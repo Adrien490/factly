@@ -55,10 +55,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/dailyboost:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/dailyboost:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/dailyboost:buildcache,mode=max
 
   deploy:
     needs: build
