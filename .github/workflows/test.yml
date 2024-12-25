@@ -1,0 +1,16 @@
+name: Test Workflow
+on:
+  push:
+    branches-ignore: [main] # S'exécute sur toutes les branches sauf main
+  workflow_dispatch: # Permet le déclenchement manuel
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Build
+        run: |
+          npm ci --force
+          npm run lint
+          npm run type-check
