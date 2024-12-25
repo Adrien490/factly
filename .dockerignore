@@ -1,16 +1,10 @@
 node_modules
-npm-debug.log
-Dockerfile
-.dockerignore
-.git
-.gitignore
-.env
-.env.local
-.env.development
-.env.production
-.env.test
-.env.development.local
-.env.production.local
-.env.test.local
 .next
+.git
+.env*
+*.md
+.DS_Store
+.vscode
+coverage
+*.log
 
