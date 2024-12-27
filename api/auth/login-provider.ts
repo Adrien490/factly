@@ -9,5 +9,6 @@ export default async function loginProvider({
 }) {
 	await signIn(provider, {
 		redirectTo: "/dashboard",
+		redirect: true,
 	});
 }
