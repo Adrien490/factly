@@ -50,20 +50,6 @@ export const authConfig: NextAuthConfig = {
 				picture: existingUser.image,
 			};
 		},
-		authorized({ auth, request: { nextUrl } }) {
-			const isLoggedIn = !!auth?.user;
-			const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-			if (isOnDashboard) {
-				if (isLoggedIn) return true;
-				return false;
-			}
-			return true;
-		},
-		redirect({ url, baseUrl }) {
-			if (url.startsWith(baseUrl)) return url;
-			if (url.startsWith("/")) return new URL(url, baseUrl).toString();
-			return baseUrl;
-		},
 	},
 	pages: {
 		signIn: "/login",
