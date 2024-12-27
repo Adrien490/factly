@@ -2,20 +2,12 @@ import type { NextAuthConfig } from "next-auth";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
-import { getUserById } from "./api/user/get-user";
 
 export const authConfig: NextAuthConfig = {
+	secret: process.env.AUTH_SECRET,
 	providers: [
 		Google({
-			clientId: process.env.GOOGLE_CLIENT_ID!,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			authorization: {
-				params: {
-					prompt: "consent",
-					access_type: "offline",
-					response_type: "code",
-				},
-			},
+			allowDangerousEmailAccountLinking: true,
 		}),
 		Github,
 		Resend({
@@ -36,19 +28,14 @@ export const authConfig: NextAuthConfig = {
 			}
 			return session;
 		},
-		async jwt({ token }) {
-			if (!token.sub) return token;
-
-			const existingUser = await getUserById(token.sub);
-			if (!existingUser) return token;
-
-			return {
-				...token,
-				id: existingUser.id,
-				name: existingUser.name,
-				email: existingUser.email,
-				picture: existingUser.image,
-			};
+		async jwt({ token, user }) {
+			if (user) {
+				token.id = user.id;
+				token.name = user.name;
+				token.email = user.email;
+				token.picture = user.image;
+			}
+			return token;
 		},
 	},
 	pages: {
