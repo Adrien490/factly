@@ -1,9 +1,18 @@
 "use server";
 
 import { signIn } from "@/auth";
-import SendMagicLinkFormSchema, {
-	SendMagicLinkActionResponse,
-} from "@/lib/schemas/send-magic-link-form-schema";
+import SendMagicLinkFormSchema from "@/lib/schemas/send-magic-link-form-schema";
+
+type SendMagicLinkActionResponse = {
+	success?: boolean;
+	message?: string;
+	inputs?: {
+		email?: string;
+	};
+	errors?: {
+		email?: string[];
+	};
+};
 
 export default async function sendMagicLink(
 	_: SendMagicLinkActionResponse | null,

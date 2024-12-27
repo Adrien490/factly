@@ -4,12 +4,17 @@ import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 
 export const authConfig: NextAuthConfig = {
-	secret: process.env.AUTH_SECRET,
 	providers: [
 		Google({
+			clientId: process.env.AUTH_GOOGLE_ID,
+			clientSecret: process.env.AUTH_GOOGLE_SECRET,
 			allowDangerousEmailAccountLinking: true,
 		}),
-		Github,
+		Github({
+			clientId: process.env.AUTH_GITHUB_ID,
+			clientSecret: process.env.AUTH_GITHUB_SECRET,
+			allowDangerousEmailAccountLinking: true,
+		}),
 		Resend({
 			apiKey: process.env.AUTH_RESEND_KEY,
 			from: "no-reply@resend.dev",
