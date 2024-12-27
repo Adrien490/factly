@@ -6,17 +6,7 @@ import { getUserById } from "./api/user/get-user";
 
 export const authConfig: NextAuthConfig = {
 	providers: [
-		Google({
-			clientId: process.env.GOOGLE_CLIENT_ID!,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			authorization: {
-				params: {
-					prompt: "consent",
-					access_type: "offline",
-					response_type: "code",
-				},
-			},
-		}),
+		Google,
 		Github,
 		Resend({
 			apiKey: process.env.AUTH_RESEND_KEY,
