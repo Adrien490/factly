@@ -6,7 +6,17 @@ import { getUserById } from "./api/user/get-user";
 
 export const authConfig: NextAuthConfig = {
 	providers: [
-		Google,
+		Google({
+			clientId: process.env.GOOGLE_CLIENT_ID!,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+			authorization: {
+				params: {
+					prompt: "consent",
+					access_type: "offline",
+					response_type: "code",
+				},
+			},
+		}),
 		Github,
 		Resend({
 			apiKey: process.env.AUTH_RESEND_KEY,
@@ -48,6 +58,11 @@ export const authConfig: NextAuthConfig = {
 				return false;
 			}
 			return true;
+		},
+		redirect({ url, baseUrl }) {
+			if (url.startsWith(baseUrl)) return url;
+			if (url.startsWith("/")) return new URL(url, baseUrl).toString();
+			return baseUrl;
 		},
 	},
 	pages: {
