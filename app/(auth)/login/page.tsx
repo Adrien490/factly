@@ -4,7 +4,7 @@ import Socials from "./components/socials";
 
 export default async function LoginPage() {
 	return (
-		<div className="flex items-center justify-center px-4 py-12 min-h-screen border-4 mx-auto">
+		<div className="flex items-center justify-center px-4 py-12 min-h-screen mx-auto">
 			<div className="max-w-xs">
 				<div className="mb-8">
 					<h1 className="text-2xl font-semibold tracking-tight">
