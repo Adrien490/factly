@@ -9,7 +9,7 @@ export const authConfig: NextAuthConfig = {
 		Github,
 		Resend({
 			apiKey: process.env.AUTH_RESEND_KEY,
-			from: process.env.AUTH_RESEND_FROM,
+			from: process.env.EMAIL_FROM,
 		}),
 	],
 	events: {
