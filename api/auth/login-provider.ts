@@ -12,9 +12,18 @@ export default async function loginProvider({
 }: {
 	provider: string;
 }) {
-	const { provider: parsedProvider } = LoginProviderSchema.parse({
+	const validatedFields = LoginProviderSchema.safeParse({
 		provider,
 	});
 
-	await signIn(parsedProvider, { redirectTo: "/dashboard" });
+	if (!validatedFields.success) {
+		return {
+			success: false,
+			message: "Invalid provider",
+		};
+	}
+
+	await signIn(provider, {
+		redirectTo: "/dashboard",
+	});
 }
