@@ -4,9 +4,19 @@ import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import { getUserById } from "./api/user/get-user";
 
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
 	providers: [
-		Google,
+		Google({
+			clientId: process.env.GOOGLE_CLIENT_ID!,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+			authorization: {
+				params: {
+					prompt: "consent",
+					access_type: "offline",
+					response_type: "code",
+				},
+			},
+		}),
 		Github,
 		Resend({
 			apiKey: process.env.AUTH_RESEND_KEY,
@@ -39,6 +49,15 @@ export const authConfig = {
 				email: existingUser.email,
 				picture: existingUser.image,
 			};
+		},
+		authorized({ auth, request: { nextUrl } }) {
+			const isLoggedIn = !!auth?.user;
+			const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+			if (isOnDashboard) {
+				if (isLoggedIn) return true;
+				return false;
+			}
+			return true;
 		},
 	},
 	pages: {
