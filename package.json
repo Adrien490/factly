@@ -4,14 +4,15 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack",
-		"build": "next build",
+		"build": "prisma generate && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"test:ci": "npm run lint && npm run type-check",
 		"type-check": "tsc --noEmit",
 		"test": "vitest",
 		"test:ui": "vitest --ui",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"postinstall": "prisma generate"
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.7.4",
