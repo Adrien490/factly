@@ -123,8 +123,6 @@ model Product {
   name         String
   description  String?
   price        Float
-  sku          String?       @unique
-  inStock      Int           @default(0)
   userId       String
   user         User          @relation(fields: [userId], references: [id])
   supplier     Supplier?     @relation(fields: [supplierId], references: [id])
