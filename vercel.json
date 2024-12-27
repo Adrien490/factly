@@ -4,7 +4,6 @@
 	"framework": "nextjs",
 	"regions": ["cdg1"],
 	"env": {
-		"NEXTAUTH_URL": "${VERCEL_URL}",
 		"NEXTAUTH_SECRET": "${NEXTAUTH_SECRET}",
 		"DATABASE_URL": "${DATABASE_URL}",
 		"GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
