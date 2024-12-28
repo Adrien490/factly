@@ -1,12 +1,12 @@
 "use client";
 
-import { Breadcrumb } from "@/app/dashboard/components/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { ReactNode, useState } from "react";
+import { Breadcrumb } from "./breadcrumb";
 
 interface PageHeaderProps {
 	title: string;
@@ -28,34 +28,16 @@ export function PageHeader({
 	const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 	const isMobile = useIsMobile();
 
-	const toggleButton = (
-		<Button
-			variant="ghost"
-			size="sm"
-			onClick={() => setIsExpanded(!isExpanded)}
-			className={cn(
-				"relative p-0 h-6 w-6 rounded-full hover:bg-transparent",
-				"after:absolute after:inset-0 after:rounded-full after:border",
-				"after:border-border/50 after:opacity-0 hover:after:opacity-100",
-				"after:transition-opacity after:duration-200"
-			)}
-		>
-			<ChevronDown
-				className={cn(
-					"h-4 w-4 text-muted-foreground transition-transform duration-200",
-					isExpanded ? "transform rotate-0" : "transform rotate-180"
-				)}
-			/>
-			<span className="sr-only">
-				{isExpanded ? "Collapse header" : "Expand header"}
-			</span>
-		</Button>
-	);
-
 	const headerContent = (
 		<div className="space-y-2">
 			<div className="space-y-1">
-				<h1 className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+				<h1
+					className={cn(
+						"text-2xl font-semibold tracking-tight",
+						"bg-gradient-to-r from-foreground to-foreground/70",
+						"bg-clip-text text-transparent"
+					)}
+				>
 					{title}
 				</h1>
 				{description && (
@@ -110,7 +92,27 @@ export function PageHeader({
 				<div className="space-y-4">
 					<div className="flex items-start justify-between">
 						{headerContent}
-						{toggleButton}
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={() => setIsExpanded(!isExpanded)}
+							className={cn(
+								"relative p-0 h-6 w-6 rounded-full hover:bg-transparent",
+								"after:absolute after:inset-0 after:rounded-full after:border",
+								"after:border-border/50 after:opacity-0 hover:after:opacity-100",
+								"after:transition-opacity after:duration-200"
+							)}
+						>
+							<ChevronDown
+								className={cn(
+									"h-4 w-4 text-muted-foreground transition-transform duration-200",
+									isExpanded ? "transform rotate-0" : "transform rotate-180"
+								)}
+							/>
+							<span className="sr-only">
+								{isExpanded ? "Collapse header" : "Expand header"}
+							</span>
+						</Button>
 					</div>
 					{actionsContent}
 				</div>
