@@ -78,13 +78,15 @@ model User {
 
 model Client {
   id        String    @id @default(cuid())
+  reference String    @unique
   name      String
   email     String?
   phone     String?
   address   String?
-  zipCode   String?
   city      String?
+  zipCode   String?
   country   String?
+  notes     String?
   userId    String
   user      User      @relation(fields: [userId], references: [id])
   invoices  Invoice[]
