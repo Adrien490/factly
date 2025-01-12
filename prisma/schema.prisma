@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model Account {
@@ -13,16 +13,16 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?  @db.Text
+  id_token          String?
   session_state     String?
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  updatedAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -32,9 +32,9 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -59,143 +59,178 @@ model Authenticator {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String                   @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String                   @unique
   emailVerified DateTime?
   image         String?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @default(now())
   accounts      Account[]
-  sessions      Session[]
   Authenticator Authenticator[]
-  products      Product[]
   clients       Client[]
-  suppliers     Supplier[]
-  categories    Category[]
-  invoices      Invoice[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  memberships   OrganizationMembership[]
+  sessions      Session[]
+}
+
+model Organization {
+  id              String                   @id @default(cuid())
+  name            String
+  siren           String?
+  siret           String?
+  vatNumber       String?
+  vatOptionDebits Boolean?                 @default(false)
+  legalForm       String?
+  rcsNumber       String?
+  capital         Float?
+  address         String?
+  city            String?
+  zipCode         String?
+  country         String?
+  phone           String?
+  email           String?
+  website         String?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @default(now())
+  clients         Client[]
+  memberships     OrganizationMembership[]
+}
+
+model OrganizationMembership {
+  id             String           @id @default(cuid())
+  userId         String
+  organizationId String
+  role           OrganizationRole @default(MEMBER)
+  status         MembershipStatus @default(PENDING)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now())
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([status])
 }
 
 model Client {
-  id        String    @id @default(cuid())
-  reference String    @unique
-  name      String
+  id             String          @id @default(cuid())
+  reference      String          @unique
+  name           String
+  email          String?
+  phone          String?
+  vatNumber      String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  userId         String
+  clientType     ClientType      @default(COMPANY)
+  organizationId String
+  siren          String?
+  civility       Civility?
+  legalForm      LegalForm?
+  siret          String?
+  status         ClientStatus    @default(LEAD)
+  website        String?
+  addresses      Address[]
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  user           User            @relation(fields: [userId], references: [id])
+  contacts       ClientContact[]
+
+  @@index([name])
+  @@index([status])
+  @@index([siren])
+  @@index([siret])
+}
+
+model ClientContact {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
   email     String?
   phone     String?
-  address   String?
-  city      String?
-  zipCode   String?
-  country   String?
-  notes     String?
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  invoices  Invoice[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  isDefault Boolean? @default(false)
+  title     String?
+  clientId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
 }
 
-model Supplier {
-  id        String    @id @default(cuid())
-  name      String
-  email     String?
-  phone     String?
-  address   String?
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-model Category {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  userId      String
-  user        User      @relation(fields: [userId], references: [id])
-  products    Product[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@unique([name, userId])
-}
-
-model Product {
-  id           String        @id @default(cuid())
-  name         String
-  description  String?
-  price        Float
-  userId       String
-  user         User          @relation(fields: [userId], references: [id])
-  supplier     Supplier?     @relation(fields: [supplierId], references: [id])
-  supplierId   String?
-  Category     Category?     @relation(fields: [categoryId], references: [id])
-  categoryId   String?
-  invoiceItems InvoiceItem[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-}
-
-model Invoice {
-  id          String        @id @default(cuid())
-  number      String        @unique
-  date        DateTime
-  dueDate     DateTime
-  status      InvoiceStatus @default(DRAFT)
-  subtotal    Float
-  tax         Float
-  total       Float
-  notes       String?
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
+model Address {
+  id          String      @id @default(cuid())
+  addressType AddressType
+  line1       String
+  line2       String?
+  zipCode     String
+  city        String
+  country     String
+  isDefault   Boolean     @default(false)
   clientId    String
-  client      Client        @relation(fields: [clientId], references: [id])
-  items       InvoiceItem[]
-  pdfVersions InvoicePDF[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  client      Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, addressType, isDefault])
+  @@index([clientId])
+  @@index([addressType])
 }
 
-model InvoicePDF {
-  id        String   @id @default(cuid())
-  url       String
-  notes     String?
-  invoiceId String
-  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum ClientType {
+  INDIVIDUAL
+  COMPANY
 }
 
-model InvoiceItem {
-  id        String   @id @default(cuid())
-  quantity  Int
-  price     Float
-  total     Float
-  invoiceId String
-  productId String
-  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MEMBER
 }
 
-enum InvoiceStatus {
-  DRAFT
-  SENT
-  PAID
-  CANCELLED
-}
-
-enum InvitationStatus {
+enum MembershipStatus {
   PENDING
-  ACCEPTED
-  DECLINED
-  EXPIRED
+  ACTIVE
+  REVOKED
 }
 
-enum Plan {
-  FREE
-  BASIC
-  PREMIUM
-  ENTERPRISE
+enum AddressType {
+  BILLING
+  DELIVERY
+}
+
+enum ClientStatus {
+  LEAD
+  PROSPECT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum LegalForm {
+  AUTO_ENTREPRENEUR
+  EI
+  EIRL
+  EURL
+  SARL
+  SAS
+  SASU
+  SA
+  SCI
+  SCM
+  SNC
+  ASSOCIATION
+  AUTRE
+}
+
+enum Civility {
+  M
+  Mme
+  Mlle
+}
+
+enum Country {
+  FR
+  BE
+  DE
+  ES
+  IT
 }
