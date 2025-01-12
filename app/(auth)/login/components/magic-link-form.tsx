@@ -1,6 +1,6 @@
 "use client";
 
-import sendMagicLink from "@/api/auth/send-magic-link";
+import sendMagicLink from "@/app/(auth)/api/send-magic-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

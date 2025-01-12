@@ -2,7 +2,12 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
 // Routes qui nécessitent une authentification
-const protectedRoutes = ["/dashboard", "/settings", "/api/files"];
+const protectedRoutes = [
+	"/dashboard",
+	"/settings",
+	"/api/files",
+	"/organizations",
+];
 
 // Routes accessibles uniquement aux visiteurs (non connectés)
 const publicOnlyRoutes = ["/login"];
@@ -24,7 +29,7 @@ export default auth((req) => {
 		isLoggedIn &&
 		publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route))
 	) {
-		return Response.redirect(new URL("/dashboard", nextUrl.origin));
+		return Response.redirect(new URL("/organizations", nextUrl.origin));
 	}
 
 	// Rediriger les utilisateurs non connectés vers la page de connexion pour les routes protégées

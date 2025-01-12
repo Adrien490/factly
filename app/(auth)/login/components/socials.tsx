@@ -1,6 +1,6 @@
 "use client";
 
-import loginProvider from "@/api/auth/login-provider";
+import loginProvider from "@/app/(auth)/api/login-provider";
 import { Button } from "@/components/ui/button";
 
 export default function Socials() {
