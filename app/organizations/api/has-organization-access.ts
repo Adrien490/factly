@@ -1,12 +1,15 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { Prisma } from "@prisma/client";
+import { headers } from "next/headers";
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000; // 1 seconde
 
 export default async function hasOrganizationAccess(organizationId: string) {
-	const session = await auth();
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
 	if (!session?.user?.id) {
 		return false;

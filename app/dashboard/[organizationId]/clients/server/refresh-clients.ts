@@ -1,7 +1,7 @@
 "use server";
 
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import {
 	createErrorResponse,
 	createSuccessResponse,
@@ -10,6 +10,7 @@ import {
 	ServerActionStatus,
 } from "@/types/server-action";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import refreshClientsSchema from "../schemas/refresh-clients-schema";
 
 export default async function refreshClients(
@@ -17,7 +18,9 @@ export default async function refreshClients(
 	formData: FormData
 ): Promise<ServerActionState<null, typeof refreshClientsSchema>> {
 	try {
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,

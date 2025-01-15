@@ -2,7 +2,7 @@
 
 import AddressSchema from "@/app/dashboard/[organizationId]/clients/[clientId]/addresses/schemas/address-schema";
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import {
 	ServerActionState,
@@ -13,6 +13,7 @@ import {
 } from "@/types/server-action";
 import { Address } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 
 export default async function editAddress(
 	_: ServerActionState<Address, typeof AddressSchema> | null,
@@ -20,8 +21,10 @@ export default async function editAddress(
 ): Promise<ServerActionState<Address, typeof AddressSchema>> {
 	try {
 		// 1. Vérification de l'authentification
-		const session = await auth();
-		if (!session?.user?.id) {
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
+		if (!session) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour modifier une adresse"

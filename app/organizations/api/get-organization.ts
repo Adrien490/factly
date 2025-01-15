@@ -1,8 +1,9 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { Prisma } from "@prisma/client";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 const DEFAULT_SELECT = {
@@ -26,7 +27,9 @@ const DEFAULT_SELECT = {
 } satisfies Prisma.OrganizationSelect;
 
 export default async function getOrganization(id: string) {
-	const session = await auth();
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 	if (!session?.user?.id) {
 		throw new Error("Vous devez être connecté pour voir cette organisation");
 	}

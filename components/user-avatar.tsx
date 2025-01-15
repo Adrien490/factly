@@ -19,10 +19,11 @@ import {
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { User } from "better-auth/types";
 import { LogOut, Settings, User as UserIcon } from "lucide-react";
-import { User } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 	size?: "sm" | "md" | "lg";
@@ -49,7 +50,7 @@ function getUserInitials(
 	return email?.substring(0, 2).toUpperCase() || "??";
 }
 
-function MenuItems({ user }: { user: User }) {
+function MenuItems({ user, onLogout }: { user: User; onLogout: () => void }) {
 	const themeToggle = ThemeToggle();
 	const ThemeIcon = themeToggle.icon;
 
@@ -79,8 +80,8 @@ function MenuItems({ user }: { user: User }) {
 			</DropdownMenuItem>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem
-				onClick={() => signOut({ callbackUrl: "/login" })}
 				className="text-red-600 dark:text-red-400 hover:!bg-red-100 dark:hover:!bg-red-900/20"
+				onClick={onLogout}
 			>
 				<LogOut className="mr-2 h-4 w-4" />
 				<span>Déconnexion</span>
@@ -89,7 +90,13 @@ function MenuItems({ user }: { user: User }) {
 	);
 }
 
-function SheetMenuItems({ user }: { user: User }) {
+function SheetMenuItems({
+	user,
+	onLogout,
+}: {
+	user: User;
+	onLogout: () => void;
+}) {
 	const themeToggle = ThemeToggle();
 	const ThemeIcon = themeToggle.icon;
 
@@ -130,11 +137,12 @@ function SheetMenuItems({ user }: { user: User }) {
 					{themeToggle.label}
 				</Button>
 				<div className="border-t my-2" />
+
 				<Button
+					onClick={onLogout}
 					variant="ghost"
 					className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/20"
 					size="sm"
-					onClick={() => signOut({ callbackUrl: "/login" })}
 				>
 					<LogOut className="mr-2 h-4 w-4" />
 					Déconnexion
@@ -145,10 +153,21 @@ function SheetMenuItems({ user }: { user: User }) {
 }
 
 export function UserAvatar({ size = "md", className }: UserAvatarProps) {
-	const session = useSession();
+	const { data: session } = authClient.useSession();
 	const isMobile = useIsMobile();
+	const router = useRouter();
 
-	if (!session?.data?.user) return null;
+	const onLogout = async () => {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					router.push("/login"); // redirect to login page
+				},
+			},
+		});
+	};
+
+	if (!session?.user) return null;
 
 	const avatar = (
 		<Avatar
@@ -159,11 +178,11 @@ export function UserAvatar({ size = "md", className }: UserAvatarProps) {
 			)}
 		>
 			<AvatarImage
-				src={session.data.user.image || undefined}
-				alt={session.data.user.name || "Avatar de l'utilisateur"}
+				src={session.user.image || undefined}
+				alt={session.user.name || "Avatar de l'utilisateur"}
 			/>
 			<AvatarFallback className="font-medium">
-				{getUserInitials(session.data.user.name, session.data.user.email)}
+				{getUserInitials(session.user.name, session.user.email)}
 			</AvatarFallback>
 		</Avatar>
 	);
@@ -176,7 +195,7 @@ export function UserAvatar({ size = "md", className }: UserAvatarProps) {
 					<SheetHeader className="p-4 text-left">
 						<SheetTitle>Mon compte</SheetTitle>
 					</SheetHeader>
-					<SheetMenuItems user={session.data.user} />
+					<SheetMenuItems user={session.user} onLogout={onLogout} />
 				</SheetContent>
 			</Sheet>
 		);
@@ -186,7 +205,7 @@ export function UserAvatar({ size = "md", className }: UserAvatarProps) {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{avatar}</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56" align="end">
-				<MenuItems user={session.data.user} />
+				<MenuItems user={session.user} onLogout={onLogout} />
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

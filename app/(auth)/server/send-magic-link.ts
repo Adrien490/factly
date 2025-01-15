@@ -1,6 +1,5 @@
 "use server";
 
-import { signIn } from "@/auth";
 import SendMagicLinkFormSchema from "@/app/(auth)/schemas/send-magic-link-form-schema";
 
 type SendMagicLinkActionResponse = {
@@ -33,5 +32,5 @@ export default async function sendMagicLink(
 		};
 	}
 
-	return await signIn("resend", formData);
+	// 1. Vérification de l'authentification
 }

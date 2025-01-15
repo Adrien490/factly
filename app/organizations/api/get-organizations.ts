@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
@@ -28,18 +28,17 @@ const DEFAULT_SELECT = {
 	capital: true,
 	createdAt: true,
 	updatedAt: true,
-	memberships: {
-		select: {
-			userId: true,
-		},
-	},
+	userId: true,
+	memberships: true,
 } satisfies Prisma.OrganizationSelect;
 
 export default async function getOrganizations(params: GetOrganizationsParams) {
 	try {
 		// 1. Vérification de l'authentification
-		const session = await auth();
-		if (!session?.user?.id) {
+		const session = await auth.api.getSession({
+			headers: await headers(), // you need to pass the headers object.
+		});
+		if (!session) {
 			throw new Error("UNAUTHORIZED");
 		}
 

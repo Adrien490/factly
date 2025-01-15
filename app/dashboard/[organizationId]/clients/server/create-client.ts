@@ -6,7 +6,7 @@ import {
 	default as ClientSchema,
 } from "@/app/dashboard/[organizationId]/clients/schemas/client-schema";
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import {
 	ServerActionState,
@@ -23,6 +23,7 @@ import {
 	LegalForm,
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 
 export default async function createClient(
 	_: ServerActionState<Client, typeof ClientSchema> | null,
@@ -31,7 +32,9 @@ export default async function createClient(
 	try {
 		console.log("createClient");
 		// 1. Vérification de l'authentification
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,

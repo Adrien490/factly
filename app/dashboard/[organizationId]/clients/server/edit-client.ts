@@ -2,7 +2,7 @@
 
 import ClientFormSchema from "@/app/dashboard/[organizationId]/clients/schemas/client-schema";
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import {
 	ServerActionState,
@@ -12,6 +12,7 @@ import {
 } from "@/types/server-action";
 import { Client, ClientStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function editClient(
@@ -20,7 +21,9 @@ export default async function editClient(
 ): Promise<ServerActionState<Client, typeof ClientFormSchema>> {
 	try {
 		// 1. Vérification de l'authentification
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,

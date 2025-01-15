@@ -1,7 +1,7 @@
 "use server";
 
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import {
 	ServerActionState,
@@ -11,6 +11,7 @@ import {
 } from "@/types/server-action";
 import { Address } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import deleteAddressSchema from "../schemas/delete-address-schema";
 
 export default async function deleteAddress(
@@ -19,8 +20,10 @@ export default async function deleteAddress(
 ): Promise<ServerActionState<Address, typeof deleteAddressSchema>> {
 	try {
 		// 1. Vérification de l'authentification
-		const session = await auth();
-		if (!session?.user?.id) {
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
+		if (!session) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour supprimer une adresse"

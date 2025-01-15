@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 
 import {
@@ -10,6 +10,7 @@ import {
 	createValidationErrorResponse,
 } from "@/types/server-action";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import OrganizationFormSchema from "../schemas/organization-form-schema";
 
 export default async function createOrganization(
@@ -17,7 +18,9 @@ export default async function createOrganization(
 	formData: FormData
 ) {
 	try {
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,

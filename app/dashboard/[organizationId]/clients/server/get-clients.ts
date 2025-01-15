@@ -2,11 +2,12 @@
 
 import getClientsSchema from "@/app/dashboard/[organizationId]/clients/schemas/get-clients-schema";
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
 import { PagePagination } from "@/components/page-pagination";
+import { auth } from "@/lib/auth";
 import db, { CACHE_TIMES, DB_TIMEOUTS } from "@/lib/db";
 import { Civility, ClientStatus, ClientType, Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -185,7 +186,9 @@ export default async function getClients(
 	params: z.infer<typeof getClientsSchema>
 ): Promise<GetClientsReturn> {
 	try {
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			redirect("/login");
 		}
