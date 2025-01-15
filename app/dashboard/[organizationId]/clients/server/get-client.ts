@@ -1,9 +1,10 @@
 "use server";
 
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db, { CACHE_TIMES, DB_TIMEOUTS } from "@/lib/db";
 import { unstable_cache } from "next/cache";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import getClientSchema from "../schemas/get-client-schema";
@@ -17,7 +18,9 @@ export default async function getClient(
 ) {
 	try {
 		// 1. Vérification de l'authentification
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			throw new Error("UNAUTHORIZED");
 		}

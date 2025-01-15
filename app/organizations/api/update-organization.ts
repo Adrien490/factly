@@ -1,9 +1,10 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 
 import { ServerActionStatus } from "@/types/server-action";
+import { headers } from "next/headers";
 import OrganizationFormSchema from "../schemas/organization-form-schema";
 
 export default async function updateOrganization(
@@ -11,7 +12,9 @@ export default async function updateOrganization(
 	formData: FormData
 ) {
 	try {
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return {
 				status: ServerActionStatus.ERROR,

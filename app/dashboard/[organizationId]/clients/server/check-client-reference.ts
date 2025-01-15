@@ -1,7 +1,7 @@
 "use server";
 
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import {
 	ServerActionState,
@@ -10,6 +10,7 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/types/server-action";
+import { headers } from "next/headers";
 import CheckReferenceSchema from "../schemas/check-reference-schema";
 
 type CheckReferenceResponse = {
@@ -27,7 +28,9 @@ export default async function checkClientReference(
 	ServerActionState<CheckReferenceResponse, typeof CheckReferenceSchema>
 > {
 	try {
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,

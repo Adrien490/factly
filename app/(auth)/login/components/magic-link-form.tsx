@@ -1,33 +1,23 @@
 "use client";
 
-import sendMagicLink from "@/app/(auth)/api/send-magic-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { useActionState } from "react";
 
 export default function MagicLinkForm() {
-	const [state, action, isPending] = useActionState(sendMagicLink, null);
-
 	return (
-		<form action={action} className="space-y-6">
+		<form className="space-y-6">
 			<div className="space-y-2">
 				<Label htmlFor="email">Email</Label>
 				<Input
 					name="email"
 					id="email"
-					defaultValue={state?.inputs?.email}
 					type="email"
 					placeholder="Enter your email address..."
-					className={cn("", state?.errors?.email && "border-red-500")}
 				/>
-				{state?.errors?.email && (
-					<p className="text-red-500 text-sm mt-1">{state.errors.email[0]}</p>
-				)}
 			</div>
 
-			<Button type="submit" className="w-full mt-4" disabled={isPending}>
+			<Button type="submit" className="w-full mt-4">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"

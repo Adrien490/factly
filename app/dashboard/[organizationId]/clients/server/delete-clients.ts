@@ -1,5 +1,5 @@
 import hasOrganizationAccess from "@/app/organizations/api/has-organization-access";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import {
 	ServerActionState,
@@ -8,6 +8,7 @@ import {
 	createSuccessResponse,
 } from "@/types/server-action";
 import { revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import deleteClientsSchema from "../schemas/delete-clients-schema";
 
 type DeleteProgress = {
@@ -23,7 +24,9 @@ export default async function deleteClients(
 ) {
 	try {
 		// 1. Vérification de l'authentification
-		const session = await auth();
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ServerActionStatus.UNAUTHORIZED,
