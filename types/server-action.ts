@@ -10,27 +10,37 @@ export enum ServerActionStatus {
 	CONFLICT = "conflict",
 	FORBIDDEN = "forbidden",
 	PENDING = "pending",
+	INITIAL = "initial",
+	IDLE = "idle",
 }
-
-export type ServerResponse<T> = {
-	status: ServerActionStatus;
-	message: string;
-	data?: T;
-};
 
 export type ValidationErrors<T> = {
 	[K in keyof T]?: string[];
 };
 
-export type ServerActionState<T, S extends z.ZodType> = ServerResponse<T> & {
-	validationErrors?: ValidationErrors<z.infer<S>>;
-	formData?: z.infer<S>;
+export type ServerResponse<TData> = {
+	status: ServerActionStatus;
+	message: string;
+	data?: TData;
 };
 
-export function createSuccessResponse<T, S extends z.ZodType>(
-	data: T,
+export type ServerActionState<
+	TData,
+	TSchema extends z.ZodType
+> = ServerResponse<TData> & {
+	validationErrors?: ValidationErrors<z.infer<TSchema>>;
+	formData?: z.infer<TSchema>;
+};
+
+export type ServerAction<TData, TSchema extends z.ZodType> = (
+	state: ServerActionState<TData, TSchema> | undefined,
+	formData: FormData
+) => Promise<ServerActionState<TData, TSchema>>;
+
+export function createSuccessResponse<TData, TSchema extends z.ZodType>(
+	data: TData,
 	message: string
-): ServerActionState<T, S> {
+): ServerActionState<TData, TSchema> {
 	return {
 		status: ServerActionStatus.SUCCESS,
 		message,
@@ -38,25 +48,56 @@ export function createSuccessResponse<T, S extends z.ZodType>(
 	};
 }
 
-export function createErrorResponse<T, S extends z.ZodType>(
+export function createErrorResponse<TData, TSchema extends z.ZodType>(
 	status: ServerActionStatus,
 	message: string
-): ServerActionState<T, S> {
+): ServerActionState<TData, TSchema> {
 	return {
 		status,
 		message,
 	};
 }
 
-export function createValidationErrorResponse<T, S extends z.ZodType>(
-	validationErrors: ValidationErrors<z.infer<S>>,
-	formData: z.infer<S>,
+export function createValidationErrorResponse<TData, TSchema extends z.ZodType>(
+	validationErrors: ValidationErrors<z.infer<TSchema>>,
+	formData: z.infer<TSchema>,
 	message: string
-): ServerActionState<T, S> {
+): ServerActionState<TData, TSchema> {
 	return {
 		status: ServerActionStatus.VALIDATION_ERROR,
 		message,
 		validationErrors,
 		formData,
 	};
+}
+
+export function isPending<TData, TSchema extends z.ZodType>(
+	state: ServerActionState<TData, TSchema> | undefined
+): boolean {
+	return state?.status === ServerActionStatus.PENDING;
+}
+
+export function isSuccess<TData, TSchema extends z.ZodType>(
+	state: ServerActionState<TData, TSchema> | undefined
+): boolean {
+	return state?.status === ServerActionStatus.SUCCESS;
+}
+
+export function isError<TData, TSchema extends z.ZodType>(
+	state: ServerActionState<TData, TSchema> | undefined
+): boolean {
+	return (
+		state?.status === ServerActionStatus.ERROR ||
+		state?.status === ServerActionStatus.VALIDATION_ERROR ||
+		state?.status === ServerActionStatus.UNAUTHORIZED ||
+		state?.status === ServerActionStatus.FORBIDDEN ||
+		state?.status === ServerActionStatus.NOT_FOUND ||
+		state?.status === ServerActionStatus.CONFLICT
+	);
+}
+
+export function hasValidationErrors<TData, TSchema extends z.ZodType>(
+	state: ServerActionState<TData, TSchema> | undefined
+): boolean {
+	return state?.status === ServerActionStatus.VALIDATION_ERROR;
 }

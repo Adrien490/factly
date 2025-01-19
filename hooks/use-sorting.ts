@@ -51,17 +51,18 @@ export function useSorting() {
 			optimisticSort.column === columnId && optimisticSort.direction === "asc"
 				? "desc"
 				: "asc";
+
 		startTransition(() => {
 			setOptimisticSort({
 				column: columnId,
 				direction: newDirection,
 			});
-		});
 
-		// Mise à jour des paramètres d'URL
-		params.set("sortBy", columnId);
-		params.set("sortOrder", newDirection);
-		updateUrlWithParams(params);
+			// Mise à jour des paramètres d'URL
+			params.set("sortBy", columnId);
+			params.set("sortOrder", newDirection);
+			updateUrlWithParams(params);
+		});
 	};
 
 	const getSortingState = (): SortingState => ({
@@ -82,28 +83,29 @@ export function useSorting() {
 		const { params } = preserveExistingParams();
 		params.delete("sortBy");
 		params.delete("sortOrder");
+
 		startTransition(() => {
 			setOptimisticSort({
 				column: null,
 				direction: null,
 			});
+			updateUrlWithParams(params);
 		});
-
-		updateUrlWithParams(params);
 	};
 
 	const setSorting = (columnId: string, direction: "asc" | "desc") => {
 		const { params } = preserveExistingParams();
 
-		params.set("sortBy", columnId);
-		params.set("sortOrder", direction);
+		startTransition(() => {
+			setOptimisticSort({
+				column: columnId,
+				direction,
+			});
 
-		setOptimisticSort({
-			column: columnId,
-			direction,
+			params.set("sortBy", columnId);
+			params.set("sortOrder", direction);
+			updateUrlWithParams(params);
 		});
-
-		updateUrlWithParams(params);
 	};
 
 	return {
