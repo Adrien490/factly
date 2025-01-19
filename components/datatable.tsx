@@ -3,7 +3,7 @@
 import { useSelection } from "@/hooks/use-selection";
 import { useSorting } from "@/hooks/use-sorting";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronsUpDown, SearchX } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -77,8 +77,20 @@ export default function DataTable<T extends { id: string }>({
 
 	if (data.length === 0) {
 		return (
-			<div className="flex min-h-[400px] flex-col items-center justify-center gap-2 rounded-md border bg-background p-8 text-center">
-				<div className="text-sm text-muted-foreground">Aucun résultat</div>
+			<div className="flex min-h-[400px] flex-col items-center justify-center gap-4 rounded-md border bg-background p-8 text-center">
+				<div className="rounded-full bg-muted p-3">
+					<SearchX
+						className="h-6 w-6 text-muted-foreground"
+						aria-hidden="true"
+					/>
+				</div>
+				<div className="space-y-2">
+					<h3 className="text-lg font-medium">Aucun résultat</h3>
+					<p className="text-sm text-muted-foreground max-w-[300px]">
+						Aucun élément ne correspond à vos critères de recherche. Essayez de
+						modifier vos filtres ou d&apos;effectuer une nouvelle recherche.
+					</p>
+				</div>
 			</div>
 		);
 	}

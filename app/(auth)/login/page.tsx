@@ -1,6 +1,6 @@
 import Link from "next/link";
 import MagicLinkForm from "./components/magic-link-form";
-import Socials from "./components/socials";
+import SocialLogin from "./components/social-login";
 
 export default async function LoginPage() {
 	return (
@@ -16,7 +16,7 @@ export default async function LoginPage() {
 					</p>
 				</div>
 				<div className="border-b border-muted pb-4 mb-6">
-					<Socials />
+					<SocialLogin />
 				</div>
 				<div className="">
 					<MagicLinkForm />

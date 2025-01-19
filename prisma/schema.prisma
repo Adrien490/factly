@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id                     String                   @id
-  name                   String
-  email                  String
-  emailVerified          Boolean
-  image                  String?
-  createdAt              DateTime
-  updatedAt              DateTime
-  sessions               Session[]
-  accounts               Account[]
-  organizations          Organization[]
-  OrganizationMembership OrganizationMembership[]
-  Client                 Client[]
+  id            String         @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+  organizations Organization[]
+  members       Member[]
+  Client        Client[]
 
   @@unique([email])
   @@map("user")
@@ -71,43 +71,54 @@ model Verification {
 }
 
 model Organization {
-  id              String                   @id @default(cuid())
+  id              String       @id @default(cuid())
   name            String
+  logo            String?
   siren           String?
   siret           String?
   vatNumber       String?
-  vatOptionDebits Boolean?                 @default(false)
-  legalForm       String?
+  vatOptionDebits Boolean?     @default(false)
+  legalForm       LegalForm?
   rcsNumber       String?
   capital         Float?
   address         String?
   city            String?
   zipCode         String?
-  country         String?
+  country         Country?
   phone           String?
   email           String?
   website         String?
-  createdAt       DateTime                 @default(now())
-  updatedAt       DateTime                 @default(now())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
   clients         Client[]
-  memberships     OrganizationMembership[]
-  User            User?                    @relation(fields: [userId], references: [id])
+  members         Member[]
+  invitations     Invitation[]
+  User            User?        @relation(fields: [userId], references: [id])
   userId          String?
 }
 
-model OrganizationMembership {
-  id             String           @id @default(cuid())
+model Member {
+  id             String       @id @default(cuid())
   userId         String
   organizationId String
-  role           OrganizationRole @default(MEMBER)
-  status         MembershipStatus @default(PENDING)
+  role           Role         @default(MEMBER)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+}
+
+model Invitation {
+  id             String           @id @default(cuid())
+  email          String
+  role           Role             @default(MEMBER)
+  organizationId String
+  status         InvitationStatus @default(PENDING)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @default(now())
   organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, organizationId])
-  @@index([status])
 }
 
 model Client {
@@ -179,16 +190,16 @@ enum ClientType {
   COMPANY
 }
 
-enum OrganizationRole {
+enum Role {
   OWNER
   ADMIN
   MEMBER
 }
 
-enum MembershipStatus {
+enum InvitationStatus {
   PENDING
-  ACTIVE
-  REVOKED
+  ACCEPTED
+  REJECTED
 }
 
 enum AddressType {

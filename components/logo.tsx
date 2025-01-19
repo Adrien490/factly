@@ -1,16 +1,20 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
-export function Logo() {
+interface LogoProps {
+	className?: string;
+}
+
+export function Logo({ className }: LogoProps) {
 	return (
-		<Link
-			href="/organizations"
-			className="flex items-center space-x-2 px-4 py-2"
-		>
-			<LayoutDashboard className="h-6 w-6 text-primary" />
-			<span className="font-semibold">Factly</span>
-		</Link>
+		<div className={cn("flex items-center", className)}>
+			<Link href="/organizations" className="flex items-center gap-2">
+				<LayoutDashboard className="h-6 w-6 text-primary" />
+				<span className="font-semibold">Factly</span>
+			</Link>
+		</div>
 	);
 }

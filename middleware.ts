@@ -34,7 +34,9 @@ export default async function middleware(request: NextRequest) {
 			isLoggedIn &&
 			publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route))
 		) {
-			return Response.redirect(new URL("/organizations", nextUrl.origin));
+			return Response.redirect(
+				new URL("/dashboard/organizations", nextUrl.origin)
+			);
 		}
 
 		if (
