@@ -103,7 +103,7 @@ export function Pricing() {
 							(advantage, idx) => (
 								<motion.div
 									key={idx}
-									className="flex items-center gap-2 text-sm text-foreground/80 bg-background/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-border shadow-sm"
+									className="flex items-center gap-2 text-sm text-foreground/80 bg-background/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-border shadow-2xs"
 									whileHover={{
 										y: -2,
 										boxShadow: "0 8px 16px rgba(0,0,0,0.06)",

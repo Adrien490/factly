@@ -9,7 +9,7 @@ const emptyStateVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: "bg-background/60 border rounded-lg shadow-sm",
+				default: "bg-background/60 border rounded-lg shadow-2xs",
 				ghost: "bg-transparent",
 				subtle: "bg-muted/40 rounded-lg",
 			},

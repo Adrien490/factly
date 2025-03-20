@@ -41,7 +41,7 @@ export default function OrganizationList({
 			: "space-y-3";
 
 	return (
-		<div className="relative group-has-[[data-pending]]:animate-pulse">
+		<div className="relative group-has-data-pending:animate-pulse">
 			{/* Animation de transition pour donner un retour visuel lorsqu'on change de vue */}
 			<div className={`transition-all duration-300 ${containerClassName}`}>
 				{/* Mapping des organisations avec le paramètre view pour adaptation */}

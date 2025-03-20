@@ -1,17 +1,15 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutGrid, List } from "lucide-react";
+import ViewType from "@/features/toggle-view/types/view-type";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 
-type ViewType = "grid" | "list";
-
-interface ViewSwitcherProps {
-	className?: string;
-}
-
-export default function ViewSwitcher({ className }: ViewSwitcherProps) {
+/**
+ * Hook personnalisé pour gérer la fonctionnalité de changement de vue (grid/list)
+ *
+ * @returns Un objet contenant la vue actuelle, la vue optimistique, un indicateur de chargement et la fonction de changement de vue
+ */
+export function useToggleView() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();
@@ -44,29 +42,10 @@ export default function ViewSwitcher({ className }: ViewSwitcherProps) {
 		});
 	};
 
-	return (
-		<Tabs
-			data-pending={isPending ? "" : undefined}
-			value={optimisticView}
-			onValueChange={(value) => handleViewChange(value as ViewType)}
-			className={className}
-		>
-			<TabsList className="grid grid-cols-2 h-9 w-[100px]">
-				<TabsTrigger
-					value="grid"
-					className="flex items-center justify-center px-3"
-					data-state={optimisticView === "grid" ? "active" : ""}
-				>
-					<LayoutGrid className="h-4 w-4" />
-				</TabsTrigger>
-				<TabsTrigger
-					value="list"
-					className="flex items-center justify-center px-3"
-					data-state={optimisticView === "list" ? "active" : ""}
-				>
-					<List className="h-4 w-4" />
-				</TabsTrigger>
-			</TabsList>
-		</Tabs>
-	);
+	return {
+		currentView: initialView,
+		optimisticView,
+		isPending,
+		handleViewChange,
+	};
 }

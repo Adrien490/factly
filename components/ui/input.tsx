@@ -16,7 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 
 					// États interactifs simplifiés
 					"hover:border-ring/50",
-					"focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring",
+					"focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring",
 
 					// Placeholder élégant
 					"placeholder:text-muted-foreground/70",

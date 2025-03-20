@@ -24,7 +24,7 @@ export interface HorizontalMenuProps {
 }
 
 const menuItemStyles = cva(
-	"group inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 relative border-b-2 border-transparent hover:border-muted-foreground data-[active=true]:border-primary data-[active=true]:text-primary transition-all duration-200",
+	"group inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 relative border-b-2 border-transparent hover:border-muted-foreground data-[active=true]:border-primary data-[active=true]:text-primary transition-all duration-200",
 	{
 		variants: {
 			size: {
@@ -95,7 +95,7 @@ export function HorizontalMenu({
 															<Link
 																href={subItem.href}
 																className={cn(
-																	"block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+																	"block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
 																	isActive &&
 																		"bg-accent/50 text-accent-foreground",
 																	subItem.disabled &&
@@ -115,7 +115,7 @@ export function HorizontalMenu({
 														) : (
 															<button
 																className={cn(
-																	"w-full text-left block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+																	"w-full text-left block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
 																	isActive &&
 																		"bg-accent/50 text-accent-foreground",
 																	subItem.disabled &&

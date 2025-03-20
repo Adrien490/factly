@@ -19,7 +19,7 @@ const ToastViewport = React.forwardRef<
 	<ToastPrimitives.Viewport
 		ref={ref}
 		className={cn(
-			"fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse gap-3 p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+			"fixed top-0 z-100 flex max-h-screen w-full flex-col-reverse gap-3 p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
 			className
 		)}
 		{...props}
@@ -28,7 +28,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-	"group pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-lg border border-border bg-background text-foreground p-4 pr-8 shadow-lg transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full data-[state=closed]:slide-out-to-right-full"
+	"group pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-lg border border-border bg-background text-foreground p-4 pr-8 shadow-lg transition-all data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full sm:data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-right-full"
 );
 
 // Barre de progression simple
@@ -58,7 +58,7 @@ const Toast = React.forwardRef<
 			<Info className="h-5 w-5 shrink-0" aria-hidden="true" />
 			<div className="flex-1 overflow-hidden text-ellipsis">{children}</div>
 			<ToastPrimitives.Close
-				className="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none group-hover:opacity-100"
+				className="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-hidden focus:ring-1 focus:ring-ring disabled:pointer-events-none group-hover:opacity-100"
 				aria-label="Fermer"
 			>
 				<X className="h-4 w-4" />
@@ -75,7 +75,7 @@ const ToastAction = React.forwardRef<
 	<ToastPrimitives.Action
 		ref={ref}
 		className={cn(
-			"inline-flex h-8 items-center justify-center rounded-md border px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50",
+			"inline-flex h-8 items-center justify-center rounded-md border px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent focus:outline-hidden focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50",
 			className
 		)}
 		{...props}

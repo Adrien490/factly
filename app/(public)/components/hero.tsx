@@ -103,7 +103,7 @@ export default function Hero() {
 						<Button
 							size="lg"
 							asChild
-							className="w-full h-12 rounded-full shadow-[0_10px_25px_-12px_rgba(var(--primary-rgb),0.7)] hover:shadow-[0_16px_30px_-10px_rgba(var(--primary-rgb),0.65)] bg-gradient-to-r from-primary to-primary/90 hover:translate-y-[1px] transition-all duration-200 group overflow-hidden relative"
+							className="w-full h-12 rounded-full shadow-[0_10px_25px_-12px_rgba(var(--primary-rgb),0.7)] hover:shadow-[0_16px_30px_-10px_rgba(var(--primary-rgb),0.65)] bg-linear-to-r from-primary to-primary/90 hover:translate-y-[1px] transition-all duration-200 group overflow-hidden relative"
 						>
 							<Link href="/login">
 								<motion.span
@@ -135,7 +135,7 @@ export default function Hero() {
 			</BackgroundLines>
 
 			{/* Effet de masque pour transition douce - harmonisé */}
-			<div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none z-20"></div>
+			<div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-background to-transparent pointer-events-none z-20"></div>
 		</div>
 	);
 }

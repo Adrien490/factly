@@ -8,11 +8,11 @@ import INVITATION_SORTABLE_FIELDS, {
 } from "@/features/invitations/lib/invitation-sortable-fields";
 import { INVITATION_STATUS_OPTIONS } from "@/features/invitations/lib/invitation-status-options";
 import getInvitations from "@/features/invitations/queries/get-invitations";
-import { SortOrder } from "@/schemas/sort-order-schema";
+import SortOrder from "@/features/sorting/types/sort-order";
+import ViewSwitcher from "@/features/toggle-view";
 import { InvitationStatus } from "@prisma/client";
 import Link from "next/link";
 import { Suspense } from "react";
-import ViewSwitcher from "../../../../components/view-switcher";
 import InvitationList from "./components/invitation-list";
 
 type Props = {

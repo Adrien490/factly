@@ -85,7 +85,7 @@ export default function OrganizationSwitcher({
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
-						className="w-[--radix-dropdown-menu-trigger-width] max-h-[300px] overflow-y-auto"
+						className="w-(--radix-dropdown-menu-trigger-width) max-h-[300px] overflow-y-auto"
 						align="start"
 					>
 						<DropdownMenuLabel className="text-xs font-normal text-muted-foreground">

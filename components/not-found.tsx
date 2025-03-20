@@ -93,7 +93,7 @@ export function NotFound({
 				</div>
 
 				{/* Ligne décorative */}
-				<div className="absolute -bottom-16 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent sm:-bottom-20 md:-bottom-24" />
+				<div className="absolute -bottom-16 h-px w-full bg-linear-to-r from-transparent via-border to-transparent sm:-bottom-20 md:-bottom-24" />
 			</div>
 		</PageContainer>
 	);

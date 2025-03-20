@@ -385,7 +385,6 @@ model Quote {
   status             SaleStatus @default(DRAFT)
   date               DateTime   @default(now())
   expiryDate         DateTime?
-  currency           Currency   @default(EUR)
   subtotal           Float
   taxAmount          Float
   totalAmount        Float
@@ -430,7 +429,6 @@ model Invoice {
   status             InvoiceStatus @default(DRAFT)
   date               DateTime      @default(now())
   dueDate            DateTime
-  currency           Currency      @default(EUR)
   subtotal           Float
   taxAmount          Float
   totalAmount        Float
@@ -551,13 +549,6 @@ enum InvoiceStatus {
   PAID
   OVERDUE
   CANCELLED
-}
-
-enum Currency {
-  EUR
-  USD
-  GBP
-  CHF
 }
 
 enum PaymentMethod {

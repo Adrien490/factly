@@ -1,5 +1,5 @@
+import OrganizationForm from "@/app/dashboard/(layout)/new/components/organization-form";
 import PageContainer from "@/components/page-container";
-import OrganizationForm from "@/features/organizations/components/organization-form";
 
 export default async function NewOrganizationPage() {
 	return (

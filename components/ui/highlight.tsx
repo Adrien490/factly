@@ -10,7 +10,7 @@ export function Highlight({ children, className }: HighlightProps) {
 	return (
 		<span
 			className={cn(
-				"bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent inline-block",
+				"bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent inline-block",
 				className
 			)}
 		>

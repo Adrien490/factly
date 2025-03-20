@@ -15,7 +15,7 @@ export default async function LoginPage() {
 			<header className="absolute top-0 left-0 w-full flex justify-between items-center p-4 sm:p-8 z-20">
 				<Link
 					href="/"
-					className="flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-full px-4 py-2 bg-background/60 backdrop-blur-sm"
+					className="flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-full px-4 py-2 bg-background/60 backdrop-blur-xs"
 					aria-label="Retour à l'accueil"
 				>
 					<ArrowLeft className="w-4 h-4" />
@@ -35,7 +35,7 @@ export default async function LoginPage() {
 			{/* Carte principale simplifiée avec bordure améliorée */}
 			<div
 				className="w-full max-w-md p-6 sm:p-8 space-y-5 rounded-xl relative z-10 
-                bg-background/90 backdrop-blur-sm 
+                bg-background/90 backdrop-blur-xs 
                 border border-border/10
                 shadow-[4px_4px_0_0_rgba(0,0,0,0.05)]
                 dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.05)]
@@ -65,7 +65,7 @@ export default async function LoginPage() {
 						<span className="w-full border-t border-border/20"></span>
 					</div>
 					<div className="relative flex justify-center text-xs">
-						<span className="px-3 py-1 text-muted-foreground bg-background/90 backdrop-blur-sm">
+						<span className="px-3 py-1 text-muted-foreground bg-background/90 backdrop-blur-xs">
 							ou
 						</span>
 					</div>

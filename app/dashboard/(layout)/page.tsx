@@ -6,9 +6,9 @@ import {
 	OrganizationSortableField,
 } from "@/features/organizations/lib/organization-sortable-fields";
 import getOrganizations from "@/features/organizations/queries/get-organizations";
+import ViewSwitcher from "@/features/toggle-view";
 import Link from "next/link";
 import { Suspense } from "react";
-import ViewSwitcher from "../../../components/view-switcher";
 import SortSelector from "../../../features/sorting/components/sort-selector";
 import OrganizationList from "./components/organization-list";
 import OrganizationListSkeleton from "./components/organization-list-skeleton";

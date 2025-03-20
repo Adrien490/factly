@@ -13,7 +13,7 @@ import DataTable from "@/features/datatable/components/datatable";
 import FilterSelect, {
 	FilterOption,
 } from "@/features/filters/components/filter-select";
-import { SortOrder } from "@/schemas/sort-order-schema";
+import SortOrder from "@/features/sorting/types/sort-order";
 import { ClientType } from "@prisma/client";
 import Link from "next/link";
 import ClientSelectionActions from "./components/client-selection-actions";
