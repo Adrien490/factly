@@ -4,47 +4,31 @@
 
 @layer base {
 	:root {
-		/* Base colors */
 		--background: 229 57% 100%;
 		--foreground: 229 63% 4%;
-
-		/* Surface colors */
-		--card: 229 57% 99%;
-		--card-foreground: 229 63% 3%;
-		--popover: 229 57% 99%;
+		--muted: 229 12% 86%;
+		--muted-foreground: 229 10% 37%;
+		--popover: 0 0% 99%;
 		--popover-foreground: 229 63% 3%;
-
-		/* Primary colors */
+		--card: 0 0% 99%;
+		--card-foreground: 229 63% 3%;
+		--border: 220 13% 91%;
+		--input: 220 13% 91%;
 		--primary: 229 100% 62%;
 		--primary-foreground: 0 0% 100%;
-
-		/* Secondary colors */
-		--secondary: 229 20% 96%;
+		--secondary: 229 20% 90%;
 		--secondary-foreground: 229 20% 30%;
-
-		/* Muted variants */
-		--muted: 229 12% 96%;
-		--muted-foreground: 229 10% 37%;
-
-		/* Accent colors */
-		--accent: 229 28% 94%;
+		--accent: 229 28% 85%;
 		--accent-foreground: 229 28% 25%;
-
-		/* Destructive colors */
-		--destructive: 0 84% 60%;
-		--destructive-foreground: 0 0% 100%;
-
-		/* Border and input */
-		--border: 229 13% 91%;
-		--input: 229 13% 91%;
+		--destructive: 3 100% 50%;
+		--destructive-foreground: 3 0% 100%;
 		--ring: 229 100% 62%;
-
-		/* Chart colors */
 		--chart-1: 229 100% 62%;
-		--chart-2: 229 70% 55%;
-		--chart-3: 229 85% 70%;
-		--chart-4: 229 60% 65%;
-		--chart-5: 229 75% 60%;
+		--chart-2: 229 20% 90%;
+		--chart-3: 229 28% 85%;
+		--chart-4: 229 20% 93%;
+		--chart-5: 229 103% 62%;
+		--radius: 0.5rem;
 
 		/* Sidebar colors */
 		--sidebar-background: var(--background);
@@ -55,53 +39,35 @@
 		--sidebar-accent-foreground: var(--accent-foreground);
 		--sidebar-border: var(--border);
 		--sidebar-ring: var(--ring);
-
-		/* Border radius */
-		--radius: 0.5rem;
 	}
 
 	.dark {
 		/* Base colors */
 		--background: 229 41% 4%;
 		--foreground: 229 23% 99%;
-
-		/* Surface colors */
-		--card: 229 41% 5%;
-		--card-foreground: 229 23% 99%;
-		--popover: 229 41% 5%;
-		--popover-foreground: 229 23% 99%;
-
-		/* Primary colors */
-		--primary: 229 100% 62%;
-		--primary-foreground: 0 0% 100%;
-
-		/* Secondary colors */
-		--secondary: 229 14% 8%;
-		--secondary-foreground: 229 14% 68%;
-
-		/* Muted variants */
 		--muted: 229 12% 14%;
 		--muted-foreground: 229 10% 63%;
-
-		/* Accent colors */
+		--popover: 229 41% 5%;
+		--popover-foreground: 0 0% 100%;
+		--card: 229 41% 5%;
+		--card-foreground: 0 0% 100%;
+		--border: 215 27.9% 16.9%;
+		--input: 215 27.9% 16.9%;
+		--primary: 229 100% 62%;
+		--primary-foreground: 0 0% 100%;
+		--secondary: 229 14% 8%;
+		--secondary-foreground: 229 14% 68%;
 		--accent: 229 23% 17%;
 		--accent-foreground: 229 23% 77%;
-
-		/* Destructive colors */
-		--destructive: 0 84% 60%;
+		--destructive: 3 89% 54%;
 		--destructive-foreground: 0 0% 100%;
-
-		/* Border and input */
-		--border: 229 28% 16%;
-		--input: 229 28% 16%;
+		--radius: 0.5rem;
 		--ring: 229 100% 62%;
-
-		/* Chart colors */
 		--chart-1: 229 100% 62%;
-		--chart-2: 229 70% 55%;
-		--chart-3: 229 85% 70%;
-		--chart-4: 229 60% 65%;
-		--chart-5: 229 75% 60%;
+		--chart-2: 229 14% 8%;
+		--chart-3: 229 23% 17%;
+		--chart-4: 229 14% 11%;
+		--chart-5: 229 103% 62%;
 
 		/* Sidebar colors */
 		--sidebar-background: var(--background);
@@ -127,5 +93,14 @@
 		body {
 			font-family: InterVariable, sans-serif;
 		}
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
 	}
 }

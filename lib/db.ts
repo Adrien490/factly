@@ -9,13 +9,6 @@ export const CACHE_TIMES = {
 	VERY_LONG: 86400, // 24 hours
 } as const;
 
-// Database timeouts (in milliseconds)
-export const DB_TIMEOUTS = {
-	SHORT: 5000, // 5 seconds
-	MEDIUM: 10000, // 10 seconds
-	LONG: 30000, // 30 seconds
-} as const;
-
 // Database client configuration
 const globalForPrisma = global as unknown as {
 	prisma: PrismaClient | undefined;

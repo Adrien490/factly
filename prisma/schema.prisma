@@ -7,23 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String         @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  organizations Organization[]
-  members       Member[]
-  Client        Client[]
-
-  @@unique([email])
-  @@map("user")
-}
+// Nouvelle table pour l'année fiscale
 
 model Session {
   id        String   @id
@@ -70,98 +54,258 @@ model Verification {
   @@map("verification")
 }
 
+model User {
+  id            String   @id
+  name          String
+  email         String   @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  organizations Organization[] @relation("UserOrganizations")
+  members       Member[]
+  clients       Client[]
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
 model Organization {
-  id              String       @id @default(cuid())
-  name            String
-  logo            String?
-  siren           String?
-  siret           String?
-  vatNumber       String?
-  vatOptionDebits Boolean?     @default(false)
-  legalForm       LegalForm?
-  rcsNumber       String?
-  capital         Float?
-  address         String?
-  city            String?
-  zipCode         String?
-  country         Country?
-  phone           String?
-  email           String?
-  website         String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now())
-  clients         Client[]
-  members         Member[]
-  invitations     Invitation[]
-  User            User?        @relation(fields: [userId], references: [id])
-  userId          String?
+  id        String  @id @default(cuid())
+  name      String
+  legalName String?
+  logoUrl   String?
+  email     String?
+  phone     String?
+  website   String?
+  siren     String? @unique
+  siret     String? @unique
+  vatNumber String? @unique
+
+  // Adresse intégrée
+  addressLine1 String? // Ligne principale de l'adresse
+  addressLine2 String? // Informations complémentaires
+  city         String? // Ville
+  postalCode   String? // Code postal
+  region       String? // Région, département
+  country      String? @default("France") // Pays
+
+  // Informations légales françaises
+  legalForm         LegalForm? // Forme juridique (SARL, SAS, etc.)
+  nafCode           String? // Code NAF/APE
+  rcsNumber         String? // Numéro RCS
+  rcsCity           String? // Ville du greffe d'immatriculation
+  capitalAmount     Float? // Capital social
+  intracomVatNumber String? // Numéro de TVA intracommunautaire
+
+  // Paramètres de facturation française
+  invoicePrefix     String? // Préfixe pour les numéros de factures
+  quotePrefix       String? // Préfixe pour les numéros de devis
+  nextInvoiceNumber Int     @default(1) // Prochain numéro de facture
+  nextQuoteNumber   Int     @default(1) // Prochain numéro de devis
+
+  // Informations bancaires (nécessaires pour les virements SEPA et les prélèvements)
+  bankName        String? // Nom de la banque
+  bankAccountIBAN String? // IBAN
+  bankAccountBIC  String? // BIC/SWIFT
+
+  // Informations de facturation
+  defaultPaymentDeadlineDays Int?   @default(30) // Délai de paiement par défaut (loi LME)
+  defaultLatePaymentFee      Float? @default(40) // Indemnité forfaitaire (loi LME)
+  defaultLatePaymentRate     Float? @default(10.15) // Taux d'intérêt BCE + 10 points
+
+  // Mentions légales obligatoires pour factures
+  invoiceFooter String? // Texte en pied de page des factures
+
+  // Paramètres TVA spécifiques
+  vatMethod               String? @default("DEBIT") // DEBIT ou ENCAISSEMENT
+  vatDeclarationType      String? @default("CA3") // CA3, CA12, etc.
+  vatDeclarationFrequency String? @default("MONTHLY") // MONTHLY, QUARTERLY, ANNUAL
+
+  // Paramètres d'intégration comptable
+  accountingSystemType   String? // SAGE, EBP, CEGID, etc.
+  accountingExportFormat String? // Format d'export comptable préféré
+  defaultJournalCode     String? // Code journal ventes (ex: VE)
+
+  // Paramètres de facturation électronique (obligatoire d'ici 2026)
+  eInvoicingEnabled         Boolean   @default(false)
+  eInvoicingProvider        String? // Chorus Pro, portail PDP, etc.
+  eInvoicingIdentifier      String? // Identifiant sur plateforme de dématérialisation
+  eInvoicingCertificate     String? // Certificat de signature électronique
+  eInvoicingSealingMethod   String? // Méthode de scellement des factures
+  eInvoiceFormat            String?   @default("FACTUR-X") // FACTUR-X, UBL, CII
+  eInvoiceProfileVersion    String?   @default("BASIC") // MINIMUM, BASIC, EN16931, EXTENDED
+  eInvoiceReceiptMode       String?   @default("PORTAL") // PORTAL, API, EDI
+  eInvoiceTransmissionMode  String?   @default("PORTAL") // PORTAL, API, EDI
+  eInvoiceRecipientRegistry Boolean   @default(false) // Annuaire des destinataires
+  eReportingEnabled         Boolean   @default(false)
+  eReportingFrequency       String?   @default("MONTHLY") // MONTHLY, REAL-TIME
+  eReportingLastSubmission  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  members     Member[]
+  clients     Client[]
+  tags        Tag[]
+  invitations Invitation[]
+  fiscalYears FiscalYear[] // Relation avec les années fiscales
+
+  // Relations pour la gestion commerciale
+  products   Product[]
+  categories ProductCategory[]
+  invoices   Invoice[]
+  quotes     Quote[]
+  taxRates   TaxRate[]
+
+  // Relation avec User (créateur)
+  creator   User?   @relation("UserOrganizations", fields: [creatorId], references: [id])
+  creatorId String?
+}
+
+model FiscalYear {
+  id          String           @id @default(cuid())
+  name        String // Ex: "Année fiscale 2023-2024"
+  description String? // Description optionnelle
+  startDate   DateTime // Date de début
+  endDate     DateTime // Date de fin
+  status      FiscalYearStatus @default(ACTIVE)
+  isCurrent   Boolean          @default(false) // Indique l'année fiscale courante
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  @@index([organizationId])
+  @@index([startDate, endDate])
+  @@index([status])
+}
+
+// Enum pour le statut de l'année fiscale
+
+enum FiscalYearStatus {
+  ACTIVE // Année fiscale en cours ou future
+  CLOSED // Année fiscale clôturée, mais pas encore archivée
+  ARCHIVED // Année fiscale archivée, consultable mais non modifiable
 }
 
 model Member {
-  id             String       @id @default(cuid())
-  userId         String
-  organizationId String
-  role           Role         @default(MEMBER)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @default(now())
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
 
   @@unique([userId, organizationId])
 }
 
 model Invitation {
-  id             String           @id @default(cuid())
-  email          String
-  role           Role             @default(MEMBER)
+  id        String           @id @default(cuid())
+  email     String
+  status    InvitationStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
-  status         InvitationStatus @default(PENDING)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @default(now())
-  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 }
 
-model Client {
-  id             String          @id @default(cuid())
-  reference      String          @unique
-  name           String
-  email          String?
-  phone          String?
-  vatNumber      String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  userId         String
-  clientType     ClientType      @default(COMPANY)
+enum ClientPriority {
+  LOW
+  MEDIUM
+  HIGH
+  STRATEGIC
+}
+
+// Modèle ClientTag pour un système de tags personnalisables
+
+enum TagType {
+  CLIENT
+  PRODUCT
+  SUPPLIER
+}
+
+model Tag {
+  id          String   @id @default(cuid())
+  type        TagType
+  name        String
+  color       String? // Code couleur pour l'affichage (ex: #FF5733)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  clients        Client[] // Relation many-to-many avec Client
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
-  siren          String?
-  civility       Civility?
-  legalForm      LegalForm?
-  siret          String?
-  status         ClientStatus    @default(LEAD)
-  website        String?
+
+  @@unique([name, organizationId]) // Un tag doit être unique par organisation
+}
+
+// Modifications du modèle Client existant
+model Client {
+  id         String         @id @default(cuid())
+  reference  String         @unique
+  name       String
+  email      String?
+  phone      String?
+  website    String?
+  clientType ClientType     @default(INDIVIDUAL)
+  status     ClientStatus   @default(LEAD)
+  priority   ClientPriority @default(LOW)
+  // Informations fiscales essentielles (existantes)
+  siren      String?
+  siret      String?
+  vatNumber  String?
+
+  // Champs existants
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations existantes
   addresses      Address[]
-  organization   Organization    @relation(fields: [organizationId], references: [id])
-  user           User            @relation(fields: [userId], references: [id])
-  contacts       ClientContact[]
+  contacts       Contact[]
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  quotes         Quote[]
+  invoices       Invoice[]
+
+  // Nouvelle relation avec les tags
+  tags Tag[] // Relation many-to-many avec Tag
 
   @@index([name])
   @@index([status])
-  @@index([siren])
-  @@index([siret])
 }
 
-model ClientContact {
-  id        String   @id @default(cuid())
+model Contact {
+  id        String    @id @default(cuid())
+  civility  Civility?
   firstName String
   lastName  String
   email     String?
   phone     String?
-  isDefault Boolean? @default(false)
   title     String?
-  clientId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  isDefault Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String
 
   @@index([clientId])
 }
@@ -169,42 +313,213 @@ model ClientContact {
 model Address {
   id          String      @id @default(cuid())
   addressType AddressType
-  line1       String
-  line2       String?
-  zipCode     String
-  city        String
-  country     String
-  isDefault   Boolean     @default(false)
-  clientId    String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @default(now())
-  client      Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
-  @@unique([clientId, addressType, isDefault])
+  // Simplified address format
+  line1      String // Main address line (street number + name)
+  line2      String? // Additional address information
+  postalCode String // Postal/ZIP code
+  city       String // City name
+  region     String? // Region, state, department, etc.
+  country    String  @default("France")
+
+  // Coordonnées géographiques (optionnelles)
+  latitude  Float?
+  longitude Float?
+
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations - only client now
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String?
+
   @@index([clientId])
-  @@index([addressType])
+  @@index([postalCode])
 }
 
-enum ClientType {
-  INDIVIDUAL
-  COMPANY
+// Modèles pour la gestion commerciale
+
+model Product {
+  id          String           @id @default(cuid())
+  name        String
+  description String?
+  categoryId  String?
+  category    ProductCategory? @relation(fields: [categoryId], references: [id])
+  reference   String?
+  imageUrl    String?
+  price       Float
+  tax         Float            @default(20) // Taux de TVA en pourcentage
+  isActive    Boolean          @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  taxRate        TaxRate?     @relation(fields: [taxRateId], references: [id])
+  taxRateId      String?
+
+  // Relations avec les lignes de devis et factures
+  quoteItems   QuoteItem[]
+  invoiceItems InvoiceItem[]
 }
 
-enum Role {
-  OWNER
-  ADMIN
-  MEMBER
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  products    Product[]
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
+model Quote {
+  id                 String     @id @default(cuid())
+  number             String // Numéro de devis
+  title              String?
+  clientId           String
+  client             Client     @relation(fields: [clientId], references: [id])
+  status             SaleStatus @default(DRAFT)
+  date               DateTime   @default(now())
+  expiryDate         DateTime?
+  currency           Currency   @default(EUR)
+  subtotal           Float
+  taxAmount          Float
+  totalAmount        Float
+  notes              String?
+  termsAndConditions String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  items          QuoteItem[]
+  invoices       Invoice[]
+}
+
+model QuoteItem {
+  id            String        @id @default(cuid())
+  quoteId       String
+  quote         Quote         @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId     String?
+  product       Product?      @relation(fields: [productId], references: [id])
+  description   String
+  quantity      Float
+  unitPrice     Float
+  tax           Float
+  discountType  DiscountType?
+  discountValue Float? // Valeur de la remise (pourcentage ou montant fixe)
+  total         Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id                 String        @id @default(cuid())
+  number             String // Numéro de facture
+  clientId           String
+  client             Client        @relation(fields: [clientId], references: [id])
+  quoteId            String?
+  quote              Quote?        @relation(fields: [quoteId], references: [id])
+  status             InvoiceStatus @default(DRAFT)
+  date               DateTime      @default(now())
+  dueDate            DateTime
+  currency           Currency      @default(EUR)
+  subtotal           Float
+  taxAmount          Float
+  totalAmount        Float
+  paidAmount         Float         @default(0)
+  notes              String?
+  termsAndConditions String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  items          InvoiceItem[]
+  payments       Payment[]
+}
+
+model InvoiceItem {
+  id            String        @id @default(cuid())
+  invoiceId     String
+  invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  productId     String?
+  product       Product?      @relation(fields: [productId], references: [id])
+  description   String
+  quantity      Float
+  unitPrice     Float
+  tax           Float
+  discountType  DiscountType?
+  discountValue Float? // Valeur de la remise (pourcentage ou montant fixe)
+  total         Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  invoiceId     String
+  invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  amount        Float
+  paymentDate   DateTime      @default(now())
+  paymentMethod PaymentMethod @default(BANK_TRANSFER)
+  reference     String? // Référence du paiement (numéro de chèque, etc.)
+  notes         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Nouveau modèle pour les taux de TVA
+model TaxRate {
+  id          String  @id @default(cuid())
+  name        String // Ex: "TVA standard", "TVA réduite" 
+  rate        Float // Ex: 20.0, 10.0, 5.5
+  description String?
+  isDefault   Boolean @default(false)
+
+  // Spécificités françaises
+  accountCode String? // Code comptable (ex: 445711 pour TVA collectée à 20%)
+  euVatType   String? // Type pour déclarations EU: "GOODS", "SERVICES", "NOT_APPLICABLE"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  products       Product[]
+}
+
+enum Civility {
+  MR // Monsieur
+  MRS // Madame
+  MS // Mademoiselle
+  DR // Docteur
+  PROF // Professeur
+  MASTER // Maître (pour avocats, notaires)
+}
+
+// Enums
 enum InvitationStatus {
   PENDING
   ACCEPTED
   REJECTED
 }
 
-enum AddressType {
-  BILLING
-  DELIVERY
+enum ClientType {
+  INDIVIDUAL
+  COMPANY
 }
 
 enum ClientStatus {
@@ -215,32 +530,64 @@ enum ClientStatus {
   ARCHIVED
 }
 
+enum AddressType {
+  BILLING // Billing address
+  SHIPPING // Shipping address
+}
+
+enum SaleStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum Currency {
+  EUR
+  USD
+  GBP
+  CHF
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  CREDIT_CARD
+  CHECK
+  CASH
+  DIRECT_DEBIT
+  PAYPAL
+  OTHER
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
 enum LegalForm {
-  AUTO_ENTREPRENEUR
-  EI
-  EIRL
-  EURL
-  SARL
-  SAS
-  SASU
-  SA
-  SCI
-  SCM
-  SNC
-  ASSOCIATION
-  AUTRE
-}
-
-enum Civility {
-  M
-  Mme
-  Mlle
-}
-
-enum Country {
-  FR
-  BE
-  DE
-  ES
-  IT
+  EI // Entreprise Individuelle
+  EIRL // Entreprise Individuelle à Responsabilité Limitée
+  EURL // Entreprise Unipersonnelle à Responsabilité Limitée
+  SARL // Société à Responsabilité Limitée
+  SAS // Société par Actions Simplifiée
+  SASU // Société par Actions Simplifiée Unipersonnelle
+  SA // Société Anonyme
+  SNC // Société en Nom Collectif
+  SCI // Société Civile Immobilière
+  SCOP // Société Coopérative et Participative
+  ASSO // Association loi 1901
+  AE // Auto-Entrepreneur
+  ME // Micro-Entreprise
+  OTHER // Autre forme juridique
 }
