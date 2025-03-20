@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { Loader2, Search, X } from "lucide-react";
-import Form from "next/form";
+import { useForm } from "@tanstack/react-form";
+import { Search, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { useDebouncedCallback } from "use-debounce";
+import { Loader } from "./loader";
 
 type SearchFormProps = {
 	paramName: string; // Le nom du paramètre de recherche à gérer
@@ -22,64 +21,78 @@ const SearchForm = ({ paramName, className, placeholder }: SearchFormProps) => {
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 
-	const { watch, setValue, handleSubmit } = useForm({
+	// Récupérer la valeur initiale du paramètre de recherche
+	const initialSearchValue = searchParams.get(paramName) || "";
+
+	// Configuration du formulaire avec TanStack Form
+	const form = useForm({
 		defaultValues: {
-			[paramName]: searchParams.get(paramName) || "",
+			searchTerm: initialSearchValue,
 		},
 	});
 
-	const debouncedSearch = useDebouncedCallback((searchTerm: string) => {
+	// Mettre à jour les paramètres d'URL lorsque la recherche change
+	const updateSearchParams = (searchTerm: string) => {
 		const newSearchParams = new URLSearchParams(searchParams.toString());
 		if (searchTerm) {
 			newSearchParams.set(paramName, searchTerm);
 		} else {
 			newSearchParams.delete(paramName);
 		}
-		startTransition(() => {
-			router.replace(`?${newSearchParams.toString()}`, { scroll: false });
-		});
-	}, 300);
 
-	const clearSearch = () => {
-		const newSearchParams = new URLSearchParams(searchParams.toString());
-		newSearchParams.delete(paramName);
 		startTransition(() => {
 			router.replace(`?${newSearchParams.toString()}`, { scroll: false });
 		});
-		setValue(paramName, ""); // Reset form value
 	};
 
-	const searchTerm = watch(paramName); // Watch real-time changes
+	// Effacer la recherche
+	const clearSearch = () => {
+		form.setFieldValue("searchTerm", "");
+		updateSearchParams("");
+	};
 
 	return (
-		<Form
-			onSubmit={handleSubmit((data) => {
-				debouncedSearch(data[paramName]);
-			})}
-			data-pending={isPending ? "" : undefined}
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				form.handleSubmit();
+			}}
 			className={cn("relative flex w-full items-center gap-2", className)}
-			action=""
+			data-pending={isPending ? "" : undefined}
 		>
 			<div className="absolute left-5 flex items-center">
 				{isPending ? (
-					<Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+					<Loader size="sm" />
 				) : (
 					<Search className="text-muted-foreground h-4 w-4" />
 				)}
 			</div>
-			<Input
-				autoComplete="off"
-				type="text"
-				value={searchTerm}
-				onChange={(e) => {
-					setValue(paramName, e.target.value);
-					debouncedSearch(e.target.value);
+
+			<form.Field
+				name="searchTerm"
+				validators={{
+					onChangeAsyncDebounceMs: 300, // Debounce de 300ms
+					onChangeAsync: async ({ value }) => {
+						updateSearchParams(value);
+						return undefined;
+					},
 				}}
-				className="pl-12 truncate h-9"
-				placeholder={placeholder || "Rechercher..."}
-				aria-label="Champ de recherche"
-			/>
+			>
+				{(field) => (
+					<Input
+						autoComplete="off"
+						type="text"
+						value={field.state.value}
+						onChange={(e) => field.handleChange(e.target.value)}
+						className="pl-12 truncate h-9"
+						placeholder={placeholder || "Rechercher..."}
+						aria-label="Champ de recherche"
+					/>
+				)}
+			</form.Field>
+
 			<Button
+				type="button"
 				className="absolute right-0 hover:bg-transparent"
 				variant="ghost"
 				onClick={clearSearch}
@@ -87,7 +100,7 @@ const SearchForm = ({ paramName, className, placeholder }: SearchFormProps) => {
 			>
 				<X className="h-4 w-4 text-muted-foreground" />
 			</Button>
-		</Form>
+		</form>
 	);
 };
 

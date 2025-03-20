@@ -11,7 +11,6 @@ export enum ServerActionStatus {
 	FORBIDDEN = "forbidden",
 	PENDING = "pending",
 	INITIAL = "initial",
-	IDLE = "idle",
 }
 
 export type ValidationErrors<T> = {
@@ -69,35 +68,4 @@ export function createValidationErrorResponse<TData, TSchema extends z.ZodType>(
 		validationErrors,
 		formData,
 	};
-}
-
-export function isPending<TData, TSchema extends z.ZodType>(
-	state: ServerActionState<TData, TSchema> | undefined
-): boolean {
-	return state?.status === ServerActionStatus.PENDING;
-}
-
-export function isSuccess<TData, TSchema extends z.ZodType>(
-	state: ServerActionState<TData, TSchema> | undefined
-): boolean {
-	return state?.status === ServerActionStatus.SUCCESS;
-}
-
-export function isError<TData, TSchema extends z.ZodType>(
-	state: ServerActionState<TData, TSchema> | undefined
-): boolean {
-	return (
-		state?.status === ServerActionStatus.ERROR ||
-		state?.status === ServerActionStatus.VALIDATION_ERROR ||
-		state?.status === ServerActionStatus.UNAUTHORIZED ||
-		state?.status === ServerActionStatus.FORBIDDEN ||
-		state?.status === ServerActionStatus.NOT_FOUND ||
-		state?.status === ServerActionStatus.CONFLICT
-	);
-}
-
-export function hasValidationErrors<TData, TSchema extends z.ZodType>(
-	state: ServerActionState<TData, TSchema> | undefined
-): boolean {
-	return state?.status === ServerActionStatus.VALIDATION_ERROR;
 }

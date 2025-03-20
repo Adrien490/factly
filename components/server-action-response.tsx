@@ -32,7 +32,6 @@ export default function ServerActionResponse<TData, TSchema extends z.ZodType>({
 				toast({
 					title: "Erreur",
 					description: state.message,
-					variant: "destructive",
 				});
 				break;
 			case ServerActionStatus.VALIDATION_ERROR:
@@ -43,7 +42,6 @@ export default function ServerActionResponse<TData, TSchema extends z.ZodType>({
 								.map(([, errors]) => `${errors?.join(", ")}`)
 								.join("\n")
 						: "",
-					variant: "destructive",
 				});
 				break;
 		}

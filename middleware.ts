@@ -1,4 +1,4 @@
-import type { auth } from "@/lib/auth";
+import type { auth } from "@/features/auth/lib/auth";
 import { betterFetch } from "@better-fetch/fetch";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -34,9 +34,7 @@ export default async function middleware(request: NextRequest) {
 			isLoggedIn &&
 			publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route))
 		) {
-			return Response.redirect(
-				new URL("/dashboard/organizations", nextUrl.origin)
-			);
+			return Response.redirect(new URL("/dashboard", nextUrl.origin));
 		}
 
 		if (

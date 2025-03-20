@@ -12,16 +12,16 @@ interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 	maxWidth?: "5xl" | "6xl" | "7xl" | "full";
 }
 
-export function PageContainer({
+export default function PageContainer({
 	children,
-	maxWidth = "7xl",
+	maxWidth = "full",
 	className,
 	...props
 }: PageContainerProps) {
 	return (
 		<div
 			className={cn(
-				"mx-auto w-full px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8",
+				"mx-auto w-full px-4 sm:px-6 lg:px-8",
 				{
 					"max-w-5xl": maxWidth === "5xl",
 					"max-w-6xl": maxWidth === "6xl",
