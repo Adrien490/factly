@@ -18,18 +18,17 @@ import FormErrors from "@/features/forms/components/form-errors";
 import { FormFooter } from "@/features/forms/components/form-footer";
 import { FormLayout } from "@/features/forms/components/form-layout";
 import { FormSection } from "@/features/forms/components/form-section";
-import { useToast } from "@/hooks/use-toast";
 
 import formOpts from "@/app/dashboard/[organizationId]/clients/new/lib/form-options";
-import Autocomplete from "@/features/autocomplete/components/autocomplete";
 import { Loader } from "@/components/loader";
+import Autocomplete from "@/features/autocomplete/components/autocomplete";
 import useCheckClientReference from "@/features/clients/hooks/use-check-client-reference";
 import useCreateClient from "@/features/clients/hooks/use-create-client";
 import clientPriorityOptions from "@/features/clients/lib/client-priority-options";
 import clientStatusOptions from "@/features/clients/lib/client-status-options";
 import clientTypeOptions from "@/features/clients/lib/client-type-options";
 import { generateReference } from "@/features/clients/lib/generate-reference";
-import { ServerActionStatus } from "@/types/server-action";
+import FieldInfo from "@/features/forms/components/field-info";
 import { ClientStatus, ClientType } from "@prisma/client";
 import {
 	mergeForm,
@@ -48,7 +47,7 @@ import {
 	X,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
+import { use, useTransition } from "react";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -61,7 +60,6 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { state, dispatch, isPending } = useCreateClient();
-	const { toast } = useToast();
 	const router = useRouter();
 	const { state: checkReferenceState, dispatch: checkReferenceDispatch } =
 		useCheckClientReference();
@@ -110,60 +108,6 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 			});
 		}
 	};
-
-	// Effet séparé pour gérer les résultats (succès, erreur, validation)
-	useEffect(() => {
-		// Ne rien faire si nous sommes en chargement ou si nous n'avons pas d'état
-		if (isPending || !state?.status) {
-			return;
-		}
-
-		// Traiter uniquement quand nous avons un résultat et ne sommes plus en chargement
-		if (state?.status === ServerActionStatus.SUCCESS) {
-			// Réinitialiser d'abord le formulaire
-			form.reset();
-
-			// Puis afficher le toast de succès
-			toast({
-				title: "Client créé avec succès",
-				description: (
-					<div className="flex flex-col gap-1">
-						<p className="font-medium">{state.message}</p>
-						<p className="text-xs text-emerald-600 dark:text-emerald-400">
-							Référence client: {state.data?.reference}
-						</p>
-					</div>
-				),
-				duration: 5000,
-				action: (
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => router.push(`/dashboard/${organizationId}/clients`)}
-					>
-						Voir la liste
-					</Button>
-				),
-			});
-		} else if (
-			state?.status === ServerActionStatus.ERROR ||
-			state?.status === ServerActionStatus.CONFLICT ||
-			state?.status === ServerActionStatus.VALIDATION_ERROR
-		) {
-			toast({
-				title: "Erreur lors de la création du client",
-				description: (
-					<div className="flex flex-col gap-1">
-						<p className="font-medium">{state.message}</p>
-						<p className="text-xs">
-							Veuillez vérifier les informations saisies et réessayer.
-						</p>
-					</div>
-				),
-				duration: 7000,
-			});
-		}
-	}, [state, form, toast, organizationId, isPending, router]);
 
 	// Fonction pour sélectionner une adresse dans l'autocomplétion
 	const handleAddressSelect = (address: FormattedAddressResult) => {
@@ -305,11 +249,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 
 									{/* Message de statut et d'aide */}
 									<div className="min-h-5">
-										{field.state.meta.errors.length > 0 && (
-											<p className="text-xs text-destructive">
-												{String(field.state.meta.errors[0])}
-											</p>
-										)}
+										<FieldInfo field={field} />
 
 										{field.state.value &&
 											field.state.value.length >= 3 &&
@@ -371,11 +311,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 										onChange={(e) => field.handleChange(e.target.value)}
 										className="border-input focus:ring-1 focus:ring-primary"
 									/>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -405,11 +341,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 											))}
 										</SelectContent>
 									</Select>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -520,15 +452,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 												La recherche doit commencer par une lettre ou un chiffre
 											</p>
 										)}
-									{field.state.meta.errors.length > 0 && (
-										<p
-											className="text-xs text-destructive"
-											id="addressLine1-error"
-											role="alert"
-										>
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -546,11 +470,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 										value={field.state.value || ""}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -587,11 +507,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
 										/>
-										{field.state.meta.errors.length > 0 && (
-											<p className="text-xs text-destructive">
-												{String(field.state.meta.errors[0])}
-											</p>
-										)}
+										<FieldInfo field={field} />
 									</div>
 								)}
 							</form.Field>
@@ -632,11 +548,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 														<p className="text-xs text-muted-foreground">
 															Identifiant d&apos;entreprise à 9 chiffres
 														</p>
-														{sirenField.state.meta.errors.length > 0 && (
-															<p className="text-xs text-destructive">
-																{String(sirenField.state.meta.errors[0])}
-															</p>
-														)}
+														<FieldInfo field={sirenField} />
 													</div>
 												)}
 											</form.Field>
@@ -662,11 +574,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 														<p className="text-xs text-muted-foreground">
 															Identifiant d&apos;établissement à 14 chiffres
 														</p>
-														{siretField.state.meta.errors.length > 0 && (
-															<p className="text-xs text-destructive">
-																{String(siretField.state.meta.errors[0])}
-															</p>
-														)}
+														<FieldInfo field={siretField} />
 													</div>
 												)}
 											</form.Field>
@@ -692,11 +600,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 									<p className="text-xs text-muted-foreground">
 										Numéro de TVA intracommunautaire
 									</p>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -746,11 +650,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 											))}
 										</SelectContent>
 									</Select>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -813,11 +713,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 										value={field.state.value}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -835,11 +731,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 										value={field.state.value}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -870,11 +762,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 										value={field.state.value}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -899,11 +787,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 										value={field.state.value}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
-									{field.state.meta.errors.length > 0 && (
-										<p className="text-xs text-destructive">
-											{String(field.state.meta.errors[0])}
-										</p>
-									)}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>

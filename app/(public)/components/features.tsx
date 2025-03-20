@@ -67,7 +67,7 @@ export default function Features() {
 			</div>
 
 			{/* Masque supérieur pour transition avec la section précédente - harmonisé */}
-			<div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
+			<div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-background to-transparent z-10 pointer-events-none" />
 
 			<PageContainer className="relative z-10">
 				{/* Badge supérieur - style neomorphique 2025 */}
@@ -79,7 +79,7 @@ export default function Features() {
 					viewport={{ once: true, amount: 0.8 }}
 					transition={{ duration: 0.6 }}
 				>
-					<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg">
+					<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg">
 						<Sparkles className="h-4 w-4" />
 						<span className="text-sm font-medium">Fonctionnalités clés</span>
 					</div>
@@ -131,7 +131,7 @@ export default function Features() {
 			</PageContainer>
 
 			{/* Masque inférieur pour transition avec la section suivante - optimisé */}
-			<div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
+			<div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-background to-transparent z-10 pointer-events-none" />
 		</section>
 	);
 }

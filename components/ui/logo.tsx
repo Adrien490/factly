@@ -15,7 +15,7 @@ const logoVariants = cva(
 				dark: "text-foreground",
 				light: "text-background",
 				gradient:
-					"text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-500",
+					"text-transparent bg-clip-text bg-linear-to-r from-primary to-indigo-500",
 				modern: "text-primary hover:text-primary/90",
 				minimal: "text-foreground hover:text-primary",
 			},
@@ -39,7 +39,7 @@ const logoVariants = cva(
 			},
 			elevation: {
 				flat: "",
-				raised: "shadow-sm",
+				raised: "shadow-2xs",
 				elevated: "shadow-md",
 				floating: "shadow-lg",
 			},
@@ -61,15 +61,15 @@ const logoBackgroundVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"bg-gradient-to-br from-primary via-primary/80 to-primary-foreground/70",
+					"bg-linear-to-br from-primary via-primary/80 to-primary-foreground/70",
 				accent:
-					"bg-gradient-to-br from-accent via-accent/80 to-accent-foreground/70",
-				dark: "bg-gradient-to-br from-foreground via-foreground/80 to-muted/70",
+					"bg-linear-to-br from-accent via-accent/80 to-accent-foreground/70",
+				dark: "bg-linear-to-br from-foreground via-foreground/80 to-muted/70",
 				light:
-					"bg-gradient-to-br from-background via-background/80 to-muted/70",
-				gradient: "bg-gradient-to-br from-primary via-indigo-500 to-violet-500",
-				modern: "bg-gradient-to-br from-primary/90 to-blue-600/80",
-				minimal: "bg-gradient-to-br from-foreground/10 to-foreground/5",
+					"bg-linear-to-br from-background via-background/80 to-muted/70",
+				gradient: "bg-linear-to-br from-primary via-indigo-500 to-violet-500",
+				modern: "bg-linear-to-br from-primary/90 to-blue-600/80",
+				minimal: "bg-linear-to-br from-foreground/10 to-foreground/5",
 			},
 			glow: {
 				none: "opacity-0",
@@ -201,7 +201,7 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
 					{/* Container du logo avec focus visible amélioré */}
 					<div
 						className={cn(
-							"relative flex items-center justify-center w-full h-full bg-background/80 dark:bg-card/90 shadow-sm z-10 backdrop-blur-sm transition-all duration-300 group-hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+							"relative flex items-center justify-center w-full h-full bg-background/80 dark:bg-card/90 shadow-2xs z-10 backdrop-blur-xs transition-all duration-300 group-hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
 							withBorder &&
 								"border border-border group-hover:border-primary/30",
 							shape === "square" && "rounded-lg",
@@ -236,7 +236,7 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
 								strokeLinecap="round"
 								strokeLinejoin="round"
 								className={cn(
-									"transition-all duration-300 drop-shadow-sm group-hover:drop-shadow-md",
+									"transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-md",
 									animate
 										? "group-hover:animate-pulse-once"
 										: "group-hover:scale-110",
@@ -268,7 +268,7 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
 				{!hideText && (
 					<span
 						className={cn(
-							"transition-all duration-300 drop-shadow-sm group-hover:drop-shadow-md group-hover:translate-y-[-1px] group-focus-within:translate-y-[-1px]",
+							"transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-md group-hover:translate-y-[-1px] group-focus-within:translate-y-[-1px]",
 							textSizes[textSize],
 							variant === "default" &&
 								"text-primary group-hover:text-primary/90",
@@ -283,7 +283,7 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
 							variant === "minimal" &&
 								"text-foreground/80 group-hover:text-primary",
 							variant === "gradient" &&
-								"bg-gradient-to-r from-primary to-indigo-500 text-transparent bg-clip-text font-bold"
+								"bg-linear-to-r from-primary to-indigo-500 text-transparent bg-clip-text font-bold"
 						)}
 					>
 						{text}

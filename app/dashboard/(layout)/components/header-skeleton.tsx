@@ -17,7 +17,7 @@ export default function HeaderSkeleton({
 			className={cn(
 				"sticky top-0 z-50 w-full transition-all border-b",
 				isScrolled
-					? "bg-background/90 backdrop-blur-sm shadow-sm"
+					? "bg-background/90 backdrop-blur-xs shadow-2xs"
 					: "bg-background",
 				className
 			)}

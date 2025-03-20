@@ -69,7 +69,7 @@ export default function AppShowcase() {
 			ref={sectionRef}
 		>
 			{/* Élément décoratif supérieur - plus subtil */}
-			<div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent pointer-events-none z-10"></div>
+			<div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-background to-transparent pointer-events-none z-10"></div>
 
 			{/* Arrière-plan avec étoiles et étoiles filantes - optimisé */}
 			<div className="absolute inset-0 w-full h-full">
@@ -109,7 +109,7 @@ export default function AppShowcase() {
 									{/* Badge amélioré - design 2025 */}
 									<motion.div
 										variants={itemVariants}
-										className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-gradient-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg"
+										className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-linear-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg"
 									>
 										<Sparkles className="w-4 h-4" />
 										<span className="text-sm font-medium">
@@ -186,17 +186,17 @@ export default function AppShowcase() {
 								)}
 							>
 								{/* Effet de lumière dynamique sur l'image */}
-								<div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-tr from-primary/5 via-primary/0 to-primary/5 z-10 pointer-events-none"></div>
+								<div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-tr from-primary/5 via-primary/0 to-primary/5 z-10 pointer-events-none"></div>
 
 								{/* Points lumineux animés */}
-								<div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-primary/40 blur-sm animate-pulse z-20 pointer-events-none"></div>
+								<div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-primary/40 blur-xs animate-pulse z-20 pointer-events-none"></div>
 								<div
-									className="absolute bottom-1/3 right-1/4 w-3 h-3 rounded-full bg-primary/30 blur-sm animate-pulse z-20 pointer-events-none"
+									className="absolute bottom-1/3 right-1/4 w-3 h-3 rounded-full bg-primary/30 blur-xs animate-pulse z-20 pointer-events-none"
 									style={{ animationDuration: "3s" }}
 								></div>
 
 								{/* Image principale avec meilleure optimisation */}
-								<div className="relative aspect-[16/9] w-full">
+								<div className="relative aspect-16/9 w-full">
 									<Image
 										src="/showcase-action.webp"
 										alt="Dashboard Factly"
@@ -210,7 +210,7 @@ export default function AppShowcase() {
 									/>
 
 									{/* Overlay pour améliorer la lisibilité et l'effet visuel */}
-									<div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-70 rounded-lg"></div>
+									<div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent opacity-70 rounded-lg"></div>
 								</div>
 							</div>
 
@@ -233,7 +233,7 @@ export default function AppShowcase() {
 											Essayer gratuitement
 											<ExternalLink className="h-4 w-4 transition-all duration-300 group-hover/btn:translate-x-1 group-hover/btn:scale-110" />
 										</span>
-										<span className="absolute inset-0 bg-gradient-to-r from-primary to-primary/70 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
+										<span className="absolute inset-0 bg-linear-to-r from-primary to-primary/70 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
 									</Link>
 								</Button>
 							</motion.div>
@@ -243,7 +243,7 @@ export default function AppShowcase() {
 			</PageContainer>
 
 			{/* Élément décoratif inférieur - harmonisé avec sections adjacentes */}
-			<div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none z-10"></div>
+			<div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-background to-transparent pointer-events-none z-10"></div>
 		</section>
 	);
 }

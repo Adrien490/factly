@@ -24,7 +24,7 @@ export default function TabsNav({ items, className, ...props }: TabsNavProps) {
 							key={index}
 							href={item.href}
 							className={cn(
-								"inline-flex items-center justify-center whitespace-nowrap px-4 py-2.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative border-b-2",
+								"inline-flex items-center justify-center whitespace-nowrap px-4 py-2.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative border-b-2",
 								item.active
 									? "border-primary text-foreground"
 									: "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30"
@@ -55,7 +55,7 @@ export default function TabsNav({ items, className, ...props }: TabsNavProps) {
 						key={index}
 						href={item.href}
 						className={cn(
-							"inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+							"inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
 							item.active
 								? "bg-primary/10 text-primary"
 								: "text-muted-foreground hover:text-foreground hover:bg-muted/50"

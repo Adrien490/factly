@@ -31,7 +31,7 @@ export default function Header({ userPromise, className }: Props) {
 			className={cn(
 				"sticky top-0 z-50 w-full transition-all border-b",
 				isScrolled
-					? "bg-background/90 backdrop-blur-sm shadow-sm"
+					? "bg-background/90 backdrop-blur-xs shadow-2xs"
 					: "bg-background",
 				className
 			)}
@@ -47,7 +47,7 @@ export default function Header({ userPromise, className }: Props) {
 					{/* Logo */}
 					<Link
 						href="/dashboard/organizations"
-						className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+						className="focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
 						aria-label="Tableau de bord Factly"
 					>
 						<Logo

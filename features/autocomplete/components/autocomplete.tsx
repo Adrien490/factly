@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useAutocomplete } from "../hooks/use-autocomplete";
 
 interface AutocompleteProps<T> {
 	name: string;
@@ -22,6 +22,7 @@ interface AutocompleteProps<T> {
 	className?: string;
 	inputClassName?: string;
 	noResultsMessage?: string;
+	minQueryLength?: number;
 }
 
 export default function Autocomplete<T>({
@@ -39,50 +40,20 @@ export default function Autocomplete<T>({
 	className,
 	inputClassName,
 	noResultsMessage = "Aucun résultat trouvé",
+	minQueryLength = 3,
 }: AutocompleteProps<T>) {
-	const [isOpen, setIsOpen] = useState(false);
-	const inputRef = useRef<HTMLInputElement>(null);
-	const listRef = useRef<HTMLUListElement>(null);
-
-	// Gérer l'affichage des résultats
-	const hasValidQuery = value.length >= 3;
-	const hasResults = items.length > 0;
-	const showResults = isOpen && hasValidQuery;
-
-	// Gestion des événements
-	function handleFocus() {
-		if (hasValidQuery) setIsOpen(true);
-	}
-
-	function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
-		// Vérifier si le clic est dans la liste pour éviter de la fermer trop tôt
-		if (listRef.current?.contains(e.relatedTarget as Node)) return;
-
-		// Délai court pour permettre aux clics sur les éléments de liste de se déclencher
-		setTimeout(() => {
-			setIsOpen(false);
-		}, 100);
-	}
-
-	function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-		onChange(e.target.value);
-		setIsOpen(e.target.value.length >= 3);
-	}
-
-	function handleItemSelect(item: T) {
-		onSelect(item);
-		setIsOpen(false);
-	}
-
-	function handleKeyDown(e: React.KeyboardEvent) {
-		if (e.key === "Escape" && isOpen) {
-			e.preventDefault();
-			setIsOpen(false);
-		} else if (e.key === "Tab" && isOpen) {
-			// Ferme le menu lors de la navigation par tabulation
-			setIsOpen(false);
-		}
-	}
+	// Utilisation du hook personnalisé
+	const {
+		inputRef,
+		listRef,
+		showResults,
+		hasResults,
+		handleFocus,
+		handleBlur,
+		handleInputChange,
+		handleItemSelect,
+		handleKeyDown,
+	} = useAutocomplete<T>(value, items, { minQueryLength });
 
 	return (
 		<div className={cn("relative w-full", className)}>
@@ -91,7 +62,7 @@ export default function Autocomplete<T>({
 				ref={inputRef}
 				type="text"
 				value={value}
-				onChange={handleInputChange}
+				onChange={(e) => handleInputChange(e, onChange)}
 				onFocus={handleFocus}
 				onBlur={handleBlur}
 				onKeyDown={handleKeyDown}
@@ -131,7 +102,7 @@ export default function Autocomplete<T>({
 									id={`autocomplete-item-${index}`}
 									role="option"
 									className="cursor-pointer select-none py-1.5 px-3 hover:bg-muted"
-									onClick={() => handleItemSelect(item)}
+									onClick={() => handleItemSelect(item, onSelect)}
 									tabIndex={-1}
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}

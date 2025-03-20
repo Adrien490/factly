@@ -79,7 +79,7 @@ export function CTASection({
 						<h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-5 text-white drop-shadow-lg">
 							{title}
 						</h2>
-						<p className="text-white/90 max-w-2xl mx-auto text-base backdrop-blur-sm py-3 px-5 rounded-2xl bg-white/10 shadow-inner border border-white/5">
+						<p className="text-white/90 max-w-2xl mx-auto text-base backdrop-blur-xs py-3 px-5 rounded-2xl bg-white/10 shadow-inner border border-white/5">
 							{subtitle}
 						</p>
 					</motion.div>
@@ -135,7 +135,7 @@ export function CTASection({
 								>
 									<span className="relative z-10">{primaryCTA.label}</span>
 									<ArrowRight className="h-4 w-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
-									<span className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+									<span className="absolute inset-0 bg-linear-to-r from-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
 								</HoverBorderGradient>
 							</Link>
 						</motion.div>
@@ -176,10 +176,10 @@ export function CTASection({
 			</div>
 
 			{/* Masque supérieur pour transition avec la section précédente */}
-			<div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
+			<div className="absolute inset-x-0 top-0 h-24 bg-linear-to-b from-background to-transparent z-10 pointer-events-none" />
 
 			{/* Masque inférieur pour transition avec la section suivante */}
-			<div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
+			<div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-background to-transparent z-10 pointer-events-none" />
 		</section>
 	);
 }

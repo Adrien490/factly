@@ -69,7 +69,7 @@ export default function Footer({ className }: FooterProps) {
 			</div>
 
 			{/* Bordure supérieure améliorée */}
-			<div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/15 to-transparent"></div>
+			<div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/15 to-transparent"></div>
 
 			<PageContainer className="relative z-10">
 				<div className="max-w-7xl mx-auto">
@@ -134,7 +134,7 @@ export default function Footer({ className }: FooterProps) {
 						transition={{ duration: 0.5, delay: 0.7 }}
 						className="border-t border-border/20 pt-8 flex justify-center"
 					>
-						<div className="flex items-center gap-2 text-xs text-muted-foreground/80 bg-background/30 backdrop-blur-sm px-6 py-2 rounded-full border border-white/5 shadow-sm">
+						<div className="flex items-center gap-2 text-xs text-muted-foreground/80 bg-background/30 backdrop-blur-xs px-6 py-2 rounded-full border border-white/5 shadow-2xs">
 							<Copyright className="h-3.5 w-3.5" />
 							<span>
 								{new Date().getFullYear()} Factly. Tous droits réservés

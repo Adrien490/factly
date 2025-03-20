@@ -76,7 +76,7 @@ export function PricingItem({
 					<p className="text-sm text-muted-foreground">{plan.description}</p>
 				</CardHeader>
 
-				<CardContent className="flex-grow">
+				<CardContent className="grow">
 					<ul className="space-y-3">
 						{plan.features.map((feature, idx) => (
 							<li key={idx} className="flex items-start gap-2">

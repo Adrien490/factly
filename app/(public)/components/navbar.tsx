@@ -34,14 +34,14 @@ export default function Navbar({ userPromise }: Props) {
 			className={cn(
 				"fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300",
 				scrolled
-					? "backdrop-blur-lg bg-background/80 shadow-sm"
+					? "backdrop-blur-lg bg-background/80 shadow-2xs"
 					: "bg-transparent"
 			)}
 			role="banner"
 		>
 			{/* Élément décoratif supérieur - visible uniquement quand scrolled */}
 			{scrolled && (
-				<div className="absolute -bottom-px left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+				<div className="absolute -bottom-px left-0 right-0 h-[1px] bg-linear-to-r from-transparent via-primary/40 to-transparent" />
 			)}
 
 			<nav
@@ -58,7 +58,7 @@ export default function Navbar({ userPromise }: Props) {
 					<div className="flex items-center">
 						<Link
 							href="/"
-							className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+							className="focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
 							aria-label="Accueil Factly"
 							scroll={true}
 						>
@@ -81,7 +81,7 @@ export default function Navbar({ userPromise }: Props) {
 					<div className="hidden md:flex items-center justify-center flex-1">
 						<nav
 							className={cn(
-								"flex items-center space-x-1 lg:space-x-2 px-3 py-1.5 rounded-full border shadow-sm",
+								"flex items-center space-x-1 lg:space-x-2 px-3 py-1.5 rounded-full border shadow-2xs",
 								scrolled
 									? "bg-background/50 backdrop-blur-md border-border/40"
 									: "bg-transparent border-transparent"
@@ -102,7 +102,7 @@ export default function Navbar({ userPromise }: Props) {
 													: !scrolled
 													? "text-foreground/80 hover:text-foreground"
 													: "text-foreground/80 hover:text-foreground",
-												"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+												"focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
 											)}
 											aria-current={isActive ? "page" : undefined}
 											scroll={true}

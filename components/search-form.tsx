@@ -51,20 +51,31 @@ const SearchForm = ({ paramName, className, placeholder }: SearchFormProps) => {
 		updateSearchParams("");
 	};
 
+	const hasValue = !!form.getFieldValue("searchTerm");
+
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
 				form.handleSubmit();
 			}}
-			className={cn("relative flex w-full items-center gap-2", className)}
+			className={cn(
+				"relative flex w-full items-center",
+				"group rounded-md overflow-hidden",
+				"bg-background border border-input",
+				"hover:border-muted-foreground/25",
+				"focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20",
+				"transition-all duration-200 ease-in-out",
+				isPending && "opacity-90",
+				className
+			)}
 			data-pending={isPending ? "" : undefined}
 		>
-			<div className="absolute left-5 flex items-center">
+			<div className="absolute left-3 flex items-center text-muted-foreground">
 				{isPending ? (
-					<Loader size="sm" />
+					<Loader size="sm" className="text-primary/70" />
 				) : (
-					<Search className="text-muted-foreground h-4 w-4" />
+					<Search className="h-4 w-4 group-hover:text-foreground/70 group-focus-within:text-primary transition-colors duration-150" />
 				)}
 			</div>
 
@@ -84,28 +95,42 @@ const SearchForm = ({ paramName, className, placeholder }: SearchFormProps) => {
 						type="text"
 						value={field.state.value}
 						onChange={(e) => field.handleChange(e.target.value)}
-						className="pl-12 truncate h-9"
+						className={cn(
+							"pl-10 pr-10 h-9",
+							"border-none shadow-none focus-visible:ring-0",
+							"bg-transparent",
+							"placeholder:text-muted-foreground/50",
+							"transition-all duration-150"
+						)}
 						placeholder={placeholder || "Rechercher..."}
 						aria-label="Champ de recherche"
 					/>
 				)}
 			</form.Field>
 
-			<Button
-				type="button"
-				className="absolute right-0 hover:bg-transparent"
-				variant="ghost"
-				onClick={clearSearch}
-				aria-label="Effacer la recherche"
+			<div
+				className={cn(
+					"absolute right-2 transition-opacity duration-150",
+					hasValue ? "opacity-100" : "opacity-0 pointer-events-none"
+				)}
 			>
-				<X className="h-4 w-4 text-muted-foreground" />
-			</Button>
+				<Button
+					type="button"
+					className="h-7 w-7 p-0 rounded-full hover:bg-muted"
+					variant="ghost"
+					onClick={clearSearch}
+					aria-label="Effacer la recherche"
+					tabIndex={hasValue ? 0 : -1}
+				>
+					<X className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+				</Button>
+			</div>
 		</form>
 	);
 };
 
 export function SearchFormSkeleton() {
-	return <Skeleton className="h-10 w-full" />;
+	return <Skeleton className="h-10 w-full rounded-md" />;
 }
 
 export default SearchForm;
