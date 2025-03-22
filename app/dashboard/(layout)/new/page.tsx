@@ -1,9 +1,9 @@
-import OrganizationForm from "@/app/dashboard/(layout)/new/components/organization-form";
-import PageContainer from "@/components/page-container";
+import { PageContainer } from "@/shared/components/page-container";
+import OrganizationForm from "./components/organization-form";
 
 export default async function NewOrganizationPage() {
 	return (
-		<PageContainer className="pb-12">
+		<PageContainer>
 			<OrganizationForm />
 		</PageContainer>
 	);

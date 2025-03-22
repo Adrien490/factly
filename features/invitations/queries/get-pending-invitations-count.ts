@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/features/auth/lib/auth";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 import { headers } from "next/headers";
 
 export default async function getPendingInvitationsCount(): Promise<number> {

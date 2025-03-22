@@ -4,15 +4,15 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+} from "@/shared/components/ui/card";
+import { cn } from "@/shared/lib/utils";
 import PricingPlan from "../types/pricing-plan";
 
 interface PricingItemProps {

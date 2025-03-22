@@ -1,34 +1,34 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { FormLabel } from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/components/ui/select";
+import { Textarea } from "@/shared/components/ui/textarea";
 
-import { SearchAddressReturn } from "@/features/autocomplete/queries/search-address";
-import { FormattedAddressResult } from "@/features/autocomplete/types";
-import FormErrors from "@/features/forms/components/form-errors";
-import { FormFooter } from "@/features/forms/components/form-footer";
-import { FormLayout } from "@/features/forms/components/form-layout";
-import { FormSection } from "@/features/forms/components/form-section";
+import { SearchAddressReturn } from "@/shared/components/autocomplete/queries/search-address";
+import { FormattedAddressResult } from "@/shared/components/autocomplete/types";
+import { FormErrors } from "@/shared/components/forms/components/form-errors";
+import { FormFooter } from "@/shared/components/forms/components/form-footer";
+import { FormLayout } from "@/shared/components/forms/components/form-layout";
+import { FormSection } from "@/shared/components/forms/components/form-section";
 
 import formOpts from "@/app/dashboard/[organizationId]/clients/new/lib/form-options";
-import { Loader } from "@/components/loader";
-import Autocomplete from "@/features/autocomplete/components/autocomplete";
+import { clientPriorities } from "@/features/clients/constants/client-priorities";
+import { clientStatuses } from "@/features/clients/constants/client-statuses";
+import { clientTypes } from "@/features/clients/constants/client-types";
 import useCheckClientReference from "@/features/clients/hooks/use-check-client-reference";
 import useCreateClient from "@/features/clients/hooks/use-create-client";
-import clientPriorityOptions from "@/features/clients/lib/client-priority-options";
-import clientStatusOptions from "@/features/clients/lib/client-status-options";
-import clientTypeOptions from "@/features/clients/lib/client-type-options";
-import { generateReference } from "@/features/clients/lib/generate-reference";
-import FieldInfo from "@/features/forms/components/field-info";
+import { generateReference } from "@/features/clients/utils/generate-reference";
+import { Autocomplete } from "@/shared/components/autocomplete";
+import { FieldInfo } from "@/shared/components/forms/components/field-info";
+import { Loader } from "@/shared/components/loader";
 import { ClientStatus, ClientType } from "@prisma/client";
 import {
 	mergeForm,
@@ -334,7 +334,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
-											{clientTypeOptions.map((type) => (
+											{clientTypes.map((type) => (
 												<SelectItem key={type.value} value={type.value}>
 													{type.label}
 												</SelectItem>
@@ -643,7 +643,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 											<SelectValue placeholder="Sélectionnez un statut" />
 										</SelectTrigger>
 										<SelectContent>
-											{clientStatusOptions.map((status) => (
+											{clientStatuses.map((status) => (
 												<SelectItem key={status.value} value={status.value}>
 													{status.label}
 												</SelectItem>
@@ -664,7 +664,7 @@ export default function CreateClientForm({ searchAddressPromise }: Props) {
 											<SelectValue placeholder="Sélectionnez une priorité" />
 										</SelectTrigger>
 										<SelectContent>
-											{clientPriorityOptions.map((priority) => (
+											{clientPriorities.map((priority) => (
 												<SelectItem key={priority.value} value={priority.value}>
 													{priority.label}
 												</SelectItem>

@@ -4,7 +4,7 @@ interface Feature {
 	title: string;
 	description: string;
 	icon: ReactNode;
-	benefits?: string[];
+	benefits?: readonly string[];
 	cta?: {
 		label: string;
 		href: string;

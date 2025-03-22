@@ -1,4 +1,7 @@
-import { ServerActionState, ServerActionStatus } from "@/types/server-action";
+import {
+	ServerActionState,
+	ServerActionStatus,
+} from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
 import { useActionState } from "react";
 import createOrganization from "../actions/create-organization";

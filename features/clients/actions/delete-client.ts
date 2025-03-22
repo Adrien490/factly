@@ -2,7 +2,7 @@
 
 import { auth } from "@/features/auth/lib/auth";
 import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 
 import {
 	ServerActionState,
@@ -10,13 +10,13 @@ import {
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
-} from "@/types/server-action";
+} from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import deleteClientSchema from "../schemas/delete-client-schema";
 
 export default async function deleteClient(
-	_: ServerActionState<null, typeof deleteClientSchema> | null,
+	_: unknown,
 	formData: FormData
 ): Promise<ServerActionState<null, typeof deleteClientSchema>> {
 	try {

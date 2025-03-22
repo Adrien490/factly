@@ -1,10 +1,10 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import clientPriorityOptions from "@/features/clients/lib/client-priority-options";
-import clientStatusOptions from "@/features/clients/lib/client-status-options";
-import { GetClientsReturn } from "@/features/clients/queries/get-clients";
-import { ColumnDef } from "@/features/datatable/components/datatable";
+import { clientPriorities } from "@/features/clients/constants/client-priorities";
+import { clientStatuses } from "@/features/clients/constants/client-statuses";
+import { GetClientsReturn } from "@/features/clients/queries/get-clients/types";
+import { ColumnDef } from "@/shared/components/datatable/components/datatable";
+import { Badge } from "@/shared/components/ui/badge";
 import { ClientPriority, ClientStatus, ClientType } from "@prisma/client";
 import {
 	BuildingIcon,
@@ -82,7 +82,7 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 			<div>
 				<Badge variant={STATUS_VARIANTS[client.status] || "outline"}>
 					{
-						clientStatusOptions.find((option) => option.value === client.status)
+						clientStatuses.find((option) => option.value === client.status)
 							?.label
 					}
 				</Badge>
@@ -101,9 +101,8 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 				/>
 				<span>
 					{
-						clientPriorityOptions.find(
-							(option) => option.value === client.priority
-						)?.label
+						clientPriorities.find((option) => option.value === client.priority)
+							?.label
 					}
 				</span>
 			</div>

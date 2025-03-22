@@ -1,7 +1,7 @@
 "use client";
 
-import { EmptyState } from "@/components/ui/empty-state";
 import { type GetOrganizationsReturn } from "@/features/organizations/queries/get-organizations";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Building2, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -26,7 +26,6 @@ export default function OrganizationList({
 	if (organizations.length === 0) {
 		return (
 			<EmptyState
-				variant="ghost"
 				icon={Building2}
 				title="Aucune organisation trouvée"
 				description="Créez une organisation pour commencer"

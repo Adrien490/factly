@@ -1,7 +1,7 @@
 "use client";
 
-import { EmptyState } from "@/components/ui/empty-state";
 import { type GetInvitationsReturn } from "@/features/invitations/queries/get-invitations";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Mail } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { use } from "react";
@@ -25,7 +25,6 @@ export default function InvitationList({
 	if (invitations.length === 0) {
 		return (
 			<EmptyState
-				variant="ghost"
 				icon={Mail}
 				title="Aucune invitation"
 				description="Vous n'avez aucune invitation à rejoindre une organisation"

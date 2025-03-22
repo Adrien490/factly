@@ -1,7 +1,10 @@
 import checkClientReference, {
 	CheckClientReferenceResponse,
 } from "@/features/clients/actions/check-client-reference";
-import { ServerActionState, ServerActionStatus } from "@/types/server-action";
+import {
+	ServerActionState,
+	ServerActionStatus,
+} from "@/shared/types/server-action";
 import { useActionState } from "react";
 import checkClientReferenceSchema from "../schemas/check-client-reference-schema";
 

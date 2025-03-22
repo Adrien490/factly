@@ -1,4 +1,7 @@
-import { ServerActionState, ServerActionStatus } from "@/types/server-action";
+import {
+	ServerActionState,
+	ServerActionStatus,
+} from "@/shared/types/server-action";
 import { Tag } from "@prisma/client";
 import { useActionState } from "react";
 import deleteTag from "../actions/delete-tag";

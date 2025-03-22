@@ -2,7 +2,7 @@
 
 import { auth } from "@/features/auth/lib/auth";
 import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 import { headers } from "next/headers";
 import { z } from "zod";
 import getAddressSchema from "../schemas/get-address-schema";

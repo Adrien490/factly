@@ -1,5 +1,5 @@
-import PageContainer from "@/components/page-container";
-import PageHeader from "@/components/page-header";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
 
 type Props = {
 	params: Promise<{

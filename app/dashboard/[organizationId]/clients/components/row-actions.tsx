@@ -1,7 +1,7 @@
 "use client";
 
-import { MenuActions } from "@/components/menu-actions";
 import { GetClientsReturn } from "@/features/clients/queries/get-clients";
+import { MenuActions } from "@/shared/components/menu-actions";
 import { EyeIcon, MapPinIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { useClients } from "../hooks/use-clients";
 type Props = {

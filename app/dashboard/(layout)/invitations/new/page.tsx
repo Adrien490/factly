@@ -1,7 +1,8 @@
-import PageContainer from "@/components/page-container";
+import { PageContainer } from "@/shared/components/page-container";
+
 export default function NewInvitationPage() {
 	return (
-		<PageContainer className="pb-12">
+		<PageContainer className="">
 			<></>
 		</PageContainer>
 	);

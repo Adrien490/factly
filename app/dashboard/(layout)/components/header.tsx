@@ -1,10 +1,10 @@
 "use client";
 
-import { HorizontalMenu } from "@/components/ui/horizontal-menu";
-import Logo from "@/components/ui/logo";
-import UserAvatar from "@/features/auth/components/user-avatar";
-import { useIsScrolled } from "@/hooks/use-is-scrolled";
-import { cn } from "@/lib/utils";
+import { HorizontalMenu } from "@/shared/components/horizontal-menu/components/horizontal-menu";
+import { Logo } from "@/shared/components/logo";
+import { UserAvatar } from "@/shared/components/user-avatar";
+import { useIsScrolled } from "@/shared/hooks/use-is-scrolled";
+import { cn } from "@/shared/lib/utils";
 import { User } from "better-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function Header({ userPromise, className }: Props) {
 	return (
 		<header
 			className={cn(
-				"sticky top-0 z-50 w-full transition-all border-b",
+				"sticky top-0 z-50 w-full transition-all",
 				isScrolled
 					? "bg-background/90 backdrop-blur-xs shadow-2xs"
 					: "bg-background",
@@ -42,7 +42,7 @@ export default function Header({ userPromise, className }: Props) {
 			role="banner"
 		>
 			{/* En-tête principal avec logo et contrôles utilisateur */}
-			<div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-8">
+			<div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center">
 					{/* Logo */}
 					<Link
@@ -105,7 +105,7 @@ export default function Header({ userPromise, className }: Props) {
 						}}
 						className="overflow-hidden"
 					>
-						<div className="mx-auto w-full max-w-[1440px] px-4 py-2 sm:px-6 lg:px-8">
+						<div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8 border-b border-border/50">
 							<HorizontalMenu
 								items={menuItems}
 								size="default"

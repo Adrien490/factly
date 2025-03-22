@@ -1,30 +1,25 @@
-import PageContainer from "@/components/page-container";
-import PageHeader from "@/components/page-header";
-import SearchForm from "@/components/search-form";
-import { Button } from "@/components/ui/button";
-import clientPriorityOptions from "@/features/clients/lib/client-priority-options";
+import { clientPriorities } from "@/features/clients/constants/client-priorities";
 import clientSortableFields, {
 	ClientSortableField,
-} from "@/features/clients/lib/client-sortable-fields";
-import clientStatusOptions from "@/features/clients/lib/client-status-options";
-import getClients from "@/features/clients/queries/get-clients";
+} from "@/features/clients/constants/client-sortable-fields";
+import { clientStatuses } from "@/features/clients/constants/client-statuses";
+import { clientTypes } from "@/features/clients/constants/client-types";
+import { getClients } from "@/features/clients/queries/get-clients";
 import { GetClientsParams } from "@/features/clients/schemas/get-clients-schema";
-import DataTable from "@/features/datatable/components/datatable";
-import FilterSelect, {
-	FilterOption,
-} from "@/features/filters/components/filter-select";
-import SortOrder from "@/features/sorting/types/sort-order";
-import { ClientType } from "@prisma/client";
+import { DataTable } from "@/shared/components/datatable";
+import { FilterSelect } from "@/shared/components/filter-select";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
+import { SearchForm } from "@/shared/components/search-form";
+import SortOrder from "@/shared/components/sorting/types/sort-order";
+import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
 import Link from "next/link";
 import ClientSelectionActions from "./components/client-selection-actions";
 import { columns } from "./components/columns";
 import { CLIENT_SELECTION_KEY } from "./lib/constants";
 
 // Options pour le type de client
-const clientTypeOptions: FilterOption[] = [
-	{ value: ClientType.INDIVIDUAL, label: "Particulier" },
-	{ value: ClientType.COMPANY, label: "Entreprise" },
-];
 
 type PageProps = {
 	searchParams: Promise<{
@@ -89,13 +84,25 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				title="Clients"
 				description="Gérez votre portefeuille clients"
 				action={newClientButton}
+				navigation={{
+					items: [
+						{
+							label: "Liste des clients",
+							href: `/dashboard/${organizationId}/clients`,
+						},
+						{
+							label: "Nouveau client",
+							href: `/dashboard/${organizationId}/clients/new`,
+						},
+					],
+				}}
 				className="mb-6"
 			/>
 
 			{/* Contenu principal - Liste des clients */}
 
 			{/* Barre de recherche et filtres */}
-			<div className="bg-muted/20 mb-4 p-4 space-y-4">
+			<Card className="mb-4 p-4 space-y-4">
 				{/* Recherche */}
 				<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
 					<SearchForm
@@ -121,23 +128,23 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						<FilterSelect
 							filterKey="status"
 							label="Statut"
-							options={clientStatusOptions}
+							options={clientStatuses}
 							multiple
 						/>
 						<FilterSelect
 							filterKey="clientType"
 							label="Type"
-							options={clientTypeOptions}
+							options={clientTypes}
 						/>
 						<FilterSelect
 							filterKey="priority"
 							label="Priorité"
-							options={clientPriorityOptions}
+							options={clientPriorities}
 							multiple
 						/>
 					</div>
 				</div>
-			</div>
+			</Card>
 
 			{/* Tableau de données */}
 			<DataTable

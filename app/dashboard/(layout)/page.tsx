@@ -1,15 +1,15 @@
-import PageContainer from "@/components/page-container";
-import SearchForm from "@/components/search-form";
-import { Button } from "@/components/ui/button";
 import {
 	ORGANIZATION_SORT_OPTIONS,
 	OrganizationSortableField,
 } from "@/features/organizations/lib/organization-sortable-fields";
 import getOrganizations from "@/features/organizations/queries/get-organizations";
-import ViewSwitcher from "@/features/toggle-view";
+import { PageContainer } from "@/shared/components/page-container";
+import { SearchForm } from "@/shared/components/search-form";
+import { SortSelector } from "@/shared/components/sort-selector";
+import { ToggleView } from "@/shared/components/toggle-view";
+import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
 import { Suspense } from "react";
-import SortSelector from "../../../features/sorting/components/sort-selector";
 import OrganizationList from "./components/organization-list";
 import OrganizationListSkeleton from "./components/organization-list-skeleton";
 
@@ -47,7 +47,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 					/>
 
 					{/* Sélecteur de vue */}
-					<ViewSwitcher />
+					<ToggleView />
 
 					<Link href="/dashboard/new">
 						<Button className="h-9">Nouvelle organisation</Button>

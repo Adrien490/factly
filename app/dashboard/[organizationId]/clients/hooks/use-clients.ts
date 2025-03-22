@@ -1,6 +1,6 @@
 "use client";
 
-import { useSelection } from "@/features/selection/hooks/use-selection";
+import { useSelection } from "@/shared/components/selection/hooks/use-selection";
 import { useParams } from "next/navigation";
 import { useActionState, useTransition } from "react";
 import deleteClient from "../../../../../features/clients/actions/delete-client";

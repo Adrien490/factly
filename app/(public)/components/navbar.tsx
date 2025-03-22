@@ -1,16 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/ui/logo";
-import { ThemeToggleButton } from "@/components/ui/theme-toggle-button";
-import { useIsScrolled } from "@/hooks/use-is-scrolled";
-import { cn } from "@/lib/utils";
+import { Logo } from "@/shared/components/logo";
+import { Button } from "@/shared/components/ui/button";
+import { ThemeToggleButton } from "@/shared/components/ui/theme-toggle-button";
+import { useIsScrolled } from "@/shared/hooks/use-is-scrolled";
+import { cn } from "@/shared/lib/utils";
 import { User } from "better-auth";
 import Link from "next/link";
 import { use } from "react";
 import navigationLinks from "../lib/navigation-links";
-
-// Récupération des ids des sections pour le hook useActiveSection
 
 type Props = {
 	userPromise?: Promise<User | null>;

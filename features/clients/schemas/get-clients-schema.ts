@@ -1,6 +1,6 @@
-import datatableSchema from "@/features/datatable/schemas/datatable-schema";
+import datatableSchema from "@/shared/components/datatable/schemas/datatable-schema";
 import { z } from "zod";
-import clientSortableFields from "../lib/client-sortable-fields";
+import clientSortableFields from "../constants/client-sortable-fields";
 import clientFiltersSchema from "./client-filters-schema";
 
 const getClientsSchema = datatableSchema(clientSortableFields).extend({

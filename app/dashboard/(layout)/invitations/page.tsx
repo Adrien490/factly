@@ -1,15 +1,15 @@
-import DropdownMenuFilter from "@/components/dropdown-menu-filter";
-import PageContainer from "@/components/page-container";
-import SearchForm from "@/components/search-form";
-import { Button } from "@/components/ui/button";
 import INVITATION_SORTABLE_FIELDS, {
 	INVITATION_SORT_OPTIONS,
 	InvitationSortableField,
 } from "@/features/invitations/lib/invitation-sortable-fields";
 import { INVITATION_STATUS_OPTIONS } from "@/features/invitations/lib/invitation-status-options";
 import getInvitations from "@/features/invitations/queries/get-invitations";
-import SortOrder from "@/features/sorting/types/sort-order";
-import ViewSwitcher from "@/features/toggle-view";
+import DropdownMenuFilter from "@/shared/components/dropdown-menu-filter";
+import { PageContainer } from "@/shared/components/page-container";
+import { SearchForm } from "@/shared/components/search-form";
+import SortOrder from "@/shared/components/sorting/types/sort-order";
+import { ToggleView } from "@/shared/components/toggle-view";
+import { Button } from "@/shared/components/ui/button";
 import { InvitationStatus } from "@prisma/client";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -45,7 +45,7 @@ export default async function InvitationsPage({ searchParams }: Props) {
 	};
 
 	return (
-		<PageContainer className="space-y-6 py-6 group">
+		<PageContainer className="space-y-6 group">
 			<div className="flex flex-col gap-4 md:flex-row md:items-center">
 				{/* Recherche à gauche prenant toute la place disponible */}
 
@@ -72,7 +72,7 @@ export default async function InvitationsPage({ searchParams }: Props) {
 					/>
 
 					{/* Sélecteur de vue */}
-					<ViewSwitcher />
+					<ToggleView />
 
 					<Link href="/dashboard/invitations/new">
 						<Button className="h-9">Nouvelle invitation</Button>

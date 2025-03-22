@@ -1,14 +1,14 @@
 "use server";
 
 import { auth } from "@/features/auth/lib/auth";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 import {
 	ServerActionState,
 	ServerActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
-} from "@/types/server-action";
+} from "@/shared/types/server-action";
 import { Invitation } from "@prisma/client";
 import { headers } from "next/headers";
 import invitationFormSchema from "../schemas/send-invitation-schema";

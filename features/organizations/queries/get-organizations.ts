@@ -4,7 +4,7 @@ import { auth } from "@/features/auth/lib/auth";
 import getOrganizationsSchema, {
 	GetOrganizationsParams,
 } from "@/features/organizations/schemas/get-organizations-schema";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 import { Prisma } from "@prisma/client";
 import {
 	unstable_cacheLife as cacheLife,

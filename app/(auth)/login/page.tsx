@@ -1,7 +1,7 @@
-import Logo from "@/components/ui/logo";
-import { Spotlight } from "@/components/ui/spotlight-new";
 import MagicLinkForm from "@/features/auth/components/magic-link-form";
 import SocialLogin from "@/features/auth/components/social-login-section";
+import { Logo } from "@/shared/components/logo";
+import { Spotlight } from "@/shared/components/ui/spotlight-new";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
