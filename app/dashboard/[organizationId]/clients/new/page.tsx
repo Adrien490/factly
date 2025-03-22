@@ -1,7 +1,7 @@
 import CreateClientForm from "@/app/dashboard/[organizationId]/clients/new/components/create-client-form";
-import PageContainer from "@/components/page-container";
-import PageHeader from "@/components/page-header";
-import { searchAddress } from "@/features/autocomplete/queries/search-address";
+import { searchAddress } from "@/shared/components/autocomplete/queries/search-address";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
 
 type PageProps = {
 	params: Promise<{
@@ -19,7 +19,12 @@ type PageProps = {
 	}>;
 };
 
-export default async function NewClientPage({ searchParams }: PageProps) {
+export default async function NewClientPage({
+	searchParams,
+	params,
+}: PageProps) {
+	const resolvedParams = await params;
+	const { organizationId } = resolvedParams;
 	const resolvedSearchParams = await searchParams;
 	const {
 		q = "",
@@ -47,8 +52,22 @@ export default async function NewClientPage({ searchParams }: PageProps) {
 	return (
 		<PageContainer>
 			{/* En-tête */}
-			<PageHeader title="Nouveau client" />
-
+			<PageHeader
+				title="Nouveau client"
+				description="Créez un nouveau client pour votre organisation"
+				navigation={{
+					items: [
+						{
+							label: "Liste des clients",
+							href: `/dashboard/${organizationId}/clients`,
+						},
+						{
+							label: "Nouveau client",
+							href: `/dashboard/${organizationId}/clients/new`,
+						},
+					],
+				}}
+			/>
 			{/* Contenu principal */}
 			<CreateClientForm
 				searchAddressPromise={

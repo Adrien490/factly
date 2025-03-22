@@ -32,7 +32,7 @@
 	--radius: 0.5rem;
 
 	/* Sidebar colors */
-	--sidebar-background: var(--background);
+	--sidebar-background: var(--card);
 	--sidebar-foreground: var(--foreground);
 	--sidebar-primary: var(--primary);
 	--sidebar-primary-foreground: var(--primary-foreground);
@@ -71,7 +71,7 @@
 	--chart-5: hsl(229 103% 62%);
 
 	/* Sidebar colors */
-	--sidebar-background: var(--background);
+	--sidebar-background: var(--card);
 	--sidebar-foreground: var(--foreground);
 	--sidebar-primary: var(--primary);
 	--sidebar-primary-foreground: var(--primary-foreground);

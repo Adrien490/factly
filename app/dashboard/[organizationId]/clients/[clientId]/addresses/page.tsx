@@ -1,7 +1,7 @@
-import PageContainer from "@/components/page-container";
-import PageHeader from "@/components/page-header";
-import { Button } from "@/components/ui/button";
 import getClient from "@/features/clients/queries/get-client";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
+import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
 
 type Props = {

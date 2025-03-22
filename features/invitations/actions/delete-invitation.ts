@@ -2,14 +2,14 @@
 
 import { auth } from "@/features/auth/lib/auth";
 import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 import {
 	ServerActionState,
 	ServerActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
-} from "@/types/server-action";
+} from "@/shared/types/server-action";
 import { Invitation } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";

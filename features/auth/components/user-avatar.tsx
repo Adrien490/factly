@@ -1,29 +1,34 @@
 "use client";
 
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/shared/components/theme-toggle";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@/shared/components/ui/avatar";
+import { Button } from "@/shared/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shared/components/ui/dropdown-menu";
 import {
 	Sheet,
 	SheetContent,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
-} from "@/components/ui/sheet";
-import { authClient } from "@/features/auth/lib/auth-client";
-import getUserInitials from "@/features/auth/lib/get-user-initials";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+} from "@/shared/components/ui/sheet";
+
+import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { cn } from "@/shared/lib/utils";
 import { User } from "better-auth/types";
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import { LogOut, Moon, Settings, Sun, User as UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { authClient } from "../lib/auth-client";
+import getUserInitials from "../lib/get-user-initials";
 
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 	size?: "sm" | "md" | "lg";
@@ -38,7 +43,7 @@ const avatarSizes = {
 
 function MenuItems({ user, onLogout }: { user: User; onLogout: () => void }) {
 	const themeToggle = ThemeToggle();
-	const ThemeIcon = themeToggle.icon;
+	const ThemeIcon = themeToggle.isDark ? Moon : Sun;
 
 	return (
 		<>
@@ -50,9 +55,9 @@ function MenuItems({ user, onLogout }: { user: User; onLogout: () => void }) {
 			</div>
 			<DropdownMenuSeparator />
 
-			<DropdownMenuItem onClick={themeToggle.onClick} className="relative">
+			<DropdownMenuItem onClick={themeToggle.toggleTheme} className="relative">
 				<ThemeIcon className="mr-2 h-4 w-4" />
-				<span>{themeToggle.label}</span>
+				<span>{themeToggle.isDark ? "Mode sombre" : "Mode clair"}</span>
 			</DropdownMenuItem>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem

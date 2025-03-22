@@ -1,8 +1,6 @@
 import { getOrganization } from "@/features/organizations/queries/get-organization";
-import { NotFound } from "@/components/not-found";
-import PageContainer from "@/components/page-container";
-import PageHeader from "@/components/page-header";
-import { Building2 } from "lucide-react";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
 import DeleteOrganizationForm from "../components/delete-organization-form";
 
 interface DeleteOrganizationPageProps {
@@ -23,43 +21,13 @@ export default async function DeleteOrganizationPage({
 				<PageHeader
 					title="Supprimer l'organisation"
 					description="Supprimer définitivement cette organisation et toutes ses données"
-					breadcrumbs={[
-						{
-							label: "Organisations",
-							href: "/dashboard/organizations",
-						},
-						{
-							label: organization.name,
-							href: `/dashboard/organizations/${organizationId}`,
-						},
-						{
-							label: "Paramètres",
-							href: `/dashboard/organizations/${organizationId}/settings`,
-						},
-						{
-							label: "Supprimer l'organisation",
-							href: `/dashboard/organizations/${organizationId}/settings/delete`,
-						},
-					]}
 				/>
 
 				<DeleteOrganizationForm organization={organization} />
 			</PageContainer>
 		);
 	} catch (error: unknown) {
-		return (
-			<NotFound
-				title={error instanceof Error ? error.message : "Erreur"}
-				description="Désolé, nous n'avons pas trouvé l'organisation que vous recherchez."
-				actions={[
-					{
-						label: "Retour aux organisations",
-						href: "/dashboard/organizations",
-						icon: <Building2 className="size-4" />,
-						variant: "outline",
-					},
-				]}
-			/>
-		);
+		console.error(error);
+		return <></>;
 	}
 }

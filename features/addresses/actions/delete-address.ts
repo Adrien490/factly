@@ -2,13 +2,13 @@
 
 import { auth } from "@/features/auth/lib/auth";
 import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
-import db from "@/lib/db";
+import db from "@/shared/lib/db";
 import {
 	ServerActionState,
 	ServerActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
-} from "@/types/server-action";
+} from "@/shared/types/server-action";
 import { Address } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";

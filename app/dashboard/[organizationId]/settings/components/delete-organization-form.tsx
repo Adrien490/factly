@@ -1,6 +1,8 @@
 "use client";
 
-import ServerActionResponse from "@/components/server-action-response";
+import deleteOrganization from "@/features/organizations/actions/delete-organization";
+import { GetOrganizationReturn } from "@/features/organizations/queries/get-organization";
+import deleteOrganizationFormSchema from "@/features/organizations/schemas/delete-organization-form-schema";
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -9,8 +11,8 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@/shared/components/ui/alert-dialog";
+import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -18,14 +20,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import deleteOrganization from "@/features/organizations/actions/delete-organization";
-import { GetOrganizationReturn } from "@/features/organizations/queries/get-organization";
-import deleteOrganizationFormSchema from "@/features/organizations/schemas/delete-organization-form-schema";
-import { cn } from "@/lib/utils";
-import { ServerActionState, ServerActionStatus } from "@/types/server-action";
+} from "@/shared/components/ui/card";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { cn } from "@/shared/lib/utils";
+import {
+	ServerActionState,
+	ServerActionStatus,
+} from "@/shared/types/server-action";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Organization } from "@prisma/client";
@@ -52,6 +54,8 @@ export default function DeleteOrganizationForm({
 		{ status: ServerActionStatus.INITIAL, message: "" }
 	);
 
+	console.log(state);
+
 	const [form, fields] = useForm({
 		id: "delete-organization-form",
 		defaultValue: {
@@ -77,7 +81,6 @@ export default function DeleteOrganizationForm({
 
 	return (
 		<>
-			<ServerActionResponse state={state} />
 			<form id={form.id}>
 				<input type="hidden" name="id" value={organization.id} />
 				<Card className="border-destructive/50">

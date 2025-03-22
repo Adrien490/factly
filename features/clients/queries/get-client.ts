@@ -2,16 +2,11 @@
 
 import { auth } from "@/features/auth/lib/auth";
 import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
-import db from "@/lib/db";
-import {
-	unstable_cacheLife as cacheLife,
-	unstable_cacheTag as cacheTag,
-} from "next/cache";
+import db from "@/shared/lib/db";
+import { Prisma } from "@prisma/client";
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
 import { z } from "zod";
 import getClientSchema from "../schemas/get-client-schema";
-
 /**
  * Sélection par défaut des champs pour un client
  * Optimisée pour correspondre exactement aux besoins de la vue détail
@@ -46,8 +41,15 @@ const DEFAULT_SELECT = {
 			longitude: true,
 			isDefault: true,
 		},
+		where: {
+			isDefault: true,
+		},
 	},
 } as const;
+
+export type GetClientReturn = {
+	client: Prisma.ClientGetPayload<{ select: typeof DEFAULT_SELECT }>;
+};
 
 /**
  * Fonction interne cacheable qui récupère un client
@@ -56,15 +58,7 @@ async function fetchClient(
 	params: z.infer<typeof getClientSchema>,
 	userId: string
 ) {
-	"use cache";
-
-	// Configuration du cache
-	cacheLife({ stale: 1800, revalidate: 300, expire: 7200 });
-
-	// Tags de cache pour l'invalidation ciblée
-	cacheTag(`client:${params.id}`);
-	cacheTag(`client:user:${userId}:org:${params.organizationId}`);
-	cacheTag(`client:org:${params.organizationId}`);
+	console.log("fetchClient", params, userId);
 
 	try {
 		const client = await db.client.findFirst({
@@ -76,7 +70,7 @@ async function fetchClient(
 		});
 
 		if (!client) {
-			notFound();
+			throw new Error("Client not found");
 		}
 
 		return client;

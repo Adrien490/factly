@@ -1,26 +1,25 @@
 "use client";
 
-import ServerActionResponse from "@/components/server-action-response";
-import { Button } from "@/components/ui/button";
-import { FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { FormLabel } from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/components/ui/select";
 
-import { FormFooter } from "@/features/forms/components/form-footer";
-import { FormLayout } from "@/features/forms/components/form-layout";
-import { FormSection } from "@/features/forms/components/form-section";
 import useCreateOrganization from "@/features/organizations/hooks/use-create-organization";
 import legalFormOptions from "@/features/organizations/lib/legal-form-options";
 import OrganizationFormSchema from "@/features/organizations/schemas/create-organization-schema";
-import { useToast } from "@/hooks/use-toast";
-import { UploadDropzone, useUploadThing } from "@/lib/uploadthing";
-import { ServerActionStatus } from "@/types/server-action";
+import { FormFooter } from "@/shared/components/forms/components/form-footer";
+import { FormLayout } from "@/shared/components/forms/components/form-layout";
+import { FormSection } from "@/shared/components/forms/components/form-section";
+import { useToast } from "@/shared/hooks/use-toast";
+import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
+import { ServerActionStatus } from "@/shared/types/server-action";
 import { useForm, useInputControl } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Organization } from "@prisma/client";
@@ -98,8 +97,6 @@ export default function OrganizationForm({
 
 	return (
 		<>
-			<ServerActionResponse state={state} />
-
 			<form
 				id={form.id}
 				onSubmit={form.onSubmit}

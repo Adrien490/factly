@@ -1,8 +1,10 @@
-import { NotFound } from "@/components/not-found";
-import PageContainer from "@/components/page-container";
-import PageHeader from "@/components/page-header";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getOrganization } from "@/features/organizations/queries/get-organization";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
+import {
+	Alert,
+	AlertDescription,
+	AlertTitle,
+} from "@/shared/components/ui/alert";
 import { Construction } from "lucide-react";
 
 type Props = {
@@ -14,33 +16,13 @@ type Props = {
 export default async function MembersPage({ params }: Props) {
 	const resolvedParams = await params;
 	const { organizationId } = resolvedParams;
-
+	console.log(organizationId);
 	try {
-		const organization = await getOrganization(organizationId);
-
 		return (
 			<PageContainer>
 				<PageHeader
 					title="Gestion des membres"
 					description="Gestion des membres de l'organisation."
-					breadcrumbs={[
-						{
-							label: "Organisations",
-							href: "/dashboard/organizations",
-						},
-						{
-							label: organization.name,
-							href: `/dashboard/organizations/${organizationId}`,
-						},
-						{
-							label: "Paramètres",
-							href: `/dashboard/organizations/${organizationId}/settings`,
-						},
-						{
-							label: "Gestion des membres",
-							href: `/dashboard/organizations/${organizationId}/settings/members`,
-						},
-					]}
 				/>
 
 				<Alert>
@@ -54,8 +36,6 @@ export default async function MembersPage({ params }: Props) {
 			</PageContainer>
 		);
 	} catch (error) {
-		const errorCode = error instanceof Error ? error.message : "500";
-		const title = errorCode === "404" ? "Organisation non trouvée" : "Erreur";
-		return <NotFound title={title} errorCode={errorCode} />;
+		console.error(error);
 	}
 }

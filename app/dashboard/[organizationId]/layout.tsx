@@ -1,4 +1,7 @@
 import { auth } from "@/auth";
+import getOrganizations from "@/features/organizations/queries/get-organizations";
+import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
+import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -6,21 +9,18 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/components/ui/breadcrumb";
+import { Separator } from "@/shared/components/ui/separator";
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from "@/components/ui/sidebar";
-import UserAvatar from "@/features/auth/components/user-avatar";
-import { UserAvatarSkeleton } from "@/features/auth/components/user-avatar-skeleton";
-import getOrganizations from "@/features/organizations/queries/get-organizations";
-import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
+} from "@/shared/components/ui/sidebar";
+import { UserAvatar } from "@/shared/components/user-avatar";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import OrganizationSidebar from "./components/organization-sidebar";
+import { UserAvatarSkeleton } from "../(layout)/components/header-skeleton";
 
 type OrganizationLayoutProps = {
 	children: React.ReactNode;
@@ -56,7 +56,7 @@ export default async function OrganizationLayout({
 				/>
 			</Suspense>
 			<SidebarInset>
-				<header className="flex h-16 shrink-0 items-center gap-2 border-b">
+				<header className="flex h-16 shrink-0 items-center gap-2 bg-card px-4">
 					<div className="flex items-center gap-2 px-3">
 						<SidebarTrigger />
 						<Separator orientation="vertical" className="mr-2 h-4" />
@@ -75,7 +75,7 @@ export default async function OrganizationLayout({
 						</Breadcrumb>
 					</div>
 					<div className="ml-auto px-4">
-						<Suspense fallback={<UserAvatarSkeleton size="sm" />}>
+						<Suspense fallback={<UserAvatarSkeleton />}>
 							<UserAvatar
 								user={await auth.api
 									.getSession({ headers: await headers() })

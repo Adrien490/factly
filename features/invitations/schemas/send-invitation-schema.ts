@@ -4,7 +4,7 @@ import { z } from "zod";
 /**
  * Schéma de validation pour le formulaire d'invitation
  */
-const SendInvitationSchema = z.object({
+const sendInvitationSchema = z.object({
 	// Email du destinataire (obligatoire et valide)
 	email: z
 		.string()
@@ -21,4 +21,4 @@ const SendInvitationSchema = z.object({
 	message: z.string().optional(),
 });
 
-export default SendInvitationSchema;
+export default sendInvitationSchema;

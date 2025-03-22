@@ -1,7 +1,7 @@
 "use client";
 
-import { MenuActions } from "@/components/menu-actions";
-import { useSelection } from "@/features/selection/hooks/use-selection";
+import { MenuActions } from "@/shared/components/menu-actions";
+import { useSelection } from "@/shared/components/selection/hooks/use-selection";
 import { Trash2Icon } from "lucide-react";
 import { useClients } from "../hooks/use-clients";
 import { CLIENT_SELECTION_KEY } from "../lib/constants";

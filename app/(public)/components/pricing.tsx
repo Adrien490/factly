@@ -5,9 +5,8 @@ import { ArrowRight, Check, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 
-import PageContainer from "@/components/page-container";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 import pricingPlans from "../lib/pricing-plans";
 import { PricingItem } from "./pricing-item";
 
@@ -58,7 +57,7 @@ export function Pricing() {
 			ref={sectionRef}
 			className="relative overflow-hidden py-24 md:py-32 bg-background"
 		>
-			<PageContainer className="relative z-10">
+			<div className="relative z-10">
 				{/* Header Section with improved animations */}
 				<motion.div
 					className="text-center space-y-6 mb-16"
@@ -159,7 +158,7 @@ export function Pricing() {
 						</Button>
 					</motion.div>
 				</motion.div>
-			</PageContainer>
+			</div>
 		</section>
 	);
 }
