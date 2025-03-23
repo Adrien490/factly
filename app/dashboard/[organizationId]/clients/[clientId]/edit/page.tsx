@@ -1,4 +1,4 @@
-import getClient from "@/features/clients/queries/get-client";
+import { getClient } from "@/features/clients/get";
 import { PageHeader } from "@/shared/components/page-header";
 import { Separator } from "@/shared/components/ui/separator";
 import { notFound } from "next/navigation";

@@ -1,15 +1,12 @@
 "use client";
 
 import { MenuActions } from "@/shared/components/menu-actions";
-import { useSelection } from "@/shared/components/selection/hooks/use-selection";
+import { ServerActionStatus } from "@/shared/types/server-action";
 import { Trash2Icon } from "lucide-react";
-import { useClients } from "../hooks/use-clients";
-import { CLIENT_SELECTION_KEY } from "../lib/constants";
+import { useDeleteClient } from "../../../../../features/clients/delete/hooks/use-delete-client";
 
 export default function ClientSelectionActions() {
-	const { selectedItems } = useSelection(CLIENT_SELECTION_KEY);
-
-	const { handleDelete, isPending } = useClients();
+	const { state, action, isPending } = useDeleteClient();
 
 	return (
 		<div data-pending={isPending ? "" : undefined}>
@@ -17,10 +14,10 @@ export default function ClientSelectionActions() {
 				actions={[
 					{
 						label: "Supprimer",
-						onClick: () => handleDelete(selectedItems[0]),
+						onClick: () => action(new FormData()),
 						icon: <Trash2Icon className="h-4 w-4" />,
 						variant: "destructive",
-						disabled: isPending,
+						disabled: state.status === ServerActionStatus.PENDING,
 					},
 				]}
 			/>

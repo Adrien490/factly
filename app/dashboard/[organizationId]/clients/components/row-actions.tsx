@@ -1,15 +1,16 @@
 "use client";
 
-import { GetClientsReturn } from "@/features/clients/queries/get-clients";
+import { useDeleteClient } from "@/features/clients/delete";
+import { GetClientsReturn } from "@/features/clients/get-list";
 import { MenuActions } from "@/shared/components/menu-actions";
+import { ServerActionStatus } from "@/shared/types/server-action";
 import { EyeIcon, MapPinIcon, PencilIcon, Trash2Icon } from "lucide-react";
-import { useClients } from "../hooks/use-clients";
 type Props = {
 	client: GetClientsReturn["clients"][number];
 };
 
 export default function RowActions({ client }: Props) {
-	const { handleDelete, isPending } = useClients();
+	const { state, action, isPending } = useDeleteClient();
 
 	return (
 		<div data-pending={isPending ? "" : undefined}>
@@ -34,10 +35,10 @@ export default function RowActions({ client }: Props) {
 
 					{
 						label: "Supprimer",
-						onClick: () => handleDelete(client.id),
+						onClick: () => action(new FormData()),
 						icon: <Trash2Icon className="h-4 w-4" />,
 						variant: "destructive",
-						disabled: isPending,
+						disabled: state.status === ServerActionStatus.PENDING,
 					},
 				]}
 			/>

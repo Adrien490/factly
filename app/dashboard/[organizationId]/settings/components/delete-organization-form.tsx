@@ -1,6 +1,9 @@
 "use client";
 
-import deleteOrganization from "@/features/organizations/actions/delete-organization";
+import {
+	deleteOrganization,
+	deleteOrganizationSchema,
+} from "@/features/organizations/delete";
 import { GetOrganizationReturn } from "@/features/organizations/queries/get-organization";
 import deleteOrganizationFormSchema from "@/features/organizations/schemas/delete-organization-form-schema";
 import {
@@ -43,7 +46,7 @@ export default function DeleteOrganizationForm({
 }: DeleteOrganizationFormProps) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [state, dispatch, isPending] = useActionState<
-		ServerActionState<Organization, typeof deleteOrganizationFormSchema>,
+		ServerActionState<Organization, typeof deleteOrganizationSchema>,
 		FormData
 	>(
 		async (previous, formData) => {

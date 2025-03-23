@@ -1,5 +1,5 @@
-import CreateClientForm from "@/app/dashboard/[organizationId]/clients/new/components/create-client-form";
-import { searchAddress } from "@/shared/components/autocomplete/queries/search-address";
+import { searchAddress } from "@/features/address-api/queries/search-address";
+import { CreateClientForm } from "@/features/clients/create/components/form";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 
