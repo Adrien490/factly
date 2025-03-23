@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { GetOrganizationReturn } from "../../queries/get-organization";
+import { GetOrganizationReturn } from "../types";
 import { fetchOrganization } from "./fetch-organization";
 
 /**

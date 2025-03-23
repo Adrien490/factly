@@ -9,7 +9,7 @@ import { headers } from "next/headers";
  * @param organizationId L'identifiant de l'organisation à vérifier
  * @returns true si l'utilisateur a accès, false sinon
  */
-export default async function hasOrganizationAccess(organizationId: string) {
+export async function hasOrganizationAccess(organizationId: string) {
 	// Vérification de l'authentification
 	const session = await auth.api.getSession({
 		headers: await headers(),

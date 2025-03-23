@@ -1,4 +1,4 @@
-import { getOrganization } from "@/features/organizations/queries/get-organization";
+import { getOrganization } from "@/features/organizations/get";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 import DeleteOrganizationForm from "../components/delete-organization-form";

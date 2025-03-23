@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/features/auth/lib/auth";
-import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
+import { hasOrganizationAccess } from "@/features/organizations/has-access";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { countClientsSchema } from "../schemas";

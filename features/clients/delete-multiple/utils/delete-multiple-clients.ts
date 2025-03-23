@@ -1,9 +1,9 @@
 "use server";
 
 import { auth } from "@/features/auth/lib/auth";
-import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
 import db from "@/shared/lib/db";
 
+import { hasOrganizationAccess } from "@/features/organizations/has-access";
 import {
 	ServerActionState,
 	ServerActionStatus,

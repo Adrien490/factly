@@ -4,8 +4,7 @@ import {
 	deleteOrganization,
 	deleteOrganizationSchema,
 } from "@/features/organizations/delete";
-import { GetOrganizationReturn } from "@/features/organizations/queries/get-organization";
-import deleteOrganizationFormSchema from "@/features/organizations/schemas/delete-organization-form-schema";
+import { GetOrganizationReturn } from "@/features/organizations/get";
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -67,7 +66,7 @@ export default function DeleteOrganizationForm({
 		},
 		onValidate({ formData }) {
 			return parseWithZod(formData, {
-				schema: deleteOrganizationFormSchema.refine(
+				schema: deleteOrganizationSchema.refine(
 					(data) => data.confirm === organization.name,
 					{
 						message: "Le nom de confirmation ne correspond pas",
