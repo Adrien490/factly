@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import getOrganizations from "@/features/organizations/queries/get-organizations";
+import { getOrganizations } from "@/features/organizations/get-list";
 import hasOrganizationAccess from "@/features/organizations/queries/has-organization-access";
 import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
 import {

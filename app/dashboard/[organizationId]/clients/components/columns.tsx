@@ -1,19 +1,12 @@
 "use client";
 
-import { clientPriorities } from "@/features/clients/constants/client-priorities";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
-import { GetClientsReturn } from "@/features/clients/queries/get-clients/types";
-import { ColumnDef } from "@/shared/components/datatable/components/datatable";
+import { clientTypes } from "@/features/clients/constants/client-types";
+import { GetClientsReturn } from "@/features/clients/get-list/types";
+import { ColumnDef } from "@/shared/components/datatable";
 import { Badge } from "@/shared/components/ui/badge";
-import { ClientPriority, ClientStatus, ClientType } from "@prisma/client";
-import {
-	BuildingIcon,
-	CircleDot,
-	MapPin,
-	Receipt,
-	Star,
-	Tag,
-} from "lucide-react";
+import { ClientStatus } from "@prisma/client";
+import { BuildingIcon, CircleDot, MapPin, Receipt, Tag } from "lucide-react";
 import RowActions from "./row-actions";
 
 // Mapping des variants de Badge pour les statuts client
@@ -26,20 +19,6 @@ const STATUS_VARIANTS: Record<
 	[ClientStatus.ACTIVE]: "default",
 	[ClientStatus.INACTIVE]: "outline",
 	[ClientStatus.ARCHIVED]: "destructive",
-};
-
-// Mapping des libellés pour les types de client
-const TYPE_LABELS: Record<ClientType, string> = {
-	[ClientType.INDIVIDUAL]: "Particulier",
-	[ClientType.COMPANY]: "Entreprise",
-};
-
-// Mapping des couleurs pour les priorités clients
-const PRIORITY_COLORS: Record<ClientPriority, string> = {
-	[ClientPriority.LOW]: "text-slate-400",
-	[ClientPriority.MEDIUM]: "text-blue-500",
-	[ClientPriority.HIGH]: "text-amber-500",
-	[ClientPriority.STRATEGIC]: "text-rose-600",
 };
 
 export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
@@ -69,7 +48,12 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 		cell: (client) => (
 			<div className="flex items-center gap-2">
 				<BuildingIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-				<span>{TYPE_LABELS[client.clientType] || client.clientType}</span>
+				<span>
+					{
+						clientTypes.find((option) => option.value === client.clientType)
+							?.label
+					}
+				</span>
 			</div>
 		),
 	},
@@ -86,25 +70,6 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 							?.label
 					}
 				</Badge>
-			</div>
-		),
-	},
-	{
-		id: "priority",
-		header: "Priorité",
-		sortable: true,
-		visibility: "tablet",
-		cell: (client) => (
-			<div className="flex items-center gap-2">
-				<Star
-					className={`h-4 w-4 shrink-0 ${PRIORITY_COLORS[client.priority]}`}
-				/>
-				<span>
-					{
-						clientPriorities.find((option) => option.value === client.priority)
-							?.label
-					}
-				</span>
 			</div>
 		),
 	},
@@ -137,22 +102,16 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 	},
 	{
 		id: "address",
-		header: "Adresse de facturation",
+		header: "Adresse",
 		visibility: "desktop",
 		cell: (client) => {
-			const billingAddress = client.addresses?.find(
-				(addr) => addr.addressType === "BILLING"
-			);
+			const address = client.addresses?.find((addr) => addr.isDefault);
 			return (
 				<div className="flex items-center gap-2 max-w-[200px]">
 					<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-					{billingAddress ? (
+					{address ? (
 						<span className="truncate">
-							{[
-								billingAddress.line1,
-								billingAddress.postalCode,
-								billingAddress.city,
-							]
+							{[address.addressLine1, address.postalCode, address.city]
 								.filter(Boolean)
 								.join(", ")}
 						</span>

@@ -1,17 +1,15 @@
-import { clientPriorities } from "@/features/clients/constants/client-priorities";
 import clientSortableFields, {
 	ClientSortableField,
 } from "@/features/clients/constants/client-sortable-fields";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
-import { getClients } from "@/features/clients/queries/get-clients";
-import { GetClientsParams } from "@/features/clients/schemas/get-clients-schema";
+import { getClients, GetClientsParams } from "@/features/clients/get-list";
 import { DataTable } from "@/shared/components/datatable";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 import { SearchForm } from "@/shared/components/search-form";
-import SortOrder from "@/shared/components/sorting/types/sort-order";
+import SortOrder from "@/shared/components/sorting-dropdown/types/sort-order";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import Link from "next/link";
@@ -135,12 +133,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							filterKey="clientType"
 							label="Type"
 							options={clientTypes}
-						/>
-						<FilterSelect
-							filterKey="priority"
-							label="Priorité"
-							options={clientPriorities}
-							multiple
 						/>
 					</div>
 				</div>
