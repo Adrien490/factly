@@ -16,13 +16,16 @@ import { FormFooter } from "@/shared/components/forms/components/form-footer";
 import { FormLayout } from "@/shared/components/forms/components/form-layout";
 import { FormSection } from "@/shared/components/forms/components/form-section";
 
+import { SearchAddressReturn } from "@/features/address-api/queries/search-address";
+import { FormattedAddressResult } from "@/features/address-api/types";
 import { useCreateOrganization } from "@/features/organizations/create";
 import legalFormOptions from "@/features/organizations/lib/legal-form-options";
+import { Autocomplete } from "@/shared/components/autocomplete";
 import { FieldInfo } from "@/shared/components/forms/components/field-info";
 import { useToast } from "@/shared/hooks/use-toast";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { ServerActionStatus } from "@/shared/types/server-action";
-import { LegalForm, Organization } from "@prisma/client";
+import { LegalForm } from "@prisma/client";
 import {
 	mergeForm,
 	Updater,
@@ -36,19 +39,22 @@ import {
 	MapPin,
 	Receipt,
 	Upload,
+	X,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { use, useEffect, useTransition } from "react";
 
 interface OrganizationFormProps {
-	organization?: Organization;
+	searchAddressPromise: Promise<SearchAddressReturn>;
 }
 
 export function CreateOrganizationForm({
-	organization,
+	searchAddressPromise,
 }: OrganizationFormProps) {
+	const response = use(searchAddressPromise);
 	const { state, dispatch, isPending } = useCreateOrganization();
+	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { isUploading, startUpload } = useUploadThing("organizationLogo");
 	const router = useRouter();
 	const { toast } = useToast();
@@ -56,22 +62,22 @@ export function CreateOrganizationForm({
 	// TanStack Form setup
 	const form = useForm({
 		defaultValues: {
-			id: organization?.id ?? "",
-			name: organization?.name ?? "",
-			legalName: organization?.legalName ?? "",
-			legalForm: organization?.legalForm ?? undefined,
-			email: organization?.email ?? "",
-			siren: organization?.siren ?? "",
-			siret: organization?.siret ?? "",
-			vatNumber: organization?.vatNumber ?? "",
-			addressLine1: organization?.addressLine1 ?? "",
-			addressLine2: organization?.addressLine2 ?? "",
-			postalCode: organization?.postalCode ?? "",
-			city: organization?.city ?? "",
-			country: organization?.country ?? "France",
-			phone: organization?.phone ?? "",
-			website: organization?.website ?? "",
-			logoUrl: organization?.logoUrl ?? "",
+			id: "",
+			name: "",
+			legalName: "",
+			legalForm: undefined as LegalForm | undefined,
+			email: "",
+			siren: "",
+			siret: "",
+			vatNumber: "",
+			addressLine1: "",
+			addressLine2: "",
+			postalCode: "",
+			city: "",
+			country: "France",
+			phone: "",
+			website: "",
+			logoUrl: "",
 		},
 
 		transform: useTransform(
@@ -84,7 +90,7 @@ export function CreateOrganizationForm({
 	useEffect(() => {
 		if (!isPending && state && state.status === ServerActionStatus.SUCCESS) {
 			toast({
-				title: organization ? "Organisation mise à jour" : "Organisation créée",
+				title: "Organisation créée",
 				description: state?.message,
 			});
 
@@ -92,9 +98,51 @@ export function CreateOrganizationForm({
 				router.push(`/dashboard`);
 			}, 500);
 		}
-	}, [isPending, state, toast, organization, router]);
+	}, [isPending, state, toast, router]);
 
-	console.log(state);
+	// Fonction pour sélectionner une adresse dans l'autocomplétion
+	const handleAddressSelect = (address: FormattedAddressResult) => {
+		// Adresse ligne 1
+		if (address.type === "housenumber") {
+			// Si c'est une adresse complète avec numéro, on utilise le format complet
+			form.setFieldValue(
+				"addressLine1",
+				`${address.housenumber} ${address.street}` || ""
+			);
+		} else if (address.type === "street") {
+			// Si c'est une rue sans numéro
+			form.setFieldValue("addressLine1", address.street || "");
+		} else {
+			// Pour les autres types (locality, municipality), on utilise simplement le label
+			form.setFieldValue("addressLine1", address.label || "");
+		}
+
+		// Ville
+		form.setFieldValue("city", address.city);
+
+		// Code postal
+		form.setFieldValue("postalCode", address.postcode);
+
+		// Si on a un district (arrondissement), on l'ajoute dans addressLine2
+		if (address.district) {
+			form.setFieldValue("addressLine2", `Arrondissement: ${address.district}`);
+		}
+
+		// Coordonnées géographiques (longitude, latitude)
+	};
+
+	// Fonction pour effacer le champ d'adresse
+	const handleClearAddressSearch = () => {
+		form.setFieldValue("addressLine1", "");
+		form.setFieldValue("addressLine2", "");
+		form.setFieldValue("postalCode", "");
+		form.setFieldValue("city", "");
+		const url = new URLSearchParams();
+		// Réinitialiser l'URL de recherche
+		startAddressTransition(() => {
+			router.push(`/dashboard/new?${url.toString()}`);
+		});
+	};
 
 	return (
 		<form
@@ -108,7 +156,7 @@ export function CreateOrganizationForm({
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<input type="hidden" name="id" value={organization?.id ?? ""} />
+			<input type="hidden" name="id" value={""} />
 			<form.Field name="logoUrl">
 				{(field) => (
 					<input type="hidden" name="logoUrl" value={field.state.value ?? ""} />
@@ -446,23 +494,101 @@ export function CreateOrganizationForm({
 					icon={MapPin}
 				>
 					<div className="space-y-4">
-						<form.Field name="addressLine1">
+						<form.Field
+							name="addressLine1"
+							validators={{
+								onChangeAsyncDebounceMs: 500,
+								onChangeAsync: async ({ value }) => {
+									if (
+										value &&
+										value.length >= 3 &&
+										/^[a-zA-Z0-9]/.test(value)
+									) {
+										const url = new URLSearchParams();
+										url.set("q", value);
+
+										// Ajouter des paramètres supplémentaires si nécessaire
+										// Par exemple, si on connaît déjà le code postal
+										/*	const postalCode = form.getFieldValue("postalCode");
+										if (postalCode) {
+											url.set("postcode", postalCode);
+										}*/
+
+										// Utiliser un flag pour indiquer si on est dans un onChange manuel
+										// ou dans une validation de soumission
+										const isSubmitting = form.state.isSubmitting;
+
+										if (!isSubmitting) {
+											startAddressTransition(() => {
+												router.push(`/dashboard/new?${url.toString()}`);
+											});
+										}
+									}
+								},
+								onChange: ({ value }) => {
+									form.setFieldValue("addressLine1", value);
+								},
+							}}
+						>
 							{(field) => (
 								<div className="space-y-1.5">
-									<FormLabel
-										htmlFor="addressLine1"
-										className="flex items-center"
-									>
-										Adresse (ligne 1)
-									</FormLabel>
-									<Input
-										id="addressLine1"
-										name="addressLine1"
-										placeholder="N° et nom de rue"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
+									<FormLabel htmlFor="addressLine1">Adresse ligne 1</FormLabel>
+									<div className="relative">
+										<Autocomplete
+											name="addressLine1"
+											value={field.state.value}
+											onChange={(value) => {
+												field.handleChange(value);
+											}}
+											onSelect={handleAddressSelect}
+											items={response.results}
+											getItemLabel={(item) => item.label}
+											getItemDescription={(item) =>
+												item.postcode && `${item.postcode} ${item.city}`
+											}
+											placeholder="Rechercher une adresse... (min. 3 caractères)"
+											isLoading={isAddressLoading}
+											className="w-full"
+											inputClassName="border-input focus:ring-1 focus:ring-primary pr-20"
+										/>
+										{/* Actions dans le champ */}
+										<div className="absolute right-3 top-0 h-full flex items-center gap-1">
+											{/* Bouton pour effacer la recherche, visible uniquement si une valeur est présente */}
+											{field.state.value && (
+												<button
+													type="button"
+													className="h-5 w-5 rounded-full hover:bg-muted flex items-center justify-center"
+													onClick={handleClearAddressSearch}
+													aria-label="Effacer la recherche d'adresse"
+													title="Effacer la recherche d'adresse"
+												>
+													<X
+														className="h-3 w-3 text-muted-foreground"
+														aria-hidden="true"
+													/>
+												</button>
+											)}
+										</div>
+									</div>
+									{field.state.value && field.state.value.length < 3 && (
+										<p
+											className="text-xs text-muted-foreground"
+											id="addressLine1-info"
+											role="status"
+										>
+											Saisissez au moins 3 caractères pour lancer la recherche
+										</p>
+									)}
+									{field.state.value &&
+										!/^[a-zA-Z0-9]/.test(field.state.value) && (
+											<p
+												className="text-xs text-amber-500"
+												id="addressLine1-warning"
+												role="alert"
+											>
+												La recherche doit commencer par une lettre ou un chiffre
+											</p>
+										)}
 									<FieldInfo field={field} />
 								</div>
 							)}
@@ -622,7 +748,7 @@ export function CreateOrganizationForm({
 					<FormFooter
 						disabled={!canSubmit}
 						cancelHref="/dashboard/organizations"
-						submitLabel={organization ? "Enregistrer" : "Créer l'organisation"}
+						submitLabel={"Créer l'organisation"}
 						isPending={isPending}
 					/>
 				)}
