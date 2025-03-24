@@ -1,1 +1,1 @@
-export * from "./components/organization-switcher";
+export * from "./components";

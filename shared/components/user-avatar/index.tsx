@@ -1,1 +1,1 @@
-export * from "./components/user-avatar";
+export * from "./components";

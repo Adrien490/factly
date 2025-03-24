@@ -1,2 +1,2 @@
-export * from "./components/organization-sidebar";
+export * from "./components";
 export * from "./constants";

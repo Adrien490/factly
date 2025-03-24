@@ -1,8 +1,9 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { Suspense } from "react";
-import Header from "./components/header";
+import { Header } from "./components/header";
 import HeaderSkeleton from "./components/header-skeleton";
+
 export default async function DashboardLayout({
 	children,
 }: {

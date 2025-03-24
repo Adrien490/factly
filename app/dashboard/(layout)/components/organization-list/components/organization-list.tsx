@@ -7,13 +7,13 @@ import { Building2, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { use } from "react";
-import OrganizationCard from "../organization-card";
+import { OrganizationCard } from "../../organization-card";
 
 type OrganizationListProps = {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
 };
 
-export default function OrganizationList({
+export function OrganizationList({
 	organizationsPromise,
 }: OrganizationListProps) {
 	// Utilisation du hook use pour résoudre la Promise

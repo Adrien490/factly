@@ -1,1 +1,1 @@
-export * from "./components/sort-selector";
+export * from "./components";

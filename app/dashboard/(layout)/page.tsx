@@ -10,7 +10,7 @@ import { ToggleView } from "@/shared/components/toggle-view";
 import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
 import { Suspense } from "react";
-import OrganizationList from "./components/organization-list";
+import { OrganizationList } from "./components/organization-list";
 import OrganizationListSkeleton from "./components/organization-list-skeleton";
 
 type Props = {

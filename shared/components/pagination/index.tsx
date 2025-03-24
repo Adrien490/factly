@@ -1,2 +1,2 @@
-export * from "./components/pagination";
-export * from "./hooks/use-pagination";
+export * from "./components";
+export * from "./hooks";

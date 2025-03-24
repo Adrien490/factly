@@ -1,1 +1,1 @@
-export * from "./components/selection-toolbar";
+export * from "./components";

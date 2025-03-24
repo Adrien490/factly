@@ -1,1 +1,1 @@
-export * from "./components/sorting-dropdown";
+export * from "./components";

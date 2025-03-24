@@ -1,1 +1,1 @@
-export * from "./components/toggle-view";
+export * from "./components";
