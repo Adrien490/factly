@@ -1,8 +1,8 @@
 "use client";
 
+import { ViewType } from "@/shared/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
-import { ViewType } from "../types";
 
 /**
  * Hook personnalisé pour gérer la fonctionnalité de changement de vue (grid/list)

@@ -1,5 +1,5 @@
-import { viewTypeSchema } from "@/shared/components/view-toggle/schemas";
 import { z } from "zod";
+import { viewTypeSchema } from "../schemas/view-type-schema";
 
 /**
  * Représente les types de vue disponibles dans l'application

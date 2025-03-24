@@ -1,7 +1,7 @@
 "use client";
 
 import { OrganizationCardSkeleton } from "@/app/dashboard/(layout)/components/organization-card-skeleton";
-import { ViewType } from "@/shared/components/view-toggle/types";
+import { ViewType } from "@/shared/types";
 
 type OrganizationListSkeletonProps = {
 	viewType?: ViewType;

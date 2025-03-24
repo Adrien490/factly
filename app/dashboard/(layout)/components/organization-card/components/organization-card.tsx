@@ -8,7 +8,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import { ViewType } from "@/shared/components/view-toggle/types";
+import { ViewType } from "@/shared/types";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

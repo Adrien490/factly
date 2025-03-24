@@ -1,10 +1,9 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-
+import { ViewType } from "@/shared/types";
 import { LayoutGrid, List } from "lucide-react";
 import { useViewToggle } from "../hooks";
-import { ViewType } from "../types";
 
 /**
  * Composant pour basculer entre différentes vues (grille/liste)
