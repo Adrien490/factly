@@ -1,7 +1,7 @@
 import { datatableSchema } from "@/shared/components/datatable/schemas";
 import { Civility, ClientStatus, ClientType } from "@prisma/client";
 import { z } from "zod";
-import { clientSortableFields } from "../../constants/client-sortable-fields";
+import { clientSortableFields } from "../constants/client-sortable-fields";
 
 const filterValueSchema = z.union([
 	// Valeurs uniques (chaînes)

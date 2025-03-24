@@ -1,11 +1,10 @@
-import {
-	ClientSortableField,
-	clientSortableFields,
-} from "@/features/clients/constants/client-sortable-fields";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
 import { getClients, GetClientsParams } from "@/features/clients/get-list";
-import { DataTable } from "@/shared/components/datatable";
+import {
+	ClientSortableField,
+	clientSortableFields,
+} from "@/features/clients/get-list/constants/client-sortable-fields";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
 import { PageContainer } from "@/shared/components/page-container";
@@ -15,9 +14,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
-import ClientSelectionActions from "./components/client-selection-actions";
-import { columns } from "./components/columns";
-import { CLIENT_SELECTION_KEY } from "./lib/constants";
+import { ClientTable } from "./components/client-table";
 
 // Options pour le type de client
 
@@ -65,25 +62,19 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			),
 	};
 
-	// Récupération des données avec les paramètres
-	const { clients, pagination } = await getClients(queryParams);
-
-	// Bouton pour créer un nouveau client
-	const newClientButton = (
-		<Button asChild size="default">
-			<Link href={`/dashboard/${organizationId}/clients/new`}>
-				Nouveau client
-			</Link>
-		</Button>
-	);
-
 	return (
 		<PageContainer className="pb-12">
 			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Clients"
 				description="Gérez votre portefeuille clients"
-				action={newClientButton}
+				action={
+					<Button asChild size="default">
+						<Link href={`/dashboard/${organizationId}/clients/new`}>
+							Nouveau client
+						</Link>
+					</Button>
+				}
 				navigation={{
 					items: [
 						{
@@ -98,8 +89,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				}}
 				className="mb-6"
 			/>
-
-			{/* Contenu principal - Liste des clients */}
 
 			{/* Barre de recherche et filtres */}
 			<Card className="mb-4 p-4 space-y-4">
@@ -129,15 +118,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</Card>
 
 			{/* Tableau de données */}
-			<DataTable
-				data={clients}
-				columns={columns}
-				selection={{
-					key: CLIENT_SELECTION_KEY,
-					actions: <ClientSelectionActions />,
-				}}
-				pagination={pagination}
-			/>
+			<ClientTable clientsPromise={getClients(queryParams)} />
 		</PageContainer>
 	);
 }

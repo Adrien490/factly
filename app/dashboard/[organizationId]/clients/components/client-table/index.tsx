@@ -3,6 +3,7 @@
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
 import { Badge } from "@/shared/components/ui/badge";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 import {
 	Table,
 	TableBody,
@@ -11,9 +12,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components/ui/table";
+import { getCellStyles, getHeaderStyles } from "@/shared/constants";
+import { useSelection } from "@/shared/hooks/use-selection";
 import useSorting from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/lib/utils";
-import { ClientStatus } from "@prisma/client";
 import {
 	ArrowDown,
 	ArrowUp,
@@ -26,23 +28,24 @@ import {
 } from "lucide-react";
 import { use } from "react";
 import RowActions from "../row-actions";
+import { STATUS_VARIANTS } from "./constants";
 import { ClientListProps } from "./types";
 
 // Mapping des variants de Badge pour les statuts client
-const STATUS_VARIANTS: Record<
-	ClientStatus,
-	"default" | "secondary" | "destructive" | "outline"
-> = {
-	[ClientStatus.LEAD]: "secondary",
-	[ClientStatus.PROSPECT]: "default",
-	[ClientStatus.ACTIVE]: "default",
-	[ClientStatus.INACTIVE]: "outline",
-	[ClientStatus.ARCHIVED]: "destructive",
-};
 
-export function ClientList({ clientsPromise }: ClientListProps) {
+export function ClientTable({ clientsPromise }: ClientListProps) {
 	const response = use(clientsPromise);
 	const clients = response.clients;
+
+	const {
+		isPending: isSelectionPending,
+		handleSelectionChange,
+		handleItemSelectionChange,
+		isSelected,
+		areAllSelected,
+	} = useSelection("client");
+
+	console.log(isSelectionPending);
 
 	const {
 		sortBy,
@@ -50,26 +53,6 @@ export function ClientList({ clientsPromise }: ClientListProps) {
 		getSortDirection,
 		isPending: isSortPending,
 	} = useSorting();
-
-	// Helper pour les styles des en-têtes de colonnes
-	const getHeaderStyles = (visibility?: string) => {
-		return cn(
-			"whitespace-nowrap",
-			visibility === "tablet" && "hidden md:table-cell",
-			visibility === "desktop" && "hidden lg:table-cell"
-		);
-	};
-
-	// Helper pour les styles de cellules
-	const getCellStyles = (visibility?: string, align?: string) => {
-		return cn(
-			"whitespace-nowrap",
-			align === "center" && "text-center",
-			align === "right" && "text-right",
-			visibility === "tablet" && "hidden md:table-cell",
-			visibility === "desktop" && "hidden lg:table-cell"
-		);
-	};
 
 	// Helper pour le rendu de l'indicateur de tri
 	const renderSortIndicator = (columnId: string) => {
@@ -81,6 +64,9 @@ export function ClientList({ clientsPromise }: ClientListProps) {
 		);
 	};
 
+	const clientIds = clients.map((client) => client.id);
+	const allSelected = areAllSelected(clientIds);
+
 	return (
 		<div className="rounded-md bg-card p-4">
 			<Table
@@ -89,6 +75,16 @@ export function ClientList({ clientsPromise }: ClientListProps) {
 			>
 				<TableHeader>
 					<TableRow className="hover:bg-transparent">
+						{/* Checkbox pour sélectionner tous les clients */}
+						<TableHead className="w-12">
+							<Checkbox
+								checked={allSelected}
+								onCheckedChange={(checked) =>
+									handleSelectionChange(clientIds, !!checked)
+								}
+								aria-label="Sélectionner tous les clients"
+							/>
+						</TableHead>
 						{/* En-tête Client */}
 						<TableHead
 							className={getHeaderStyles()}
@@ -154,7 +150,20 @@ export function ClientList({ clientsPromise }: ClientListProps) {
 					{clients.map((client) => {
 						const id = client.id;
 						return (
-							<TableRow key={id}>
+							<TableRow
+								key={id}
+								className={cn(isSelected(id) ? "bg-muted/50" : undefined)}
+							>
+								{/* Checkbox pour sélectionner un client */}
+								<TableCell className="w-12">
+									<Checkbox
+										checked={isSelected(id)}
+										onCheckedChange={(checked) =>
+											handleItemSelectionChange(id, !!checked)
+										}
+										aria-label={`Sélectionner ${client.name}`}
+									/>
+								</TableCell>
 								{/* Cellule Client */}
 								<TableCell className={getCellStyles()}>
 									<div className="w-[200px] flex flex-col space-y-1">
