@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { getOrganizations } from "@/features/organizations/get-list";
-import { hasOrganizationAccess } from "@/features/organizations/has-access";
 import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
 import {
 	Breadcrumb,
@@ -18,7 +17,6 @@ import {
 } from "@/shared/components/ui/sidebar";
 import { UserAvatar } from "@/shared/components/user-avatar";
 import { cookies, headers } from "next/headers";
-import { forbidden } from "next/navigation";
 import { Suspense } from "react";
 import { UserAvatarSkeleton } from "../(layout)/components/header-skeleton";
 
@@ -37,12 +35,6 @@ export default async function OrganizationLayout({
 	const { organizationId } = resolvedParams;
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
-
-	const hasAccess = await hasOrganizationAccess(organizationId);
-
-	if (!hasAccess) {
-		forbidden();
-	}
 
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
