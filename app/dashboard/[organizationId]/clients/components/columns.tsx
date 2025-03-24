@@ -3,7 +3,7 @@
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
 import { GetClientsReturn } from "@/features/clients/get-list/types";
-import { ColumnDef } from "@/shared/components/datatable";
+import { ColumnDef } from "@/shared/components/datatable/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { ClientStatus } from "@prisma/client";
 import { BuildingIcon, CircleDot, MapPin, Receipt, Tag } from "lucide-react";
@@ -61,7 +61,7 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 		id: "status",
 		header: "Statut",
 		sortable: true,
-		visibility: "always",
+		visibility: "tablet",
 		cell: (client) => (
 			<div>
 				<Badge variant={STATUS_VARIANTS[client.status] || "outline"}>

@@ -17,15 +17,8 @@ import {
 } from "@/shared/components/ui/table";
 import useSorting from "@/shared/hooks/use-sorting";
 import { SelectionToolbar } from "../../selection-toolbar";
-
-export interface ColumnDef<T> {
-	id: string;
-	header: string | (() => React.ReactNode);
-	cell: (item: T) => React.ReactNode;
-	visibility?: "always" | "tablet" | "desktop";
-	align?: "left" | "center" | "right";
-	sortable?: boolean;
-}
+import { cellStyles } from "../constants";
+import { ColumnDef } from "../types";
 
 export interface DataTableProps<T extends { id: string }> {
 	data: T[];
@@ -37,13 +30,6 @@ export interface DataTableProps<T extends { id: string }> {
 	getItemId?: (item: T) => string;
 	pagination?: PaginationProps;
 }
-
-const cellStyles = <T,>(column: ColumnDef<T>) =>
-	cn(
-		"whitespace-nowrap",
-		column.align === "center" && "text-center",
-		column.align === "right" && "text-right"
-	);
 
 export function DataTable<T extends { id: string }>({
 	data,
