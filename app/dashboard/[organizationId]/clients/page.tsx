@@ -7,6 +7,7 @@ import { clientTypes } from "@/features/clients/constants/client-types";
 import { getClients, GetClientsParams } from "@/features/clients/get-list";
 import { DataTable } from "@/shared/components/datatable";
 import { FilterSelect } from "@/shared/components/filter-select";
+import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 import { SearchForm } from "@/shared/components/search-form";
@@ -109,26 +110,14 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						placeholder="Rechercher par nom, email, référence, SIREN..."
 						className="w-full flex-1 max-w-md"
 					/>
-
-					{clients.length > 0 && (
-						<div className="hidden md:block text-sm text-muted-foreground">
-							{pagination.total} client{pagination.total > 1 ? "s" : ""} trouvé
-							{pagination.total > 1 ? "s" : ""}
-						</div>
-					)}
-				</div>
-
-				{/* Filtres */}
-				<div className="flex flex-wrap items-center gap-2">
 					<span className="text-xs font-medium text-muted-foreground px-1">
 						Filtrer par:
 					</span>
 					<div className="flex flex-wrap gap-2">
-						<FilterSelect
+						<MultiSelectFilter
 							filterKey="status"
 							label="Statut"
 							options={clientStatuses}
-							multiple
 						/>
 						<FilterSelect
 							filterKey="clientType"

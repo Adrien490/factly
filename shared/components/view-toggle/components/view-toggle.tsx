@@ -3,7 +3,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 
 import { LayoutGrid, List } from "lucide-react";
-import useToggleView from "../hooks/use-toggle-view";
+import { useViewToggle } from "../hooks";
 import { ViewType } from "../types";
 
 /**
@@ -11,12 +11,12 @@ import { ViewType } from "../types";
  * Utilise le hook useToggleView pour gérer la logique
  */
 
-export interface ToggleViewProps {
+export interface ViewToggleProps {
 	/** Classe CSS optionnelle pour le composant */
 	className?: string;
 }
-export function ToggleView({ className }: ToggleViewProps) {
-	const { optimisticView, isPending, handleViewChange } = useToggleView();
+export function ViewToggle({ className }: ViewToggleProps) {
+	const { optimisticView, isPending, handleViewChange } = useViewToggle();
 
 	return (
 		<Tabs

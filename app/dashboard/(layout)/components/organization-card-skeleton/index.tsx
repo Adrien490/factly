@@ -1,6 +1,6 @@
-import { ViewType } from "@/shared/components/toggle-view/types";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { ViewType } from "@/shared/components/view-toggle/types";
 export function OrganizationCardSkeleton({
 	viewType = "grid",
 }: {

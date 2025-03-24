@@ -9,7 +9,7 @@ import { ViewType } from "../types";
  *
  * @returns Un objet contenant la vue actuelle, la vue optimistique, un indicateur de chargement et la fonction de changement de vue
  */
-export default function useToggleView() {
+export function useViewToggle() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();

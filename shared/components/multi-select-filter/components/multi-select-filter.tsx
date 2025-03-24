@@ -16,102 +16,27 @@ import {
 	PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components/ui/select";
 import { cn } from "@/shared/lib/utils";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { useState } from "react";
-import useFilterSelect from "../hooks/use-filter-select";
+import useMultiSelectFilter from "../hooks/use-multi-select-filter";
+import { MultiSelectFilterProps } from "../types";
 
-export type FilterOption = {
-	value: string;
-	label: string;
-};
-
-interface FilterSelectProps {
-	filterKey: string;
-	label: string;
-	options: FilterOption[];
-	placeholder?: string;
-	multiple?: boolean;
-	className?: string;
-	maxHeight?: number;
-}
-
-export function FilterSelect({
+export function MultiSelectFilter({
 	filterKey,
 	label,
 	options,
 	placeholder = "Sélectionner...",
-	multiple = false,
 	className,
 	maxHeight = 250,
-}: FilterSelectProps) {
-	const { values, setFilter, clearFilter, isSelected, isPending } =
-		useFilterSelect(filterKey);
+}: MultiSelectFilterProps) {
+	const { values, setFilter, toggleValue, clearFilter, isSelected, isPending } =
+		useMultiSelectFilter(filterKey);
 	const [open, setOpen] = useState(false);
 
 	// Gestion des options sélectionnées
-	const selected = options.filter((option) => values.includes(option.value));
+	const selectedOptions = options.filter((option) => isSelected(option.value));
 
-	// Gérer le changement de valeur pour select simple
-	const handleSingleSelect = (value: string) => {
-		setFilter(value);
-	};
-
-	// Gérer le changement de valeur pour select multiple
-	const handleMultipleSelect = (option: FilterOption) => {
-		if (isSelected(option.value)) {
-			setFilter(values.filter((value) => value !== option.value));
-		} else {
-			setFilter([...values, option.value]);
-		}
-	};
-
-	// Rendu du select simple
-	if (!multiple) {
-		return (
-			<div
-				data-pending={isPending ? "" : undefined}
-				className={cn("min-w-[180px] relative", className)}
-			>
-				<Select
-					value={values[0] || ""}
-					onValueChange={handleSingleSelect}
-					disabled={isPending}
-				>
-					<SelectTrigger className="w-full">
-						<span className="text-muted-foreground text-xs mr-2">{label}</span>
-						<SelectValue placeholder={placeholder} />
-						{isPending && (
-							<Loader
-								size="xs"
-								variant="spinner"
-								className="ml-2"
-								color="primary"
-							/>
-						)}
-					</SelectTrigger>
-					<SelectContent>
-						<ScrollArea className={`h-${maxHeight}`}>
-							{options.map((option) => (
-								<SelectItem key={option.value} value={option.value}>
-									{option.label}
-								</SelectItem>
-							))}
-						</ScrollArea>
-					</SelectContent>
-				</Select>
-			</div>
-		);
-	}
-
-	// Rendu du select multiple
 	return (
 		<div
 			data-pending={isPending ? "" : undefined}
@@ -139,13 +64,13 @@ export function FilterSelect({
 								{label}:
 							</span>
 							<div className="flex-1 overflow-hidden">
-								{selected.length === 0 ? (
+								{selectedOptions.length === 0 ? (
 									<span className="text-muted-foreground truncate">
 										{placeholder}
 									</span>
 								) : (
 									<div className="flex flex-nowrap gap-1 max-w-full overflow-x-auto hide-scrollbar">
-										{selected.map((option) => (
+										{selectedOptions.map((option) => (
 											<Badge
 												key={option.value}
 												variant="secondary"
@@ -189,7 +114,7 @@ export function FilterSelect({
 								{options.map((option) => (
 									<CommandItem
 										key={option.value}
-										onSelect={() => handleMultipleSelect(option)}
+										onSelect={() => toggleValue(option.value)}
 										className="cursor-pointer"
 									>
 										<Check

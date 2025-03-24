@@ -1,6 +1,6 @@
 "use client";
 
-import { useSelection } from "@/shared/components/selection-toolbar/hooks/use-selection";
+import { useSelection } from "@/shared/hooks/use-selection";
 import { cn } from "@/shared/lib/utils";
 import { ArrowDown, ArrowUp, ChevronsUpDown, Search } from "lucide-react";
 

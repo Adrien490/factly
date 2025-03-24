@@ -1,4 +1,4 @@
-import { viewTypeSchema } from "@/shared/components/toggle-view/schemas";
+import { viewTypeSchema } from "@/shared/components/view-toggle/schemas";
 import { z } from "zod";
 
 /**

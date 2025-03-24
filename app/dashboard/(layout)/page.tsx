@@ -6,8 +6,8 @@ import {
 import { PageContainer } from "@/shared/components/page-container";
 import { SearchForm } from "@/shared/components/search-form";
 import { SortSelector } from "@/shared/components/sort-selector";
-import { ToggleView } from "@/shared/components/toggle-view";
 import { Button } from "@/shared/components/ui/button";
+import { ViewToggle } from "@/shared/components/view-toggle";
 import Link from "next/link";
 import { Suspense } from "react";
 import { OrganizationList } from "./components/organization-list";
@@ -47,7 +47,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 					/>
 
 					{/* Sélecteur de vue */}
-					<ToggleView />
+					<ViewToggle />
 
 					<Link href="/dashboard/new">
 						<Button className="h-9">Nouvelle organisation</Button>
