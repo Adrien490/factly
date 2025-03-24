@@ -1,4 +1,4 @@
-const navigationLinks = [
+export const navigationLinks = [
 	{
 		name: "Accueil",
 		href: "#home",
@@ -16,5 +16,3 @@ const navigationLinks = [
 		href: "#contact",
 	},
 ];
-
-export default navigationLinks;

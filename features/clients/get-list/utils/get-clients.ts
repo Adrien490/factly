@@ -33,8 +33,16 @@ export async function getClients(
 			throw new Error("Access denied");
 		}
 
+		const validation = getClientsSchema.safeParse(params);
+
+		if (!validation.success) {
+			throw new Error("Invalid parameters");
+		}
+
+		const validatedParams = validation.data;
+
 		// Appel à la fonction
-		return await fetchClients(params, session.user.id);
+		return await fetchClients(validatedParams, session.user.id);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error("Invalid parameters");

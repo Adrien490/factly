@@ -26,18 +26,8 @@ export async function fetchClients(
 		);
 
 		// Validate parameters
-		const validation = getClientsSchema.safeParse({
-			...params,
-			page,
-			perPage,
-		});
 
-		if (!validation.success) {
-			throw new Error("Invalid parameters");
-		}
-
-		const validatedParams = validation.data;
-		const where = buildWhereClause(validatedParams);
+		const where = buildWhereClause(params);
 
 		// Get total count with performance tracking
 		const total = await db.client.count({ where });
@@ -55,10 +45,9 @@ export async function fetchClients(
 			skip,
 			orderBy: [
 				{
-					[validatedParams.sortBy || "name"]:
-						validatedParams.sortOrder || "asc",
+					[params.sortBy || "name"]: params.sortOrder || "asc",
 				},
-				{ id: validatedParams.sortOrder || "asc" }, // Toujours ajouter un tri secondaire pour garantir la cohérence
+				{ id: params.sortOrder || "asc" }, // Toujours ajouter un tri secondaire pour garantir la cohérence
 			],
 		});
 

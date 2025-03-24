@@ -1,6 +1,5 @@
 import db from "@/shared/lib/db";
 import { DEFAULT_SELECT } from "../constants";
-import { getOrganizationsSchema } from "../schemas";
 import { GetOrganizationsParams, GetOrganizationsReturn } from "../types";
 import { buildWhereClause } from "./build-where-clause";
 
@@ -14,20 +13,13 @@ export async function fetchOrganizations(
 ): Promise<GetOrganizationsReturn> {
 	try {
 		// Validation des paramètres
-		const validation = getOrganizationsSchema.safeParse(params);
-
-		if (!validation.success) {
-			throw new Error("Invalid parameters");
-		}
-
-		const validatedParams = validation.data;
-		const where = buildWhereClause(validatedParams, userId);
+		const where = buildWhereClause(params, userId);
 
 		// Récupération des organisations
 		const organizations = await db.organization.findMany({
 			where,
 			select: DEFAULT_SELECT,
-			orderBy: { [validatedParams.sortBy]: validatedParams.sortOrder },
+			orderBy: { [params.sortBy]: params.sortOrder },
 		});
 
 		return organizations;

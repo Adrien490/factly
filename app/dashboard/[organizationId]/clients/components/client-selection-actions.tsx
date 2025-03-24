@@ -1,9 +1,9 @@
 "use client";
 
+import { useDeleteClient } from "@/features/clients/delete";
 import { MenuActions } from "@/shared/components/menu-actions";
 import { ServerActionStatus } from "@/shared/types/server-action";
 import { Trash2Icon } from "lucide-react";
-import { useDeleteClient } from "../../../../../features/clients/delete/hooks/use-delete-client";
 
 export default function ClientSelectionActions() {
 	const { state, action, isPending } = useDeleteClient();

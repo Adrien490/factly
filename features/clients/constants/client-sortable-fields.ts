@@ -1,4 +1,4 @@
-const clientSortableFields = [
+export const clientSortableFields = [
 	"createdAt",
 	"name",
 	"email",
@@ -8,5 +8,3 @@ const clientSortableFields = [
 
 // Type pour les champs triables
 export type ClientSortableField = (typeof clientSortableFields)[number];
-
-export default clientSortableFields;

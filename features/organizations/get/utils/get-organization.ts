@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import { hasOrganizationAccess } from "../../has-access";
+import { getOrganizationSchema } from "../schemas";
 import { GetOrganizationReturn } from "../types";
 import { fetchOrganization } from "./fetch-organization";
 
@@ -21,8 +23,23 @@ export async function getOrganization(
 			throw new Error("Unauthorized");
 		}
 
+		if (!hasOrganizationAccess(id)) {
+			throw new Error("Unauthorized");
+		}
+
+		const validation = getOrganizationSchema.safeParse({ id });
+
+		if (!validation.success) {
+			throw new Error("Invalid parameters");
+		}
+
+		const validatedParams = validation.data;
+
 		// Récupération de l'organisation avec timeout
-		const organization = await fetchOrganization({ id }, session.user.id);
+		const organization = await fetchOrganization(
+			validatedParams,
+			session.user.id
+		);
 
 		if (!organization) {
 			throw new Error("Organization not found");

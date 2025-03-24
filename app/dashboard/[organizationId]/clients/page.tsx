@@ -1,5 +1,6 @@
-import clientSortableFields, {
+import {
 	ClientSortableField,
+	clientSortableFields,
 } from "@/features/clients/constants/client-sortable-fields";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
@@ -9,9 +10,9 @@ import { FilterSelect } from "@/shared/components/filter-select";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 import { SearchForm } from "@/shared/components/search-form";
-import SortOrder from "@/shared/components/sorting-dropdown/types/sort-order";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
+import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import ClientSelectionActions from "./components/client-selection-actions";
 import { columns } from "./components/columns";

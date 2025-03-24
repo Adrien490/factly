@@ -8,7 +8,7 @@ import { cn } from "@/shared/lib/utils";
 import { User } from "better-auth";
 import Link from "next/link";
 import { use } from "react";
-import navigationLinks from "../lib/navigation-links";
+import { navigationLinks } from "./constants";
 
 type Props = {
 	userPromise?: Promise<User | null>;

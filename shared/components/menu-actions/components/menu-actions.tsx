@@ -12,18 +12,7 @@ import { cn } from "@/shared/lib/utils";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
-
-export interface MenuAction {
-	id?: string;
-	label: string;
-	onClick?: () => void | Promise<void>;
-	href?: string;
-	className?: string;
-	disabled?: boolean;
-	icon?: React.ReactNode;
-	variant?: "destructive" | "default";
-	divider?: boolean;
-}
+import { MenuAction } from "../types";
 
 interface MenuActionsProps {
 	actions: MenuAction[];

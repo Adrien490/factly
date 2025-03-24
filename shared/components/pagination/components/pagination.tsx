@@ -1,6 +1,6 @@
 "use client";
 
-import usePagination from "@/shared/components/datatable/hooks/use-pagination";
+import usePagination from "@/shared/components/pagination/hooks/use-pagination";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Select,

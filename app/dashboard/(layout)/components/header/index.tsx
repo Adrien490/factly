@@ -9,7 +9,7 @@ import { User } from "better-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { use } from "react";
-import menuItems from "./constants";
+import { menuItems } from "./constants";
 
 type Props = {
 	userPromise: Promise<User | null>;
