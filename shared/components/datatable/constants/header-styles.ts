@@ -1,6 +1,6 @@
-import { cn } from "../lib/utils";
+import { cn } from "@/shared/lib/utils";
 
-export const getHeaderStyles = (visibility?: string) => {
+export const headerStyles = (visibility?: string) => {
 	return cn(
 		"whitespace-nowrap",
 		visibility === "tablet" && "hidden md:table-cell",

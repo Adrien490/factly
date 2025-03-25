@@ -179,3 +179,29 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@layer components {
+	.header-styles {
+		@apply whitespace-nowrap;
+	}
+
+	.header-styles-tablet {
+		@apply hidden md:table-cell;
+	}
+
+	.header-styles-desktop {
+		@apply hidden lg:table-cell;
+	}
+
+	.cell-styles {
+		@apply whitespace-nowrap;
+	}
+
+	.cell-styles-tablet {
+		@apply hidden md:table-cell;
+	}
+
+	.cell-styles-desktop {
+		@apply hidden lg:table-cell;
+	}
+}

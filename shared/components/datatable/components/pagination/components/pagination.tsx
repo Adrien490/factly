@@ -1,6 +1,6 @@
 "use client";
 
-import usePagination from "@/shared/components/pagination/hooks/use-pagination";
+import usePagination from "@/shared/components/datatable/hooks/use-pagination";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Select,
@@ -43,7 +43,7 @@ export function Pagination({
 	return (
 		<div
 			className={cn(
-				"flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 gap-3 bg-card px-4 rounded-lg",
+				"flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 gap-3",
 				isPending && "opacity-70"
 			)}
 		>

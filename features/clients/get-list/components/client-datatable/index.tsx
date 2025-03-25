@@ -2,19 +2,26 @@
 
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
+import { Pagination } from "@/shared/components/datatable/components/pagination";
+import {
+	cellStyles,
+	headerStyles,
+} from "@/shared/components/datatable/constants";
+import { useSelection } from "@/shared/components/datatable/hooks/use-selection";
+import useSorting from "@/shared/components/datatable/hooks/use-sorting";
 import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 import { Checkbox } from "@/shared/components/ui/checkbox";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import {
 	Table,
 	TableBody,
 	TableCell,
+	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/shared/components/ui/table";
-import { getCellStyles, getHeaderStyles } from "@/shared/constants";
-import { useSelection } from "@/shared/hooks/use-selection";
-import useSorting from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/lib/utils";
 import {
 	ArrowDown,
@@ -25,17 +32,21 @@ import {
 	MapPin,
 	Receipt,
 	Tag,
+	UserPlus,
 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { use } from "react";
-import RowActions from "../row-actions";
+import RowActions from "../../../../../app/dashboard/[organizationId]/clients/components/row-actions";
 import { STATUS_VARIANTS } from "./constants";
 import { ClientListProps } from "./types";
-
 // Mapping des variants de Badge pour les statuts client
 
-export function ClientTable({ clientsPromise }: ClientListProps) {
+export function ClientDatatable({ clientsPromise }: ClientListProps) {
 	const response = use(clientsPromise);
-	const clients = response.clients;
+	const { clients, pagination } = response;
+	const params = useParams();
+	const organizationId = params.organizationId as string;
 
 	const {
 		isPending: isSelectionPending,
@@ -67,6 +78,23 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 	const clientIds = clients.map((client) => client.id);
 	const allSelected = areAllSelected(clientIds);
 
+	if (!clients.length) {
+		return (
+			<EmptyState
+				icon={UserPlus}
+				title="Aucun client trouvé"
+				description="Vous pouvez créer un client en cliquant sur le bouton ci-dessous"
+				action={
+					<Button asChild size="default">
+						<Link href={`/dashboard/${organizationId}/clients/new`}>
+							Nouveau client
+						</Link>
+					</Button>
+				}
+			/>
+		);
+	}
+
 	return (
 		<div className="rounded-md bg-card p-4">
 			<Table
@@ -87,7 +115,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 						</TableHead>
 						{/* En-tête Client */}
 						<TableHead
-							className={getHeaderStyles()}
+							className={headerStyles()}
 							onClick={() => sortBy("name")}
 						>
 							<div className="flex items-center gap-2">
@@ -106,13 +134,13 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 						</TableHead>
 
 						{/* En-tête Type */}
-						<TableHead className={getHeaderStyles("tablet")}>
+						<TableHead className={headerStyles("tablet")}>
 							<span className="font-medium">Type</span>
 						</TableHead>
 
 						{/* En-tête Statut */}
 						<TableHead
-							className={getHeaderStyles("tablet")}
+							className={headerStyles("tablet")}
 							onClick={() => sortBy("status")}
 						>
 							<div className="flex items-center gap-2">
@@ -131,17 +159,17 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 						</TableHead>
 
 						{/* En-tête Infos fiscales */}
-						<TableHead className={getHeaderStyles("desktop")}>
+						<TableHead className={headerStyles("desktop")}>
 							<span className="font-medium">Infos fiscales</span>
 						</TableHead>
 
 						{/* En-tête Adresse */}
-						<TableHead className={getHeaderStyles("desktop")}>
+						<TableHead className={headerStyles("desktop")}>
 							<span className="font-medium">Adresse</span>
 						</TableHead>
 
 						{/* En-tête Actions */}
-						<TableHead className={cn(getHeaderStyles(), "text-right")}>
+						<TableHead className={cn(headerStyles(), "text-right")}>
 							<span className="font-medium"></span>
 						</TableHead>
 					</TableRow>
@@ -165,7 +193,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 									/>
 								</TableCell>
 								{/* Cellule Client */}
-								<TableCell className={getCellStyles()}>
+								<TableCell className={cellStyles()}>
 									<div className="w-[200px] flex flex-col space-y-1">
 										<div className="flex items-center gap-2">
 											<div className="font-medium truncate">{client.name}</div>
@@ -180,7 +208,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 								</TableCell>
 
 								{/* Cellule Type */}
-								<TableCell className={getCellStyles("tablet")}>
+								<TableCell className={cellStyles("tablet")}>
 									<div className="flex items-center gap-2">
 										<BuildingIcon className="h-4 w-4 text-muted-foreground shrink-0" />
 										<span>
@@ -194,7 +222,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 								</TableCell>
 
 								{/* Cellule Statut */}
-								<TableCell className={getCellStyles("tablet")}>
+								<TableCell className={cellStyles("tablet")}>
 									<div>
 										<Badge
 											variant={STATUS_VARIANTS[client.status] || "outline"}
@@ -209,7 +237,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 								</TableCell>
 
 								{/* Cellule Infos fiscales */}
-								<TableCell className={getCellStyles("desktop")}>
+								<TableCell className={cellStyles("desktop")}>
 									<div className="flex flex-col space-y-1 max-w-[150px]">
 										{client.siret && (
 											<div className="flex items-center gap-1.5 text-xs">
@@ -232,7 +260,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 								</TableCell>
 
 								{/* Cellule Adresse */}
-								<TableCell className={getCellStyles("desktop")}>
+								<TableCell className={cellStyles("desktop")}>
 									<div className="flex items-center gap-2 max-w-[200px]">
 										<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
 										{client.addresses &&
@@ -258,7 +286,7 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 								</TableCell>
 
 								{/* Cellule Actions */}
-								<TableCell className={getCellStyles(undefined, "right")}>
+								<TableCell>
 									<div className="flex justify-end">
 										<RowActions client={client} />
 									</div>
@@ -267,6 +295,18 @@ export function ClientTable({ clientsPromise }: ClientListProps) {
 						);
 					})}
 				</TableBody>
+				<TableFooter>
+					<TableRow>
+						<TableCell colSpan={7} className="py-4">
+							<Pagination
+								total={pagination.total}
+								pageCount={pagination.pageCount}
+								page={pagination.page}
+								perPage={pagination.perPage}
+							/>
+						</TableCell>
+					</TableRow>
+				</TableFooter>
 			</Table>
 		</div>
 	);

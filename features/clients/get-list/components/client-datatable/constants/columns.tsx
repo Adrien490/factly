@@ -1,5 +1,6 @@
 "use client";
 
+import RowActions from "@/app/dashboard/[organizationId]/clients/components/row-actions";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
 import { GetClientsReturn } from "@/features/clients/get-list/types";
@@ -7,7 +8,6 @@ import { ColumnDef } from "@/shared/components/datatable/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { ClientStatus } from "@prisma/client";
 import { BuildingIcon, CircleDot, MapPin, Receipt, Tag } from "lucide-react";
-import RowActions from "./row-actions";
 
 // Mapping des variants de Badge pour les statuts client
 const STATUS_VARIANTS: Record<

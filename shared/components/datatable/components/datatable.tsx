@@ -1,24 +1,25 @@
 "use client";
 
-import { useSelection } from "@/shared/hooks/use-selection";
+import { useSelection } from "@/shared/components/datatable/hooks/use-selection";
 import { cn } from "@/shared/lib/utils";
 import { ArrowDown, ArrowUp, ChevronsUpDown, Search } from "lucide-react";
 
-import { Pagination, PaginationProps } from "@/shared/components/pagination";
+import useSorting from "@/shared/components/datatable/hooks/use-sorting";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import {
 	Table,
 	TableBody,
 	TableCell,
+	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/shared/components/ui/table";
-import useSorting from "@/shared/hooks/use-sorting";
-import { SelectionToolbar } from "../../selection-toolbar";
 import { cellStyles } from "../constants";
 import { ColumnDef } from "../types";
+import { Pagination, PaginationProps } from "./pagination";
+import { SelectionToolbar } from "./selection/selection-toolbar";
 
 export interface DataTableProps<T extends { id: string }> {
 	data: T[];
@@ -98,16 +99,10 @@ export function DataTable<T extends { id: string }>({
 							{columns.map((column) => (
 								<TableHead
 									key={column.id}
-									className={cn(cellStyles<T>(column), "")}
+									className={cn(cellStyles(column.visibility), "")}
 									onClick={() => column.sortable && sortBy(column.id)}
 								>
-									<div
-										className={cn(
-											"flex items-center gap-2",
-											column.align === "right" && "justify-end",
-											column.align === "center" && "justify-center"
-										)}
-									>
+									<div className={cn("flex items-center gap-2")}>
 										<span className="flex-1 font-medium">
 											{typeof column.header === "function"
 												? column.header()
@@ -160,7 +155,7 @@ export function DataTable<T extends { id: string }>({
 									{columns.map((column) => (
 										<TableCell
 											key={`${id}-${column.id}`}
-											className={cellStyles<T>(column)}
+											className={cellStyles(column.visibility)}
 										>
 											{column.cell(item)}
 										</TableCell>
@@ -169,10 +164,22 @@ export function DataTable<T extends { id: string }>({
 							);
 						})}
 					</TableBody>
+					{pagination && (
+						<TableFooter>
+							<TableRow>
+								<TableCell colSpan={7} className="py-4">
+									<Pagination
+										total={pagination.total}
+										pageCount={pagination.pageCount}
+										page={pagination.page}
+										perPage={pagination.perPage}
+									/>
+								</TableCell>
+							</TableRow>
+						</TableFooter>
+					)}
 				</Table>
 			</div>
-
-			{pagination && <Pagination {...pagination} />}
 		</div>
 	);
 }

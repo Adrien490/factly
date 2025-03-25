@@ -5,6 +5,7 @@ import {
 	ClientSortableField,
 	clientSortableFields,
 } from "@/features/clients/get-list/constants/client-sortable-fields";
+import { DataTable } from "@/shared/components/datatable";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
 import { PageContainer } from "@/shared/components/page-container";
@@ -14,7 +15,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
-import { ClientTable } from "./components/client-table";
+import { columns } from "../../../../features/clients/get-list/components/client-datatable/constants/columns";
 
 // Options pour le type de client
 
@@ -61,6 +62,8 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				{}
 			),
 	};
+
+	const { clients, pagination } = await getClients(queryParams);
 
 	return (
 		<PageContainer className="pb-12">
@@ -118,7 +121,12 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</Card>
 
 			{/* Tableau de données */}
-			<ClientTable clientsPromise={getClients(queryParams)} />
+			<DataTable
+				selection={{ key: "selectedClients" }}
+				data={clients}
+				columns={columns}
+				pagination={pagination}
+			/>
 		</PageContainer>
 	);
 }
