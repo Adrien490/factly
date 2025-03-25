@@ -1,94 +1,54 @@
 "use client";
 
 import { cn } from "@/shared/lib/utils";
+import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { HTMLAttributes } from "react";
-import { LoaderAlign, LoaderColor, LoaderSize, LoaderVariant } from "../types";
-
-export interface LoaderProps extends HTMLAttributes<HTMLDivElement> {
-	size?: LoaderSize;
-	text?: string;
-	className?: string;
-	variant?: LoaderVariant;
-	color?: LoaderColor;
-	align?: LoaderAlign;
-}
+import { LoaderFullscreen } from "../../loader-fullscreen";
+import {
+	alignClass,
+	bgColorClass,
+	colorClass,
+	loaderAnimations,
+	sizeClasses,
+} from "../constants";
+import { LoaderProps } from "../types";
 
 export function Loader({
 	size = "sm",
 	text,
 	className,
 	variant = "spinner",
-	color = "default",
+	color = "primary",
 	align = "center",
 	...props
 }: LoaderProps) {
-	// Configurations pour les différentes tailles et couleurs
-	const sizeClasses = {
-		icons: {
-			xs: "h-3 w-3",
-			sm: "h-4 w-4",
-			md: "h-5 w-5",
-			lg: "h-6 w-6",
-		},
-		dots: {
-			xs: "h-1.5 w-1.5",
-			sm: "h-2 w-2",
-			md: "h-2.5 w-2.5",
-			lg: "h-3 w-3",
-		},
-		text: {
-			xs: "text-xs",
-			sm: "text-xs",
-			md: "text-sm",
-			lg: "text-sm",
-		},
-	};
-
-	const alignClass = {
-		start: "justify-start",
-		center: "justify-center",
-		end: "justify-end",
-	}[align];
-
-	const colorClass = {
-		default: "text-muted-foreground",
-		primary: "text-primary",
-		secondary: "text-secondary",
-	}[color];
-
-	const bgColorClass = {
-		default: "bg-muted-foreground",
-		primary: "bg-primary",
-		secondary: "bg-secondary",
-	}[color];
-
 	return (
 		<div
-			className={cn("flex items-center gap-2", alignClass, className)}
+			className={cn("flex items-center gap-3", alignClass[align], className)}
 			aria-live="polite"
 			role="status"
 			{...props}
 		>
 			{/* Loader basé sur la variante sélectionnée */}
 			{variant === "dots" ? (
-				<div className="flex space-x-2 items-center">
+				<motion.div
+					className="flex space-x-2 items-center"
+					variants={loaderAnimations.dots.container}
+					initial="initial"
+					animate="animate"
+				>
 					{[0, 1, 2].map((i) => (
-						<div
+						<motion.div
 							key={i}
+							variants={loaderAnimations.dots.item}
 							className={cn(
 								"rounded-full",
 								sizeClasses.dots[size],
-								bgColorClass,
-								"animate-bounce"
+								bgColorClass[color]
 							)}
-							style={{
-								animationDuration: "0.8s",
-								animationDelay: `${i * 0.15}s`,
-							}}
 						/>
 					))}
-				</div>
+				</motion.div>
 			) : variant === "pulse" ? (
 				<div
 					className={cn(
@@ -96,28 +56,89 @@ export function Loader({
 						sizeClasses.icons[size]
 					)}
 				>
-					<div
+					<motion.div
+						variants={loaderAnimations.pulse}
+						initial="initial"
+						animate="animate"
 						className={cn(
-							"absolute inset-0 rounded-full opacity-25 animate-ping",
-							colorClass
+							"absolute rounded-full",
+							sizeClasses.icons[size],
+							colorClass[color]
 						)}
 					/>
 					<div
-						className={cn("rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5", colorClass)}
+						className={cn(
+							"rounded-full",
+							sizeClasses.dots[size],
+							bgColorClass[color]
+						)}
 					/>
 				</div>
 			) : (
-				<Loader2
-					className={cn(sizeClasses.icons[size], "animate-spin", colorClass)}
-				/>
+				<motion.div
+					variants={loaderAnimations.spinner}
+					initial="initial"
+					animate="animate"
+					className="flex items-center justify-center"
+				>
+					<Loader2 className={cn(sizeClasses.icons[size], colorClass[color])} />
+				</motion.div>
 			)}
 
 			{/* Texte optionnel */}
 			{text && (
-				<span className={cn(sizeClasses.text[size], "font-medium", colorClass)}>
+				<motion.span
+					initial={{ opacity: 0, y: 5 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.3, ease: "easeOut" }}
+					className={cn(
+						sizeClasses.text[size],
+						"font-medium",
+						colorClass[color]
+					)}
+				>
 					{text}
-				</span>
+				</motion.span>
 			)}
 		</div>
 	);
 }
+
+// Ajouter le composant LoaderFullscreen comme propriété de Loader
+Loader.Fullscreen = LoaderFullscreen;
+
+// Bouton avec état de chargement intégré
+Loader.Button = function LoaderButton({
+	children,
+	loading = false,
+	disabled,
+	loaderSize = "sm",
+	loaderColor = "white",
+	variant = "spinner",
+	className,
+	...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+	loading?: boolean;
+	loaderSize?: LoaderProps["size"];
+	loaderColor?: LoaderProps["color"];
+	variant?: LoaderProps["variant"];
+}) {
+	return (
+		<button
+			disabled={disabled || loading}
+			className={cn(
+				"relative inline-flex items-center justify-center",
+				loading && "cursor-not-allowed",
+				className
+			)}
+			{...props}
+		>
+			{loading && (
+				<span className="absolute inset-0 flex items-center justify-center">
+					<Loader variant={variant} size={loaderSize} color={loaderColor} />
+				</span>
+			)}
+			<span className={cn(loading && "invisible")}>{children}</span>
+		</button>
+	);
+};
