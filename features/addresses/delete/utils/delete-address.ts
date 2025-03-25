@@ -41,7 +41,7 @@ export async function deleteAddress(
 				isDefault: true,
 				clientId: true,
 				supplierId: true,
-				Client: { select: { organizationId: true } },
+				client: { select: { organizationId: true } },
 				supplier: { select: { organizationId: true } },
 			},
 		});
@@ -52,7 +52,7 @@ export async function deleteAddress(
 
 		// Vérifier les droits d'accès à l'organisation
 		const organizationId =
-			existingAddress.Client?.organizationId ||
+			existingAddress.client?.organizationId ||
 			existingAddress.supplier?.organizationId;
 
 		if (!organizationId) {

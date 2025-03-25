@@ -19,8 +19,8 @@ import { FormFooter } from "@/shared/components/forms/components/form-footer";
 import { FormLayout } from "@/shared/components/forms/components/form-layout";
 import { FormSection } from "@/shared/components/forms/components/form-section";
 
-import { clientStatuses } from "@/features/clients/constants/client-statuses";
-import { clientTypes } from "@/features/clients/constants/client-types";
+import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
 import { useCreateClient } from "@/features/clients/create";
 import { useCheckReference } from "@/features/references/check";
 import { generateReference } from "@/features/references/generate/utils/generate-reference";
@@ -333,7 +333,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
-											{clientTypes.map((type) => (
+											{CLIENT_TYPE_OPTIONS.map((type) => (
 												<SelectItem key={type.value} value={type.value}>
 													{type.label}
 												</SelectItem>
@@ -642,7 +642,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 											<SelectValue placeholder="Sélectionnez un statut" />
 										</SelectTrigger>
 										<SelectContent>
-											{clientStatuses.map((status) => (
+											{CLIENT_STATUS_OPTIONS.map((status) => (
 												<SelectItem key={status.value} value={status.value}>
 													{status.label}
 												</SelectItem>

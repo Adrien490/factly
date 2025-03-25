@@ -1,7 +1,7 @@
 "use client";
 
-import { clientStatuses } from "@/features/clients/constants/client-statuses";
-import { clientTypes } from "@/features/clients/constants/client-types";
+import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
 import { GetClientsReturn } from "@/features/clients/get-list/types";
 import {
 	Card,
@@ -29,11 +29,11 @@ interface ClientExpandedProps {
 export function ClientExpanded({ client }: ClientExpandedProps) {
 	const defaultAddress = client.addresses?.find((addr) => addr.isDefault);
 	const clientType =
-		clientTypes.find((type) => type.value === client.clientType)?.label ||
-		"Non spécifié";
+		CLIENT_TYPE_OPTIONS.find((type) => type.value === client.clientType)
+			?.label || "Non spécifié";
 	const clientStatus =
-		clientStatuses.find((status) => status.value === client.status)?.label ||
-		"Non spécifié";
+		CLIENT_STATUS_OPTIONS.find((status) => status.value === client.status)
+			?.label || "Non spécifié";
 
 	return (
 		<div className="p-4 bg-muted/30 grid md:grid-cols-2 gap-4">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSelection } from "@/shared/components/datatable/hooks/use-selection";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import {
@@ -11,7 +12,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components/ui/table";
-import { useSelection } from "@/shared/hooks/use-selection";
 import { useSorting } from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/lib/utils";
 import { ArrowDown, ArrowUp, ChevronsUpDown, Search } from "lucide-react";
@@ -98,7 +98,7 @@ export function DataTable<T extends { id: string }>({
 						/>
 					</TableCell>
 				</TableRow>
-				<TableRow className="hover:bg-transparent" role="row">
+				<TableRow role="row">
 					{selection && (
 						<TableHead className="w-[40px]" role="columnheader">
 							<Checkbox

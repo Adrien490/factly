@@ -1,13 +1,9 @@
 import { ClientType } from "@prisma/client";
+import { ClientTypeOption } from "../types";
 
 /**
  * Interface pour les options de type de client
  */
-export interface ClientTypeOption {
-	value: ClientType;
-	label: string;
-	description: string;
-}
 
 /**
  * Mapping des types de client vers des libellés plus lisibles
@@ -40,4 +36,4 @@ export function getClientTypes(): ClientTypeOption[] {
 /**
  * Liste complète des options de type de client
  */
-export const clientTypes = getClientTypes();
+export const CLIENT_TYPE_OPTIONS = getClientTypes();

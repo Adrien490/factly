@@ -1,8 +1,8 @@
 import { getAddresses } from "@/features/addresses";
 import { AddressDataTable } from "@/features/addresses/components/address-datatable";
 import { GetAddressesParams } from "@/features/addresses/get-list/types";
-import { clientStatuses } from "@/features/clients/constants/client-statuses";
-import { clientTypes } from "@/features/clients/constants/client-types";
+import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
 import { PageContainer } from "@/shared/components/page-container";
@@ -99,12 +99,12 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						<MultiSelectFilter
 							filterKey="status"
 							label="Statut"
-							options={clientStatuses}
+							options={CLIENT_STATUS_OPTIONS}
 						/>
 						<FilterSelect
 							filterKey="clientType"
 							label="Type"
-							options={clientTypes}
+							options={CLIENT_TYPE_OPTIONS}
 						/>
 					</div>
 				</div>

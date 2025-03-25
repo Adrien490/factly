@@ -1,24 +1,11 @@
 "use client";
-import { clientStatuses } from "@/features/clients/constants/client-statuses";
-import { clientTypes } from "@/features/clients/constants/client-types";
+import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
 import { RowActions } from "@/features/clients/get-list/components/client-datatable/components/row-actions";
 import { GetClientsReturn } from "@/features/clients/get-list/types";
 import { ColumnDef } from "@/shared/components/datatable/types";
 import { Badge } from "@/shared/components/ui/badge";
-import { ClientStatus } from "@prisma/client";
 import { BuildingIcon, CircleDot, MapPin, Receipt, Tag } from "lucide-react";
-
-// Mapping des variants de Badge pour les statuts client
-const STATUS_VARIANTS: Record<
-	ClientStatus,
-	"default" | "secondary" | "destructive" | "outline"
-> = {
-	[ClientStatus.LEAD]: "secondary",
-	[ClientStatus.PROSPECT]: "default",
-	[ClientStatus.ACTIVE]: "default",
-	[ClientStatus.INACTIVE]: "outline",
-	[ClientStatus.ARCHIVED]: "destructive",
-};
 
 export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 	{
@@ -50,8 +37,9 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 				<BuildingIcon className="h-4 w-4 text-muted-foreground shrink-0" />
 				<span>
 					{
-						clientTypes.find((option) => option.value === client.clientType)
-							?.label
+						CLIENT_TYPE_OPTIONS.find(
+							(option) => option.value === client.clientType
+						)?.label
 					}
 				</span>
 			</div>
@@ -64,10 +52,17 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 		visibility: "tablet",
 		cell: (client) => (
 			<div>
-				<Badge variant={STATUS_VARIANTS[client.status] || "outline"}>
+				<Badge
+					className={
+						CLIENT_STATUS_OPTIONS.find(
+							(option) => option.value === client.status
+						)?.color || "outline"
+					}
+				>
 					{
-						clientStatuses.find((option) => option.value === client.status)
-							?.label
+						CLIENT_STATUS_OPTIONS.find(
+							(option) => option.value === client.status
+						)?.label
 					}
 				</Badge>
 			</div>

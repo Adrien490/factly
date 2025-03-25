@@ -1,5 +1,5 @@
-import { clientStatuses } from "@/features/clients/constants/client-statuses";
-import { clientTypes } from "@/features/clients/constants/client-types";
+import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
 import { getClients, GetClientsParams } from "@/features/clients/get-list";
 import { ClientDatatable } from "@/features/clients/get-list/components";
 import {
@@ -93,7 +93,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			{/* Barre de recherche et filtres */}
 			<Card className="mb-4 py-4 space-y-4">
 				{/* Recherche */}
-				<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+				<div className="px-2 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
 					<SearchForm
 						paramName="search"
 						placeholder="Rechercher par nom, email, référence, SIREN..."
@@ -106,12 +106,12 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						<MultiSelectFilter
 							filterKey="status"
 							label="Statut"
-							options={clientStatuses}
+							options={CLIENT_STATUS_OPTIONS}
 						/>
 						<FilterSelect
 							filterKey="clientType"
 							label="Type"
-							options={clientTypes}
+							options={CLIENT_TYPE_OPTIONS}
 						/>
 					</div>
 				</div>

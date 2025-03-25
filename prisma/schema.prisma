@@ -296,7 +296,7 @@ model Address {
 
   supplier   Supplier? @relation(fields: [supplierId], references: [id])
   supplierId String?
-  Client     Client?   @relation(fields: [clientId], references: [id])
+  client     Client?   @relation(fields: [clientId], references: [id])
   clientId   String?
 
   @@index([supplierId])

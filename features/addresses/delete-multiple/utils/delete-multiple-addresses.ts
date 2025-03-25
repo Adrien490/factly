@@ -45,7 +45,7 @@ export async function deleteMultipleAddresses(
 				isDefault: true,
 				clientId: true,
 				supplierId: true,
-				Client: { select: { organizationId: true } },
+				client: { select: { organizationId: true } },
 				supplier: { select: { organizationId: true } },
 			},
 		});
@@ -61,7 +61,7 @@ export async function deleteMultipleAddresses(
 		// Vérifier les droits d'accès à l'organisation pour chaque adresse
 		for (const address of addresses) {
 			const organizationId =
-				address.Client?.organizationId || address.supplier?.organizationId;
+				address.client?.organizationId || address.supplier?.organizationId;
 
 			if (!organizationId) {
 				continue; // Ignorer cette adresse

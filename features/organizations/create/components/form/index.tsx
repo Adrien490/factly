@@ -19,7 +19,7 @@ import { FormSection } from "@/shared/components/forms/components/form-section";
 import { SearchAddressReturn } from "@/features/address-api/queries/search-address";
 import { FormattedAddressResult } from "@/features/address-api/types";
 import { useCreateOrganization } from "@/features/organizations/create";
-import legalFormOptions from "@/features/organizations/lib/legal-form-options";
+import { LEGAL_FORM_OPTIONS } from "@/features/organizations/legal-form-options";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { FieldInfo } from "@/shared/components/forms/components/field-info";
 import { useToast } from "@/shared/hooks/use-toast";
@@ -336,7 +336,7 @@ export function CreateOrganizationForm({
 											<SelectValue placeholder="Sélectionnez une forme juridique" />
 										</SelectTrigger>
 										<SelectContent>
-											{legalFormOptions.map((option) => (
+											{LEGAL_FORM_OPTIONS.map((option) => (
 												<SelectItem key={option.value} value={option.value}>
 													{option.label}
 												</SelectItem>

@@ -3,7 +3,7 @@ import { LegalForm } from "@prisma/client";
 /**
  * Mapping des formes juridiques vers des libellés plus lisibles
  */
-const LEGAL_FORM_LABELS: Record<LegalForm, string> = {
+export const LEGAL_FORM_LABELS: Record<LegalForm, string> = {
 	[LegalForm.EI]: "Entreprise Individuelle",
 	[LegalForm.EIRL]: "Entreprise Individuelle à Responsabilité Limitée",
 	[LegalForm.EURL]: "Entreprise Unipersonnelle à Responsabilité Limitée",
@@ -21,27 +21,12 @@ const LEGAL_FORM_LABELS: Record<LegalForm, string> = {
 };
 
 /**
- * Génère les options de forme juridique pour les composants de formulaire
- * @param includeAll Si true, inclut toutes les formes juridiques, sinon exclut les formes rares
- * @returns Un tableau d'options prêtes à l'emploi pour les composants de sélection
+ * Options de forme juridique pré-calculées
+ * Calculées une seule fois pour plus d'efficacité
  */
-export function getLegalFormOptions(): {
-	label: string;
-	value: LegalForm;
-}[] {
-	// Sélection des formes juridiques à inclure
-	const formsToInclude = Object.values(LegalForm);
+export const LEGAL_FORM_OPTIONS = Object.values(LegalForm).map((form) => ({
+	label: LEGAL_FORM_LABELS[form],
+	value: form,
+}));
 
-	// Création du tableau d'options
-	return formsToInclude.map((form) => ({
-		label: LEGAL_FORM_LABELS[form] || String(form),
-		value: form,
-	}));
-}
-
-/**
- * Liste complète des options de forme juridique
- */
-const legalFormOptions = getLegalFormOptions();
-
-export default legalFormOptions;
+// Export par défaut pour faciliter l'import

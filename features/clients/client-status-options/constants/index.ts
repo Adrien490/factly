@@ -1,14 +1,5 @@
 import { ClientStatus } from "@prisma/client";
-
-/**
- * Interface pour les options de statut client
- */
-export interface ClientStatusOption {
-	value: ClientStatus;
-	label: string;
-	description: string;
-	color: string; // Couleur pour affichage visuel (badges, indicateurs)
-}
+import { ClientStatusOption } from "../types";
 
 /**
  * Mapping des statuts client vers des libellés plus lisibles
@@ -62,4 +53,4 @@ export function getClientStatuses(): ClientStatusOption[] {
 /**
  * Liste complète des options de statut client
  */
-export const clientStatuses = getClientStatuses();
+export const CLIENT_STATUS_OPTIONS = getClientStatuses();
