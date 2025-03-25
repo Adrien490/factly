@@ -1,11 +1,12 @@
 import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
-import { getClients, GetClientsParams } from "@/features/clients/get-list";
+import { getClients } from "@/features/clients/get-list";
 import { ClientDatatable } from "@/features/clients/get-list/components";
 import {
 	ClientSortableField,
 	clientSortableFields,
 } from "@/features/clients/get-list/constants/client-sortable-fields";
+import { hasOrganizationAccess } from "@/features/organizations/has-access";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
 import { PageContainer } from "@/shared/components/page-container";
@@ -15,6 +16,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
+import { forbidden } from "next/navigation";
 
 // Options pour le type de client
 
@@ -39,28 +41,9 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	const { perPage, page, sortBy, sortOrder, search, ...filters } =
 		resolvedSearchParams;
 
-	// Conversion des paramètres
-	const queryParams: GetClientsParams = {
-		organizationId,
-		perPage: Number(perPage) || 10,
-		page: Number(page) || 1,
-		sortBy: clientSortableFields.includes(sortBy as ClientSortableField)
-			? (sortBy as ClientSortableField)
-			: "createdAt",
-		sortOrder: (sortOrder as SortOrder) || "desc",
-		search: search,
-
-		// Traiter tous les filtres
-		filters: Object.entries(filters)
-			.filter(([key]) => key.startsWith("filter_"))
-			.reduce(
-				(acc, [key, value]) => ({
-					...acc,
-					[key.replace("filter_", "")]: value,
-				}),
-				{}
-			),
-	};
+	if (!hasOrganizationAccess(organizationId)) {
+		forbidden();
+	}
 
 	return (
 		<PageContainer className="pb-12">
@@ -118,7 +101,29 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</Card>
 
 			{/* Tableau de données */}
-			<ClientDatatable clientsPromise={getClients(queryParams)} />
+			<ClientDatatable
+				clientsPromise={getClients({
+					organizationId,
+					perPage: Number(perPage) || 10,
+					page: Number(page) || 1,
+					sortBy: clientSortableFields.includes(sortBy as ClientSortableField)
+						? (sortBy as ClientSortableField)
+						: "createdAt",
+					sortOrder: (sortOrder as SortOrder) || "desc",
+					search: search,
+
+					// Traiter tous les filtres
+					filters: Object.entries(filters)
+						.filter(([key]) => key.startsWith("filter_"))
+						.reduce(
+							(acc, [key, value]) => ({
+								...acc,
+								[key.replace("filter_", "")]: value,
+							}),
+							{}
+						),
+				})}
+			/>
 		</PageContainer>
 	);
 }

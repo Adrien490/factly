@@ -27,9 +27,6 @@ export async function hasOrganizationAccess(organizationId: string) {
 	});
 
 	if (!organization) {
-		console.log(
-			`[HAS_ORGANIZATION_ACCESS] L'organisation ${organizationId} n'existe pas`
-		);
 		return false;
 	}
 
