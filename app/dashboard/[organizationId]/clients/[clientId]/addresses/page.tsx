@@ -1,11 +1,8 @@
+import { getAddresses } from "@/features/addresses";
+import { AddressDataTable } from "@/features/addresses/components/address-datatable";
+import { GetAddressesParams } from "@/features/addresses/get-list/types";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
-import { getClients, GetClientsParams } from "@/features/clients/get-list";
-import { ClientDatatable } from "@/features/clients/get-list/components";
-import {
-	ClientSortableField,
-	clientSortableFields,
-} from "@/features/clients/get-list/constants/client-sortable-fields";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
 import { PageContainer } from "@/shared/components/page-container";
@@ -16,37 +13,31 @@ import { Card } from "@/shared/components/ui/card";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 
-// Options pour le type de client
-
-type PageProps = {
+type Props = {
+	params: Promise<{
+		organizationId: string;
+		clientId: string;
+	}>;
 	searchParams: Promise<{
 		perPage?: string;
-		cursor?: string;
+		page?: string;
 		sortBy?: string;
 		sortOrder?: SortOrder;
 		search?: string;
-		[key: string]: string | undefined;
-	}>;
-	params: Promise<{
-		organizationId: string;
 	}>;
 };
-
-export default async function ClientsPage({ searchParams, params }: PageProps) {
+export default async function AddressesPage({ searchParams, params }: Props) {
 	const resolvedSearchParams = await searchParams;
 	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
-	const { perPage, page, sortBy, sortOrder, search, ...filters } =
-		resolvedSearchParams;
+	const { organizationId, clientId } = resolvedParams;
+	const { perPage, page, sortOrder, search, ...filters } = resolvedSearchParams;
 
 	// Conversion des paramètres
-	const queryParams: GetClientsParams = {
-		organizationId,
+	const queryParams: GetAddressesParams = {
+		clientId,
 		perPage: Number(perPage) || 10,
 		page: Number(page) || 1,
-		sortBy: clientSortableFields.includes(sortBy as ClientSortableField)
-			? (sortBy as ClientSortableField)
-			: "createdAt",
+
 		sortOrder: (sortOrder as SortOrder) || "desc",
 		search: search,
 
@@ -66,24 +57,26 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 		<PageContainer className="pb-12">
 			{/* En-tête avec action principale */}
 			<PageHeader
-				title="Clients"
-				description="Gérez votre portefeuille clients"
+				title="Adresses"
+				description="Gérez les adresses de votre client"
 				action={
-					<Button asChild size="default">
-						<Link href={`/dashboard/${organizationId}/clients/new`}>
-							Nouveau client
+					<Button>
+						<Link
+							href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
+						>
+							Nouvelle adresse
 						</Link>
 					</Button>
 				}
 				navigation={{
 					items: [
 						{
-							label: "Liste des clients",
-							href: `/dashboard/${organizationId}/clients`,
+							label: "Liste des adresses",
+							href: `/dashboard/${organizationId}/clients/${clientId}/addresses`,
 						},
 						{
-							label: "Nouveau client",
-							href: `/dashboard/${organizationId}/clients/new`,
+							label: "Nouvelle adresse",
+							href: `/dashboard/${organizationId}/clients/${clientId}/addresses/new`,
 						},
 					],
 				}}
@@ -118,7 +111,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</Card>
 
 			{/* Tableau de données */}
-			<ClientDatatable clientsPromise={getClients(queryParams)} />
+			<AddressDataTable addressesPromise={getAddresses(queryParams)} />
 		</PageContainer>
 	);
 }

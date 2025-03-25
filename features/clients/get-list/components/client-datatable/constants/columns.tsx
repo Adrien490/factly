@@ -1,8 +1,7 @@
 "use client";
-
-import RowActions from "@/app/dashboard/[organizationId]/clients/components/row-actions";
 import { clientStatuses } from "@/features/clients/constants/client-statuses";
 import { clientTypes } from "@/features/clients/constants/client-types";
+import { RowActions } from "@/features/clients/get-list/components/client-datatable/components/row-actions";
 import { GetClientsReturn } from "@/features/clients/get-list/types";
 import { ColumnDef } from "@/shared/components/datatable/types";
 import { Badge } from "@/shared/components/ui/badge";
@@ -27,6 +26,7 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 		header: "Client",
 		sortable: true,
 		visibility: "always",
+
 		cell: (client) => (
 			<div className="w-[200px] flex flex-col space-y-1">
 				<div className="flex items-center gap-2">
@@ -124,11 +124,10 @@ export const columns: ColumnDef<GetClientsReturn["clients"][number]>[] = [
 	},
 	{
 		id: "actions",
-		header: "",
-		align: "right",
-		visibility: "always",
+		header: "Actions",
+		visibility: "desktop",
 		cell: (client) => (
-			<div className="flex justify-end">
+			<div className="flex items-center gap-2 justify-end">
 				<RowActions client={client} />
 			</div>
 		),

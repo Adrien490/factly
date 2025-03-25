@@ -5,7 +5,7 @@ import { MenuActions } from "@/shared/components/menu-actions";
 import { ServerActionStatus } from "@/shared/types/server-action";
 import { Trash2Icon } from "lucide-react";
 
-export default function ClientSelectionActions() {
+export function SelectionActions() {
 	const { state, action, isPending } = useDeleteClient();
 
 	return (

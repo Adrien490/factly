@@ -10,7 +10,7 @@ type Props = {
 	client: GetClientsReturn["clients"][number];
 };
 
-export default function RowActions({ client }: Props) {
+export function RowActions({ client }: Props) {
 	const { state, action, isPending } = useDeleteClient();
 
 	return (

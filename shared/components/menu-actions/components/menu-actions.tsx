@@ -76,6 +76,7 @@ export function MenuActions({
 							onSelect={(e) => {
 								if (action.onClick) {
 									e.preventDefault();
+									e.stopPropagation();
 									action.onClick();
 								}
 							}}

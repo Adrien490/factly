@@ -1,8 +1,5 @@
 "use client";
 
-import useSorting, {
-	SortDirection,
-} from "@/shared/components/datatable/hooks/use-sorting";
 import { Button } from "@/shared/components/ui/button";
 import {
 	DropdownMenu,
@@ -12,6 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
+import { SortDirection, useSorting } from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/lib/utils";
 import { Filter, SlidersHorizontal } from "lucide-react";
 import * as React from "react";

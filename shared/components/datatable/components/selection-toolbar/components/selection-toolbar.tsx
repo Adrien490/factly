@@ -12,7 +12,7 @@ export function SelectionToolbar({ selectedItems = [], actions }: Props) {
 	const hasSelection = count > 0;
 
 	return (
-		<div className="mb-4 bg-card rounded-md py-2 px-4 flex items-center justify-between">
+		<div className="flex items-center justify-between">
 			<div className="flex items-center gap-2 h-8">
 				<CheckSquare
 					className={`h-4 w-4 ${

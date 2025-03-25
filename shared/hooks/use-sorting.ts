@@ -26,7 +26,7 @@ interface UseSortingOptions {
 	preserveParams?: boolean;
 }
 
-export default function useSorting(options: UseSortingOptions = {}) {
+export function useSorting(options: UseSortingOptions = {}) {
 	const {
 		defaultColumn = null,
 		defaultDirection = "asc",

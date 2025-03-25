@@ -10,7 +10,7 @@ export type PaginationState = {
 	perPage: number;
 };
 
-export default function usePagination() {
+export function usePagination() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();
