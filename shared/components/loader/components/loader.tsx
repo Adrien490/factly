@@ -3,7 +3,6 @@
 import { cn } from "@/shared/lib/utils";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { LoaderFullscreen } from "../../loader-fullscreen";
 import {
 	alignClass,
 	bgColorClass,
@@ -103,42 +102,3 @@ export function Loader({
 		</div>
 	);
 }
-
-// Ajouter le composant LoaderFullscreen comme propriété de Loader
-Loader.Fullscreen = LoaderFullscreen;
-
-// Bouton avec état de chargement intégré
-Loader.Button = function LoaderButton({
-	children,
-	loading = false,
-	disabled,
-	loaderSize = "sm",
-	loaderColor = "white",
-	variant = "spinner",
-	className,
-	...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-	loading?: boolean;
-	loaderSize?: LoaderProps["size"];
-	loaderColor?: LoaderProps["color"];
-	variant?: LoaderProps["variant"];
-}) {
-	return (
-		<button
-			disabled={disabled || loading}
-			className={cn(
-				"relative inline-flex items-center justify-center",
-				loading && "cursor-not-allowed",
-				className
-			)}
-			{...props}
-		>
-			{loading && (
-				<span className="absolute inset-0 flex items-center justify-center">
-					<Loader variant={variant} size={loaderSize} color={loaderColor} />
-				</span>
-			)}
-			<span className={cn(loading && "invisible")}>{children}</span>
-		</button>
-	);
-};

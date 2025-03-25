@@ -1,8 +1,8 @@
 "use client";
 
 import { useSelection } from "@/shared/components/datatable/hooks/use-selection";
+import { EmptyState } from "@/shared/components/empty-state/components/empty-state";
 import { Checkbox } from "@/shared/components/ui/checkbox";
-import { EmptyState } from "@/shared/components/ui/empty-state";
 import {
 	Table,
 	TableBody,

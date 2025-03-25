@@ -2,9 +2,9 @@
 
 import { GetAddressesReturn } from "@/features/addresses/get-list/types";
 import { DataTable } from "@/shared/components/datatable";
+import { EmptyState } from "@/shared/components/empty-state/components/empty-state";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
-import { EmptyState } from "@/shared/components/ui/empty-state";
 import { PlusCircle } from "lucide-react";
 import { use } from "react";
 import { columns } from "./constants/columns";
