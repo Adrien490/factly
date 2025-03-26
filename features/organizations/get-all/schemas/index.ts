@@ -1,5 +1,5 @@
 import { z } from "zod";
-import ORGANIZATION_SORTABLE_FIELDS from "../../lib/organization-sortable-fields";
+import { ORGANIZATION_SORTABLE_FIELDS } from "../constants";
 
 /**
  * Schéma de validation pour la récupération des organisations

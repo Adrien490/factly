@@ -1,5 +1,5 @@
+import { searchAddress } from "@/features/addresses/search";
 import { CreateClientForm } from "@/features/clients/create/components/form";
-import { searchAddress } from "@/features/search-address";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { GetAddressesReturn } from "@/features/addresses/get-list/types";
+import { GetAddressesReturn } from "@/features/addresses/get-all/types";
 import { DataTable } from "@/shared/components/datatable";
 import { EmptyState } from "@/shared/components/empty-state/components/empty-state";
 import { Button } from "@/shared/components/ui/button";

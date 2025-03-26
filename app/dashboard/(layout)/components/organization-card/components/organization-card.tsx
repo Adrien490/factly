@@ -1,6 +1,6 @@
 "use client";
 
-import { type GetOrganizationsReturn } from "@/features/organizations/get-list";
+import { type GetOrganizationsReturn } from "@/features/organizations/get-all";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import {
 	DropdownMenu,

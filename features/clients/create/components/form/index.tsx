@@ -17,15 +17,15 @@ import { FormFooter } from "@/shared/components/forms/components/form-footer";
 import { FormLayout } from "@/shared/components/forms/components/form-layout";
 import { FormSection } from "@/shared/components/forms/components/form-section";
 
+import {
+	FormattedAddressResult,
+	SearchAddressReturn,
+} from "@/features/addresses/search";
 import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
 import { useCreateClient } from "@/features/clients/create";
 import { useCheckReference } from "@/features/references/check";
 import { generateReference } from "@/features/references/generate/utils/generate-reference";
-import {
-	FormattedAddressResult,
-	SearchAddressReturn,
-} from "@/features/search-address";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { FieldInfo } from "@/shared/components/forms/components/field-info";
 import { Loader } from "@/shared/components/loader";

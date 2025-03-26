@@ -1,11 +1,11 @@
 import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
-import { getClients } from "@/features/clients/get-list";
-import { ClientDatatable } from "@/features/clients/get-list/components";
+import { getClients } from "@/features/clients/get-all";
+import { ClientDatatable } from "@/features/clients/get-all/components";
 import {
 	ClientSortableField,
 	clientSortableFields,
-} from "@/features/clients/get-list/constants/client-sortable-fields";
+} from "@/features/clients/get-all/constants/client-sortable-fields";
 import { hasOrganizationAccess } from "@/features/organizations/has-access";
 import { FilterSelect } from "@/shared/components/filter-select";
 import { MultiSelectFilter } from "@/shared/components/multi-select-filter";

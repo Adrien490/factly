@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { getOrganizations } from "@/features/organizations/get-list";
+import { getOrganizations } from "@/features/organizations/get-all";
 import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
 import {
 	Breadcrumb,

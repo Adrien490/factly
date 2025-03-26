@@ -1,4 +1,4 @@
-import { GetClientsReturn } from "@/features/clients/get-list";
+import { GetClientsReturn } from "@/features/clients/get-all";
 import { Client } from "@prisma/client";
 
 export interface ClientListProps {

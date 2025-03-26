@@ -1,8 +1,8 @@
 "use client";
 import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
-import { RowActions } from "@/features/clients/get-list/components/client-datatable/components/row-actions";
-import { GetClientsReturn } from "@/features/clients/get-list/types";
+import { RowActions } from "@/features/clients/get-all/components/client-datatable/components/row-actions";
+import { GetClientsReturn } from "@/features/clients/get-all/types";
 import { ColumnDef } from "@/shared/components/datatable/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { BuildingIcon, CircleDot, MapPin, Receipt, Tag } from "lucide-react";

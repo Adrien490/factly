@@ -1,6 +1,6 @@
 "use client";
 
-import { GetOrganizationsReturn } from "@/features/organizations/get-list";
+import { GetOrganizationsReturn } from "@/features/organizations/get-all";
 import { OrganizationSwitcher } from "@/shared/components/organization-switcher";
 import {
 	Sidebar,

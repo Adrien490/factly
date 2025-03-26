@@ -1,5 +1,5 @@
+import { searchAddress } from "@/features/addresses";
 import { CreateOrganizationForm } from "@/features/organizations/create/components/form";
-import { searchAddress } from "@/features/search-address/utils/search-address";
 import { PageContainer } from "@/shared/components/page-container";
 
 type Props = {

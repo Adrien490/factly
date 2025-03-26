@@ -1,5 +1,5 @@
 "use client";
-import { GetAddressesReturn } from "@/features/addresses/get-list/types";
+import { GetAddressesReturn } from "@/features/addresses/get-all/types";
 import { ColumnDef } from "@/shared/components/datatable/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { formatDate } from "date-fns";

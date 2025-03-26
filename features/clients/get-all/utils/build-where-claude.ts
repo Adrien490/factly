@@ -1,4 +1,4 @@
-import { getClientsSchema } from "@/features/clients/get-list/schemas";
+import { getClientsSchema } from "@/features/clients/get-all/schemas";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { buildFilterConditions } from "./build-filter-conditions";

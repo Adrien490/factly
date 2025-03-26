@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { DEFAULT_SELECT } from "../constants";
+import { DEFAULT_SELECT, ORGANIZATION_SORTABLE_FIELDS } from "../constants";
 import { getOrganizationsSchema } from "../schemas";
 
 export type GetOrganizationsParams = z.infer<typeof getOrganizationsSchema>;
@@ -37,3 +37,6 @@ export type OrganizationWithCount = Prisma.OrganizationGetPayload<{
 export type GetOrganizationsReturn = Array<
 	Prisma.OrganizationGetPayload<{ select: typeof DEFAULT_SELECT }>
 >;
+
+export type OrganizationSortableField =
+	(typeof ORGANIZATION_SORTABLE_FIELDS)[number];

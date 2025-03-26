@@ -1,8 +1,6 @@
-import { getOrganizations } from "@/features/organizations/get-list";
-import {
-	ORGANIZATION_SORT_OPTIONS,
-	OrganizationSortableField,
-} from "@/features/organizations/lib/organization-sortable-fields";
+import { getOrganizations } from "@/features/organizations/get-all";
+import { ORGANIZATION_SORT_OPTIONS } from "@/features/organizations/get-all/constants";
+import { OrganizationSortableField } from "@/features/organizations/get-all/types";
 import { PageContainer } from "@/shared/components/page-container";
 import { SearchForm } from "@/shared/components/search-form";
 import { SortSelector } from "@/shared/components/sort-selector";

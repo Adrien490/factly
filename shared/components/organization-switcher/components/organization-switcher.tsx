@@ -1,6 +1,6 @@
 "use client";
 
-import { GetOrganizationsReturn } from "@/features/organizations/get-list";
+import { GetOrganizationsReturn } from "@/features/organizations/get-all";
 import { Loader } from "@/shared/components/loader";
 import {
 	DropdownMenu,

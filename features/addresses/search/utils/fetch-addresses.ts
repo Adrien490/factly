@@ -1,3 +1,5 @@
+"use server";
+
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { BASE_ADRESSE_API_URL, DEFAULT_LIMIT, MAX_RESULTS } from "../constants";

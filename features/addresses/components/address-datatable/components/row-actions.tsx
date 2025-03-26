@@ -2,7 +2,7 @@
 
 import { deleteAddress } from "@/features/addresses";
 import { DeleteAddressParams } from "@/features/addresses/delete/types";
-import { GetAddressesReturn } from "@/features/addresses/get-list/types";
+import { GetAddressesReturn } from "@/features/addresses/get-all/types";
 import { updateAddress } from "@/features/addresses/update";
 import {
 	AlertDialog,

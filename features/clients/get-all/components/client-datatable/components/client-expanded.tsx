@@ -2,7 +2,7 @@
 
 import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
-import { GetClientsReturn } from "@/features/clients/get-list/types";
+import { GetClientsReturn } from "@/features/clients/get-all/types";
 import {
 	Card,
 	CardContent,

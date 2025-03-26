@@ -1,7 +1,7 @@
 "use client";
 
 import { useDeleteClient } from "@/features/clients/delete";
-import { GetClientsReturn } from "@/features/clients/get-list";
+import { GetClientsReturn } from "@/features/clients/get-all";
 import { MenuActions } from "@/shared/components/menu-actions";
 import { ServerActionStatus } from "@/shared/types/server-action";
 import { EyeIcon, MapPinIcon, PencilIcon, Trash2Icon } from "lucide-react";
