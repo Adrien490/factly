@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -69,6 +70,7 @@ model User {
   clients       Client[]
   sessions      Session[]
   accounts      Account[]
+  passkeys      Passkey[] // Relation avec les passkeys
 
   @@map("user")
 }
@@ -253,12 +255,13 @@ model Supplier {
   localSupplier                Boolean @default(false) // Fournisseur local
   sustainabilityCertifications String? // Certifications développement durable
 
+  // Pour filtrer les meilleurs fournisseurs
   @@unique([reference, organizationId])
   @@index([name])
   @@index([status, organizationId])
   @@index([supplierType, organizationId])
   @@index([createdAt])
-  @@index([reliabilityScore, qualityScore]) // Pour filtrer les meilleurs fournisseurs
+  @@index([reliabilityScore, qualityScore])
 }
 
 model Contact {
@@ -282,17 +285,18 @@ model Contact {
 }
 
 model Address {
-  id           String   @id @default(cuid())
+  id           String      @id @default(cuid())
+  addressType  AddressType @default(BILLING)
   addressLine1 String
   addressLine2 String?
   postalCode   String
   city         String
-  country      String   @default("France")
+  country      String      @default("France")
   latitude     Float?
   longitude    Float?
-  isDefault    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isDefault    Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
   supplier   Supplier? @relation(fields: [supplierId], references: [id])
   supplierId String?
@@ -300,6 +304,12 @@ model Address {
   clientId   String?
 
   @@index([supplierId])
+}
+
+enum AddressType {
+  BILLING
+  SHIPPING
+  OTHER
 }
 
 model ProductSupplier {
@@ -319,6 +329,7 @@ model ProductSupplier {
 }
 
 // Modifications du modèle Client existant
+
 model Client {
   id         String       @id @default(cuid())
   reference  String       @unique
@@ -348,10 +359,14 @@ model Client {
   quotes         Quote[]
   invoices       Invoice[]
 
-  @@index([name, status]) // Index composé pour recherche par nom + statut
-  @@index([createdAt]) // Pour les requêtes de triage par date
-  @@index([updatedAt]) // Pour les requêtes de modification récente
-  @@index([organizationId, clientType]) // Pour filtrer par type dans une organisation
+  // Index composé pour recherche par nom + statut
+  // Pour les requêtes de triage par date
+  // Pour les requêtes de modification récente
+  // Pour filtrer par type dans une organisation
+  @@index([name, status])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([organizationId, clientType])
 }
 
 // Modèles pour la gestion commerciale
@@ -398,11 +413,16 @@ model Product {
   InvoiceItem     InvoiceItem[]
   ProductSupplier ProductSupplier[]
 
-  @@index([organizationId, status]) // Filtrer produits actifs par organisation
-  @@index([organizationId, categoryId]) // Filtrer par catégorie
-  @@index([price]) // Filtrer par gamme de prix
-  @@index([createdAt]) // Pour triage chronologique
-  @@index([sku, organizationId]) // Recherche rapide par SKU
+  // Filtrer produits actifs par organisation
+  // Filtrer par catégorie
+  // Filtrer par gamme de prix
+  // Pour triage chronologique
+  // Recherche rapide par SKU
+  @@index([organizationId, status])
+  @@index([organizationId, categoryId])
+  @@index([price])
+  @@index([createdAt])
+  @@index([sku, organizationId])
 }
 
 enum ProductStatus {
@@ -442,8 +462,9 @@ model Inventory {
   // Relations
   stockMovements StockMovement[]
 
+  // Pour requêtes sur produits en rupture ou à réapprovisionner
   @@unique([productId, warehouseId])
-  @@index([currentStock]) // Pour requêtes sur produits en rupture ou à réapprovisionner
+  @@index([currentStock])
 }
 
 model Warehouse {
@@ -471,9 +492,12 @@ model StockMovement {
   notes         String?
   performedBy   String? // User ID
 
-  @@index([date]) // Recherche chronologique
-  @@index([inventoryId, date]) // Mouvements d'un produit par date
-  @@index([movementType]) // Filtrer par type de mouvement
+  // Recherche chronologique
+  // Mouvements d'un produit par date
+  // Filtrer par type de mouvement
+  @@index([date])
+  @@index([inventoryId, date])
+  @@index([movementType])
 }
 
 model Quote {
@@ -545,10 +569,14 @@ model Invoice {
   items          InvoiceItem[]
   payments       Payment[]
 
-  @@index([organizationId, status, date]) // Factures par statut et date
-  @@index([clientId, status]) // Factures d'un client par statut 
-  @@index([dueDate, status]) // Pour alertes d'échéance
-  @@index([totalAmount]) // Pour recherches par montant
+  // Factures par statut et date
+  // Factures d'un client par statut 
+  // Pour alertes d'échéance
+  // Pour recherches par montant
+  @@index([organizationId, status, date])
+  @@index([clientId, status])
+  @@index([dueDate, status])
+  @@index([totalAmount])
 }
 
 model InvoiceItem {
@@ -584,6 +612,7 @@ model Payment {
 }
 
 // Nouveau modèle pour les taux de TVA
+
 model TaxRate {
   id          String  @id @default(cuid())
   name        String // Ex: "TVA standard", "TVA réduite" 
@@ -614,6 +643,7 @@ enum Civility {
 }
 
 // Enums
+
 enum InvitationStatus {
   PENDING
   ACCEPTED
@@ -707,4 +737,20 @@ enum MovementType {
   ADJUSTMENT
   TRANSFER
   LOSS
+}
+
+model Passkey {
+  id           String   @id @default(cuid())
+  name         String?
+  publicKey    String   @db.Text
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String   @unique
+  counter      Int      @default(0)
+  deviceType   String?
+  backedUp     Boolean  @default(false)
+  transports   String?
+  createdAt    DateTime @default(now())
+
+  @@map("passkey")
 }

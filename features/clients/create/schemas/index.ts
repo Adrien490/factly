@@ -1,4 +1,4 @@
-import { ClientStatus, ClientType } from "@prisma/client";
+import { AddressType, ClientStatus, ClientType } from "@prisma/client";
 import { z } from "zod";
 
 /**
@@ -15,33 +15,31 @@ export const createClientSchema = z.object({
 		.string()
 		.min(3, "La référence doit comporter au moins 3 caractères"),
 	name: z.string().min(1, "Le nom est requis"),
-	email: z.string().optional().nullable(),
-	phone: z.string().optional().nullable(),
-	website: z.string().optional().nullable(),
+	email: z.string().optional(),
+	phone: z.string().optional(),
+	website: z.string().optional(),
 
 	// Classification
 	clientType: z.nativeEnum(ClientType).default(ClientType.INDIVIDUAL),
 	status: z.nativeEnum(ClientStatus).default(ClientStatus.LEAD),
 
 	// Informations fiscales
-	siren: z.string().optional().nullable(),
-	siret: z.string().optional().nullable(),
-	vatNumber: z.string().optional().nullable(),
+	siren: z.string().optional(),
+	siret: z.string().optional(),
+	vatNumber: z.string().optional(),
 
 	// Notes et informations supplémentaires
-	notes: z.string().optional().nullable(),
+	notes: z.string().optional(),
 
 	// Adresse
-	addressLine1: z.string().optional().nullable(),
-	addressLine2: z.string().optional().nullable(),
-	postalCode: z.string().optional().nullable(),
-	city: z.string().optional().nullable(),
-	country: z.string().optional().nullable(),
+	addressType: z.nativeEnum(AddressType),
+	addressLine1: z.string().optional(),
+	addressLine2: z.string().optional(),
+	postalCode: z.string().optional(),
+	city: z.string().optional(),
+	country: z.string().optional().default("France"),
 
 	// Coordonnées géographiques
-	latitude: z.number().optional().nullable(),
-	longitude: z.number().optional().nullable(),
-
-	// Relations (optionnelles dans le formulaire)
-	tags: z.array(z.string()).optional(),
+	latitude: z.number().optional(),
+	longitude: z.number().optional(),
 });

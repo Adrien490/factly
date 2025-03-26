@@ -1,6 +1,6 @@
 // shared-code.ts
 // Notice the import path is different from the client
-import { ClientStatus, ClientType } from "@prisma/client";
+import { AddressType, ClientStatus, ClientType } from "@prisma/client";
 import { formOptions } from "@tanstack/react-form/nextjs";
 
 // You can pass other form options here
@@ -20,6 +20,7 @@ export const formOpts = (organizationId: string) =>
 			siret: "",
 			vatNumber: "",
 			// Adresse principale
+			addressType: AddressType.BILLING as AddressType,
 			addressLine1: "",
 			addressLine2: "",
 			postalCode: "",

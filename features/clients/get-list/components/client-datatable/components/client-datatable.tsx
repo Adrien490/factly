@@ -3,14 +3,12 @@
 import { DataTable } from "@/shared/components/datatable";
 import { EmptyState } from "@/shared/components/empty-state/components/empty-state";
 import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
 import { UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { use } from "react";
 import { columns } from "../constants/columns";
 import { ClientListProps } from "../types";
-import { ClientExpanded } from "./client-expanded";
 // Mapping des variants de Badge pour les statuts client
 
 export function ClientDatatable({ clientsPromise }: ClientListProps) {
@@ -37,19 +35,11 @@ export function ClientDatatable({ clientsPromise }: ClientListProps) {
 	}
 
 	return (
-		<Card>
-			<DataTable
-				data={clients}
-				columns={columns}
-				pagination={pagination}
-				collapsible={{
-					key: "expanded",
-					content: (client) => {
-						return <ClientExpanded client={client} />;
-					},
-				}}
-				selection={{ key: "clientId" }}
-			/>
-		</Card>
+		<DataTable
+			data={clients}
+			columns={columns}
+			pagination={pagination}
+			selection={{ key: "clientId" }}
+		/>
 	);
 }

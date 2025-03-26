@@ -46,7 +46,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	}
 
 	return (
-		<PageContainer className="pb-12">
+		<PageContainer className="pb-12 group">
 			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Clients"
@@ -100,30 +100,31 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				</div>
 			</Card>
 
-			{/* Tableau de données */}
-			<ClientDatatable
-				clientsPromise={getClients({
-					organizationId,
-					perPage: Number(perPage) || 10,
-					page: Number(page) || 1,
-					sortBy: clientSortableFields.includes(sortBy as ClientSortableField)
-						? (sortBy as ClientSortableField)
-						: "createdAt",
-					sortOrder: (sortOrder as SortOrder) || "desc",
-					search: search,
+			<Card>
+				<ClientDatatable
+					clientsPromise={getClients({
+						organizationId,
+						perPage: Number(perPage) || 10,
+						page: Number(page) || 1,
+						sortBy: clientSortableFields.includes(sortBy as ClientSortableField)
+							? (sortBy as ClientSortableField)
+							: "createdAt",
+						sortOrder: (sortOrder as SortOrder) || "desc",
+						search: search,
 
-					// Traiter tous les filtres
-					filters: Object.entries(filters)
-						.filter(([key]) => key.startsWith("filter_"))
-						.reduce(
-							(acc, [key, value]) => ({
-								...acc,
-								[key.replace("filter_", "")]: value,
-							}),
-							{}
-						),
-				})}
-			/>
+						// Traiter tous les filtres
+						filters: Object.entries(filters)
+							.filter(([key]) => key.startsWith("filter_"))
+							.reduce(
+								(acc, [key, value]) => ({
+									...acc,
+									[key.replace("filter_", "")]: value,
+								}),
+								{}
+							),
+					})}
+				/>
+			</Card>
 		</PageContainer>
 	);
 }

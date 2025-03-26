@@ -162,6 +162,8 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		});
 	};
 
+	console.log(state);
+
 	return (
 		<form
 			action={dispatch}
@@ -189,6 +191,15 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					<input
 						type="hidden"
 						name="longitude"
+						value={field.state.value ?? ""}
+					/>
+				)}
+			</form.Field>
+			<form.Field name="addressType">
+				{(field) => (
+					<input
+						type="hidden"
+						name="addressType"
 						value={field.state.value ?? ""}
 					/>
 				)}

@@ -1,4 +1,4 @@
-import getUserInitials from "@/features/auth/lib/get-user-initials";
+import { getUserInitials } from "@/features/auth/utils";
 import {
 	Avatar,
 	AvatarFallback,

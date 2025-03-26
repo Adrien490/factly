@@ -21,11 +21,11 @@ export interface DataTableProps<T extends { id: string }> {
 	ariaLabel?: string;
 
 	// Configuration pour les lignes collapsibles
-	collapsible?: {
+	/*collapsible?: {
 		key?: string; // Clé pour les paramètres d'URL (par défaut: "expanded")
 		content: (item: T) => React.ReactNode; // Contenu à afficher quand la ligne est étendue
 		initialExpandedIds?: string[]; // IDs des lignes initialement étendues
-	};
+	};*/
 }
 
 // Type d'action pour les lignes du tableau

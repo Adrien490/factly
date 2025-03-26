@@ -1,18 +1,11 @@
 "use client";
 
+import socialProviders from "@/features/auth/constants/social-providers";
+import Provider from "@/features/auth/types/provider";
+import { signIn } from "@/features/auth/utils";
 import { Button } from "@/shared/components/ui/button";
-import { authClient } from "../lib/auth-client";
-import socialProviders from "../lib/social-providers";
-import Provider from "../types/provider";
 
-const signIn = async (provider: Provider) => {
-	await authClient.signIn.social({
-		provider,
-		callbackURL: "/dashboard",
-	});
-};
-
-export default function SocialLoginForm() {
+export function SocialLogin() {
 	return (
 		<div className="space-y-3">
 			<div className="grid grid-cols-1 gap-3">

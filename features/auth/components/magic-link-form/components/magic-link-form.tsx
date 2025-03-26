@@ -34,7 +34,7 @@ const buttonVariants = {
 	tap: { scale: 0.98 },
 };
 
-export default function MagicLinkForm() {
+export function MagicLinkForm() {
 	// Utilisation de useRef au lieu de useState pour suivre l'état
 	const formRef = useRef<HTMLFormElement>(null);
 	const emailRef = useRef<HTMLInputElement>(null);
@@ -141,7 +141,7 @@ export default function MagicLinkForm() {
 							type="email"
 							placeholder="votre@email.fr"
 							required
-							autoComplete="email"
+							autoComplete="email webauthn"
 							autoFocus
 							onChange={handleEmailChange}
 							className="transition-all duration-300 pr-10 backdrop-blur-sm
@@ -230,66 +230,6 @@ export default function MagicLinkForm() {
 					</p>
 				</div>
 			</form>
-
-			{/* Styles CSS injectés pour gérer les états sans utiliser useState */}
-			<style jsx global>{`
-				form.submitting .normal-state {
-					opacity: 0;
-					transform: translateY(-20px);
-				}
-				form.submitting .submitting-state {
-					opacity: 1;
-					transform: translateY(0);
-				}
-				form.success .normal-state,
-				form.success .submitting-state {
-					opacity: 0;
-					transform: translateY(-20px);
-				}
-				form.success .success-state {
-					opacity: 1;
-					transform: translateY(0);
-				}
-				form.success .success-icon {
-					opacity: 1;
-					transform: translateY(-50%) scale(1);
-				}
-				form.success .form-label {
-					opacity: 0;
-					transform: translateY(-10px);
-				}
-				form.success .success-label {
-					opacity: 1;
-					transform: translateY(0);
-				}
-				form.success input {
-					border-color: rgba(34, 197, 94, 0.5);
-					box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.1);
-					text-shadow: 0 0 0 rgba(34, 197, 94, 0.2);
-					color: rgb(22, 163, 74);
-				}
-				form.success input:focus {
-					border-color: rgba(34, 197, 94, 0.5);
-					ring-color: rgba(34, 197, 94, 0.2);
-				}
-				form.success .normal-note {
-					opacity: 0;
-					transform: translateY(20px);
-				}
-				form.success .success-message {
-					opacity: 1;
-					transform: translateY(0);
-				}
-				form.success button {
-					background: linear-gradient(
-						to right,
-						rgb(22, 163, 74),
-						rgb(34, 197, 94)
-					);
-					border-radius: 9999px;
-					box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
-				}
-			`}</style>
 		</motion.div>
 	);
 }

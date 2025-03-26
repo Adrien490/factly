@@ -15,9 +15,7 @@ import {
 import { useSorting } from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/lib/utils";
 import { ArrowDown, ArrowUp, ChevronsUpDown, Search } from "lucide-react";
-import { Fragment } from "react";
 import { cellStyles } from "../constants";
-import { useCollapsible } from "../hooks";
 import { DataTableProps } from "../types";
 import { Pagination } from "./pagination";
 import { SelectionToolbar } from "./selection-toolbar";
@@ -29,7 +27,6 @@ export function DataTable<T extends { id: string }>({
 	getItemId = (item: T) => item.id,
 	pagination,
 	ariaLabel = "Tableau de données",
-	collapsible,
 }: DataTableProps<T>) {
 	const {
 		handleSelectionChange,
@@ -46,28 +43,7 @@ export function DataTable<T extends { id: string }>({
 		isPending: isSortPending,
 	} = useSorting();
 
-	const { toggleRowExpanded, isRowExpanded } = useCollapsible(collapsible?.key);
-
 	const isPending = isSortPending;
-
-	const hasCollapsibleContent = !!collapsible;
-
-	const handleRowClick = (item: T, e: React.MouseEvent) => {
-		if (
-			(e.target as HTMLElement).closest('input[type="checkbox"]') ||
-			(e.target as HTMLElement).closest("button") ||
-			(e.target as HTMLElement).closest('[role="menu"]') ||
-			(e.target as HTMLElement).closest("[data-radix-popper-content-wrapper]")
-		) {
-			return;
-		}
-
-		if (hasCollapsibleContent) {
-			const id = getItemId(item);
-			toggleRowExpanded(id);
-			return;
-		}
-	};
 
 	if (data.length === 0) {
 		return (
@@ -176,72 +152,41 @@ export function DataTable<T extends { id: string }>({
 			<TableBody>
 				{data.map((item) => {
 					const id = getItemId(item);
-					const isExpanded = hasCollapsibleContent && isRowExpanded(id);
 
 					return (
-						<Fragment key={id}>
-							<TableRow
-								className={cn(
-									isSelected(id) ? "bg-muted/50" : undefined,
-									hasCollapsibleContent ? "cursor-pointer" : undefined,
-									isExpanded && "border-b-0"
-								)}
-								onClick={(e) => handleRowClick(item, e)}
-								data-state={isSelected(id) ? "selected" : undefined}
-								role="row"
-								tabIndex={hasCollapsibleContent ? 0 : undefined}
-								onKeyDown={(e) => {
-									if (hasCollapsibleContent) {
-										if (e.key === "Enter" || e.key === " ") {
-											e.preventDefault();
-											if (hasCollapsibleContent) {
-												toggleRowExpanded(id);
-											}
+						<TableRow
+							key={id}
+							className={cn(isSelected(id) ? "bg-muted/50" : undefined)}
+							data-state={isSelected(id) ? "selected" : undefined}
+							role="row"
+							tabIndex={0}
+						>
+							{selection && (
+								<TableCell className="w-[40px]" role="gridcell">
+									<Checkbox
+										checked={isSelected(id)}
+										onCheckedChange={(checked) =>
+											handleItemSelectionChange(id, checked as boolean)
 										}
-									}
-								}}
-							>
-								{selection && (
-									<TableCell className="w-[40px]" role="gridcell">
-										<Checkbox
-											checked={isSelected(id)}
-											onCheckedChange={(checked) =>
-												handleItemSelectionChange(id, checked as boolean)
-											}
-											aria-label={`Sélectionner la ligne ${id}`}
-										/>
-									</TableCell>
-								)}
-								{columns.map((column) => (
-									<TableCell
-										key={`${id}-${column.id}`}
-										className={cn(
-											cellStyles(column.visibility),
-											column.className,
-											column.align === "center" && "text-center",
-											column.align === "right" && "text-right"
-										)}
-										role="gridcell"
-									>
-										{column.cell(item)}
-									</TableCell>
-								))}
-							</TableRow>
-
-							{hasCollapsibleContent && isExpanded && (
-								<TableRow key={`${id}-expanded`}>
-									<TableCell
-										role="gridcell"
-										colSpan={columns.length + (selection ? 1 : 0)}
-										className="p-0 border-t-0"
-									>
-										<div className="rounded-b-md">
-											{collapsible.content(item)}
-										</div>
-									</TableCell>
-								</TableRow>
+										aria-label={`Sélectionner la ligne ${id}`}
+									/>
+								</TableCell>
 							)}
-						</Fragment>
+							{columns.map((column) => (
+								<TableCell
+									key={`${id}-${column.id}`}
+									className={cn(
+										cellStyles(column.visibility),
+										column.className,
+										column.align === "center" && "text-center",
+										column.align === "right" && "text-right"
+									)}
+									role="gridcell"
+								>
+									{column.cell(item)}
+								</TableCell>
+							))}
+						</TableRow>
 					);
 				})}
 			</TableBody>

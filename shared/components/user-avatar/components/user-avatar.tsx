@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/features/auth/lib/auth-client";
-import getUserInitials from "@/features/auth/lib/get-user-initials";
+import { getUserInitials } from "@/features/auth/utils";
 import {
 	Avatar,
 	AvatarFallback,
@@ -25,8 +25,8 @@ import { cn } from "@/shared/lib/utils";
 import { User } from "better-auth/types";
 import { useRouter } from "next/navigation";
 import { avatarSizes } from "../constants";
-import { SheetMenuItems } from "./sheet-menu-items";
 import { MenuItems } from "./menu-items";
+import { SheetMenuItems } from "./sheet-menu-items";
 
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 	size?: "sm" | "md" | "lg";

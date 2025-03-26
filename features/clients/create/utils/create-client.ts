@@ -10,7 +10,7 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
-import { Client, ClientStatus, ClientType } from "@prisma/client";
+import { AddressType, Client, ClientStatus, ClientType } from "@prisma/client";
 import { headers } from "next/headers";
 import { createClientSchema } from "../schemas";
 
@@ -72,6 +72,7 @@ export async function createClient(
 			vatNumber: formData.get("vatNumber") as string,
 
 			// Informations d'adresse (à traiter séparément)
+			addressType: formData.get("addressType") as AddressType,
 			addressLine1: formData.get("addressLine1") as string,
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
@@ -124,6 +125,7 @@ export async function createClient(
 			organizationId: validatedOrgId,
 
 			// Extraire les champs d'adresse pour les gérer séparément
+			addressType,
 			addressLine1,
 			addressLine2,
 			postalCode,
@@ -148,6 +150,7 @@ export async function createClient(
 						addresses: {
 							create: [
 								{
+									addressType,
 									addressLine1,
 									addressLine2,
 									postalCode: postalCode || "",
