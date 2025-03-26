@@ -11,9 +11,7 @@ import searchAddressSchema, {
 import { FormattedAddressResult } from "../types";
 
 // Constants
-const BASE_ADRESSE_API_URL =
-	process.env.NEXT_PUBLIC_BASE_ADRESSE_API_URL ||
-	"https://api-adresse.data.gouv.fr/search";
+const BASE_ADRESSE_API_URL = "https://api-adresse.data.gouv.fr/search";
 const DEFAULT_LIMIT = 5;
 const MAX_RESULTS = 15;
 

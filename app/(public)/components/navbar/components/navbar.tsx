@@ -27,7 +27,7 @@ export function Navbar({ userPromise }: Props) {
 	const pathname = usePathname();
 
 	// Utilisation du hook useIsScrolled sans debounce
-	const scrolled = useIsScrolled(50, 0);
+	const scrolled = useIsScrolled(75, 0);
 
 	// Utilisation du hook personnalisé pour détecter la section active
 	const activeSection = useActiveSection(navigationLinks);
