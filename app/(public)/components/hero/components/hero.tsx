@@ -3,49 +3,28 @@
 import { BackgroundLines } from "@/shared/components/ui/background-lines";
 import { Button } from "@/shared/components/ui/button";
 import { Highlight } from "@/shared/components/ui/hero-highlight";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
-import { advantages } from "../constants";
+import { advantages, containerVariants, itemVariants } from "../constants";
 
 export function Hero() {
-	// Référence pour l'effet de parallaxe
-	/*const { resolvedTheme } = useTheme();
-	const isLightTheme = resolvedTheme === "light";*/
+	// Utilisation de useReducedMotion pour l'accessibilité
+	const prefersReducedMotion = useReducedMotion();
 
-	// Variantes d'animation optimisées pour Core Web Vitals
-	const containerVariants = {
-		hidden: { opacity: 0 },
-		visible: {
-			opacity: 1,
-			transition: {
-				delayChildren: 0.1, // Réduit de 0.2 à 0.1 pour un affichage plus rapide
-				staggerChildren: 0.1, // Réduit pour une expérience plus fluide
-			},
-		},
-	};
+	const { theme } = useTheme();
+	const isDark = theme === "dark";
 
-	const itemVariants = {
-		hidden: { y: 20, opacity: 0 },
-		visible: {
-			y: 0,
-			opacity: 1,
-			transition: {
-				type: "spring",
-				stiffness: 300,
-				damping: 24,
-				duration: 0.4, // Optimisé
-			},
-		},
-	};
 	// Contenu principal qui sera utilisé dans les deux arrière-plans
 	const heroContent = (
 		<>
-			<div id="home" className="absolute top-0 left-0"></div>
+			{/* Ancre accessible pour la navigation */}
+			<div id="home" className="absolute top-0 left-0" aria-hidden="true"></div>
 
 			{/* Contenu principal avec centrage amélioré */}
 			<motion.div
-				className="max-w-5xl mx-auto text-center px-4 sm:px-6 pt-36 pb-28 sm:pb-16 sm:py-16 md:py-14 relative z-10 h-full flex flex-col justify-center"
+				className="max-w-5xl mx-auto text-center px-4 sm:px-6 pt-34 sm:pt-36 pb-16 sm:pb-28 md:pb-16 md:py-14 relative z-10 h-full flex flex-col justify-center items-center"
 				variants={containerVariants}
 				initial="hidden"
 				whileInView="visible"
@@ -53,7 +32,10 @@ export function Hero() {
 			>
 				{/* Titre principal avec animation améliorée */}
 				<motion.div variants={itemVariants} className="mb-6">
-					<motion.h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold tracking-tight leading-[1.1] md:leading-[1.1] text-foreground">
+					<motion.h1
+						className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold tracking-tight leading-[1.1] md:leading-[1.1] text-foreground"
+						aria-label="Factly, gérez votre entreprise simplement."
+					>
 						Factly,{" "}
 						<Highlight className="text-foreground">
 							gérez votre entreprise
@@ -64,18 +46,19 @@ export function Hero() {
 
 				{/* Description améliorée */}
 				<motion.p
-					className="mt-6 mb-8 text-base md:text-xl text-muted-foreground max-w-2xl mx-auto font-light"
+					className="mt-6 mb-8 text-base md:text-xl text-muted-foreground max-w-xs sm:max-w-2xl mx-auto font-light"
 					variants={itemVariants}
 				>
-					Optimisez votre gestion commerciale avec notre plateforme tout-en-un :
-					facturation, clients, inventaire et analyses financières en un seul
-					endroit.
+					Plateforme complète de gestion d&apos;entreprise : facturation,
+					clients, inventaire et analyses financières pour optimiser votre
+					productivité au quotidien.
 				</motion.p>
 
 				{/* Avantages clés en ligne - version 2025 */}
 				<motion.div
 					className="flex flex-wrap justify-center gap-5 mb-8"
 					variants={itemVariants}
+					aria-label="Principales fonctionnalités"
 				>
 					{advantages.map((advantage, idx) => (
 						<motion.div
@@ -83,6 +66,7 @@ export function Hero() {
 							className="flex items-center gap-2 text-sm text-foreground/80 bg-background/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.03)]"
 							whileHover={{ y: -2, boxShadow: "0 8px 16px rgba(0,0,0,0.06)" }}
 							transition={{ duration: 0.2 }}
+							aria-label={advantage.text}
 						>
 							{advantage.icon}
 							<span>{advantage.text}</span>
@@ -90,26 +74,33 @@ export function Hero() {
 					))}
 				</motion.div>
 
-				{/* Boutons d'action - design 2025 */}
+				{/* Boutons d'action - design 2025 avec CTA primaire et secondaire */}
 				<motion.div
-					className="flex justify-center items-center mt-10"
+					className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8 sm:mt-10 w-full"
 					variants={itemVariants}
 				>
+					{/* CTA Primaire */}
 					<motion.div
-						whileHover={{ scale: 1.03 }}
-						whileTap={{ scale: 0.98 }}
-						className="w-full max-w-md relative overflow-hidden"
+						whileHover={prefersReducedMotion ? {} : { scale: 1.03 }}
+						whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
+						className="w-full sm:max-w-md relative overflow-hidden"
 					>
 						<Button
 							size="lg"
 							asChild
-							className="w-full h-12 rounded-full shadow-[0_10px_25px_-12px_rgba(var(--primary-rgb),0.7)] hover:shadow-[0_16px_30px_-10px_rgba(var(--primary-rgb),0.65)] bg-linear-to-r from-primary to-primary/90 hover:translate-y-[1px] transition-all duration-200 group overflow-hidden relative"
+							variant="gradient"
+							className="w-full h-12 rounded-full"
 						>
-							<Link href="/login">
+							<Link
+								href="/login"
+								aria-label="Commencer à utiliser Factly maintenant"
+							>
 								<motion.span
 									className="absolute inset-0 bg-white/10 rounded-full transform-gpu"
 									initial={{ scale: 0, opacity: 0 }}
-									whileHover={{ scale: 1.5, opacity: 0.4 }}
+									whileHover={
+										prefersReducedMotion ? {} : { scale: 1.5, opacity: 0.4 }
+									}
 									transition={{ duration: 0.5 }}
 								/>
 								Commencer maintenant
@@ -121,21 +112,28 @@ export function Hero() {
 						<div className="absolute -inset-0.5 rounded-full bg-primary/20 blur-md opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300 z-[-1]" />
 					</motion.div>
 				</motion.div>
+
+				{/* Micro données structurées pour SEO */}
 			</motion.div>
 		</>
 	);
 
-	return (
-		<div className="relative">
+	if (isDark) {
+		return (
 			<BackgroundLines
-				className="min-h-[100vh] w-full relative"
-				svgOptions={{ duration: 10 }}
+				className="flex items-center justify-center w-full min-h-[100vh]"
+				svgOptions={{
+					duration: 10,
+				}}
 			>
 				{heroContent}
 			</BackgroundLines>
+		);
+	}
 
-			{/* Effet de masque pour transition douce - harmonisé */}
-			<div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-background to-transparent pointer-events-none z-20"></div>
+	return (
+		<div className="flex items-center justify-center w-full min-h-[100vh]">
+			{heroContent}
 		</div>
 	);
 }

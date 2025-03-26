@@ -36,3 +36,13 @@ export const footerLinks = [
 		],
 	},
 ];
+
+export const animationSettings = ({
+	prefersReducedMotion,
+}: {
+	prefersReducedMotion: boolean;
+}) => ({
+	initial: prefersReducedMotion ? {} : { opacity: 0, y: 15 },
+	animate: prefersReducedMotion ? {} : { opacity: 1, y: 0 },
+	transition: { duration: prefersReducedMotion ? 0 : 0.4 },
+});

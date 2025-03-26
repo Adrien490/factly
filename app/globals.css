@@ -2,8 +2,6 @@
 
 @source '../node_modules/@uploadthing/react/dist/**';
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
 	--background: hsl(229 57% 100%);
 	--foreground: hsl(229 63% 4%);
@@ -177,31 +175,5 @@
 	}
 	body {
 		@apply bg-background text-foreground;
-	}
-}
-
-@layer components {
-	.header-styles {
-		@apply whitespace-nowrap;
-	}
-
-	.header-styles-tablet {
-		@apply hidden md:table-cell;
-	}
-
-	.header-styles-desktop {
-		@apply hidden lg:table-cell;
-	}
-
-	.cell-styles {
-		@apply whitespace-nowrap;
-	}
-
-	.cell-styles-tablet {
-		@apply hidden md:table-cell;
-	}
-
-	.cell-styles-desktop {
-		@apply hidden lg:table-cell;
 	}
 }
