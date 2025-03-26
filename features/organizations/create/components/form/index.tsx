@@ -16,10 +16,12 @@ import { FormFooter } from "@/shared/components/forms/components/form-footer";
 import { FormLayout } from "@/shared/components/forms/components/form-layout";
 import { FormSection } from "@/shared/components/forms/components/form-section";
 
-import { SearchAddressReturn } from "@/features/address-api/queries/search-address";
-import { FormattedAddressResult } from "@/features/address-api/types";
 import { useCreateOrganization } from "@/features/organizations/create";
 import { LEGAL_FORM_OPTIONS } from "@/features/organizations/legal-form-options";
+import {
+	FormattedAddressResult,
+	SearchAddressReturn,
+} from "@/features/search-address";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { FieldInfo } from "@/shared/components/forms/components/field-info";
 import { useToast } from "@/shared/hooks/use-toast";

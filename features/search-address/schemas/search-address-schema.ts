@@ -13,7 +13,7 @@ export interface SearchAddressParams {
 }
 
 // Schéma de validation des paramètres de recherche
-const searchAddressSchema = z.object({
+export const searchAddressSchema = z.object({
 	query: z.string().min(1),
 	limit: z.number().min(1).max(100).optional(),
 	type: z
@@ -25,5 +25,3 @@ const searchAddressSchema = z.object({
 	lon: z.number().min(-180).max(180).optional(),
 	autocomplete: z.boolean().optional(),
 });
-
-export default searchAddressSchema;

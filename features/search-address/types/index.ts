@@ -1,10 +1,3 @@
-import {
-	AddressFeature,
-	AddressProperty,
-	AddressResponse,
-} from "@/features/address-api/schemas/address-result-schema";
-import { SearchAddressParams } from "@/features/address-api/schemas/search-address-schema";
-
 export type FormattedAddressResult = {
 	id: string;
 	label: string;
@@ -21,14 +14,11 @@ export type FormattedAddressResult = {
 };
 
 export type SearchAddressReturn = {
-	query: string;
 	results: FormattedAddressResult[];
-	total: number;
-};
-
-export type {
-	AddressFeature,
-	AddressProperty,
-	AddressResponse,
-	SearchAddressParams,
+	metadata: {
+		query: string;
+		limit: number;
+		attribution: string;
+		licence: string;
+	};
 };
