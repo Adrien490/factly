@@ -1,26 +1,14 @@
 "use client";
 
-import Feature from "@/app/(public)/types/feature";
+import { Feature } from "@/app/(public)/components/features/types";
 import { cn } from "@/shared/lib/utils";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
+import { itemVariants } from "../constants";
 
 // Variantes d'animation pour chaque élément - transitions plus douces et optimisées
-export const itemVariants = {
-	hidden: { y: 20, opacity: 0 },
-	visible: {
-		y: 0,
-		opacity: 1,
-		transition: {
-			type: "spring",
-			stiffness: 300,
-			damping: 24,
-			duration: 0.4,
-		},
-	},
-};
 
 interface FeatureItemProps extends Feature {
 	index: number;

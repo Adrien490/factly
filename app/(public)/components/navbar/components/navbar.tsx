@@ -8,13 +8,13 @@ import { cn } from "@/shared/lib/utils";
 import { User } from "better-auth";
 import Link from "next/link";
 import { use } from "react";
-import { navigationLinks } from "./constants";
+import { navigationLinks } from "../constants";
 
 type Props = {
 	userPromise?: Promise<User | null>;
 };
 
-export default function Navbar({ userPromise }: Props) {
+export function Navbar({ userPromise }: Props) {
 	// Récupération de l'utilisateur avec le hook use de React (Server Components)
 	let user: User | null = null;
 	if (userPromise) {

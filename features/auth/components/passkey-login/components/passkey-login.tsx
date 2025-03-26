@@ -11,32 +11,11 @@ export function PasskeyLogin() {
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
-	// Préchargement des passkeys pour l'UI conditionnelle
-	useEffect(() => {
-		// Vérification correcte et sécurisée de l'API WebAuthn
-		if (
-			typeof window === "undefined" ||
-			typeof PublicKeyCredential === "undefined" ||
-			typeof PublicKeyCredential.isConditionalMediationAvailable !==
-				"function" ||
-			!PublicKeyCredential.isConditionalMediationAvailable()
-		) {
-			console.log(
-				"L'authentification conditionnelle par passkey n'est pas supportée"
-			);
-			return;
-		}
-
-		// Préchargement des passkeys avec gestion d'erreur
-		authClient.signIn.passkey({ autoFill: true }).catch((error) => {
-			console.warn("Erreur lors du préchargement des passkeys:", error);
-		});
-	}, []);
-
 	const handlePasskeyLogin = async () => {
 		try {
 			setIsLoading(true);
-			await authClient.signIn.passkey();
+			const data = await authClient.signIn.passkey();
+			console.log(data);
 
 			// Animation de transition avant redirection
 			toast.success("Connexion réussie", {
@@ -59,6 +38,17 @@ export function PasskeyLogin() {
 			setIsLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		if (
+			!PublicKeyCredential.isConditionalMediationAvailable ||
+			!PublicKeyCredential.isConditionalMediationAvailable()
+		) {
+			return;
+		}
+
+		void authClient.signIn.passkey({ autoFill: true });
+	}, []);
 
 	return (
 		<Button

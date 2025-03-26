@@ -63,3 +63,28 @@ export const features = [
 		],
 	},
 ] as const;
+
+// Variantes d'animation pour le conteneur - optimisée pour Core Web Vitals
+export const containerVariants = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			delayChildren: 0.05,
+			staggerChildren: 0.08,
+		},
+	},
+};
+
+// Variantes pour les animations des éléments individuels
+export const itemVariants = {
+	hidden: { opacity: 0, y: 20 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: {
+			duration: 0.6,
+			ease: [0.22, 1, 0.36, 1],
+		},
+	},
+};

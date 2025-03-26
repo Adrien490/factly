@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-interface Feature {
+export interface Feature {
 	title: string;
 	description: string;
 	icon: ReactNode;
@@ -10,5 +10,3 @@ interface Feature {
 		href: string;
 	};
 }
-
-export default Feature;
