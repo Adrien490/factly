@@ -1,9 +1,9 @@
 "use client";
 
-import { Logo } from "@/shared/components/logo";
-import { PageContainer } from "@/shared/components/page-container";
-import { GridPattern } from "@/shared/components/ui/grid-pattern";
-import { cn } from "@/shared/lib/utils";
+import { Logo } from "@/features/shared/components/logo";
+import { PageContainer } from "@/features/shared/components/page-container";
+import { GridPattern } from "@/features/shared/components/ui/grid-pattern";
+import { cn } from "@/features/shared/lib/utils";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronUp, Copyright, ExternalLink, Heart } from "lucide-react";
 import Link from "next/link";

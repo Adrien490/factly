@@ -1,8 +1,8 @@
 "use client";
 
-import { BackgroundLines } from "@/shared/components/ui/background-lines";
-import { Button } from "@/shared/components/ui/button";
-import { Highlight } from "@/shared/components/ui/hero-highlight";
+import { BackgroundLines } from "@/features/shared/components/ui/background-lines";
+import { Button } from "@/features/shared/components/ui/button";
+import { Highlight } from "@/features/shared/components/ui/hero-highlight";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";

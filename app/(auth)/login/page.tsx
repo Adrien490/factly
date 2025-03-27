@@ -3,8 +3,8 @@ import {
 	PasskeyLogin,
 	SocialLogin,
 } from "@/features/auth/components";
-import { Logo } from "@/shared/components/logo";
-import { Spotlight } from "@/shared/components/ui/spotlight-new";
+import { Logo } from "@/features/shared/components/logo";
+import { Spotlight } from "@/features/shared/components/ui/spotlight-new";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/shared/components/ui/card";
-import { Skeleton } from "@/shared/components/ui/skeleton";
-import { ViewType } from "@/shared/types";
+import { Card, CardContent } from "@/features/shared/components/ui/card";
+import { Skeleton } from "@/features/shared/components/ui/skeleton";
+import { ViewType } from "@/features/shared/types";
 
 export function OrganizationCardSkeleton({
 	viewType = "grid",

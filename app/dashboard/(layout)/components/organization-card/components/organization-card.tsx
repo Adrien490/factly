@@ -1,14 +1,14 @@
 "use client";
 
-import { type GetOrganizationsReturn } from "@/features/organizations/get-all";
-import { Card, CardContent } from "@/shared/components/ui/card";
+import { type GetOrganizationsReturn } from "@/features/organization/get-all";
+import { Card, CardContent } from "@/features/shared/components/ui/card";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
-import { ViewType } from "@/shared/types";
+} from "@/features/shared/components/ui/dropdown-menu";
+import { ViewType } from "@/features/shared/types";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

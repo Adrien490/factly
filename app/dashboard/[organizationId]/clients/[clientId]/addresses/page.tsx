@@ -1,16 +1,16 @@
-import { getAddresses } from "@/features/addresses";
-import { AddressDataTable } from "@/features/addresses/components/address-datatable";
-import { GetAddressesParams } from "@/features/addresses/get-all/types";
-import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
-import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
-import { FilterSelect } from "@/shared/components/filter-select";
-import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
-import { SearchForm } from "@/shared/components/search-form";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { SortOrder } from "@/shared/types";
+import { getAddresses } from "@/features/address";
+import { AddressDataTable } from "@/features/address/components/address-datatable";
+import { GetAddressesParams } from "@/features/address/get-all/types";
+import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";
+import { FilterSelect } from "@/features/shared/components/filter-select";
+import { MultiSelectFilter } from "@/features/shared/components/multi-select-filter";
+import { PageContainer } from "@/features/shared/components/page-container";
+import { PageHeader } from "@/features/shared/components/page-header";
+import { SearchForm } from "@/features/shared/components/search-form";
+import { Button } from "@/features/shared/components/ui/button";
+import { Card } from "@/features/shared/components/ui/card";
+import { SortOrder } from "@/features/shared/types";
 import Link from "next/link";
 
 type Props = {

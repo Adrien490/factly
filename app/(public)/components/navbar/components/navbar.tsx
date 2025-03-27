@@ -1,9 +1,9 @@
 "use client";
 
-import { Logo } from "@/shared/components/logo";
-import { Button } from "@/shared/components/ui/button";
-import { ThemeToggleButton } from "@/shared/components/ui/theme-toggle-button";
-import { cn } from "@/shared/lib/utils";
+import { Logo } from "@/features/shared/components/logo";
+import { Button } from "@/features/shared/components/ui/button";
+import { ThemeToggleButton } from "@/features/shared/components/ui/theme-toggle-button";
+import { cn } from "@/features/shared/lib/utils";
 import { User } from "better-auth";
 import { motion } from "framer-motion";
 import Link from "next/link";

@@ -1,7 +1,7 @@
-import { searchAddress } from "@/features/addresses/search";
-import { CreateClientForm } from "@/features/clients/create/components/form";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
+import { searchAddress } from "@/features/address/search";
+import { CreateClientForm } from "@/features/client/create/components/form";
+import { PageContainer } from "@/features/shared/components/page-container";
+import { PageHeader } from "@/features/shared/components/page-header";
 
 type PageProps = {
 	params: Promise<{

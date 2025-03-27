@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
+import { Button } from "@/features/shared/components/ui/button";
+import { Input } from "@/features/shared/components/ui/input";
+import { Label } from "@/features/shared/components/ui/label";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Loader2, Mail, Sparkles } from "lucide-react";
 import { useRef } from "react";

@@ -1,8 +1,8 @@
 "use client";
 
-import { type GetOrganizationsReturn } from "@/features/organizations/get-all";
-import { EmptyState } from "@/shared/components/empty-state/components/empty-state";
-import { ViewType } from "@/shared/types";
+import { type GetOrganizationsReturn } from "@/features/organization/get-all";
+import { EmptyState } from "@/features/shared/components/empty-state/components/empty-state";
+import { ViewType } from "@/features/shared/types";
 import { Building2, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

@@ -1,7 +1,7 @@
 "use client";
 
-import { Skeleton } from "@/shared/components/ui/skeleton";
-import { cn } from "@/shared/lib/utils";
+import { Skeleton } from "@/features/shared/components/ui/skeleton";
+import { cn } from "@/features/shared/lib/utils";
 
 interface HeaderSkeletonProps {
 	className?: string;

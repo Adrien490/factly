@@ -1,7 +1,7 @@
 "use client";
 
 import { Feature } from "@/app/(public)/components/features/types";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/features/shared/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";

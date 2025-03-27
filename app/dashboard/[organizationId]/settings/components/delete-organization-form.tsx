@@ -3,8 +3,8 @@
 import {
 	deleteOrganization,
 	deleteOrganizationSchema,
-} from "@/features/organizations/delete";
-import { GetOrganizationReturn } from "@/features/organizations/get";
+} from "@/features/organization/delete";
+import { GetOrganizationReturn } from "@/features/organization/get";
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -13,8 +13,8 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/shared/components/ui/alert-dialog";
-import { Button } from "@/shared/components/ui/button";
+} from "@/features/shared/components/ui/alert-dialog";
+import { Button } from "@/features/shared/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -22,14 +22,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/shared/components/ui/card";
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
-import { cn } from "@/shared/lib/utils";
+} from "@/features/shared/components/ui/card";
+import { Input } from "@/features/shared/components/ui/input";
+import { Label } from "@/features/shared/components/ui/label";
+import { cn } from "@/features/shared/lib/utils";
 import {
 	ServerActionState,
 	ServerActionStatus,
-} from "@/shared/types/server-action";
+} from "@/features/shared/types/server-action";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Organization } from "@prisma/client";

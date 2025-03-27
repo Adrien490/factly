@@ -5,7 +5,7 @@ import {
 	features,
 	itemVariants,
 } from "@/app/(public)/components/features/constants";
-import { PageContainer } from "@/shared/components/page-container";
+import { PageContainer } from "@/features/shared/components/page-container";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { FeatureItem } from "./feature-item/components";

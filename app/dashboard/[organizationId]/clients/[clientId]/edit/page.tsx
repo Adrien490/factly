@@ -1,6 +1,6 @@
-import { getClient } from "@/features/clients/get";
-import { PageHeader } from "@/shared/components/page-header";
-import { Separator } from "@/shared/components/ui/separator";
+import { getClient } from "@/features/client/get";
+import { PageHeader } from "@/features/shared/components/page-header";
+import { Separator } from "@/features/shared/components/ui/separator";
 import { notFound } from "next/navigation";
 
 type PageProps = {

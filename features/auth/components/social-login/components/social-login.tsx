@@ -3,7 +3,7 @@
 import socialProviders from "@/features/auth/constants/social-providers";
 import Provider from "@/features/auth/types/provider";
 import { signIn } from "@/features/auth/utils";
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/features/shared/components/ui/button";
 
 export function SocialLogin() {
 	return (

@@ -1,10 +1,10 @@
 "use client";
 
 import { useIsScrolled } from "@/app/(public)/components/navbar/hooks/use-is-scrolled";
-import { HorizontalMenu } from "@/shared/components/horizontal-menu";
-import { Logo } from "@/shared/components/logo";
-import { UserAvatar } from "@/shared/components/user-avatar";
-import { cn } from "@/shared/lib/utils";
+import { HorizontalMenu } from "@/features/shared/components/horizontal-menu";
+import { Logo } from "@/features/shared/components/logo";
+import { UserAvatar } from "@/features/shared/components/user-avatar";
+import { cn } from "@/features/shared/lib/utils";
 import { User } from "better-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";

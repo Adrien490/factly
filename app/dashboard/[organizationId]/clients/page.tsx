@@ -1,20 +1,20 @@
-import { CLIENT_STATUS_OPTIONS } from "@/features/clients/client-status-options";
-import { CLIENT_TYPE_OPTIONS } from "@/features/clients/client-type-options";
-import { getClients } from "@/features/clients/get-all";
-import { ClientDatatable } from "@/features/clients/get-all/components";
+import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
+import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";
+import { getClients } from "@/features/client/get-all";
+import { ClientDatatable } from "@/features/client/get-all/components";
 import {
 	ClientSortableField,
 	clientSortableFields,
-} from "@/features/clients/get-all/constants/client-sortable-fields";
-import { hasOrganizationAccess } from "@/features/organizations/has-access";
-import { FilterSelect } from "@/shared/components/filter-select";
-import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
-import { SearchForm } from "@/shared/components/search-form";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { SortOrder } from "@/shared/types";
+} from "@/features/client/get-all/constants/client-sortable-fields";
+import { hasOrganizationAccess } from "@/features/organization/has-access";
+import { FilterSelect } from "@/features/shared/components/filter-select";
+import { MultiSelectFilter } from "@/features/shared/components/multi-select-filter";
+import { PageContainer } from "@/features/shared/components/page-container";
+import { PageHeader } from "@/features/shared/components/page-header";
+import { SearchForm } from "@/features/shared/components/search-form";
+import { Button } from "@/features/shared/components/ui/button";
+import { Card } from "@/features/shared/components/ui/card";
+import { SortOrder } from "@/features/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 

@@ -1,6 +1,6 @@
-import { getOrganization } from "@/features/organizations/get";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
+import { getOrganization } from "@/features/organization/get";
+import { PageContainer } from "@/features/shared/components/page-container";
+import { PageHeader } from "@/features/shared/components/page-header";
 
 type Props = {
 	params: Promise<{

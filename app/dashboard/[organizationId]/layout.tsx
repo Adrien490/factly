@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { getOrganizations } from "@/features/organizations/get-all";
-import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
+import { getOrganizations } from "@/features/organization/get-all";
+import { OrganizationSidebar } from "@/features/shared/components/organization-sidebar";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -8,14 +8,14 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from "@/shared/components/ui/breadcrumb";
-import { Separator } from "@/shared/components/ui/separator";
+} from "@/features/shared/components/ui/breadcrumb";
+import { Separator } from "@/features/shared/components/ui/separator";
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from "@/shared/components/ui/sidebar";
-import { UserAvatar } from "@/shared/components/user-avatar";
+} from "@/features/shared/components/ui/sidebar";
+import { UserAvatar } from "@/features/shared/components/user-avatar";
 import { cookies, headers } from "next/headers";
 import { Suspense } from "react";
 import { UserAvatarSkeleton } from "../(layout)/components/header-skeleton";
