@@ -6,47 +6,18 @@ import { ContainerScroll } from "@/features/shared/components/ui/container-scrol
 import { ShootingStars } from "@/features/shared/components/ui/shooting-stars";
 import { StarsBackground } from "@/features/shared/components/ui/stars-background";
 import { cn } from "@/features/shared/lib/utils";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronDown, ExternalLink, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
 import { containerVariants, itemVariants } from "../constants";
 
 export function AppShowcase() {
-	const imageRef = useRef<HTMLDivElement>(null);
-	const sectionRef = useRef<HTMLElement>(null);
-	const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
-
-	// Variants d'animation
-
-	// Fonction pour ajouter un effet de rotation 3D sur l'image
-	const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-		if (!imageRef.current) return;
-
-		const rect = imageRef.current.getBoundingClientRect();
-		const x = (e.clientX - rect.left) / rect.width;
-		const y = (e.clientY - rect.top) / rect.height;
-
-		// Limiter la rotation à un angle raisonnable
-		const maxRotation = 2; // degrés
-		imageRef.current.style.transform = `perspective(1000px) rotateX(${
-			(y - 0.5) * maxRotation
-		}deg) rotateY(${(x - 0.5) * -maxRotation}deg)`;
-	};
-
-	const handleMouseLeave = () => {
-		if (!imageRef.current) return;
-		imageRef.current.style.transform =
-			"perspective(1000px) rotateX(0) rotateY(0)";
-	};
-
 	return (
 		<PageContainer>
 			<section
 				id="application"
 				className="relative py-28 sm:py-32 md:py-36 overflow-hidden"
-				ref={sectionRef}
 			>
 				{/* Élément décoratif supérieur - plus subtil */}
 				<div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-background to-transparent pointer-events-none z-10"></div>
@@ -84,7 +55,7 @@ export function AppShowcase() {
 										className="max-w-4xl mx-auto text-center mb-12"
 										variants={containerVariants}
 										initial="hidden"
-										animate={isInView ? "visible" : "hidden"}
+										animate="visible"
 									>
 										{/* Badge amélioré - design 2025 */}
 										<motion.div
@@ -153,9 +124,6 @@ export function AppShowcase() {
 							>
 								{/* Cadre d'image avec ombre portée améliorée et effet neomorphique 2025 */}
 								<div
-									ref={imageRef}
-									onMouseMove={handleMouseMove}
-									onMouseLeave={handleMouseLeave}
 									className={cn(
 										"relative w-full max-w-6xl mx-auto mt-4 rounded-2xl overflow-hidden transform perspective-1000",
 										"border border-white/20 dark:border-white/10 bg-background/5",

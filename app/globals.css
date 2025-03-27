@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@source '../node_modules/@uploadthing/react/dist/**';
+@import "uploadthing/tw/v4";
+@source "../node_modules/@uploadthing/react/dist";
 
 :root {
 	--background: hsl(229 57% 100%);

@@ -1,7 +1,7 @@
 import { auth } from "@/features/auth/lib/auth";
 import { headers } from "next/headers";
 import { Suspense } from "react";
-import { UserAvatarSkeleton } from "../dashboard/(layout)/components/header-skeleton";
+import { UserAvatarSkeleton } from "../dashboard/(layout)/components/header/components/header-skeleton";
 import { Navbar } from "./components/navbar";
 
 export default async function PublicLayout({

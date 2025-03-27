@@ -22,8 +22,6 @@
 	},
 	"dependencies": {
 		"@better-fetch/fetch": "^1.1.12",
-		"@conform-to/react": "^1.2.2",
-		"@conform-to/zod": "^1.2.2",
 		"@hookform/resolvers": "^3.9.1",
 		"@prisma/client": "^6.1.0",
 		"@radix-ui/react-accordion": "^1.2.2",
@@ -53,7 +51,7 @@
 		"@radix-ui/react-tooltip": "^1.1.6",
 		"@tabler/icons-react": "^3.30.0",
 		"@tanstack/react-form": "^1.0.5",
-		"@uploadthing/react": "^7.1.5",
+		"@uploadthing/react": "^7.3.0",
 		"better-auth": "^1.2.4",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
@@ -76,8 +74,7 @@
 		"sonner": "^1.7.1",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss-animate": "^1.0.7",
-		"uploadthing": "^7.4.4",
-		"use-debounce": "^10.0.4",
+		"uploadthing": "^7.6.0",
 		"zod": "^3.24.1"
 	},
 	"devDependencies": {

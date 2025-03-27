@@ -30,8 +30,6 @@ import {
 	ServerActionState,
 	ServerActionStatus,
 } from "@/features/shared/types/server-action";
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import { Organization } from "@prisma/client";
 import { AlertTriangle } from "lucide-react";
 import { useActionState, useState } from "react";
@@ -58,32 +56,9 @@ export default function DeleteOrganizationForm({
 
 	console.log(state);
 
-	const [form, fields] = useForm({
-		id: "delete-organization-form",
-		defaultValue: {
-			id: organization.id,
-			confirm: "",
-		},
-		onValidate({ formData }) {
-			return parseWithZod(formData, {
-				schema: deleteOrganizationSchema.refine(
-					(data) => data.confirm === organization.name,
-					{
-						message: "Le nom de confirmation ne correspond pas",
-						path: ["confirm"],
-					}
-				),
-			});
-		},
-		shouldValidate: "onBlur",
-		shouldRevalidate: "onInput",
-	});
-
-	console.log(form.valid);
-
 	return (
 		<>
-			<form id={form.id}>
+			<form>
 				<input type="hidden" name="id" value={organization.id} />
 				<Card className="border-destructive/50">
 					<CardHeader className="border-b border-destructive/20">
@@ -112,30 +87,19 @@ export default function DeleteOrganizationForm({
 
 							<div className="space-y-2.5">
 								<Label
-									htmlFor={fields.confirm.id}
+									htmlFor="confirm"
 									className="text-sm font-medium text-destructive"
 								>
 									Pour continuer, écrivez &quot;{organization.name}&quot;
 								</Label>
 								<Input
-									id={fields.confirm.id}
-									name={fields.confirm.name}
-									aria-describedby={fields.confirm.descriptionId}
-									className={cn(
-										"border-destructive/50",
-										fields.confirm.errors && "border-destructive"
-									)}
+									id="confirm"
+									name="confirm"
+									aria-describedby="confirm-description"
+									className={cn("border-destructive/50")}
 									placeholder={organization.name}
 									autoComplete="off"
 								/>
-								{fields.confirm.errors && (
-									<p
-										id={fields.confirm.errorId}
-										className="text-sm text-destructive"
-									>
-										{fields.confirm.errors[0]}
-									</p>
-								)}
 							</div>
 						</div>
 					</CardContent>
@@ -144,7 +108,7 @@ export default function DeleteOrganizationForm({
 							type="button"
 							variant="destructive"
 							className="w-full"
-							disabled={!form.valid || isPending}
+							disabled={isPending}
 							onClick={() => setIsDialogOpen(true)}
 						>
 							Je comprends, supprimer l&apos;organisation

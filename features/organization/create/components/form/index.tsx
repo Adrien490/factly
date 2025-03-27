@@ -24,6 +24,7 @@ import { useCreateOrganization } from "@/features/organization/create";
 import { LEGAL_FORM_OPTIONS } from "@/features/organization/legal-form-options";
 import { Autocomplete } from "@/features/shared/components/autocomplete";
 import { FieldInfo } from "@/features/shared/components/forms/components/field-info";
+import { Loader } from "@/features/shared/components/loader";
 import { useToast } from "@/features/shared/hooks/use-toast";
 import {
 	UploadDropzone,
@@ -37,15 +38,7 @@ import {
 	useForm,
 	useTransform,
 } from "@tanstack/react-form";
-import {
-	Building2,
-	Globe,
-	Loader2,
-	MapPin,
-	Receipt,
-	Upload,
-	X,
-} from "lucide-react";
+import { Building2, Globe, MapPin, Receipt, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
@@ -168,6 +161,12 @@ export function CreateOrganizationForm({
 				)}
 			</form.Field>
 
+			<form.Field name="country">
+				{(field) => (
+					<input type="hidden" name="country" value={field.state.value ?? ""} />
+				)}
+			</form.Field>
+
 			<FormLayout columns={2} className="mt-6">
 				{/* Section Logo */}
 				<FormSection
@@ -230,8 +229,7 @@ export function CreateOrganizationForm({
 										{isUploading && (
 											<div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-[2px] rounded-md">
 												<div className="flex items-center gap-2">
-													<Loader2 className="h-5 w-5 animate-spin text-primary" />
-													<p className="text-sm">Chargement...</p>
+													<Loader variant="dots" text="Chargement..." />
 												</div>
 											</div>
 										)}
@@ -525,7 +523,9 @@ export function CreateOrganizationForm({
 
 										if (!isSubmitting) {
 											startAddressTransition(() => {
-												router.push(`/dashboard/new?${url.toString()}`);
+												router.push(`/dashboard/new?${url.toString()}`, {
+													scroll: false,
+												});
 											});
 										}
 									}
@@ -663,25 +663,6 @@ export function CreateOrganizationForm({
 								)}
 							</form.Field>
 						</div>
-
-						<form.Field name="country">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="country" className="flex items-center">
-										Pays
-									</FormLabel>
-									<Input
-										id="country"
-										name="country"
-										placeholder="France"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
 					</div>
 				</FormSection>
 

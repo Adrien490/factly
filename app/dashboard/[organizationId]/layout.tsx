@@ -18,7 +18,7 @@ import {
 import { UserAvatar } from "@/features/shared/components/user-avatar";
 import { cookies, headers } from "next/headers";
 import { Suspense } from "react";
-import { UserAvatarSkeleton } from "../(layout)/components/header-skeleton";
+import { UserAvatarSkeleton } from "../(layout)/components/header/components/header-skeleton";
 
 type OrganizationLayoutProps = {
 	children: React.ReactNode;

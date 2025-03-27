@@ -8,8 +8,10 @@ import { Button } from "@/features/shared/components/ui/button";
 import { ViewToggle } from "@/features/shared/components/view-toggle";
 import Link from "next/link";
 import { Suspense } from "react";
-import { OrganizationList } from "./components/organization-list";
-import OrganizationListSkeleton from "./components/organization-list-skeleton";
+import {
+	OrganizationList,
+	OrganizationListSkeleton,
+} from "./components/organization-list";
 
 type Props = {
 	searchParams: Promise<{

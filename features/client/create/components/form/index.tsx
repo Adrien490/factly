@@ -394,7 +394,10 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										if (!isSubmitting) {
 											startAddressTransition(() => {
 												router.push(
-													`/dashboard/${organizationId}/clients/new?${url.toString()}`
+													`/dashboard/${organizationId}/clients/new?${url.toString()}`,
+													{
+														scroll: false,
+													}
 												);
 											});
 										}

@@ -43,19 +43,7 @@ export default async function NewOrganizationPage({ searchParams }: Props) {
 	return (
 		<PageContainer>
 			<CreateOrganizationForm
-				searchAddressPromise={
-					q.length >= 3
-						? searchAddress(searchAddressParams)
-						: Promise.resolve({
-								results: [],
-								metadata: {
-									query: q,
-									limit: Number(limit) || 5,
-									attribution: "API Adresse (Base Adresse Nationale)",
-									licence: "ODbL 1.0",
-								},
-						  })
-				}
+				searchAddressPromise={searchAddress(searchAddressParams)}
 			/>
 		</PageContainer>
 	);

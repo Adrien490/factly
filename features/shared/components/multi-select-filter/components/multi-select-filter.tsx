@@ -30,7 +30,7 @@ export function MultiSelectFilter({
 	className,
 	maxHeight = 250,
 }: MultiSelectFilterProps) {
-	const { values, setFilter, toggleValue, clearFilter, isSelected, isPending } =
+	const { values, toggleValue, clearFilter, isSelected, isPending } =
 		useMultiSelectFilter(filterKey);
 	const [open, setOpen] = useState(false);
 
