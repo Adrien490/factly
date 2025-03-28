@@ -5,7 +5,7 @@ import Link from "next/link";
 
 interface FormFooterProps {
 	isPending?: boolean;
-	cancelHref: string;
+	cancelHref?: string;
 	submitLabel: string;
 	disabled?: boolean;
 	cancelLabel?: string;
@@ -43,16 +43,18 @@ export function FormFooter({
 			)}
 
 			<div className="flex gap-3 w-full sm:w-auto order-1 sm:order-2 justify-end">
-				<Link href={cancelHref} className="w-full sm:w-auto">
-					<Button
-						type="button"
-						variant="outline"
-						className="w-full sm:w-auto border-border/70 hover:bg-background hover:text-foreground hover:border-border"
-						size="default"
-					>
-						{cancelLabel}
-					</Button>
-				</Link>
+				{cancelHref && (
+					<Link href={cancelHref} className="w-full sm:w-auto">
+						<Button
+							type="button"
+							variant="outline"
+							className="w-full sm:w-auto border-border/70 hover:bg-background hover:text-foreground hover:border-border"
+							size="default"
+						>
+							{cancelLabel}
+						</Button>
+					</Link>
+				)}
 
 				<Button
 					type="submit"

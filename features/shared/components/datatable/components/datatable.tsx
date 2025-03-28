@@ -27,6 +27,7 @@ export function DataTable<T extends { id: string }>({
 	getItemId = (item: T) => item.id,
 	pagination,
 	ariaLabel = "Tableau de données",
+	onRowClick,
 }: DataTableProps<T>) {
 	const {
 		handleSelectionChange,
@@ -44,6 +45,13 @@ export function DataTable<T extends { id: string }>({
 	} = useSorting();
 
 	const isPending = isSortPending;
+
+	// Handler pour gérer le clic sur une ligne
+	const handleRowClick = (item: T) => {
+		if (onRowClick) {
+			onRowClick(item);
+		}
+	};
 
 	if (data.length === 0) {
 		return (
@@ -156,13 +164,30 @@ export function DataTable<T extends { id: string }>({
 					return (
 						<TableRow
 							key={id}
-							className={cn(isSelected(id) ? "bg-muted/50" : undefined)}
+							className={cn(
+								isSelected(id) ? "bg-muted/50" : undefined,
+								onRowClick ? "cursor-pointer hover:bg-muted/30" : undefined
+							)}
 							data-state={isSelected(id) ? "selected" : undefined}
 							role="row"
 							tabIndex={0}
+							onClick={onRowClick ? () => handleRowClick(item) : undefined}
+							onKeyDown={(e) => {
+								if (onRowClick && (e.key === "Enter" || e.key === " ")) {
+									e.preventDefault();
+									handleRowClick(item);
+								}
+							}}
 						>
 							{selection && (
-								<TableCell className="w-[40px]" role="gridcell">
+								<TableCell
+									className="w-[40px]"
+									role="gridcell"
+									onClick={(e) => {
+										// Empêcher la propagation du clic vers la ligne pour les cellules de sélection
+										if (onRowClick) e.stopPropagation();
+									}}
+								>
 									<Checkbox
 										checked={isSelected(id)}
 										onCheckedChange={(checked) =>

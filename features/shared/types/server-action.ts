@@ -29,6 +29,7 @@ export type ServerActionState<
 > = ServerResponse<TData> & {
 	validationErrors?: ValidationErrors<z.infer<TSchema>>;
 	formData?: z.infer<TSchema>;
+	inputs?: z.infer<TSchema>;
 };
 
 export type ServerAction<TData, TSchema extends z.ZodType> = (
@@ -38,34 +39,40 @@ export type ServerAction<TData, TSchema extends z.ZodType> = (
 
 export function createSuccessResponse<TData, TSchema extends z.ZodType>(
 	data: TData,
-	message: string
+	message: string,
+	inputs?: z.infer<TSchema>
 ): ServerActionState<TData, TSchema> {
 	return {
 		status: ServerActionStatus.SUCCESS,
 		message,
 		data,
+		inputs,
 	};
 }
 
 export function createErrorResponse<TData, TSchema extends z.ZodType>(
 	status: ServerActionStatus,
-	message: string
+	message: string,
+	inputs?: z.infer<TSchema>
 ): ServerActionState<TData, TSchema> {
 	return {
 		status,
 		message,
+		inputs,
 	};
 }
 
 export function createValidationErrorResponse<TData, TSchema extends z.ZodType>(
 	validationErrors: ValidationErrors<z.infer<TSchema>>,
 	formData: z.infer<TSchema>,
-	message: string
+	message: string,
+	inputs?: z.infer<TSchema>
 ): ServerActionState<TData, TSchema> {
 	return {
 		status: ServerActionStatus.VALIDATION_ERROR,
 		message,
 		validationErrors,
 		formData,
+		inputs,
 	};
 }

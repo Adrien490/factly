@@ -5,7 +5,7 @@ import { EmptyState } from "@/features/shared/components/empty-state/components/
 import { Button } from "@/features/shared/components/ui/button";
 import { UserPlus } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { use } from "react";
 import { columns } from "../constants/columns";
 import { ClientListProps } from "../types";
@@ -13,6 +13,7 @@ import { ClientListProps } from "../types";
 
 export function ClientDatatable({ clientsPromise }: ClientListProps) {
 	const response = use(clientsPromise);
+	const router = useRouter();
 	const { clients, pagination } = response;
 	const params = useParams();
 	const organizationId = params.organizationId as string;
@@ -40,6 +41,9 @@ export function ClientDatatable({ clientsPromise }: ClientListProps) {
 			columns={columns}
 			pagination={pagination}
 			selection={{ key: "clientId" }}
+			onRowClick={(client) => {
+				router.push(`/dashboard/${organizationId}/clients/${client.id}`);
+			}}
 		/>
 	);
 }

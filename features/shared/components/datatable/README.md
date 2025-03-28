@@ -166,14 +166,15 @@ export default function UsersPage() {
 
 ## Props
 
-| Prop         | Type                                         | Description                                    | Requis | Par défaut           |
-| ------------ | -------------------------------------------- | ---------------------------------------------- | ------ | -------------------- |
-| `data`       | `T[]`                                        | Tableau de données à afficher                  | Oui    | -                    |
-| `columns`    | `ColumnDef<T>[]`                             | Définition des colonnes                        | Oui    | -                    |
-| `selection`  | `{ key: string; actions?: React.ReactNode }` | Configuration de la sélection                  | Non    | `undefined`          |
-| `getItemId`  | `(item: T) => string`                        | Fonction pour obtenir l'ID unique d'un élément | Non    | `(item) => item.id`  |
-| `pagination` | `PaginationProps`                            | Configuration de la pagination                 | Non    | `undefined`          |
-| `ariaLabel`  | `string`                                     | Label ARIA pour le tableau                     | Non    | "Tableau de données" |
+| Prop         | Type                                         | Description                                     | Requis | Par défaut             |
+| ------------ | -------------------------------------------- | ----------------------------------------------- | ------ | ---------------------- |
+| `data`       | `T[]`                                        | Tableau de données à afficher                   | Oui    | -                      |
+| `columns`    | `ColumnDef<T>[]`                             | Définition des colonnes                         | Oui    | -                      |
+| `selection`  | `{ key: string; actions?: React.ReactNode }` | Configuration de la sélection                   | Non    | `undefined`            |
+| `getItemId`  | `(item: T) => string`                        | Fonction pour extraire l'ID unique d'un élément | Non    | `item => item.id`      |
+| `pagination` | `object`                                     | Configuration de la pagination                  | Non    | -                      |
+| `ariaLabel`  | `string`                                     | Label d'accessibilité pour le tableau           | Non    | `"Tableau de données"` |
+| `onRowClick` | `(item: T) => void`                          | Fonction appelée lorsqu'une ligne est cliquée   | Non    | -                      |
 
 ## ColumnDef (Configuration des colonnes)
 

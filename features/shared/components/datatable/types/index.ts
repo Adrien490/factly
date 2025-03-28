@@ -19,6 +19,7 @@ export interface DataTableProps<T extends { id: string }> {
 		perPage: number;
 	};
 	ariaLabel?: string;
+	onRowClick?: (item: T) => void;
 
 	// Configuration pour les lignes collapsibles
 	/*collapsible?: {

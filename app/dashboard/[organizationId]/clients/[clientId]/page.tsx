@@ -57,9 +57,6 @@ export default async function ClientPage({ params }: Props) {
 				title={`Fiche client`}
 				description={client.name}
 			/>
-			<div>
-				Client {clientId} of organization {organizationId}
-			</div>
 		</PageContainer>
 	);
 }

@@ -17,19 +17,12 @@ import { FormFooter } from "@/features/shared/components/forms/components/form-f
 import { FormLayout } from "@/features/shared/components/forms/components/form-layout";
 import { FormSection } from "@/features/shared/components/forms/components/form-section";
 
-import {
-	FormattedAddressResult,
-	SearchAddressReturn,
-} from "@/features/address/search";
 import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";
-import { useCreateClient } from "@/features/client/create";
 import { useCheckReference } from "@/features/reference/check";
 import { generateReference } from "@/features/reference/generate/utils/generate-reference";
-import { Autocomplete } from "@/features/shared/components/autocomplete";
 import { FieldInfo } from "@/features/shared/components/forms/components/field-info";
 import { Loader } from "@/features/shared/components/loader";
-import { useToast } from "@/features/shared/hooks/use-toast";
 import { ServerActionStatus } from "@/features/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
 import {
@@ -38,40 +31,43 @@ import {
 	useForm,
 	useTransform,
 } from "@tanstack/react-form";
-import {
-	Building,
-	Clock,
-	MapPin,
-	Receipt,
-	Tag,
-	User,
-	Wand2,
-	X,
-} from "lucide-react";
-import Link from "next/link";
+import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
-import { formOpts } from "./constants";
+import { GetClientReturn } from "../../get";
+import { useUpdateClient } from "../hooks";
 
 type Props = {
-	searchAddressPromise: Promise<SearchAddressReturn>;
+	clientPromise: Promise<GetClientReturn>;
 };
 
-export function CreateClientForm({ searchAddressPromise }: Props) {
-	const response = use(searchAddressPromise);
+export function UpdateClientForm({ clientPromise }: Props) {
+	const client = use(clientPromise);
 	const params = useParams();
-	const { toast } = useToast();
 	const organizationId = params.organizationId as string;
 	const [isCheckingReference, startReferenceTransition] = useTransition();
-	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch, isPending } = useCreateClient();
+	const { state, dispatch, isPending } = useUpdateClient();
 	const router = useRouter();
 	const { state: checkReferenceState, dispatch: checkReferenceDispatch } =
 		useCheckReference();
 
 	// TanStack Form setup
 	const form = useForm({
-		...formOpts(organizationId),
+		defaultValues: {
+			id: state?.inputs?.id ?? client.id,
+			organizationId,
+			name: state?.inputs?.name ?? client.name,
+			reference: state?.inputs?.reference ?? client.reference,
+			email: state?.inputs?.email ?? client.email,
+			phone: state?.inputs?.phone ?? client.phone,
+			website: state?.inputs?.website ?? client.website,
+			clientType: state?.inputs?.clientType ?? client.clientType,
+			status: state?.inputs?.status ?? client.status,
+			notes: state?.inputs?.notes ?? client.notes,
+			siren: state?.inputs?.siren ?? client.siren,
+			siret: state?.inputs?.siret ?? client.siret,
+			vatNumber: state?.inputs?.vatNumber ?? client.vatNumber,
+		},
 
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
@@ -114,79 +110,16 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		}
 	};
 
-	// Fonction pour sélectionner une adresse dans l'autocomplétion
-	const handleAddressSelect = (address: FormattedAddressResult) => {
-		// Adresse ligne 1
-		if (address.type === "housenumber") {
-			// Si c'est une adresse complète avec numéro, on utilise le format complet
-			form.setFieldValue(
-				"addressLine1",
-				`${address.housenumber} ${address.street}` || ""
-			);
-		} else if (address.type === "street") {
-			// Si c'est une rue sans numéro
-			form.setFieldValue("addressLine1", address.street || "");
-		} else {
-			// Pour les autres types (locality, municipality), on utilise simplement le label
-			form.setFieldValue("addressLine1", address.label || "");
-		}
-
-		// Ville
-		form.setFieldValue("city", address.city);
-
-		// Code postal
-		form.setFieldValue("postalCode", address.postcode);
-
-		// Si on a un district (arrondissement), on l'ajoute dans addressLine2
-		if (address.district) {
-			form.setFieldValue("addressLine2", `Arrondissement: ${address.district}`);
-		}
-
-		// Coordonnées géographiques (longitude, latitude)
-		if (address.coordinates && address.coordinates.length === 2) {
-			// L'API retourne les coordonnées au format [longitude, latitude]
-			const [longitude, latitude] = address.coordinates;
-			form.setFieldValue("longitude", longitude);
-			form.setFieldValue("latitude", latitude);
-		} else {
-			// Réinitialiser les coordonnées si elles ne sont pas disponibles
-			form.setFieldValue("longitude", null);
-			form.setFieldValue("latitude", null);
-		}
-	};
-
-	// Fonction pour effacer le champ d'adresse
-	const handleClearAddressSearch = () => {
-		form.setFieldValue("addressLine1", "");
-		form.setFieldValue("addressLine2", "");
-		form.setFieldValue("postalCode", "");
-		form.setFieldValue("city", "");
-		const url = new URLSearchParams();
-		// Réinitialiser l'URL de recherche
-		startAddressTransition(() => {
-			router.push(`/dashboard/${organizationId}/clients/new?${url.toString()}`);
-		});
-	};
-
 	console.log(state);
 
 	useEffect(() => {
 		if (state.status === ServerActionStatus.SUCCESS) {
-			form.reset();
-			toast({
-				duration: 4000,
-				title: "Client créé avec succès",
-				description: "Le client a été créé avec succès",
-				action: (
-					<Link href={`/dashboard/${organizationId}/clients`}>
-						<Button variant="outline" size="sm">
-							Voir la liste
-						</Button>
-					</Link>
-				),
-			});
+			// toast notification removed since we're using server-action-response
 		}
-	}, [form, state?.message, state.status, toast, router, organizationId]);
+		return () => {
+			form.reset();
+		};
+	}, [form, state?.message, state.status, router, organizationId]);
 
 	return (
 		<form
@@ -201,31 +134,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 
 			{/* Champs cachés */}
 			<input type="hidden" name="organizationId" value={organizationId} />
-			<form.Field name="latitude">
+			<form.Field name="id">
 				{(field) => (
-					<input
-						type="hidden"
-						name="latitude"
-						value={field.state.value ?? ""}
-					/>
-				)}
-			</form.Field>
-			<form.Field name="longitude">
-				{(field) => (
-					<input
-						type="hidden"
-						name="longitude"
-						value={field.state.value ?? ""}
-					/>
-				)}
-			</form.Field>
-			<form.Field name="addressType">
-				{(field) => (
-					<input
-						type="hidden"
-						name="addressType"
-						value={field.state.value ?? ""}
-					/>
+					<input type="hidden" name="id" value={field.state.value ?? ""} />
 				)}
 			</form.Field>
 
@@ -248,6 +159,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								},
 								onChangeAsync: async ({ value }) => {
 									if (form.state.isSubmitting) return undefined;
+									if (!value) return undefined;
 									checkReference(value);
 								},
 							}}
@@ -382,176 +294,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					</div>
 				</FormSection>
 
-				{/* Section 5: Adresse */}
-				<FormSection
-					title="Adresse de facturation"
-					description="Adresse de facturation du client"
-					icon={MapPin}
-				>
-					<div className="space-y-4">
-						<form.Field
-							name="addressLine1"
-							validators={{
-								onChangeAsyncDebounceMs: 500,
-								onChangeAsync: async ({ value }) => {
-									if (
-										value &&
-										value.length >= 3 &&
-										/^[a-zA-Z0-9]/.test(value)
-									) {
-										const url = new URLSearchParams();
-										url.set("q", value);
-
-										// Ajouter des paramètres supplémentaires si nécessaire
-										// Par exemple, si on connaît déjà le code postal
-										/*	const postalCode = form.getFieldValue("postalCode");
-										if (postalCode) {
-											url.set("postcode", postalCode);
-										}*/
-
-										// Utiliser un flag pour indiquer si on est dans un onChange manuel
-										// ou dans une validation de soumission
-										const isSubmitting = form.state.isSubmitting;
-
-										if (!isSubmitting) {
-											startAddressTransition(() => {
-												router.push(
-													`/dashboard/${organizationId}/clients/new?${url.toString()}`,
-													{
-														scroll: false,
-													}
-												);
-											});
-										}
-									}
-								},
-								onChange: ({ value }) => {
-									form.setFieldValue("addressLine1", value);
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressLine1">Adresse ligne 1</FormLabel>
-									<div className="relative">
-										<Autocomplete
-											name="addressLine1"
-											value={field.state.value}
-											onChange={(value) => {
-												field.handleChange(value);
-											}}
-											onSelect={handleAddressSelect}
-											items={response.results}
-											getItemLabel={(item) => item.label}
-											getItemDescription={(item) =>
-												item.postcode && `${item.postcode} ${item.city}`
-											}
-											placeholder="Rechercher une adresse... (min. 3 caractères)"
-											isLoading={isAddressLoading}
-											className="w-full"
-											inputClassName="border-input focus:ring-1 focus:ring-primary pr-20"
-										/>
-										{/* Actions dans le champ */}
-										<div className="absolute right-3 top-0 h-full flex items-center gap-1">
-											{/* Bouton pour effacer la recherche, visible uniquement si une valeur est présente */}
-											{field.state.value && (
-												<button
-													type="button"
-													className="h-5 w-5 rounded-full hover:bg-muted flex items-center justify-center"
-													onClick={handleClearAddressSearch}
-													aria-label="Effacer la recherche d'adresse"
-													title="Effacer la recherche d'adresse"
-												>
-													<X
-														className="h-3 w-3 text-muted-foreground"
-														aria-hidden="true"
-													/>
-												</button>
-											)}
-										</div>
-									</div>
-									{field.state.value && field.state.value.length < 3 && (
-										<p
-											className="text-xs text-muted-foreground"
-											id="addressLine1-info"
-											role="status"
-										>
-											Saisissez au moins 3 caractères pour lancer la recherche
-										</p>
-									)}
-									{field.state.value &&
-										!/^[a-zA-Z0-9]/.test(field.state.value) && (
-											<p
-												className="text-xs text-amber-500"
-												id="addressLine1-warning"
-												role="alert"
-											>
-												La recherche doit commencer par une lettre ou un chiffre
-											</p>
-										)}
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="addressLine2">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressLine2">
-										Adresse ligne 2 (optionnelle)
-									</FormLabel>
-									<Input
-										id="addressLine2"
-										name="addressLine2"
-										placeholder="Complément d'adresse, étage, etc."
-										value={field.state.value || ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<div className="grid grid-cols-2 gap-4">
-							<form.Field name="postalCode">
-								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="postalCode">Code postal</FormLabel>
-										<Input
-											id="postalCode"
-											name="postalCode"
-											placeholder="Ex: 75001"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										{field.state.meta.errors.length > 0 && (
-											<p className="text-xs text-destructive">
-												{String(field.state.meta.errors[0])}
-											</p>
-										)}
-									</div>
-								)}
-							</form.Field>
-
-							<form.Field name="city">
-								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="city">Ville</FormLabel>
-										<Input
-											id="city"
-											name="city"
-											placeholder="Ex: Paris"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										<FieldInfo field={field} />
-									</div>
-								)}
-							</form.Field>
-						</div>
-					</div>
-				</FormSection>
-
 				{/* Section 4: Informations fiscales */}
 				<FormSection
 					title="Informations fiscales"
@@ -577,7 +319,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 															id="siren"
 															name="siren"
 															placeholder="9 chiffres (ex: 123456789)"
-															value={sirenField.state.value}
+															value={sirenField.state.value ?? ""}
 															onChange={(e) =>
 																sirenField.handleChange(e.target.value)
 															}
@@ -603,7 +345,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 															id="siret"
 															name="siret"
 															placeholder="14 chiffres (ex: 12345678900001)"
-															value={siretField.state.value}
+															value={siretField.state.value ?? ""}
 															onChange={(e) =>
 																siretField.handleChange(e.target.value)
 															}
@@ -652,7 +394,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										id="vatNumber"
 										name="vatNumber"
 										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
 									<p className="text-xs text-muted-foreground">
@@ -743,7 +485,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										name="email"
 										type="email"
 										placeholder="contact@example.com"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
 									<FieldInfo field={field} />
@@ -761,7 +503,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										id="phone"
 										name="phone"
 										placeholder="Ex: +33 1 23 45 67 89"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
 									<FieldInfo field={field} />
@@ -792,7 +534,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										id="website"
 										name="website"
 										placeholder="Ex: https://www.example.com"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
 									<FieldInfo field={field} />
@@ -817,7 +559,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										name="notes"
 										rows={4}
 										placeholder="Notes et informations complémentaires"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>
 									<FieldInfo field={field} />
@@ -832,8 +574,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit}
-						cancelHref={`/dashboard/${organizationId}/clients`}
-						submitLabel="Créer le client"
+						submitLabel="Modifier le client"
 						isPending={isPending}
 					/>
 				)}

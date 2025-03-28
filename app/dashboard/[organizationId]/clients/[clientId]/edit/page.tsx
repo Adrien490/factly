@@ -1,7 +1,9 @@
 import { getClient } from "@/features/client/get";
+import { UpdateClientForm } from "@/features/client/update/form";
+import { PageContainer } from "@/features/shared/components/page-container";
 import { PageHeader } from "@/features/shared/components/page-header";
-import { Separator } from "@/features/shared/components/ui/separator";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 type PageProps = {
 	params: Promise<{
@@ -21,15 +23,50 @@ export default async function EditClientPage({ params }: PageProps) {
 	}
 
 	return (
-		<div className="flex flex-col gap-8">
+		<PageContainer>
 			{/* En-tête */}
-			<div className="flex flex-col gap-4">
-				<PageHeader
-					title={`Modifier ${client.name}`}
-					description="Modifiez les informations du client ci-dessous"
+
+			<PageHeader
+				title={`Modifier ${client.name}`}
+				description="Modifiez les informations du client ci-dessous"
+				breadcrumbs={[
+					{ label: "Clients", href: `/dashboard/${organizationId}/clients` },
+					{
+						label: client.name,
+						href: `/dashboard/${organizationId}/clients/${clientId}`,
+					},
+				]}
+				navigation={{
+					items: [
+						{
+							label: "Fiche client",
+							href: `/dashboard/${organizationId}/clients/${clientId}`,
+						},
+						{
+							label: "Modifier",
+							href: `/dashboard/${organizationId}/clients/${clientId}/edit`,
+						},
+
+						{
+							label: "Gestion des adresses",
+							href: `/dashboard/${organizationId}/clients/${clientId}/addresses`,
+						},
+						{
+							label: "Gestion des contacts",
+							href: `/dashboard/${organizationId}/clients/${clientId}/contacts`,
+						},
+						{
+							label: "Supprimer",
+							href: `/dashboard/${organizationId}/clients/${clientId}/delete`,
+						},
+					],
+				}}
+			/>
+			<Suspense fallback={<div>Loading...</div>}>
+				<UpdateClientForm
+					clientPromise={getClient({ id: clientId, organizationId })}
 				/>
-				<Separator />
-			</div>
-		</div>
+			</Suspense>
+		</PageContainer>
 	);
 }

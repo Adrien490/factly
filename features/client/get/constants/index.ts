@@ -15,6 +15,7 @@ export const DEFAULT_SELECT = {
 	siren: true,
 	siret: true,
 	vatNumber: true,
+	notes: true,
 	userId: true,
 	createdAt: true,
 	updatedAt: true,
