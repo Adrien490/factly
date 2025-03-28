@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/features/auth";
 import { headers } from "next/headers";
 import { Suspense } from "react";
 import { Header } from "./components/header";

@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/features/auth";
 import { getOrganizations } from "@/features/organization/get-all";
 import { OrganizationSidebar } from "@/features/shared/components/organization-sidebar";
 import {
