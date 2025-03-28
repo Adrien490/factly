@@ -4,6 +4,8 @@ import { Footer } from "@/app/(public)/components/footer";
 import { Hero } from "@/app/(public)/components/hero";
 
 export default async function HomePage() {
+	"use cache";
+
 	return (
 		<>
 			<Hero />
