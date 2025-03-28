@@ -1,2 +1,2 @@
+export * from "../../organization-card";
 export * from "./organization-list";
-export * from "./organization-list-skeleton";

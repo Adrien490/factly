@@ -1,7 +1,7 @@
 import { PageContainer } from "@/features/shared/components/page-container";
 import { Button } from "@/features/shared/components/ui/button";
 import { Skeleton } from "@/features/shared/components/ui/skeleton";
-import { OrganizationListSkeleton } from "./components/organization-list";
+import { OrganizationListSkeleton } from "./components/organization-list-skeleton";
 
 export default function DashboardLoading() {
 	return (

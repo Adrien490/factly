@@ -1,17 +1,13 @@
 "use client";
 
-import { type GetOrganizationsReturn } from "@/features/organization/get-all";
-import { EmptyState } from "@/features/shared/components/empty-state/components/empty-state";
+import { cn } from "@/features/shared/lib/utils";
 import { ViewType } from "@/features/shared/types";
-import { Building2, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { use } from "react";
 import { OrganizationCard } from "../../organization-card";
-
-type OrganizationListProps = {
-	organizationsPromise: Promise<GetOrganizationsReturn>;
-};
+import { OrganizationListProps } from "../types";
 
 export function OrganizationList({
 	organizationsPromise,
@@ -21,27 +17,17 @@ export function OrganizationList({
 	const searchParams = useSearchParams();
 	const viewMode = (searchParams.get("view") as ViewType) || "grid";
 
-	// Affichage de l'état vide (pas d'organisations)
-	if (organizations.length === 0) {
-		return (
-			<EmptyState
-				icon={Building2}
-				title="Aucune organisation trouvée"
-				description="Créez une organisation pour commencer"
-			/>
-		);
-	}
-
-	// Container adaptatif selon le mode de vue
-	const containerClassName =
-		viewMode === "grid"
-			? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-			: "space-y-3";
-
 	return (
 		<div className="relative group-has-data-pending:animate-pulse">
 			{/* Animation de transition pour donner un retour visuel lorsqu'on change de vue */}
-			<div className={`transition-all duration-300 ${containerClassName}`}>
+			<div
+				className={cn(
+					"transition-all duration-300",
+					viewMode === "grid"
+						? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+						: "space-y-3"
+				)}
+			>
 				{/* Mapping des organisations avec le paramètre view pour adaptation */}
 				{organizations.map((organization) => (
 					<OrganizationCard

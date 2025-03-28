@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 
-export type FilterValue = string | string[];
+export type FilterValue = string;
 
 export default function useFilterSelect(filterKey: string) {
 	const router = useRouter();
@@ -17,16 +17,14 @@ export default function useFilterSelect(filterKey: string) {
 	const currentValues = searchParams.getAll(paramKey);
 
 	// État optimiste pour une meilleure UX
-	const [optimisticValues, setOptimisticValues] =
-		useOptimistic<string[]>(currentValues);
+	const [optimisticValue, setOptimisticValue] = useOptimistic<string>(
+		currentValues[0]
+	);
 
 	// Mise à jour de l'URL avec les nouveaux paramètres
-	const updateUrlWithParams = (
-		params: URLSearchParams,
-		newValues: string[]
-	) => {
+	const updateUrlWithParams = (params: URLSearchParams, newValue: string) => {
 		startTransition(() => {
-			setOptimisticValues(newValues);
+			setOptimisticValue(newValue);
 			router.push(`?${params.toString()}`, { scroll: false });
 		});
 	};
@@ -45,18 +43,15 @@ export default function useFilterSelect(filterKey: string) {
 		params.delete(paramKey);
 
 		// Convertir en tableau pour traitement uniforme
-		const values = Array.isArray(value) ? value : [value];
 
 		// Ajouter les nouvelles valeurs
-		values.forEach((val) => {
-			if (val) params.append(paramKey, val);
-		});
+		if (value) params.append(paramKey, value);
 
 		// IMPORTANT: Réinitialiser la pagination à la page 1 quand un filtre change
 		// Cela permet d'éviter des pages vides quand le nombre de résultats diminue
 		params.set("page", "1");
 
-		updateUrlWithParams(params, values);
+		updateUrlWithParams(params, value);
 	};
 
 	// Effacer le filtre
@@ -67,14 +62,14 @@ export default function useFilterSelect(filterKey: string) {
 		// Réinitialiser également la pagination à la page 1 quand on efface un filtre
 		params.set("page", "1");
 
-		updateUrlWithParams(params, []);
+		updateUrlWithParams(params, "");
 	};
 
 	// Vérifier si une valeur est sélectionnée
-	const isSelected = (value: string) => optimisticValues.includes(value);
+	const isSelected = (value: string) => optimisticValue === value;
 
 	return {
-		values: optimisticValues,
+		value: optimisticValue,
 		setFilter,
 		clearFilter,
 		isSelected,

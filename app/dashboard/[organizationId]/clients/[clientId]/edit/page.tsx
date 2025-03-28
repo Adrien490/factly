@@ -4,6 +4,7 @@ import { PageContainer } from "@/features/shared/components/page-container";
 import { PageHeader } from "@/features/shared/components/page-header";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { clientNavigation } from "../constants";
 
 type PageProps = {
 	params: Promise<{
@@ -37,29 +38,7 @@ export default async function EditClientPage({ params }: PageProps) {
 					},
 				]}
 				navigation={{
-					items: [
-						{
-							label: "Fiche client",
-							href: `/dashboard/${organizationId}/clients/${clientId}`,
-						},
-						{
-							label: "Modifier",
-							href: `/dashboard/${organizationId}/clients/${clientId}/edit`,
-						},
-
-						{
-							label: "Gestion des adresses",
-							href: `/dashboard/${organizationId}/clients/${clientId}/addresses`,
-						},
-						{
-							label: "Gestion des contacts",
-							href: `/dashboard/${organizationId}/clients/${clientId}/contacts`,
-						},
-						{
-							label: "Supprimer",
-							href: `/dashboard/${organizationId}/clients/${clientId}/delete`,
-						},
-					],
+					items: clientNavigation(organizationId, clientId),
 				}}
 			/>
 			<Suspense fallback={<div>Loading...</div>}>

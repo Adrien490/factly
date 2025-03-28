@@ -1,11 +1,7 @@
 "use client";
 
 import { OrganizationCardSkeleton } from "@/app/dashboard/(layout)/components/organization-card/components/organization-card-skeleton";
-import { ViewType } from "@/features/shared/types";
-
-type OrganizationListSkeletonProps = {
-	viewType?: ViewType;
-};
+import { OrganizationListSkeletonProps } from "../types";
 
 export function OrganizationListSkeleton({
 	viewType = "grid",

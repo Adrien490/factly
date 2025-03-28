@@ -1,17 +1,17 @@
-import { getAddresses } from "@/features/address";
-import { AddressDataTable } from "@/features/address/get-all/components/address-datatable";
+import { AddressList, getAddresses } from "@/features/address";
+import { ADDRESS_TYPE_OPTIONS } from "@/features/address/address-type-options";
 import { GetAddressesParams } from "@/features/address/get-all/types";
-import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
-import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";
 import { FilterSelect } from "@/features/shared/components/filter-select";
-import { MultiSelectFilter } from "@/features/shared/components/multi-select-filter";
 import { PageContainer } from "@/features/shared/components/page-container";
 import { PageHeader } from "@/features/shared/components/page-header";
 import { SearchForm } from "@/features/shared/components/search-form";
 import { Button } from "@/features/shared/components/ui/button";
 import { Card } from "@/features/shared/components/ui/card";
+import { ViewToggle } from "@/features/shared/components/view-toggle";
 import { SortOrder } from "@/features/shared/types";
 import Link from "next/link";
+import { clientNavigation } from "../constants";
+import { clientBreadcrumbs } from "../constants/client-breadcrumbs";
 
 type Props = {
 	params: Promise<{
@@ -68,23 +68,15 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						</Link>
 					</Button>
 				}
+				breadcrumbs={clientBreadcrumbs(organizationId, clientId)}
 				navigation={{
-					items: [
-						{
-							label: "Liste des adresses",
-							href: `/dashboard/${organizationId}/clients/${clientId}/addresses`,
-						},
-						{
-							label: "Nouvelle adresse",
-							href: `/dashboard/${organizationId}/clients/${clientId}/addresses/new`,
-						},
-					],
+					items: clientNavigation(organizationId, clientId),
 				}}
 				className="mb-6"
 			/>
 
 			{/* Barre de recherche et filtres */}
-			<Card className="mb-4 py-4 space-y-4">
+			<Card className="mb-4 py-4 space-y-4 px-2">
 				{/* Recherche */}
 				<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
 					<SearchForm
@@ -96,22 +88,18 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						Filtrer par:
 					</span>
 					<div className="flex flex-wrap gap-2">
-						<MultiSelectFilter
-							filterKey="status"
-							label="Statut"
-							options={CLIENT_STATUS_OPTIONS}
-						/>
 						<FilterSelect
-							filterKey="clientType"
+							filterKey="addressType"
 							label="Type"
-							options={CLIENT_TYPE_OPTIONS}
+							options={ADDRESS_TYPE_OPTIONS}
 						/>
+						<ViewToggle />
 					</div>
 				</div>
 			</Card>
 
 			{/* Tableau de données */}
-			<AddressDataTable addressesPromise={getAddresses(queryParams)} />
+			<AddressList addressesPromise={getAddresses(queryParams)} />
 		</PageContainer>
 	);
 }

@@ -100,6 +100,7 @@ export function DataTable<T extends { id: string }>({
 							className={cn(
 								cellStyles(column.visibility),
 								column.className,
+								column.sortable && "cursor-pointer",
 								column.align === "center" && "text-center",
 								column.align === "right" && "text-right"
 							)}
