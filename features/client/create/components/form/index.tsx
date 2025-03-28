@@ -29,6 +29,8 @@ import { generateReference } from "@/features/reference/generate/utils/generate-
 import { Autocomplete } from "@/features/shared/components/autocomplete";
 import { FieldInfo } from "@/features/shared/components/forms/components/field-info";
 import { Loader } from "@/features/shared/components/loader";
+import { useToast } from "@/features/shared/hooks/use-toast";
+import { ServerActionStatus } from "@/features/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
 import {
 	mergeForm,
@@ -46,8 +48,9 @@ import {
 	Wand2,
 	X,
 } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { use, useTransition } from "react";
+import { use, useEffect, useTransition } from "react";
 import { formOpts } from "./constants";
 
 type Props = {
@@ -57,6 +60,7 @@ type Props = {
 export function CreateClientForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
 	const params = useParams();
+	const { toast } = useToast();
 	const organizationId = params.organizationId as string;
 	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const [isAddressLoading, startAddressTransition] = useTransition();
@@ -165,6 +169,24 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	};
 
 	console.log(state);
+
+	useEffect(() => {
+		if (state.status === ServerActionStatus.SUCCESS) {
+			form.reset();
+			toast({
+				duration: 4000,
+				title: "Client créé avec succès",
+				description: "Le client a été créé avec succès",
+				action: (
+					<Link href={`/dashboard/${organizationId}/clients`}>
+						<Button variant="outline" size="sm">
+							Voir la liste
+						</Button>
+					</Link>
+				),
+			});
+		}
+	}, [form, state?.message, state.status, toast, router, organizationId]);
 
 	return (
 		<form
@@ -540,7 +562,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						<form.Subscribe selector={(state) => state.values.clientType}>
 							{(clientType) => (
 								<>
-									{clientType === ClientType.COMPANY && (
+									{clientType === ClientType.COMPANY ? (
 										<>
 											<form.Field name="siren">
 												{(sirenField) => (
@@ -591,6 +613,27 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 														</p>
 														<FieldInfo field={siretField} />
 													</div>
+												)}
+											</form.Field>
+										</>
+									) : (
+										<>
+											<form.Field name="siret">
+												{(field) => (
+													<input
+														type="hidden"
+														name="siret"
+														value={field.state.value ?? ""}
+													/>
+												)}
+											</form.Field>
+											<form.Field name="siren">
+												{(field) => (
+													<input
+														type="hidden"
+														name="siren"
+														value={field.state.value ?? ""}
+													/>
 												)}
 											</form.Field>
 										</>

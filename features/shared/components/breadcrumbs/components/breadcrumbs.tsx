@@ -1,21 +1,15 @@
 import {
 	Breadcrumb,
 	BreadcrumbItem,
-	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/features/shared/components/ui/breadcrumb";
 import { cn } from "@/features/shared/lib/utils";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import React from "react";
-
-interface BreadcrumbsProps extends React.HTMLAttributes<HTMLElement> {
-	items: Array<{
-		label: string;
-		href?: string;
-	}>;
-}
+import { BreadcrumbsProps } from "../types";
 
 export function Breadcrumbs({ items, className, ...props }: BreadcrumbsProps) {
 	if (!items?.length) return null;
@@ -32,12 +26,9 @@ export function Breadcrumbs({ items, className, ...props }: BreadcrumbsProps) {
 						<React.Fragment key={index}>
 							<BreadcrumbItem>
 								{item.href ? (
-									<BreadcrumbLink
-										href={item.href}
-										className="hover:text-foreground"
-									>
+									<Link href={item.href} className="hover:text-foreground">
 										{item.label}
-									</BreadcrumbLink>
+									</Link>
 								) : (
 									<BreadcrumbPage>{item.label}</BreadcrumbPage>
 								)}

@@ -77,7 +77,7 @@ export function Header({ userPromise, className }: Props) {
 								}}
 								className="ml-8"
 							>
-								<HorizontalMenu items={menuItems} size="sm" alignment="start" />
+								<HorizontalMenu items={menuItems} />
 							</motion.div>
 						)}
 					</AnimatePresence>
@@ -106,11 +106,7 @@ export function Header({ userPromise, className }: Props) {
 						className="overflow-hidden"
 					>
 						<div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8 border-b border-border/50">
-							<HorizontalMenu
-								items={menuItems}
-								size="default"
-								alignment="start"
-							/>
+							<HorizontalMenu items={menuItems} />
 						</div>
 					</motion.div>
 				)}

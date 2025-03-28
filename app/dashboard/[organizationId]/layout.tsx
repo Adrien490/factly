@@ -4,7 +4,6 @@ import { OrganizationSidebar } from "@/features/shared/components/organization-s
 import {
 	Breadcrumb,
 	BreadcrumbItem,
-	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
@@ -17,6 +16,7 @@ import {
 } from "@/features/shared/components/ui/sidebar";
 import { UserAvatar } from "@/features/shared/components/user-avatar";
 import { cookies, headers } from "next/headers";
+import Link from "next/link";
 import { Suspense } from "react";
 import { UserAvatarSkeleton } from "../(layout)/components/header/components/header-skeleton";
 
@@ -55,9 +55,7 @@ export default async function OrganizationLayout({
 						<Breadcrumb>
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
-									<BreadcrumbLink href={`/dashboard`}>
-										Organisations
-									</BreadcrumbLink>
+									<Link href={`/dashboard`}>Organisations</Link>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>

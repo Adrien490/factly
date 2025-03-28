@@ -3,16 +3,12 @@
 import { cn } from "@/features/shared/lib/utils";
 import * as React from "react";
 
-interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PageContainerProps {
 	children: React.ReactNode;
+	className?: string;
 }
 
-export function PageContainer({
-	children,
-
-	className,
-	...props
-}: PageContainerProps) {
+export function PageContainer({ children, className }: PageContainerProps) {
 	return (
 		<div
 			className={cn(
@@ -20,7 +16,6 @@ export function PageContainer({
 
 				className
 			)}
-			{...props}
 		>
 			{children}
 		</div>
