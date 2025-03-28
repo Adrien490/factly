@@ -74,6 +74,22 @@ model User {
   @@map("user")
 }
 
+model Passkey {
+  id           String   @id @default(cuid())
+  name         String?
+  publicKey    String   @db.Text
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String   @unique
+  counter      Int      @default(0)
+  deviceType   String?
+  backedUp     Boolean  @default(false)
+  transports   String?
+  createdAt    DateTime @default(now())
+
+  @@map("passkey")
+}
+
 model Organization {
   id        String  @id @default(cuid())
   name      String
@@ -724,20 +740,4 @@ enum MovementType {
   ADJUSTMENT
   TRANSFER
   LOSS
-}
-
-model Passkey {
-  id           String   @id @default(cuid())
-  name         String?
-  publicKey    String   @db.Text
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  credentialID String   @unique
-  counter      Int      @default(0)
-  deviceType   String?
-  backedUp     Boolean  @default(false)
-  transports   String?
-  createdAt    DateTime @default(now())
-
-  @@map("passkey")
 }

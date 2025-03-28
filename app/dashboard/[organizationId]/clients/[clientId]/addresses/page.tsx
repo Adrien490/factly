@@ -1,5 +1,5 @@
 import { getAddresses } from "@/features/address";
-import { AddressDataTable } from "@/features/address/components/address-datatable";
+import { AddressDataTable } from "@/features/address/get-all/components/address-datatable";
 import { GetAddressesParams } from "@/features/address/get-all/types";
 import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";

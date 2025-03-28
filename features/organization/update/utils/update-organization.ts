@@ -11,6 +11,7 @@ import {
 	createValidationErrorResponse,
 } from "@/features/shared/types/server-action";
 import { Organization } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateOrganizationSchema } from "../schemas";
 
@@ -131,6 +132,8 @@ export async function updateOrganization(
 			where: { id },
 			data: updateData,
 		});
+
+		revalidateTag("organizations");
 
 		// 8. Retour de la réponse de succès
 		return createSuccessResponse(

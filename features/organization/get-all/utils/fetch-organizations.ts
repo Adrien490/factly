@@ -1,4 +1,5 @@
 import db from "@/features/shared/lib/db";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { DEFAULT_SELECT } from "../constants";
 import { GetOrganizationsParams, GetOrganizationsReturn } from "../types";
 import { buildWhereClause } from "./build-where-clause";
@@ -11,6 +12,9 @@ export async function fetchOrganizations(
 	params: GetOrganizationsParams,
 	userId: string
 ): Promise<GetOrganizationsReturn> {
+	"use cache";
+
+	cacheLife("organizations");
 	try {
 		// Validation des paramètres
 		const where = buildWhereClause(params, userId);

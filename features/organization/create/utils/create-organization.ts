@@ -10,6 +10,7 @@ import {
 	createValidationErrorResponse,
 } from "@/features/shared/types/server-action";
 import { Organization } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createOrganizationSchema } from "../schemas";
 
@@ -112,6 +113,8 @@ export async function createOrganization(
 				},
 			},
 		});
+
+		revalidateTag("organizations");
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(
