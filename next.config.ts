@@ -4,9 +4,10 @@ const nextConfig: NextConfig = {
 	experimental: {
 		authInterrupts: true,
 		dynamicIO: true,
+		nodeMiddleware: true,
 		cacheLife: {
 			organizations: {
-				stale: 3600, // 1 hour
+				stale: 7200, // 2 hours
 				revalidate: 900, // 15 minutes
 				expire: 86400, // 1 day
 			},

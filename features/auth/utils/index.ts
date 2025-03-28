@@ -1,13 +1,3 @@
-import { authClient } from "@/features/auth/lib/auth-client";
-import Provider from "@/features/auth/types/provider";
-
-export const signIn = async (provider: Provider) => {
-	await authClient.signIn.social({
-		provider,
-		callbackURL: "/dashboard",
-	});
-};
-
 export function getUserInitials(
 	nom: string | null | undefined,
 	email: string | null | undefined

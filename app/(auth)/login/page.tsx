@@ -1,8 +1,4 @@
-import {
-	MagicLinkForm,
-	PasskeyLogin,
-	SocialLogin,
-} from "@/features/auth/components";
+import { MagicLinkForm, ProviderLogin } from "@/features/auth/components";
 import { Logo } from "@/features/shared/components/logo";
 import { Spotlight } from "@/features/shared/components/ui/spotlight-new";
 import { ArrowLeft } from "lucide-react";
@@ -59,10 +55,7 @@ export default async function LoginPage() {
 
 				{/* Options de connexion sociale */}
 				<div className="py-2">
-					<SocialLogin />
-					<div className="mt-3">
-						<PasskeyLogin />
-					</div>
+					<ProviderLogin />
 				</div>
 
 				{/* Séparateur simple */}

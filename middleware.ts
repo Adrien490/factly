@@ -1,8 +1,6 @@
-import type { auth } from "@/features/auth/lib/auth";
-import { betterFetch } from "@better-fetch/fetch";
+import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-
-type Session = typeof auth.$Infer.Session;
+import { auth } from "./auth";
 
 const protectedRoutes = [
 	"/dashboard",
@@ -13,46 +11,38 @@ const protectedRoutes = [
 const publicOnlyRoutes = ["/login"];
 const publicApiRoutes = ["/api/webhook/stripe", "/api"];
 
-export default async function middleware(request: NextRequest) {
-	try {
-		const { data: session } = await betterFetch<Session>(
-			"/api/auth/get-session",
-			{
-				baseURL: request.nextUrl.origin,
-				headers: Object.fromEntries(request.headers.entries()),
-			}
-		);
+export async function middleware(request: NextRequest) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-		const { nextUrl } = request;
-		const isLoggedIn = !!session;
+	const { nextUrl } = request;
+	const isLoggedIn = !!session;
 
-		if (publicApiRoutes.some((route) => nextUrl.pathname.startsWith(route))) {
-			return NextResponse.next();
-		}
-
-		if (
-			isLoggedIn &&
-			publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route))
-		) {
-			return Response.redirect(new URL("/dashboard", nextUrl.origin));
-		}
-
-		if (
-			!isLoggedIn &&
-			protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))
-		) {
-			const redirectUrl = new URL("/login", nextUrl.origin);
-			redirectUrl.searchParams.set("callbackUrl", nextUrl.pathname);
-			return Response.redirect(redirectUrl);
-		}
-
-		return NextResponse.next();
-	} catch (error) {
-		console.error("[MIDDLEWARE_ERROR]", error);
+	if (publicApiRoutes.some((route) => nextUrl.pathname.startsWith(route))) {
 		return NextResponse.next();
 	}
+
+	if (
+		isLoggedIn &&
+		publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route))
+	) {
+		return Response.redirect(new URL("/dashboard", nextUrl.origin));
+	}
+
+	if (
+		!isLoggedIn &&
+		protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))
+	) {
+		const redirectUrl = new URL("/login", nextUrl.origin);
+		redirectUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+		return Response.redirect(redirectUrl);
+	}
+
+	return NextResponse.next();
 }
 
 export const config = {
-	matcher: ["/((?!_next/static|_next/image|favicon.ico|public/).*)"],
+	runtime: "nodejs",
+	matcher: ["/dashboard"], // Apply middleware to specific routes
 };

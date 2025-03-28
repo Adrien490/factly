@@ -1,12 +1,10 @@
-import Provider from "../types/provider";
-
-const socialProviders: {
-	id: Provider;
+export const providers: {
+	id: "google" | "github";
 	name: string;
 	icon: React.ReactNode;
 }[] = [
 	{
-		id: "google" as Provider,
+		id: "google",
 		name: "Google",
 		icon: (
 			<svg viewBox="0 0 48 48" className="w-5 h-5">
@@ -30,7 +28,7 @@ const socialProviders: {
 		),
 	},
 	{
-		id: "github" as Provider,
+		id: "github",
 		name: "GitHub",
 		icon: (
 			<svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
@@ -39,5 +37,3 @@ const socialProviders: {
 		),
 	},
 ];
-
-export default socialProviders;
