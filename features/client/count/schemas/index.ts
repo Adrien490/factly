@@ -20,5 +20,5 @@ const clientFiltersSchema = z.record(filterValueSchema);
 export const countClientsSchema = z.object({
 	organizationId: z.string(),
 	search: z.string().optional(),
-	filters: clientFiltersSchema.default({}),
+	filters: clientFiltersSchema.optional().default({}),
 });
