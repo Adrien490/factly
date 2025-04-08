@@ -14,17 +14,19 @@ export const buildWhereClause = (
 ): Prisma.ClientWhereInput => {
 	// Condition de base qui doit toujours être respectée
 	const whereClause: Prisma.ClientWhereInput = {
-		organizationId: params.organizationId,
+		organizationId: params.organizationId as string,
 	};
 
 	// Ajouter les conditions de recherche textuelle
-	if (params.search?.trim()) {
+	if (typeof params.search === "string" && params.search.trim()) {
 		whereClause.OR = buildSearchConditions(params.search);
 	}
 
 	// Ajouter les filtres spécifiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
-		const filterConditions = buildFilterConditions(params.filters);
+		const filterConditions = buildFilterConditions(
+			params.filters as Record<string, unknown>
+		);
 		if (filterConditions.length > 0) {
 			// Combiner avec AND existant ou créer un nouveau tableau AND
 			whereClause.AND = filterConditions;

@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/features/auth/lib/auth-client";
-import { Button } from "@/features/shared/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { Fingerprint, Loader2, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -1,20 +1,15 @@
 "use client";
 
-import { Button } from "@/features/shared/components/ui/button";
-import { FormLabel } from "@/features/shared/components/ui/form";
-import { Input } from "@/features/shared/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { FormLabel } from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/features/shared/components/ui/select";
-
-import { FormErrors } from "@/features/shared/components/forms/components/form-errors";
-import { FormFooter } from "@/features/shared/components/forms/components/form-footer";
-import { FormLayout } from "@/features/shared/components/forms/components/form-layout";
-import { FormSection } from "@/features/shared/components/forms/components/form-section";
+} from "@/shared/components/ui/select";
 
 import {
 	FormattedAddressResult,
@@ -22,15 +17,18 @@ import {
 } from "@/features/address";
 import { useCreateOrganization } from "@/features/organization/create";
 import { LEGAL_FORM_OPTIONS } from "@/features/organization/legal-form-options";
-import { Autocomplete } from "@/features/shared/components/autocomplete";
-import { FieldInfo } from "@/features/shared/components/forms/components/field-info";
-import { Loader } from "@/features/shared/components/loader";
-import { useToast } from "@/features/shared/hooks/use-toast";
+import { Autocomplete } from "@/shared/components/autocomplete";
 import {
-	UploadDropzone,
-	useUploadThing,
-} from "@/features/shared/lib/uploadthing";
-import { ServerActionStatus } from "@/features/shared/types/server-action";
+	FieldInfo,
+	FormErrors,
+	FormFooter,
+	FormLayout,
+	FormSection,
+} from "@/shared/components/forms";
+import { Loader } from "@/shared/components/loader";
+import { useToast } from "@/shared/hooks/use-toast";
+import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
+import { ServerActionStatus } from "@/shared/types/server-action";
 import { LegalForm } from "@prisma/client";
 import {
 	mergeForm,

@@ -1,11 +1,11 @@
 "use client";
 
-import { PageContainer } from "@/features/shared/components/page-container";
-import { Button } from "@/features/shared/components/ui/button";
-import { ContainerScroll } from "@/features/shared/components/ui/container-scroll-animation";
-import { ShootingStars } from "@/features/shared/components/ui/shooting-stars";
-import { StarsBackground } from "@/features/shared/components/ui/stars-background";
-import { cn } from "@/features/shared/lib/utils";
+import { PageContainer } from "@/shared/components/page-container";
+import { Button } from "@/shared/components/ui/button";
+import { ContainerScroll } from "@/shared/components/ui/container-scroll-animation";
+import { ShootingStars } from "@/shared/components/ui/shooting-stars";
+import { StarsBackground } from "@/shared/components/ui/stars-background";
+import { cn } from "@/shared/lib/utils";
 import { motion } from "framer-motion";
 import { ChevronDown, ExternalLink, Sparkles } from "lucide-react";
 import Image from "next/image";

@@ -1,1 +1,1 @@
-export * from "./components/app-showcase";
+export { AppShowcase } from "./components/app-showcase";

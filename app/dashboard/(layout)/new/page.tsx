@@ -1,6 +1,6 @@
 import { searchAddress } from "@/features/address";
 import { CreateOrganizationForm } from "@/features/organization/create/components/form";
-import { PageContainer } from "@/features/shared/components/page-container";
+import { PageContainer } from "@/shared/components/page-container";
 
 type Props = {
 	searchParams: Promise<{

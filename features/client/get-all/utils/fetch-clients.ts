@@ -1,4 +1,5 @@
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import {
 	DEFAULT_PER_PAGE,
@@ -19,9 +20,9 @@ export async function fetchClients(
 	console.log("fetchClients", userId);
 	try {
 		// Normalize pagination parameters
-		const page = Math.max(1, params.page || 1);
+		const page = Math.max(1, Number(params.page) || 1);
 		const perPage = Math.min(
-			Math.max(1, params.perPage || DEFAULT_PER_PAGE),
+			Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
 			MAX_RESULTS_PER_PAGE
 		);
 
@@ -37,6 +38,9 @@ export async function fetchClients(
 		const currentPage = Math.min(page, totalPages || 1);
 		const skip = (currentPage - 1) * perPage;
 
+		// Ensure sort order is valid
+		const sortOrder = (params.sortOrder as Prisma.SortOrder) || "asc";
+
 		// Get data with performance tracking
 		const clients = await db.client.findMany({
 			where,
@@ -45,14 +49,20 @@ export async function fetchClients(
 			skip,
 			orderBy: [
 				{
-					[params.sortBy || "name"]: params.sortOrder || "asc",
+					[String(params.sortBy) || "name"]: sortOrder,
 				},
-				{ id: params.sortOrder || "asc" }, // Toujours ajouter un tri secondaire pour garantir la cohérence
+				{ id: sortOrder }, // Toujours ajouter un tri secondaire pour garantir la cohérence
 			],
 		});
 
+		// Transforming clients to match expected return type
+		const clientsWithAddresses = clients.map((client) => ({
+			...client,
+			addresses: [], // Ajouter la propriété 'addresses' requise
+		}));
+
 		return {
-			clients,
+			clients: clientsWithAddresses,
 			pagination: {
 				page: currentPage,
 				perPage,

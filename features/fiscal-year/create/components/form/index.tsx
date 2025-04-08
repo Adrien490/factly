@@ -1,34 +1,36 @@
 "use client";
 
-import { Button } from "@/features/shared/components/ui/button";
-import { FormLabel } from "@/features/shared/components/ui/form";
-import { Input } from "@/features/shared/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { FormLabel } from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/features/shared/components/ui/select";
-import { Textarea } from "@/features/shared/components/ui/textarea";
+} from "@/shared/components/ui/select";
+import { Textarea } from "@/shared/components/ui/textarea";
 
-import { FormErrors } from "@/features/shared/components/forms/components/form-errors";
-import { FormFooter } from "@/features/shared/components/forms/components/form-footer";
-import { FormLayout } from "@/features/shared/components/forms/components/form-layout";
-import { FormSection } from "@/features/shared/components/forms/components/form-section";
+import {
+	FieldInfo,
+	FormErrors,
+	FormFooter,
+	FormLayout,
+	FormSection,
+} from "@/shared/components/forms";
 
 import { useCreateFiscalYear } from "@/features/fiscal-year/create";
 import { FISCAL_YEAR_STATUS_OPTIONS } from "@/features/fiscal-year/fiscal-year-status-options";
-import { FieldInfo } from "@/features/shared/components/forms/components/field-info";
-import { Calendar } from "@/features/shared/components/ui/calendar";
+import { Calendar } from "@/shared/components/ui/calendar";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/features/shared/components/ui/popover";
-import { useToast } from "@/features/shared/hooks/use-toast";
-import { cn } from "@/features/shared/lib/utils";
-import { ServerActionStatus } from "@/features/shared/types/server-action";
+} from "@/shared/components/ui/popover";
+import { useToast } from "@/shared/hooks/use-toast";
+import { cn } from "@/shared/lib/utils";
+import { ServerActionStatus } from "@/shared/types/server-action";
 import {
 	mergeForm,
 	Updater,

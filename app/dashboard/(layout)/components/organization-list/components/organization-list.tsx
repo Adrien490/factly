@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/features/shared/lib/utils";
-import { ViewType } from "@/features/shared/types";
+import { cn } from "@/shared/lib/utils";
+import { ViewType } from "@/shared/types";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

@@ -17,7 +17,7 @@ Un composant pour afficher une liste d'adresses avec deux modes de vue (grille e
 
 import { getAddresses } from "@/features/address/get-all";
 import { AddressList } from "@/features/address/components/address-list";
-import { ViewToggle } from "@/features/shared/components/view-toggle";
+import { ViewToggle } from "@/shared/components/view-toggle";
 
 export default function AddressesPage() {
 	// Créer une promise pour récupérer les adresses

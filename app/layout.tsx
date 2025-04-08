@@ -1,5 +1,5 @@
-import { Toaster } from "@/features/shared/components/ui/toaster";
-import { ThemeProvider } from "@/features/shared/providers/theme-provider";
+import { Toaster } from "@/shared/components/ui/toaster";
+import { ThemeProvider } from "@/shared/providers/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";

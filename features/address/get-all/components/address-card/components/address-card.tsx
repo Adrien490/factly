@@ -12,18 +12,18 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "@/features/shared/components/ui/alert-dialog";
-import { Badge } from "@/features/shared/components/ui/badge";
-import { Button } from "@/features/shared/components/ui/button";
-import { Card, CardContent } from "@/features/shared/components/ui/card";
+} from "@/shared/components/ui/alert-dialog";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Card, CardContent } from "@/shared/components/ui/card";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/features/shared/components/ui/dropdown-menu";
-import { Building, Home, MoreHorizontal } from "lucide-react";
+} from "@/shared/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -173,82 +173,63 @@ export function AddressCard({ address, viewMode = "grid" }: AddressCardProps) {
 	// Rendu en mode liste
 	if (viewMode === "list") {
 		return (
-			<Link href={editHref} className="block">
-				<div className="border rounded-lg p-3 transition-all duration-200 hover:bg-accent/30">
-					<div className="flex items-center gap-3">
-						<div className="min-w-0 flex-1">
-							<div className="flex items-center gap-2">
-								<h3 className="font-medium truncate">{addressLine1}</h3>
-								{isDefault && <DefaultBadge />}
-							</div>
-							<p className="text-xs text-muted-foreground truncate mt-0.5">
-								{postalCode ? postalCode : ""}
-								{postalCode && city ? " " : ""}
-								{city ? city : ""}
-								{(postalCode || city) && country ? " · " : ""}
-								{country ? country : ""}
-							</p>
+			<div className="border rounded-lg p-3 transition-all duration-200 hover:bg-accent/30">
+				<div className="flex items-center gap-3">
+					<div className="min-w-0 flex-1">
+						<div className="flex items-center gap-2">
+							<h3 className="font-medium truncate">{addressLine1}</h3>
+							{isDefault && <DefaultBadge />}
 						</div>
-
-						<ActionMenu />
+						<p className="text-xs text-muted-foreground truncate mt-0.5">
+							{postalCode ? postalCode : ""}
+							{postalCode && city ? " " : ""}
+							{city ? city : ""}
+							{(postalCode || city) && country ? " · " : ""}
+							{country ? country : ""}
+						</p>
 					</div>
+
+					<ActionMenu />
 				</div>
-			</Link>
+			</div>
 		);
 	}
 
 	// Rendu en mode grille
 	return (
-		<Link href={editHref} className="block h-full">
-			<Card className="h-full transition-all duration-200 hover:bg-accent/30">
-				<CardContent className="p-4 flex flex-col h-full">
-					<div className="flex items-start justify-between">
-						<div className="flex items-start gap-3">
-							<div className="flex-1 min-w-0">
-								<div className="flex items-center gap-2">
-									<h3 className="font-medium truncate">{addressLine1}</h3>
-									{isDefault && <DefaultBadge />}
-								</div>
-								{addressLine2 && (
-									<p className="text-xs text-muted-foreground truncate mt-0.5">
-										{addressLine2}
-									</p>
-								)}
+		<Card className="h-full transition-all duration-200 hover:bg-accent/30">
+			<CardContent className="p-4 flex flex-col h-full">
+				<div className="flex items-start justify-between">
+					<div className="flex items-start gap-3">
+						<div className="flex-1 min-w-0">
+							<div className="flex items-center gap-2">
+								<h3 className="font-medium truncate">{addressLine1}</h3>
+								{isDefault && <DefaultBadge />}
 							</div>
-						</div>
-
-						<ActionMenu />
-					</div>
-
-					<div className="pt-3 mt-auto text-xs text-muted-foreground flex items-center justify-between gap-x-2 gap-y-1">
-						<div className="flex items-center gap-2">
-							<div>
-								{postalCode ? postalCode : ""}
-								{postalCode && city ? " " : ""}
-								{city ? city : ""}
-							</div>
-							{country && (
-								<span className="text-muted-foreground/70">{country}</span>
-							)}
-						</div>
-
-						<div className="flex items-center gap-2">
-							{clientId && (
-								<div className="flex items-center gap-1 text-muted-foreground/80">
-									<Home className="h-3 w-3" />
-									<span>Client</span>
-								</div>
-							)}
-							{supplierId && (
-								<div className="flex items-center gap-1 text-muted-foreground/80">
-									<Building className="h-3 w-3" />
-									<span>Fournisseur</span>
-								</div>
+							{addressLine2 && (
+								<p className="text-xs text-muted-foreground truncate mt-0.5">
+									{addressLine2}
+								</p>
 							)}
 						</div>
 					</div>
-				</CardContent>
-			</Card>
-		</Link>
+
+					<ActionMenu />
+				</div>
+
+				<div className="pt-3 mt-auto text-xs text-muted-foreground flex items-center justify-between gap-x-2 gap-y-1">
+					<div className="flex items-center gap-2">
+						<div>
+							{postalCode ? postalCode : ""}
+							{postalCode && city ? " " : ""}
+							{city ? city : ""}
+						</div>
+						{country && (
+							<span className="text-muted-foreground/70">{country}</span>
+						)}
+					</div>
+				</div>
+			</CardContent>
+		</Card>
 	);
 }

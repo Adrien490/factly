@@ -1,13 +1,13 @@
 "use server";
 
 import { auth } from "@/features/auth/lib/auth";
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
 import {
 	ServerActionState,
 	ServerActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
-} from "@/features/shared/types/server-action";
+} from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
 import { headers } from "next/headers";
 import { hasOrganizationAccess } from "../../has-access";

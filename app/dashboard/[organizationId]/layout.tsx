@@ -1,22 +1,16 @@
 import { auth } from "@/features/auth";
 import { getOrganizations } from "@/features/organization/get-all";
-import { OrganizationSidebar } from "@/features/shared/components/organization-sidebar";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/features/shared/components/ui/breadcrumb";
-import { Separator } from "@/features/shared/components/ui/separator";
+import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
+import { Separator } from "@/shared/components/ui/separator";
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from "@/features/shared/components/ui/sidebar";
-import { UserAvatar } from "@/features/shared/components/user-avatar";
+} from "@/shared/components/ui/sidebar";
+import { UserAvatar } from "@/shared/components/user-avatar";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 import { cookies, headers } from "next/headers";
-import Link from "next/link";
 import { Suspense } from "react";
 import { UserAvatarSkeleton } from "../(layout)/components/header/components/header-skeleton";
 
@@ -36,6 +30,11 @@ export default async function OrganizationLayout({
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
+	// Formater la date d'aujourd'hui en français
+	const dateToday = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
+	// Première lettre en majuscule
+	const formattedDate = dateToday.charAt(0).toUpperCase() + dateToday.slice(1);
+
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
 			<Suspense fallback={<div>Loading...</div>}>
@@ -52,17 +51,9 @@ export default async function OrganizationLayout({
 					<div className="flex items-center gap-2 px-3">
 						<SidebarTrigger />
 						<Separator orientation="vertical" className="mr-2 h-4" />
-						<Breadcrumb>
-							<BreadcrumbList>
-								<BreadcrumbItem className="hidden md:block">
-									<Link href={`/dashboard`}>Organisations</Link>
-								</BreadcrumbItem>
-								<BreadcrumbSeparator className="hidden md:block" />
-								<BreadcrumbItem>
-									<BreadcrumbPage>Espace de travail</BreadcrumbPage>
-								</BreadcrumbItem>
-							</BreadcrumbList>
-						</Breadcrumb>
+						<span className="text-sm text-muted-foreground font-medium">
+							{formattedDate}
+						</span>
 					</div>
 					<div className="ml-auto px-4">
 						<Suspense fallback={<UserAvatarSkeleton />}>

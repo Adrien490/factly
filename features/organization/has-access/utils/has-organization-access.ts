@@ -1,5 +1,5 @@
 import { auth } from "@/features/auth/lib/auth";
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
 import { headers } from "next/headers";
 
 /**

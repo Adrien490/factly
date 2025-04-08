@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/features/shared/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { providers } from "../constants";
 import { signIn } from "../utils";
 

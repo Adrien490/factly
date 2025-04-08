@@ -1,4 +1,4 @@
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
 import { z } from "zod";
 import { countClientsSchema } from "../schemas";
 import { CountClientsReturn } from "../types";

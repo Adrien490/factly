@@ -1,4 +1,4 @@
-import { ViewType } from "@/features/shared/types";
+import { ViewType } from "@/shared/types";
 import { GetAddressesReturn } from "../../../types";
 
 export type AddressCardProps = {

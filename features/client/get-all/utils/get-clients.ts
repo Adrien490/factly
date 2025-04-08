@@ -27,7 +27,9 @@ export async function getClients(
 		}
 
 		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(params.organizationId);
+		const hasAccess = await hasOrganizationAccess(
+			params.organizationId as string
+		);
 
 		if (!hasAccess) {
 			throw new Error("Access denied");

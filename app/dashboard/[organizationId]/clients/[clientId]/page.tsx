@@ -1,6 +1,6 @@
 import { getClient } from "@/features/client";
-import { PageContainer } from "@/features/shared/components/page-container";
-import { PageHeader } from "@/features/shared/components/page-header";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
 import { notFound } from "next/navigation";
 import { clientNavigation } from "./constants";
 import { clientBreadcrumbs } from "./constants/client-breadcrumbs";

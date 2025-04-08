@@ -57,24 +57,6 @@ export const buildFilterConditions = (
 					}
 				}
 				break;
-
-			case "city":
-				if (typeof value === "string" && value.trim()) {
-					conditions.push({
-						addresses: {
-							some: { city: { contains: value, mode: "insensitive" } },
-						},
-					});
-				}
-				break;
-
-			case "postalCode":
-				if (typeof value === "string" && value.trim()) {
-					conditions.push({
-						addresses: { some: { postalCode: { equals: value } } },
-					});
-				}
-				break;
 		}
 	});
 

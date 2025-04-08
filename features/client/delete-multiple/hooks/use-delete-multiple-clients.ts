@@ -7,7 +7,7 @@ import {
 import {
 	ServerActionState,
 	ServerActionStatus,
-} from "@/features/shared/types/server-action";
+} from "@/shared/types/server-action";
 import { useActionState } from "react";
 
 export const useDeleteMultipleClients = () => {

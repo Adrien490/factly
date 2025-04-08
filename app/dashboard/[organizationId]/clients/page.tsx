@@ -1,20 +1,18 @@
+import { columns } from "@/app/dashboard/[organizationId]/clients/components/columns";
+import { getClients } from "@/features/client";
 import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
 import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";
-import { getClients } from "@/features/client/get-all";
-import { ClientDatatable } from "@/features/client/get-all/components";
-import {
-	ClientSortableField,
-	clientSortableFields,
-} from "@/features/client/get-all/constants/client-sortable-fields";
+import { ClientSortableField } from "@/features/client/get-all/constants/client-sortable-fields";
 import { hasOrganizationAccess } from "@/features/organization/has-access";
-import { FilterSelect } from "@/features/shared/components/filter-select";
-import { MultiSelectFilter } from "@/features/shared/components/multi-select-filter";
-import { PageContainer } from "@/features/shared/components/page-container";
-import { PageHeader } from "@/features/shared/components/page-header";
-import { SearchForm } from "@/features/shared/components/search-form";
-import { Button } from "@/features/shared/components/ui/button";
-import { Card } from "@/features/shared/components/ui/card";
-import { SortOrder } from "@/features/shared/types";
+import { DataTable } from "@/shared/components/datatable";
+import { FilterSelect } from "@/shared/components/filter-select";
+import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
+import { SearchForm } from "@/shared/components/search-form";
+import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
+import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
@@ -44,6 +42,21 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	if (!hasOrganizationAccess(organizationId)) {
 		forbidden();
 	}
+
+	const { clients, pagination } = await getClients({
+		organizationId,
+		perPage: Number(perPage) || 10,
+		page: Number(page) || 1,
+		sortBy: sortBy as ClientSortableField,
+		sortOrder: sortOrder as SortOrder,
+		search,
+		filters: Object.entries(filters).reduce((acc, [key, value]) => {
+			if (value) {
+				acc[key] = value;
+			}
+			return acc;
+		}, {} as Record<string, string>),
+	});
 
 	return (
 		<PageContainer className="pb-12 group">
@@ -101,28 +114,11 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</Card>
 
 			<Card>
-				<ClientDatatable
-					clientsPromise={getClients({
-						organizationId,
-						perPage: Number(perPage) || 10,
-						page: Number(page) || 1,
-						sortBy: clientSortableFields.includes(sortBy as ClientSortableField)
-							? (sortBy as ClientSortableField)
-							: "createdAt",
-						sortOrder: (sortOrder as SortOrder) || "desc",
-						search: search,
-
-						// Traiter tous les filtres
-						filters: Object.entries(filters)
-							.filter(([key]) => key.startsWith("filter_"))
-							.reduce(
-								(acc, [key, value]) => ({
-									...acc,
-									[key.replace("filter_", "")]: value,
-								}),
-								{}
-							),
-					})}
+				<DataTable
+					data={clients}
+					columns={columns}
+					pagination={pagination}
+					selection={{ key: "clientId" }}
 				/>
 			</Card>
 		</PageContainer>

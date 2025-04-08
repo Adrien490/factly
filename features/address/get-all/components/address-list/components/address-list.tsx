@@ -1,8 +1,8 @@
 "use client";
 
 import { GetAddressesReturn } from "@/features/address/get-all/types";
-import { EmptyState } from "@/features/shared/components/empty-state/components/empty-state";
-import { ViewType } from "@/features/shared/types";
+import { EmptyState } from "@/shared/components/empty-state/components/empty-state";
+import { ViewType } from "@/shared/types";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

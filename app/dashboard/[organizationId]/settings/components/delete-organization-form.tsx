@@ -13,8 +13,8 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/features/shared/components/ui/alert-dialog";
-import { Button } from "@/features/shared/components/ui/button";
+} from "@/shared/components/ui/alert-dialog";
+import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -22,14 +22,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/features/shared/components/ui/card";
-import { Input } from "@/features/shared/components/ui/input";
-import { Label } from "@/features/shared/components/ui/label";
-import { cn } from "@/features/shared/lib/utils";
+} from "@/shared/components/ui/card";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { cn } from "@/shared/lib/utils";
 import {
 	ServerActionState,
 	ServerActionStatus,
-} from "@/features/shared/types/server-action";
+} from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
 import { AlertTriangle } from "lucide-react";
 import { useActionState, useState } from "react";

@@ -1,8 +1,8 @@
 import { countClients } from "@/features/client/count";
-import { PageContainer } from "@/features/shared/components/page-container";
-import { PageHeader } from "@/features/shared/components/page-header";
-import { Button } from "@/features/shared/components/ui/button";
-import { Card } from "@/features/shared/components/ui/card";
+import { PageContainer } from "@/shared/components/page-container";
+import { PageHeader } from "@/shared/components/page-header";
+import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
 import Link from "next/link";
 
 type Props = {

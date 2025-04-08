@@ -1,4 +1,4 @@
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { DEFAULT_SELECT } from "../constants";
 import { GetOrganizationsParams, GetOrganizationsReturn } from "../types";

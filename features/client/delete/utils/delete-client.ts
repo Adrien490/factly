@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/features/auth/lib/auth";
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
 
 import { hasOrganizationAccess } from "@/features/organization/has-access";
 import {
@@ -10,7 +10,7 @@ import {
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
-} from "@/features/shared/types/server-action";
+} from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { deleteClientSchema } from "../schemas";

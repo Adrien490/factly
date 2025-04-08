@@ -2,18 +2,20 @@
 
 import { auth } from "@/features/auth/lib/auth";
 import { hasOrganizationAccess } from "@/features/organization/has-access";
-import db from "@/features/shared/lib/db";
+import db from "@/shared/lib/db";
+import { ServerActionState } from "@/shared/types";
+import { Address } from "cluster";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { DEFAULT_SELECT } from "../../constants";
 import { createAddressSchema } from "../schemas";
 import { CreateAddressReturn } from "../types";
-
 /**
  * Crée une nouvelle adresse pour un client ou un fournisseur
  */
 export async function createAddress(
-	params: z.infer<typeof createAddressSchema>
+	_: ServerActionState<Address, typeof createAddressSchema>,
+	formData: FormData
 ): Promise<CreateAddressReturn> {
 	try {
 		// Vérification de l'authentification
@@ -25,8 +27,19 @@ export async function createAddress(
 			throw new Error("Unauthorized");
 		}
 
+		const rawData = {
+			addressLine1: formData.get("addressLine1"),
+			addressLine2: formData.get("addressLine2"),
+			postalCode: formData.get("postalCode"),
+			city: formData.get("city"),
+			country: formData.get("country"),
+			isDefault: formData.get("isDefault"),
+			clientId: formData.get("clientId"),
+			supplierId: formData.get("supplierId"),
+		};
+
 		// Validation des paramètres
-		const validation = createAddressSchema.safeParse(params);
+		const validation = createAddressSchema.safeParse(rawData);
 
 		if (!validation.success) {
 			throw new Error("Invalid parameters");
