@@ -1,27 +1,19 @@
-"use client";
-
 import { type GetOrganizationsReturn } from "@/domains/organization";
 import { Card, CardContent } from "@/shared/components/";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
 import { ViewType } from "@/shared/types";
-import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { ActionMenu } from "./components/action-menu";
 
 // Type des props
 type OrganizationCardProps = {
 	organization: GetOrganizationsReturn[0];
-	viewMode?: ViewType;
+	viewType?: ViewType;
 };
 
 export function OrganizationCard({
 	organization,
-	viewMode = "grid",
+	viewType = "grid",
 }: OrganizationCardProps) {
 	// Préparation des données à afficher
 	const { id, name, legalName, logoUrl, legalForm, city } = organization;
@@ -29,35 +21,8 @@ export function OrganizationCard({
 	// Première lettre pour le fallback du logo
 	const initial = name.charAt(0).toUpperCase();
 
-	// Fonction pour le menu des actions
-	const renderActionMenu = () => (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<button
-					className="rounded-md p-1 hover:bg-muted transition-colors"
-					aria-label="Options pour cette organisation"
-					onClick={(e) => e.preventDefault()}
-				>
-					<MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-				</button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				<DropdownMenuItem asChild>
-					<Link href={`/dashboard/${id}`} className="cursor-pointer">
-						Accéder au tableau de bord
-					</Link>
-				</DropdownMenuItem>
-				<DropdownMenuItem asChild>
-					<Link href={`/dashboard/${id}/settings`} className="cursor-pointer">
-						Paramétrage
-					</Link>
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
-
 	// Rendu en mode liste
-	if (viewMode === "list") {
+	if (viewType === "list") {
 		return (
 			<Link href={`/dashboard/${id}`} className="block">
 				<div className="border rounded-lg p-3 transition-all duration-200 hover:border-primary/50 hover:bg-accent/30">
@@ -94,7 +59,7 @@ export function OrganizationCard({
 						</div>
 
 						{/* Menu d'actions */}
-						{renderActionMenu()}
+						<ActionMenu id={id} />
 					</div>
 				</div>
 			</Link>
@@ -139,7 +104,7 @@ export function OrganizationCard({
 						</div>
 
 						{/* Menu d'actions */}
-						{renderActionMenu()}
+						<ActionMenu id={id} />
 					</div>
 
 					{/* Informations secondaires */}

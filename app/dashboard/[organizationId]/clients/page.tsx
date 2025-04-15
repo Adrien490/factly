@@ -1,21 +1,20 @@
 import {
 	CLIENT_STATUSES,
 	CLIENT_TYPES,
-	clientColumns,
 	ClientSortableField,
 	getClients,
 } from "@/domains/client";
+import { ClientDatatable } from "@/domains/client/features/get-clients/components";
 import { hasOrganizationAccess } from "@/domains/organization";
 import {
 	Button,
-	DataTable,
+	Card,
 	FilterSelect,
 	MultiSelectFilter,
 	PageContainer,
 	PageHeader,
 	SearchForm,
 } from "@/shared/components";
-import { Card } from "@/shared/components/";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
@@ -46,21 +45,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	if (!hasOrganizationAccess(organizationId)) {
 		forbidden();
 	}
-
-	const { clients, pagination } = await getClients({
-		organizationId,
-		perPage: Number(perPage) || 10,
-		page: Number(page) || 1,
-		sortBy: sortBy as ClientSortableField,
-		sortOrder: sortOrder as SortOrder,
-		search,
-		filters: Object.entries(filters).reduce((acc, [key, value]) => {
-			if (value) {
-				acc[key] = value;
-			}
-			return acc;
-		}, {} as Record<string, string>),
-	});
 
 	return (
 		<PageContainer className="pb-12 group">
@@ -105,11 +89,21 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</div>
 
 			<Card>
-				<DataTable
-					data={clients}
-					columns={clientColumns}
-					pagination={pagination}
-					selection={{ key: "clientId" }}
+				<ClientDatatable
+					clientsPromise={getClients({
+						organizationId,
+						perPage: Number(perPage) || 10,
+						page: Number(page) || 1,
+						sortBy: sortBy as ClientSortableField,
+						sortOrder: sortOrder as SortOrder,
+						search,
+						filters: Object.entries(filters).reduce((acc, [key, value]) => {
+							if (value) {
+								acc[key] = value;
+							}
+							return acc;
+						}, {} as Record<string, string>),
+					})}
 				/>
 			</Card>
 		</PageContainer>

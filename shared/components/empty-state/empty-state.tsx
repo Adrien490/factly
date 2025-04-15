@@ -34,7 +34,7 @@ export function EmptyState({
 						className="rounded-full bg-muted/30 p-3 mb-4"
 						{...animations.icon}
 					>
-						<Icon className="h-6 w-6 text-muted-foreground" />
+						{Icon}
 					</motion.div>
 				)
 			)}

@@ -13,6 +13,7 @@ import {
 	OrganizationListSkeleton,
 	OrganizationSortableField,
 } from "@/domains/organization";
+import { ViewType } from "@/shared/types";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -21,13 +22,16 @@ type Props = {
 		sortBy?: string;
 		sortOrder?: "asc" | "desc";
 		search?: string;
+		view?: ViewType;
 	}>;
 };
 
 export default async function DashboardPage({ searchParams }: Props) {
 	// Récupération des organisations avec les options par défaut
 	const resolvedSearchParams = await searchParams;
-	const { sortBy, sortOrder, search } = resolvedSearchParams;
+	const { sortBy, sortOrder, search, view } = resolvedSearchParams;
+
+	console.log(view);
 
 	return (
 		<PageContainer className="space-y-6 py-6 group">
@@ -61,6 +65,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 			{/* Liste des organisations */}
 			<Suspense fallback={<OrganizationListSkeleton />}>
 				<OrganizationList
+					viewType={view as ViewType}
 					organizationsPromise={getOrganizations({
 						sortBy: sortBy as OrganizationSortableField,
 						sortOrder: sortOrder as "asc" | "desc",

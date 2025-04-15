@@ -49,7 +49,7 @@ export function DataTable<T extends { id: string }>({
 		return (
 			<div className="py-12" role="status" aria-live="polite">
 				<EmptyState
-					icon={Search}
+					icon={<Search className="w-10 h-10" />}
 					title="Aucune donnée trouvée"
 					description="Aucune donnée ne correspond à vos critères de recherche."
 					className="group-has-[[data-pending]]:animate-pulse"

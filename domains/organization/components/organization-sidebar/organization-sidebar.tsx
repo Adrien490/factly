@@ -1,5 +1,3 @@
-"use client";
-
 import { OrganizationSwitcher } from "@/domains/organization/components/organization-switcher";
 import {
 	Sidebar,
@@ -8,28 +6,20 @@ import {
 	SidebarMenu,
 	SidebarMenuItem,
 	SidebarRail,
-	useSidebar,
 } from "@/shared/components/shadcn-ui/sidebar";
 import { use } from "react";
 import { NavMain } from "./components/nav-main/nav-main";
-import { navItems } from "./constants";
-import { AppSidebarProps } from "./types";
+import { OrganizationSidebarProps } from "./types";
 
 export function OrganizationSidebar({
-	organizationId,
 	organizationsPromise,
 	...props
-}: AppSidebarProps) {
+}: OrganizationSidebarProps) {
 	const organizations = use(organizationsPromise);
-	const { state: sidebarState } = useSidebar();
-	const isCollapsed = sidebarState === "collapsed";
+
 	return (
-		<Sidebar
-			collapsible="icon"
-			className="bg-background border-r border-border/30"
-			{...props}
-		>
-			<SidebarHeader className="border-b border-border/30 bg-background/70">
+		<Sidebar collapsible="icon" {...props}>
+			<SidebarHeader className="border-b border-border/30">
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<OrganizationSwitcher organizations={organizations} />
@@ -38,10 +28,7 @@ export function OrganizationSidebar({
 			</SidebarHeader>
 
 			<SidebarContent className="pt-2">
-				<NavMain
-					isCollapsed={isCollapsed}
-					items={navItems(organizationId).navMain}
-				/>
+				<NavMain />
 			</SidebarContent>
 			<SidebarRail className="bg-muted/10" />
 		</Sidebar>
