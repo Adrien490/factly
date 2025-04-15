@@ -2,7 +2,7 @@ import { HorizontalMenu, Logo, UserAvatar } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { User } from "better-auth";
 import { use } from "react";
-import { ANIMATION_CONFIG, menuItems } from "./constants";
+import { menuItems } from "./constants";
 
 type Props = {
 	userPromise: Promise<User | null>;
@@ -18,10 +18,6 @@ export function Header({ userPromise, className }: Props) {
 				"sticky top-0 z-50 w-full bg-background/95 backdrop-blur-[2px] border-b border-border/20 shadow-sm",
 				className
 			)}
-			style={{
-				transitionDuration: `${ANIMATION_CONFIG.duration}s`,
-				transitionTimingFunction: ANIMATION_CONFIG.ease,
-			}}
 			role="banner"
 		>
 			{/* Conteneur principal avec espacement optimisé */}

@@ -15,9 +15,3 @@ export const menuItems: MenuItem[] = [
 		href: "/dashboard/invitations",
 	},*/
 ];
-
-// Configuration standardisée des animations
-export const ANIMATION_CONFIG = {
-	duration: 0.2,
-	ease: "easeInOut",
-};
