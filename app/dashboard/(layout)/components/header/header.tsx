@@ -9,17 +9,11 @@ import { User } from "better-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { use } from "react";
-import { menuItems } from "./constants";
+import { ANIMATION_CONFIG, menuItems } from "./constants";
 
 type Props = {
 	userPromise: Promise<User | null>;
 	className?: string;
-};
-
-// Configuration standardisée des animations
-const ANIMATION_CONFIG = {
-	duration: 0.2,
-	ease: "easeInOut",
 };
 
 export function Header({ userPromise, className }: Props) {

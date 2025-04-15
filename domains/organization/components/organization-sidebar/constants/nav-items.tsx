@@ -2,7 +2,7 @@
 
 import { LayoutDashboard, Users } from "lucide-react";
 
-export const sidebarNavigation = (organizationId: string) => ({
+export const navItems = (organizationId: string) => ({
 	navMain: [
 		{
 			title: "Tableau de bord",

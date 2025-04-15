@@ -1,6 +1,5 @@
 import { auth } from "@/domains/auth";
-import { getOrganizations } from "@/domains/organization";
-import { OrganizationSidebar } from "@/domains/organization/components/organization-sidebar";
+import { getOrganizations, OrganizationSidebar } from "@/domains/organization";
 import { UserAvatar, UserAvatarSkeleton } from "@/shared/components";
 import { Separator } from "@/shared/components/ui/separator";
 import {
@@ -13,12 +12,12 @@ import { fr } from "date-fns/locale";
 import { cookies, headers } from "next/headers";
 import { Suspense } from "react";
 
-type OrganizationLayoutProps = {
+interface OrganizationLayoutProps {
 	children: React.ReactNode;
 	params: Promise<{
 		organizationId: string;
 	}>;
-};
+}
 
 export default async function OrganizationLayout({
 	children,

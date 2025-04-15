@@ -1,43 +1,25 @@
 "use client";
 
-import { GetOrganizationsReturn } from "@/domains/organization";
 import { OrganizationSwitcher } from "@/domains/organization/components/organization-switcher";
-import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import {
 	Sidebar,
 	SidebarContent,
-	SidebarGroup,
 	SidebarHeader,
 	SidebarMenu,
-	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSub,
-	SidebarMenuSubButton,
-	SidebarMenuSubItem,
 	SidebarRail,
-	useSidebar,
 } from "@/shared/components/ui/sidebar";
-import { cn } from "@/shared/utils";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import * as React from "react";
 import { use } from "react";
-import { sidebarNavigation } from "./constants";
-
-type Props = {
-	organizationId: string;
-	organizationsPromise: Promise<GetOrganizationsReturn>;
-} & React.ComponentProps<typeof Sidebar>;
+import { NavMain } from "./components/nav-main/nav-main";
+import { navItems } from "./constants";
+import { AppSidebarProps } from "./types";
 
 export function OrganizationSidebar({
 	organizationId,
 	organizationsPromise,
 	...props
-}: Props) {
-	const pathname = usePathname();
+}: AppSidebarProps) {
 	const organizations = use(organizationsPromise);
-	const { state: sidebarState } = useSidebar();
-	const isCollapsed = sidebarState === "collapsed";
 
 	return (
 		<Sidebar
@@ -48,109 +30,13 @@ export function OrganizationSidebar({
 			<SidebarHeader className="border-b border-border/30 bg-background/70">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							<OrganizationSwitcher organizations={organizations} />
-						</SidebarMenuButton>
+						<OrganizationSwitcher organizations={organizations} />
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
 
 			<SidebarContent className="pt-2">
-				<SidebarGroup>
-					<SidebarMenu>
-						{sidebarNavigation(organizationId).navMain.map((item) => {
-							const Icon = item.icon;
-							const isItemActive = item.url && pathname === item.url;
-							const hasActiveSubItem = item.items?.some(
-								(subItem) => pathname === subItem.url
-							);
-
-							// En mode normal, un menu principal n'est pas actif si un sous-menu est actif
-							const shouldShowActive = isCollapsed
-								? isItemActive
-								: isItemActive && !hasActiveSubItem;
-
-							return (
-								<SidebarMenuItem key={item.title} className="mb-0.5">
-									<SidebarMenuButton
-										asChild
-										tooltip={item.title}
-										className={cn(
-											shouldShowActive && "bg-accent text-accent-foreground"
-										)}
-									>
-										{item.url ? (
-											<Link href={item.url} className="w-full">
-												<div className="flex items-center gap-2 py-1.5">
-													{Icon && (
-														<Icon
-															className={cn(
-																"h-4 w-4",
-																shouldShowActive
-																	? "text-accent-foreground"
-																	: hasActiveSubItem
-																	? "text-accent-foreground"
-																	: "text-muted-foreground"
-															)}
-														/>
-													)}
-													<span className="group-data-[collapsible=icon]:hidden">
-														{item.title}
-													</span>
-												</div>
-												<LoadingIndicator />
-											</Link>
-										) : (
-											<div className="flex items-center gap-2 py-1.5">
-												{Icon && (
-													<Icon
-														className={cn(
-															"h-4 w-4",
-															hasActiveSubItem
-																? "text-accent-foreground"
-																: "text-muted-foreground"
-														)}
-													/>
-												)}
-												<span className="group-data-[collapsible=icon]:hidden">
-													{item.title}
-												</span>
-											</div>
-										)}
-									</SidebarMenuButton>
-
-									{item.items?.length ? (
-										<SidebarMenuSub>
-											{item.items.map((subItem) => {
-												const isSubActive = pathname === subItem.url;
-												return (
-													<SidebarMenuSubItem key={subItem.title}>
-														<SidebarMenuSubButton
-															asChild
-															isActive={isSubActive}
-															className={
-																isSubActive
-																	? "bg-primary text-primary-foreground"
-																	: ""
-															}
-														>
-															<Link
-																href={subItem.url}
-																className="pl-6 w-full text-sm py-1.5"
-															>
-																{subItem.title}
-															</Link>
-														</SidebarMenuSubButton>
-													</SidebarMenuSubItem>
-												);
-											})}
-										</SidebarMenuSub>
-									) : null}
-								</SidebarMenuItem>
-							);
-						})}
-					</SidebarMenu>
-				</SidebarGroup>
+				<NavMain items={navItems(organizationId).navMain} />
 			</SidebarContent>
 			<SidebarRail className="bg-muted/10" />
 		</Sidebar>
