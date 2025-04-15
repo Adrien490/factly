@@ -1,4 +1,4 @@
-import { searchAddress } from "@/domains/address/search-address";
+import { searchAddress } from "@/domains/address/features/search-address";
 import { PageContainer, PageHeader } from "@/shared/components";
 import { CreateClientForm } from "../../../../../domains/client/features/create-client/components";
 

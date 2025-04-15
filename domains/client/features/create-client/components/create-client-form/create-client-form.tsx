@@ -15,7 +15,7 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
-} from "@/domains/address/search-address";
+} from "@/domains/address/features/search-address";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
