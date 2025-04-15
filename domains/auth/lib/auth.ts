@@ -9,10 +9,12 @@ import { passkey } from "better-auth/plugins/passkey";
 // Récupération des variables d'environnement
 const googleClientId = process.env.AUTH_GOOGLE_ID;
 const googleClientSecret = process.env.AUTH_GOOGLE_SECRET;
+const betterAuthSecret = process.env.BETTER_AUTH_SECRET;
+const betterAuthUrl = process.env.BETTER_AUTH_URL;
 
 export const auth = betterAuth({
-	secret: process.env.BETTER_AUTH_SECRET,
-	baseUrl: process.env.BETTER_AUTH_URL,
+	secret: betterAuthSecret,
+	baseUrl: betterAuthUrl,
 	database: prismaAdapter(prisma, {
 		provider: "postgresql",
 	}),
