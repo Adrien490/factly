@@ -87,27 +87,19 @@ export function Navbar({ userPromise }: Props) {
 							whileHover={{ scale: 1.03 }}
 							whileTap={{ scale: 0.97 }}
 						>
-							<Link
-								href="/"
-								className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-								aria-label="Accueil Factly"
-								scroll={true}
-								itemProp="url"
-							>
-								<Logo
-									variant={scrolled ? "minimal" : "default"}
-									size="md"
-									shape="softSquare"
-									interactive
-									hideText={false}
-									text="Factly"
-									textSize="md"
-									hover="fade"
-									glow={scrolled ? "sm" : "md"}
-									srText="Logo Factly"
-								/>
-								<meta itemProp="name" content="Factly" />
-							</Link>
+							<Logo
+								variant={scrolled ? "minimal" : "default"}
+								size="md"
+								shape="softSquare"
+								interactive
+								hideText={false}
+								text="Factly"
+								textSize="md"
+								hover="fade"
+								glow={scrolled ? "sm" : "md"}
+								srText="Logo Factly"
+							/>
+							<meta itemProp="name" content="Factly" />
 						</motion.div>
 					</div>
 
