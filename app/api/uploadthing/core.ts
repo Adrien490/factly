@@ -47,10 +47,10 @@ export const ourFileRouter = {
 				"Upload d'image de groupe complété pour l'utilisateur:",
 				metadata.userId
 			);
-			console.log("URL du fichier:", file.url);
+			console.log("URL du fichier:", file.ufsUrl);
 
 			// !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-			return { url: file.url };
+			return { url: file.ufsUrl };
 		}),
 
 	organizationLogo: f({
@@ -75,9 +75,9 @@ export const ourFileRouter = {
 				"Upload de logo d'organisation complété pour l'utilisateur:",
 				metadata.userId
 			);
-			console.log("URL du fichier:", file.url);
+			console.log("URL du fichier:", file.ufsUrl);
 
-			return { url: file.url };
+			return { url: file.ufsUrl };
 		}),
 
 	userAvatar: f({
@@ -102,9 +102,9 @@ export const ourFileRouter = {
 				"Upload de photo de profil complété pour l'utilisateur:",
 				metadata.userId
 			);
-			console.log("URL du fichier:", file.url);
+			console.log("URL du fichier:", file.ufsUrl);
 
-			return { url: file.url };
+			return { url: file.ufsUrl };
 		}),
 } satisfies FileRouter;
 

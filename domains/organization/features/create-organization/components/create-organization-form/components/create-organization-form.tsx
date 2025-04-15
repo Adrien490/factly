@@ -232,23 +232,9 @@ export function CreateOrganizationForm({
 														"Impossible de charger l'image. Veuillez réessayer.",
 												});
 											}}
-											className="border-2 border-dashed border-muted-foreground/25 h-44 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 flex flex-col items-center justify-center ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer"
-										>
-											<div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
-												<div className="w-12 h-12 rounded-full bg-muted/10 flex items-center justify-center mb-2">
-													<Upload
-														className="h-8 w-8 text-muted-foreground"
-														aria-hidden="true"
-													/>
-												</div>
-												<p className="text-sm font-medium">
-													Glissez-déposez votre logo ici
-												</p>
-												<p className="text-xs text-muted-foreground">
-													ou cliquez pour parcourir vos fichiers
-												</p>
-											</div>
-										</UploadDropzone>
+											className="border-2 border-dashed border-muted-foreground/25 h-44 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer ut-button:bg-primary ut-button:hover:bg-primary/90"
+										/>
+
 										{isUploading && (
 											<div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-[2px] rounded-lg transition-all duration-300">
 												<div className="flex items-center gap-3 flex-col">
