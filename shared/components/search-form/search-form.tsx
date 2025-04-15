@@ -1,13 +1,13 @@
 "use client";
 
-import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
+import { Button } from "@/shared/components";
+import { Input } from "@/shared/components/shadcn-ui/input/input";
 import { cn } from "@/shared/utils";
 import { useForm } from "@tanstack/react-form";
 import { Search, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
+import { MiniDotsLoader } from "../loaders";
 import { SearchFormProps } from "./types";
 
 export function SearchForm({
@@ -71,7 +71,7 @@ export function SearchForm({
 		>
 			<div className="absolute left-3 flex items-center text-muted-foreground">
 				{isPending ? (
-					<SpinnerLoader size="sm" color="primary" />
+					<MiniDotsLoader size="sm" color="primary" />
 				) : (
 					<Search className="h-4 w-4 group-hover:text-foreground/70 group-focus-within:text-primary transition-colors duration-150" />
 				)}

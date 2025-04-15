@@ -1,19 +1,18 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { Calendar } from "@/shared/components/ui/calendar";
+import { Button, Calendar } from "@/shared/components";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/shared/components/ui/popover";
+} from "@/shared/components/shadcn-ui/popover";
 import { cn } from "@/shared/utils";
 import { addDays, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, X } from "lucide-react";
 import { useState } from "react";
 import { DateRange as CalendarDateRange } from "react-day-picker";
-import { useDateRangeFilter } from "./hooks/use-date-range-filter";
+import { useDateRangeFilter } from "./hooks";
 import { DateRangeFilterProps } from "./types";
 
 export function DateRangeFilter({

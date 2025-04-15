@@ -1,12 +1,13 @@
 import { auth } from "@/domains/auth";
 import { getOrganizations, OrganizationSidebar } from "@/domains/organization";
-import { UserAvatar, UserAvatarSkeleton } from "@/shared/components";
-import { Separator } from "@/shared/components/ui/separator";
 import {
+	Separator,
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from "@/shared/components/ui/sidebar";
+	UserAvatar,
+	UserAvatarSkeleton,
+} from "@/shared/components";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cookies, headers } from "next/headers";

@@ -1,6 +1,14 @@
 "use client";
 
-import { DotsLoader } from "@/shared/components";
+import {
+	Button,
+	DotsLoader,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/shared/components";
 import {
 	FieldInfo,
 	FormErrors,
@@ -8,17 +16,9 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { Button } from "@/shared/components/ui/button";
-import { FormLabel } from "@/shared/components/ui/form";
-import { Input } from "@/shared/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components/ui/select";
-import { Textarea } from "@/shared/components/ui/textarea";
+import { FormLabel } from "@/shared/components/shadcn-ui/form";
+import { Input } from "@/shared/components/shadcn-ui/input/input";
+import { Textarea } from "@/shared/components/shadcn-ui/textarea/textarea";
 import { ServerActionStatus } from "@/shared/types";
 
 import { GetClientReturn, useUpdateClient } from "@/domains/client";

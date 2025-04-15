@@ -1,8 +1,7 @@
 "use client";
 
-import { ThemeToggleButton } from "@/shared/components";
+import { Button, ThemeToggleButton } from "@/shared/components";
 import { Logo } from "@/shared/components/logo";
-import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils";
 import { User } from "better-auth";
 import { motion } from "framer-motion";

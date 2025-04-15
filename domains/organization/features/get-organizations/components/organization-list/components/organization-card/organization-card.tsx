@@ -1,13 +1,13 @@
 "use client";
 
 import { type GetOrganizationsReturn } from "@/domains/organization";
-import { Card, CardContent } from "@/shared/components/ui/card";
+import { Card, CardContent } from "@/shared/components/";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
+} from "@/shared/components/shadcn-ui/dropdown-menu";
 import { ViewType } from "@/shared/types";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";

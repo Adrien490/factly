@@ -2,7 +2,7 @@
 
 import { useSelection } from "@/shared/components/datatable/hooks/use-selection";
 import { EmptyState } from "@/shared/components/empty-state";
-import { Checkbox } from "@/shared/components/ui/checkbox";
+import { Checkbox } from "@/shared/components/shadcn-ui/checkbox";
 import {
 	Table,
 	TableBody,
@@ -11,7 +11,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@/shared/components/ui/table";
+} from "@/shared/components/shadcn-ui/table";
 import { useSorting } from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/utils";
 import { ArrowDown, ArrowUp, ChevronsUpDown, Search } from "lucide-react";

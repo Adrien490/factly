@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
+} from "@/shared/components/shadcn-ui/dropdown-menu";
 import { SortDirection, useSorting } from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/utils";
 import { Filter, SlidersHorizontal } from "lucide-react";

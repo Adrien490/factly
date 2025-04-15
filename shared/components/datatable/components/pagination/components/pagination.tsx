@@ -1,14 +1,14 @@
 "use client";
 
-import { usePagination } from "@/shared/components/datatable/components/pagination/hooks/use-pagination";
-import { Button } from "@/shared/components/ui/button";
 import {
+	Button,
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/shared/components/ui/select";
+} from "@/shared/components";
+import { usePagination } from "@/shared/components/datatable/components/pagination/hooks/use-pagination";
 import { cn } from "@/shared/utils";
 import {
 	ChevronLeft,

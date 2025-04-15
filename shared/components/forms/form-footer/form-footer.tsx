@@ -1,5 +1,5 @@
+import { Button } from "@/shared/components";
 import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
-import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
 

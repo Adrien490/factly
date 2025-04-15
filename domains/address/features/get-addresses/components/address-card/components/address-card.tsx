@@ -1,7 +1,6 @@
 "use client";
 
-import { deleteAddress } from "@/domains/address";
-import { updateAddress } from "@/domains/address/features/update-address";
+import { deleteAddress, updateAddress } from "@/domains/address";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -12,17 +11,16 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "@/shared/components/ui/alert-dialog";
-import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent } from "@/shared/components/ui/card";
-import {
+	Badge,
+	Button,
+	Card,
+	CardContent,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
+} from "@/shared/components";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

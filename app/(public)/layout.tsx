@@ -1,4 +1,4 @@
-import { auth } from "@/domains/auth/lib/auth";
+import { auth } from "@/domains/auth";
 import { UserAvatarSkeleton } from "@/shared/components/user-avatar";
 import { headers } from "next/headers";
 import { Suspense } from "react";

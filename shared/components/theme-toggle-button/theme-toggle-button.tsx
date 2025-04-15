@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components";
 import { useTheme } from "@/shared/hooks";
 import { cn } from "@/shared/utils";
 import { motion } from "framer-motion";

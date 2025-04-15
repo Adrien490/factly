@@ -1,6 +1,7 @@
 "use client";
 
 import { GetClientsReturn, useDeleteClient } from "@/domains/client";
+import { Button } from "@/shared/components";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -11,15 +12,14 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "@/shared/components/ui/alert-dialog";
-import { Button } from "@/shared/components/ui/button";
+} from "@/shared/components/shadcn-ui/alert-dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
+} from "@/shared/components/shadcn-ui/dropdown-menu";
 import { useToast } from "@/shared/hooks/use-toast";
 import { ServerActionStatus } from "@/shared/types";
 import { cn } from "@/shared/utils";

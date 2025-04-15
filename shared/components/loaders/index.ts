@@ -1,6 +1,7 @@
 export * from "./circle-loader";
 export * from "./dot-ring-loader";
 export * from "./dots-loader";
+export * from "./grid-loader";
 export * from "./mini-dots-loader";
 export * from "./progress-loader";
 export * from "./pulse-loader";

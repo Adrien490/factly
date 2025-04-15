@@ -1,6 +1,10 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+} from "@/shared/components/shadcn-ui/tabs";
 import { ViewType } from "@/shared/types/view-type";
 import { LayoutGrid, List } from "lucide-react";
 import { useViewToggle } from "./hooks";

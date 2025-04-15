@@ -1,9 +1,6 @@
 "use client";
 
-import {
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-} from "@/shared/components/ui/dropdown-menu";
+import { DropdownMenuItem, DropdownMenuSeparator } from "@/shared/components";
 import { useTheme } from "@/shared/hooks";
 import { LogOut, Moon, Sun } from "lucide-react";
 import { MenuItemsProps } from "./types";

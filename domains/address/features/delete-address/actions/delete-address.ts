@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/domains/auth/lib/auth";
+import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization";
 import db from "@/shared/lib/db";
 import { headers } from "next/headers";

@@ -1,18 +1,18 @@
 import {
+	Button,
 	PageContainer,
 	SearchForm,
 	SortSelector,
 	ViewToggle,
 } from "@/shared/components";
-import { Button } from "@/shared/components/ui/button";
 
 import {
 	getOrganizations,
+	ORGANIZATION_SORT_OPTIONS,
 	OrganizationList,
 	OrganizationListSkeleton,
 	OrganizationSortableField,
 } from "@/domains/organization";
-import { ORGANIZATION_SORT_OPTIONS } from "@/domains/organization/features/get-organizations/constants";
 import Link from "next/link";
 import { Suspense } from "react";
 

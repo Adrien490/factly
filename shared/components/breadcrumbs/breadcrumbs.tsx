@@ -4,7 +4,7 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from "@/shared/components/ui/breadcrumb";
+} from "@/shared/components/shadcn-ui";
 import { cn } from "@/shared/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";

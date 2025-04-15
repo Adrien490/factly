@@ -1,14 +1,14 @@
 "use client";
 
-import { authClient } from "@/domains/auth/lib/auth-client";
-import { Button } from "@/shared/components/ui/button";
+import { authClient } from "@/domains/auth";
 import {
+	Button,
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "@/shared/components/ui/card";
+} from "@/shared/components";
 import {
 	Fingerprint,
 	KeyRound,

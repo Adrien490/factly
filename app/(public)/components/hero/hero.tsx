@@ -1,8 +1,8 @@
 "use client";
 
-import { BackgroundLines } from "@/shared/components/ui/background-lines";
-import { Button } from "@/shared/components/ui/button";
-import { Highlight } from "@/shared/components/ui/hero-highlight";
+import { Button } from "@/shared/components";
+import { BackgroundLines } from "@/shared/components/shadcn-ui/background-lines";
+import { Highlight } from "@/shared/components/shadcn-ui/hero-highlight";
 import { useTheme } from "@/shared/hooks/use-theme";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";

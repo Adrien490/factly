@@ -1,9 +1,11 @@
+"use client";
+
+import { Button } from "@/shared/components";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-} from "@/shared/components/ui/avatar";
-import { Button } from "@/shared/components/ui/button";
+} from "@/shared/components/shadcn-ui/avatar";
 import { getUserInitials } from "@/shared/utils";
 import { User } from "better-auth";
 import { LogOut, Settings, UserIcon } from "lucide-react";

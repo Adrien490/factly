@@ -3,9 +3,7 @@ import {
 	getAddresses,
 	GetAddressesParams,
 } from "@/domains/address";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
-import { Button } from "@/shared/components/ui/button";
+import { Button, PageContainer, PageHeader } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { clientNavigation } from "../constants";

@@ -1,23 +1,19 @@
 "use client";
 
-import { authClient } from "@/domains/auth/lib/auth-client";
+import { authClient } from "@/domains/auth";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-} from "@/shared/components/ui/avatar";
-import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
-import {
 	Sheet,
 	SheetContent,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
-} from "@/shared/components/ui/sheet";
+} from "@/shared/components";
 
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { cn, getUserInitials } from "@/shared/utils";

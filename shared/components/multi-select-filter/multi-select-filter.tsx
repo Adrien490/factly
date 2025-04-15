@@ -1,20 +1,20 @@
 "use client";
 
-import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components";
+import { Badge } from "@/shared/components/shadcn-ui/badge/badge";
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
-} from "@/shared/components/ui/command";
+} from "@/shared/components/shadcn-ui/command";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/shared/components/ui/popover";
-import { ScrollArea } from "@/shared/components/ui/scroll-area";
+} from "@/shared/components/shadcn-ui/popover";
+import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
 import { cn } from "@/shared/utils";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { useState } from "react";

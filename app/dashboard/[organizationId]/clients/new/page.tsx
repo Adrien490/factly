@@ -18,12 +18,7 @@ type PageProps = {
 	}>;
 };
 
-export default async function NewClientPage({
-	searchParams,
-	params,
-}: PageProps) {
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
+export default async function NewClientPage({ searchParams }: PageProps) {
 	const resolvedSearchParams = await searchParams;
 	const {
 		q = "",
@@ -54,18 +49,6 @@ export default async function NewClientPage({
 			<PageHeader
 				title="Nouveau client"
 				description="Créez un nouveau client pour votre organisation"
-				navigation={{
-					items: [
-						{
-							label: "Liste des clients",
-							href: `/dashboard/${organizationId}/clients`,
-						},
-						{
-							label: "Nouveau client",
-							href: `/dashboard/${organizationId}/clients/new`,
-						},
-					],
-				}}
 			/>
 			{/* Contenu principal */}
 			<CreateClientForm

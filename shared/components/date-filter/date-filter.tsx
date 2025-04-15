@@ -1,17 +1,17 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/shared/components/ui/popover";
+} from "@/shared/components/shadcn-ui/popover";
 import { cn } from "@/shared/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, X } from "lucide-react";
 import { useState } from "react";
-import { Calendar } from "../ui/calendar";
+import { Calendar } from "../shadcn-ui/calendar";
 import { useDateFilter } from "./hooks";
 import { DateFilterProps } from "./types";
 

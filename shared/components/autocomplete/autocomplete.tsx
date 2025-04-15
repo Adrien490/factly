@@ -1,7 +1,7 @@
 "use client";
 
 import { DotsLoader } from "@/shared/components";
-import { Input } from "@/shared/components/ui/input";
+import { Input } from "@/shared/components/shadcn-ui/input/input";
 import { cn } from "@/shared/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";

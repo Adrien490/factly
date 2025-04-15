@@ -1,10 +1,10 @@
 "use client";
 
+import { Button } from "@/shared/components";
 import { PageContainer } from "@/shared/components/page-container";
-import { Button } from "@/shared/components/ui/button";
-import { ContainerScroll } from "@/shared/components/ui/container-scroll-animation";
-import { ShootingStars } from "@/shared/components/ui/shooting-stars";
-import { StarsBackground } from "@/shared/components/ui/stars-background";
+import { ContainerScroll } from "@/shared/components/shadcn-ui/container-scroll-animation";
+import { ShootingStars } from "@/shared/components/shadcn-ui/shooting-stars";
+import { StarsBackground } from "@/shared/components/shadcn-ui/stars-background";
 import { cn } from "@/shared/utils";
 import { motion } from "framer-motion";
 import { ChevronDown, ExternalLink, Sparkles } from "lucide-react";

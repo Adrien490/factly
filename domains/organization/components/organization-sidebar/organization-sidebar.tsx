@@ -8,7 +8,8 @@ import {
 	SidebarMenu,
 	SidebarMenuItem,
 	SidebarRail,
-} from "@/shared/components/ui/sidebar";
+	useSidebar,
+} from "@/shared/components/shadcn-ui/sidebar";
 import { use } from "react";
 import { NavMain } from "./components/nav-main/nav-main";
 import { navItems } from "./constants";
@@ -20,7 +21,8 @@ export function OrganizationSidebar({
 	...props
 }: AppSidebarProps) {
 	const organizations = use(organizationsPromise);
-
+	const { state: sidebarState } = useSidebar();
+	const isCollapsed = sidebarState === "collapsed";
 	return (
 		<Sidebar
 			collapsible="icon"
@@ -36,7 +38,10 @@ export function OrganizationSidebar({
 			</SidebarHeader>
 
 			<SidebarContent className="pt-2">
-				<NavMain items={navItems(organizationId).navMain} />
+				<NavMain
+					isCollapsed={isCollapsed}
+					items={navItems(organizationId).navMain}
+				/>
 			</SidebarContent>
 			<SidebarRail className="bg-muted/10" />
 		</Sidebar>

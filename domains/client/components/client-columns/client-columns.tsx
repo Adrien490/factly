@@ -7,7 +7,7 @@ import {
 	GetClientsReturn,
 } from "@/domains/client";
 import { ColumnDef } from "@/shared/components";
-import { Badge } from "@/shared/components/ui/badge";
+import { Badge } from "@/shared/components/shadcn-ui/badge/badge";
 import { BuildingIcon, CircleDot, MapPin, Receipt, Tag } from "lucide-react";
 
 export const clientColumns: ColumnDef<GetClientsReturn["clients"][number]>[] = [

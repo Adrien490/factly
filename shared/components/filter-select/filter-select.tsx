@@ -1,13 +1,13 @@
 "use client";
 
-import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/shared/components/ui/select";
+} from "@/shared/components";
+import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
 import { cn } from "@/shared/utils";
 import { useFilterSelect } from "./hooks/use-filter-select";
 import { FilterSelectProps } from "./types";

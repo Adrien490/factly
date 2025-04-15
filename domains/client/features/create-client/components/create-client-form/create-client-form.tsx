@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { FormLabel } from "@/shared/components/ui/form";
-import { Input } from "@/shared/components/ui/input";
 import {
+	Button,
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/shared/components/ui/select";
-import { Textarea } from "@/shared/components/ui/textarea";
+} from "@/shared/components";
+import { FormLabel } from "@/shared/components/shadcn-ui/form";
+import { Input } from "@/shared/components/shadcn-ui/input/input";
+import { Textarea } from "@/shared/components/shadcn-ui/textarea/textarea";
 
 import {
 	FormattedAddressResult,

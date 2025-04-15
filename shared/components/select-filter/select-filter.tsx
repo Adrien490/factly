@@ -1,14 +1,14 @@
 "use client";
 
-import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
-import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/shared/components/ui/select";
+} from "@/shared/components";
+import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
+import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
 import { cn } from "@/shared/utils";
 import { X } from "lucide-react";
 import { useSelectFilter } from "./hooks/use-select-filter";

@@ -1,9 +1,10 @@
-import { PageContainer, PageHeader } from "@/shared/components";
 import {
 	Alert,
 	AlertDescription,
 	AlertTitle,
-} from "@/shared/components/ui/alert";
+	PageContainer,
+	PageHeader,
+} from "@/shared/components";
 import { Construction } from "lucide-react";
 
 type Props = {

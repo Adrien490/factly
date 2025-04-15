@@ -1,6 +1,6 @@
 "use client";
 
-import { OrganizationCardSkeleton } from "@/domains/organization/features/get-organizations/components/organization-list/components/organization-card-skeleton/organization-card-skeleton";
+import { OrganizationCardSkeleton } from "@/domains/organization";
 import { OrganizationListSkeletonProps } from "./types";
 
 export function OrganizationListSkeleton({

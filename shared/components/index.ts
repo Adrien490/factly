@@ -1,5 +1,3 @@
-export * from "../../domains/organization/components/organization-sidebar";
-export * from "../../domains/organization/components/organization-switcher";
 export * from "./autocomplete";
 export * from "./breadcrumbs";
 export * from "./datatable";
@@ -19,6 +17,7 @@ export * from "./page-container";
 export * from "./page-header";
 export * from "./search-form";
 export * from "./select-filter";
+export * from "./shadcn-ui";
 export * from "./sort-selector";
 export * from "./sorting-dropdown";
 export * from "./theme-toggle-button";

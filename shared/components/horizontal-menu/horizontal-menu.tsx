@@ -5,7 +5,7 @@ import {
 	NavigationMenuItem,
 	NavigationMenuLink,
 	NavigationMenuList,
-} from "@/shared/components/ui/navigation-menu";
+} from "@/shared/components/shadcn-ui/navigation-menu";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -37,13 +37,14 @@ export function HorizontalMenu({ items, className }: HorizontalMenuProps) {
 							<Link
 								href={item.href || "#"}
 								className={cn(
-									"flex items-center text-sm text-muted-foreground transition-colors gap-2",
+									"flex items-center text-sm text-muted-foreground transition-colors gap-2 justify-between",
 									isItemActive(item.href)
 										? "text-primary"
 										: "text-muted-foreground hover:text-foreground"
 								)}
 								aria-current={isItemActive(item.href) ? "page" : undefined}
 							>
+								<div className="flex items-center gap-2"></div>
 								{item.icon && (
 									<span className="size-4 shrink-0 mr-2" aria-hidden="true">
 										{item.icon}

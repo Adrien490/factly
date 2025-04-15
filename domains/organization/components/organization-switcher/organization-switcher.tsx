@@ -9,8 +9,11 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
-import { SidebarMenuButton, useSidebar } from "@/shared/components/ui/sidebar";
+} from "@/shared/components/shadcn-ui/dropdown-menu";
+import {
+	SidebarMenuButton,
+	useSidebar,
+} from "@/shared/components/shadcn-ui/sidebar";
 import { cn } from "@/shared/utils";
 import {
 	Check,

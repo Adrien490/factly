@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 import { cn } from "@/shared/utils";
 import { HeaderSkeletonProps } from "./types";
 

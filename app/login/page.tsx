@@ -1,6 +1,5 @@
 import { MagicLinkForm, ProviderLogin } from "@/domains/auth";
-import { Logo } from "@/shared/components/logo";
-import { Spotlight } from "@/shared/components/ui/spotlight-new";
+import { Logo, Spotlight } from "@/shared/components";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

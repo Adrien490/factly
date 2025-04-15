@@ -13,18 +13,16 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/shared/components/ui/alert-dialog";
-import { Button } from "@/shared/components/ui/button";
-import {
+	Button,
 	Card,
 	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/shared/components/ui/card";
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
+	Label,
+} from "@/shared/components";
+import { Input } from "@/shared/components/shadcn-ui/input";
 import {
 	ServerActionState,
 	ServerActionStatus,

@@ -1,4 +1,4 @@
-import { Toaster } from "@/shared/components/ui/toaster";
+import { Toaster } from "@/shared/components/shadcn-ui/toaster";
 import { ThemeProvider } from "@/shared/providers/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";

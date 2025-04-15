@@ -7,7 +7,7 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from "@/shared/components/ui/collapsible";
+} from "@/shared/components/shadcn-ui/collapsible";
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
@@ -17,16 +17,13 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
-	useSidebar,
-} from "@/shared/components/ui/sidebar";
+} from "@/shared/components/shadcn-ui/sidebar";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavMainProps } from "./types";
 
-export function NavMain({ items }: NavMainProps) {
-	const { state: sidebarState } = useSidebar();
-	const isCollapsed = sidebarState === "collapsed";
+export function NavMain({ items, isCollapsed }: NavMainProps) {
 	const pathname = usePathname();
 	return (
 		<SidebarGroup>
@@ -58,7 +55,9 @@ export function NavMain({ items }: NavMainProps) {
 									>
 										<div className="flex items-center gap-2">
 											{item.icon && <item.icon className="size-4" />}
-											<span>{item.title}</span>
+											{!isCollapsed && !hasSubItems && (
+												<span>{item.title}</span>
+											)}
 										</div>
 										<LoadingIndicator />
 									</Link>

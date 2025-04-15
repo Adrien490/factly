@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
+} from "@/shared/components/shadcn-ui/dropdown-menu";
 import { SortOrder } from "@/shared/types";
 import { ChevronDown, SortAsc, SortDesc } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";

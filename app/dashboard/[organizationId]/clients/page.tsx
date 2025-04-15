@@ -7,6 +7,7 @@ import {
 } from "@/domains/client";
 import { hasOrganizationAccess } from "@/domains/organization";
 import {
+	Button,
 	DataTable,
 	FilterSelect,
 	MultiSelectFilter,
@@ -14,8 +15,7 @@ import {
 	PageHeader,
 	SearchForm,
 } from "@/shared/components";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
+import { Card } from "@/shared/components/";
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
@@ -75,18 +75,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						</Link>
 					</Button>
 				}
-				navigation={{
-					items: [
-						{
-							label: "Liste des clients",
-							href: `/dashboard/${organizationId}/clients`,
-						},
-						{
-							label: "Nouveau client",
-							href: `/dashboard/${organizationId}/clients/new`,
-						},
-					],
-				}}
 				className="mb-6"
 			/>
 

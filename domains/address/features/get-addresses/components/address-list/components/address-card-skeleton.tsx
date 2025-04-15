@@ -1,7 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/shared/components/ui/card";
-import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Card, CardContent, Skeleton } from "@/shared/components";
 import { ViewType } from "@/shared/types";
 
 type AddressCardSkeletonProps = {
