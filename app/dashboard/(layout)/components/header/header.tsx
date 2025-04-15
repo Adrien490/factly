@@ -48,7 +48,7 @@ export function Header({ userPromise, className }: Props) {
 						hover="fade"
 						glow="sm"
 						srText="Logo Factly"
-						href="/dashboard"
+						href="/"
 					/>
 
 					{/* Menu horizontal à côté du logo lorsqu'on défile */}

@@ -406,7 +406,8 @@ export function CreateOrganizationForm({
 							name="siren"
 							validators={{
 								onChange: ({ value }) => {
-									if (value && !/^\d{9}$/.test(value)) {
+									if (!value) return undefined;
+									if (!/^\d{9}$/.test(value)) {
 										return "Le SIREN doit contenir 9 chiffres";
 									}
 									return undefined;
@@ -438,7 +439,8 @@ export function CreateOrganizationForm({
 							name="siret"
 							validators={{
 								onChange: ({ value }) => {
-									if (value && !/^\d{14}$/.test(value)) {
+									if (!value) return undefined;
+									if (!/^\d{14}$/.test(value)) {
 										return "Le SIRET doit contenir 14 chiffres";
 									}
 									return undefined;
