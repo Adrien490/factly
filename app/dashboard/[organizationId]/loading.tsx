@@ -1,8 +1,9 @@
+import { PageContainer } from "@/shared/components";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 
 export default function Loading() {
 	return (
-		<div className="space-y-4">
+		<PageContainer>
 			{/* Header avec breadcrumbs et titre */}
 			<div className="space-y-2">
 				<div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -77,6 +78,6 @@ export default function Loading() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</PageContainer>
 	);
 }
