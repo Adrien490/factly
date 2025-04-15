@@ -15,8 +15,7 @@ export function Header({ userPromise, className }: Props) {
 	return (
 		<header
 			className={cn(
-				"sticky top-0 z-50 w-full transition-all bg-background",
-
+				"sticky top-0 z-50 w-full bg-background/95 backdrop-blur-[2px] border-b border-border/20 shadow-sm",
 				className
 			)}
 			style={{
@@ -25,39 +24,37 @@ export function Header({ userPromise, className }: Props) {
 			}}
 			role="banner"
 		>
-			{/* En-tête principal avec logo et contrôles utilisateur */}
-			<div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
-				<div className="flex items-center">
-					{/* Logo */}
+			{/* Conteneur principal avec espacement optimisé */}
+			<div className="mx-auto w-full max-w-[1440px]">
+				{/* Barre supérieure avec logo et avatar */}
+				<div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+					<div className="flex items-center">
+						{/* Logo */}
+						<Logo
+							variant="minimal"
+							size="md"
+							shape="softSquare"
+							interactive
+							hideText={false}
+							text="Factly"
+							textSize="md"
+							hover="fade"
+							glow="sm"
+							srText="Logo Factly"
+							href="/"
+						/>
+					</div>
 
-					<Logo
-						variant="minimal"
-						size="md"
-						shape="softSquare"
-						interactive
-						hideText={false}
-						text="Factly"
-						textSize="md"
-						hover="fade"
-						glow="sm"
-						srText="Logo Factly"
-						href="/"
-					/>
+					{/* Section droite : Avatar utilisateur */}
+					<div className="flex items-center gap-2 sm:gap-3">
+						<UserAvatar size="sm" user={user} />
+					</div>
 				</div>
 
-				{/* Espace central flexible */}
-				<div className="flex-1"></div>
-
-				{/* Section droite : Avatar utilisateur */}
-				<div className="flex items-center gap-2 sm:gap-3">
-					<UserAvatar size="sm" user={user} />
+				{/* Menu de navigation horizontal */}
+				<div className="h-10 px-4 sm:px-6 lg:px-8 border-t border-border/10">
+					<HorizontalMenu items={menuItems} />
 				</div>
-			</div>
-
-			{/* Menu de navigation - Visible uniquement lorsqu'on ne défile pas */}
-
-			<div className="overflow-hidden">
-				<HorizontalMenu items={menuItems} />
 			</div>
 		</header>
 	);
