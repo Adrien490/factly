@@ -1,8 +1,4 @@
-"use client";
-
 import { cn } from "@/shared/utils";
-import { motion } from "framer-motion";
-import { animations } from "./constants";
 import { EmptyStateProps } from "./types";
 
 export function EmptyState({
@@ -16,59 +12,32 @@ export function EmptyState({
 	...props
 }: EmptyStateProps) {
 	return (
-		<motion.div
+		<div
 			className={cn(
 				"flex flex-col items-center justify-center text-center w-full p-6 bg-card rounded-lg",
 				className
 			)}
-			{...animations.container}
 			{...props}
 		>
 			{illustration ? (
-				<motion.div className="mb-6" {...animations.icon}>
-					{illustration}
-				</motion.div>
+				<div className="mb-6">{illustration}</div>
 			) : (
-				Icon && (
-					<motion.div
-						className="rounded-full bg-muted/30 p-3 mb-4"
-						{...animations.icon}
-					>
-						{Icon}
-					</motion.div>
-				)
+				Icon && <div className="rounded-full bg-muted/30 p-3 mb-4">{Icon}</div>
 			)}
 
-			<motion.div
-				{...animations.item}
-				className="text-lg font-medium text-foreground"
-			>
-				{title}
-			</motion.div>
+			<div className="text-lg font-medium text-foreground">{title}</div>
 
 			{description && (
-				<motion.div
-					{...animations.item}
-					className="mt-2 text-sm text-muted-foreground mx-auto max-w-2xl"
-				>
+				<div className="mt-2 text-sm text-muted-foreground mx-auto max-w-2xl">
 					{description}
-				</motion.div>
+				</div>
 			)}
 
 			{action && (
-				<motion.div
-					{...animations.item}
-					className="mt-6 w-full flex justify-center"
-				>
-					{action}
-				</motion.div>
+				<div className="mt-6 w-full flex justify-center">{action}</div>
 			)}
 
-			{children && (
-				<motion.div {...animations.item} className="mt-6 w-full">
-					{children}
-				</motion.div>
-			)}
-		</motion.div>
+			{children && <div className="mt-6 w-full">{children}</div>}
+		</div>
 	);
 }
