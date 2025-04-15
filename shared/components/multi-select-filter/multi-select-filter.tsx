@@ -1,24 +1,22 @@
 "use client";
 
-import { Button } from "@/shared/components";
-import { Badge } from "@/shared/components/shadcn-ui/badge/badge";
 import {
+	Badge,
+	Button,
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
-} from "@/shared/components/shadcn-ui/command";
-import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/shared/components/shadcn-ui/popover";
-import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
+	ScrollArea,
+} from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { useState } from "react";
-import { useMultiSelectFilter } from "./hooks/use-multi-select-filter";
+import { useMultiSelectFilter } from "./hooks";
 import { MultiSelectFilterProps } from "./types";
 
 export function MultiSelectFilter({

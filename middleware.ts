@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-import { auth } from "./domains/auth/lib/auth";
+import { auth } from "./domains/auth";
 
 const protectedRoutes = ["/dashboard"];
 const publicOnlyRoutes = ["/login"];
