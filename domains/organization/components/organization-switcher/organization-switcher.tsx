@@ -1,4 +1,7 @@
+"use client";
+
 import { GetOrganizationsReturn } from "@/domains/organization";
+import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,25 +10,44 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/shared/components/shadcn-ui/dropdown-menu";
-import { SidebarMenuButton } from "@/shared/components/shadcn-ui/sidebar";
+import {
+	SidebarMenuButton,
+	useSidebar,
+} from "@/shared/components/shadcn-ui/sidebar";
 import { cn } from "@/shared/utils";
-import { Check, ChevronsUpDown, GalleryVerticalEnd } from "lucide-react";
+import {
+	Check,
+	ChevronsUpDown,
+	GalleryVerticalEnd,
+	Loader2,
+} from "lucide-react";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 interface OrganizationSwitcherProps {
-	activeOrganizationId: string;
 	organizations: GetOrganizationsReturn;
 }
 
 export function OrganizationSwitcher({
-	activeOrganizationId,
 	organizations,
 }: OrganizationSwitcherProps) {
+	const params = useParams();
+	const organizationId = params.organizationId;
+	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
+	const { state: sidebarState } = useSidebar();
+	const isCollapsed = sidebarState === "collapsed";
+
 	const currentOrganization = organizations.find(
-		(organization) => organization.id === activeOrganizationId
+		(organization) => organization.id === organizationId
 	);
 
-	const isCollapsed = false;
+	const handleSelectOrganization = (organizationId: string) => {
+		startTransition(() => {
+			router.push(`/dashboard/${organizationId}`);
+		});
+	};
 
 	return (
 		<DropdownMenu>
@@ -34,9 +56,12 @@ export function OrganizationSwitcher({
 					// Mode collapsed - structure simplifiée
 					<SidebarMenuButton
 						size="default"
+						disabled={isPending}
 						className="relative overflow-hidden my-2"
 					>
-						{currentOrganization?.logoUrl ? (
+						{isPending ? (
+							<SpinnerLoader size="sm" color="primary" />
+						) : currentOrganization?.logoUrl ? (
 							<div className="absolute inset-0">
 								<Image
 									src={currentOrganization.logoUrl}
@@ -57,10 +82,13 @@ export function OrganizationSwitcher({
 					// Mode normal - avec informations
 					<SidebarMenuButton
 						size="lg"
+						disabled={isPending}
 						className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 					>
 						<div className="rounded-lg bg-sidebar-primary/10 text-sidebar-primary size-8 flex items-center justify-center overflow-hidden transition-none">
-							{currentOrganization?.logoUrl ? (
+							{isPending ? (
+								<Loader2 className="size-4 animate-spin transition-none" />
+							) : currentOrganization?.logoUrl ? (
 								<Image
 									src={currentOrganization.logoUrl}
 									alt={currentOrganization.name}
@@ -97,9 +125,10 @@ export function OrganizationSwitcher({
 				{organizations.map((organization) => (
 					<DropdownMenuItem
 						key={organization.id}
+						onSelect={() => handleSelectOrganization(organization.id)}
 						className={cn(
 							"flex items-center gap-2",
-							organization.id === activeOrganizationId && "font-medium"
+							organization.id === organizationId && "font-medium"
 						)}
 					>
 						<div className="size-6 rounded-md flex items-center justify-center overflow-hidden border transition-none">
@@ -116,7 +145,7 @@ export function OrganizationSwitcher({
 							)}
 						</div>
 						<span className="flex-1 truncate">{organization.name}</span>
-						{organization.id === activeOrganizationId && (
+						{organization.id === organizationId && (
 							<Check className="ml-2 size-4 shrink-0" />
 						)}
 					</DropdownMenuItem>
