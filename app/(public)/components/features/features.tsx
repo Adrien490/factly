@@ -1,12 +1,5 @@
-"use client";
-
-import {
-	containerVariants,
-	features,
-	itemVariants,
-} from "@/app/(public)/components/features/constants";
+import { features } from "@/app/(public)/components/features/constants";
 import { PageContainer } from "@/shared/components/page-container";
-import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { FeatureItem } from "./components";
 
@@ -50,13 +43,7 @@ export function Features() {
 
 				<div className="relative z-10">
 					{/* Badge supérieur - style neomorphique 2025 */}
-					<motion.div
-						className="flex justify-center mb-7"
-						initial={{ opacity: 0, y: 10 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true, amount: 0.8 }}
-						transition={{ duration: 0.6 }}
-					>
+					<div className="flex justify-center mb-7">
 						<div
 							className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg"
 							aria-hidden="true"
@@ -64,15 +51,9 @@ export function Features() {
 							<Sparkles className="h-4 w-4" />
 							<span className="text-sm font-medium">Fonctionnalités clés</span>
 						</div>
-					</motion.div>
+					</div>
 
-					<motion.header
-						className="text-center mb-14"
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true, amount: 0.6 }}
-						transition={{ duration: 0.7 }}
-					>
+					<div className="text-center mb-14">
 						<h2
 							className="text-3xl sm:text-4xl font-bold tracking-tight mb-5"
 							itemProp="name"
@@ -92,22 +73,17 @@ export function Features() {
 							Simplifiez votre quotidien avec notre suite d&apos;outils intégrés
 							pour gérer efficacement toute votre activité commerciale.
 						</p>
-					</motion.header>
+					</div>
 
 					{/* Grille de fonctionnalités avec design 2025 */}
-					<motion.div
+					<div
 						className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0.5 xl:gap-0 bg-transparent xl:border dark:border-neutral-800 rounded-xl overflow-hidden shadow-[0_5px_30px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_5px_30px_-15px_rgba(var(--primary-rgb),0.1)]"
-						variants={containerVariants}
-						initial="hidden"
-						whileInView="visible"
-						viewport={{ once: true, amount: 0.15 }}
 						role="list"
 						aria-label="Liste des fonctionnalités principales"
 					>
 						{features.map((feature, index) => (
-							<motion.div
+							<div
 								key={index}
-								variants={itemVariants}
 								itemScope
 								itemType="https://schema.org/ListItem"
 								itemProp="itemListElement"
@@ -119,9 +95,9 @@ export function Features() {
 									totalItems={features.length}
 									columns={columns}
 								/>
-							</motion.div>
+							</div>
 						))}
-					</motion.div>
+					</div>
 				</div>
 
 				{/* Masque inférieur pour transition avec la section suivante - optimisé */}
