@@ -6,15 +6,11 @@ import { OrganizationCard } from "./components";
 import { OrganizationListProps } from "./types";
 
 export function OrganizationList({
-	viewType,
+	viewType = "grid",
 	organizationsPromise,
 }: OrganizationListProps) {
 	// Utilisation du hook use pour résoudre la Promise
 	const organizations = use(organizationsPromise);
-
-	console.log(viewType);
-
-	console.log(organizations);
 
 	return (
 		<div className="relative group-has-data-pending:animate-pulse">

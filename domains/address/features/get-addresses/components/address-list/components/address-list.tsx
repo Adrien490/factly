@@ -28,7 +28,7 @@ export function AddressList({
 	if (addresses.length === 0) {
 		return (
 			<EmptyState
-				icon={MapPin}
+				icon={<MapPin className="h-10 w-10" />}
 				title="Aucune adresse trouvée"
 				description="Vous pouvez créer une adresse en cliquant sur le bouton ci-dessous"
 				action={<Link href={createHref || "#"}>Nouvelle adresse</Link>}
