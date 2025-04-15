@@ -1,3 +1,4 @@
+import { ScrollToButton } from "@/shared/components";
 import { Logo } from "@/shared/components/logo";
 import { PageContainer } from "@/shared/components/page-container";
 import { GridPattern } from "@/shared/components/shadcn-ui/grid-pattern";
@@ -123,14 +124,12 @@ export function Footer({ className }: FooterProps) {
 
 						{/* Bouton de retour en haut */}
 						<div className="mt-10 sm:mt-16 flex flex-col items-center">
-							<button
-								className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-primary/5 transition-colors duration-300 text-center text-muted-foreground/70 hover:text-foreground cursor-pointer group"
-								onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-								aria-label="Retour en haut de page"
-							>
-								<ChevronUp className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
-								<span className="text-xs font-medium">Retour en haut</span>
-							</button>
+							<ScrollToButton
+								targetId="home"
+								icon={<ChevronUp className="h-4 w-4 animate-bounce" />}
+								label="Retour en haut"
+								aria-label="Retour en haut"
+							/>
 						</div>
 					</div>
 				</div>

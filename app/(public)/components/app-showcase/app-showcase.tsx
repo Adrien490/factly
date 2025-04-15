@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components";
+import { Button, ScrollToButton } from "@/shared/components";
 import { PageContainer } from "@/shared/components/page-container";
 import { ContainerScroll } from "@/shared/components/shadcn-ui/container-scroll-animation";
 import { ShootingStars } from "@/shared/components/shadcn-ui/shooting-stars";
@@ -78,22 +78,14 @@ export function AppShowcase() {
 
 										{/* Indicateur de défilement - accessibilité améliorée */}
 										<div className="hidden md:flex justify-center mt-10">
-											<button
-												onClick={() =>
-													document
-														.getElementById("features")
-														?.scrollIntoView({ behavior: "smooth" })
-												}
-												className="flex flex-col items-center gap-2 text-muted-foreground/70 hover:text-muted-foreground transition-colors group"
-												aria-label="Découvrir les fonctionnalités"
-											>
-												<span className="text-xs font-medium">
-													Découvrez les fonctionnalités
-												</span>
-												<div className="relative h-6 w-4 flex items-center justify-center">
+											<ScrollToButton
+												targetId="features"
+												icon={
 													<ChevronDown className="h-4 w-4 animate-bounce" />
-												</div>
-											</button>
+												}
+												label="Découvrez les fonctionnalités"
+												aria-label="Découvrir les fonctionnalités"
+											/>
 										</div>
 									</div>
 								</>

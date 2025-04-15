@@ -24,3 +24,5 @@ export * from "./theme-toggle-button";
 export * from "./user-avatar";
 
 export * from "./view-toggle";
+
+export * from "./scroll-to-button";
