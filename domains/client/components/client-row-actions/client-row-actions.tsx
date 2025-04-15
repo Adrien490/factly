@@ -1,6 +1,6 @@
 "use client";
 
-import { GetClientsReturn, useDeleteClient } from "@/domains/client";
+import { useDeleteClient } from "@/domains/client";
 import { Button } from "@/shared/components";
 import {
 	AlertDialog,
@@ -26,10 +26,7 @@ import { cn } from "@/shared/utils";
 import { MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface ClientRowActionsProps {
-	client: GetClientsReturn["clients"][number];
-}
+import { ClientRowActionsProps } from "./types";
 
 export function ClientRowActions({ client }: ClientRowActionsProps) {
 	const { state, action, isPending } = useDeleteClient();

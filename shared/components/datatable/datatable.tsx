@@ -1,8 +1,7 @@
 "use client";
 
+import { Checkbox, EmptyState } from "@/shared/components";
 import { useSelection } from "@/shared/components/datatable/hooks/use-selection";
-import { EmptyState } from "@/shared/components/empty-state";
-import { Checkbox } from "@/shared/components/shadcn-ui/checkbox";
 import {
 	Table,
 	TableBody,

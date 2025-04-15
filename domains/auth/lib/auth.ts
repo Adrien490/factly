@@ -4,9 +4,11 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { passkey } from "better-auth/plugins/passkey";
 
-if (!process.env.BETTER_AUTH_SECRET) {
-	throw new Error("BETTER_AUTH_SECRET is not defined");
-}
+// Vérification si nous sommes côté client ou serveur
+
+// Récupération des variables d'environnement
+const googleClientId = process.env.AUTH_GOOGLE_ID;
+const googleClientSecret = process.env.AUTH_GOOGLE_SECRET;
 
 export const auth = betterAuth({
 	secret: process.env.BETTER_AUTH_SECRET,
@@ -15,10 +17,14 @@ export const auth = betterAuth({
 		provider: "postgresql",
 	}),
 	socialProviders: {
-		google: {
-			clientId: process.env.AUTH_GOOGLE_ID!,
-			clientSecret: process.env.AUTH_GOOGLE_SECRET!,
-		},
+		...(googleClientId && googleClientSecret
+			? {
+					google: {
+						clientId: googleClientId,
+						clientSecret: googleClientSecret,
+					},
+			  }
+			: {}),
 	},
 	plugins: [
 		nextCookies(),
@@ -26,7 +32,7 @@ export const auth = betterAuth({
 			// Configuration explicite pour localhost
 			rpID: "localhost",
 			rpName: "Factly",
-			origin: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+			origin: process.env.BETTER_AUTH_URL,
 			authenticatorSelection: {
 				residentKey: "preferred",
 				userVerification: "preferred",
