@@ -1,6 +1,5 @@
-import { countClients } from "@/features/client/count";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
+import { countClients } from "@/domains/client/features";
+import { PageContainer, PageHeader } from "@/shared/components";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import Link from "next/link";

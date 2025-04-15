@@ -1,1 +1,1 @@
-export { FormSection } from "./components/form-section";
+export { FormSection } from "./form-section";

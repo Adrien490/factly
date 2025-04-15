@@ -1,15 +1,19 @@
-import { columns } from "@/app/dashboard/[organizationId]/clients/components/columns";
-import { getClients } from "@/features/client";
-import { CLIENT_STATUS_OPTIONS } from "@/features/client/client-status-options";
-import { CLIENT_TYPE_OPTIONS } from "@/features/client/client-type-options";
-import { ClientSortableField } from "@/features/client/get-all/constants/client-sortable-fields";
-import { hasOrganizationAccess } from "@/features/organization/has-access";
-import { DataTable } from "@/shared/components/datatable";
-import { FilterSelect } from "@/shared/components/filter-select";
-import { MultiSelectFilter } from "@/shared/components/multi-select-filter";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
-import { SearchForm } from "@/shared/components/search-form";
+import {
+	CLIENT_STATUSES,
+	CLIENT_TYPES,
+	clientColumns,
+	ClientSortableField,
+	getClients,
+} from "@/domains/client";
+import { hasOrganizationAccess } from "@/domains/organization";
+import {
+	DataTable,
+	FilterSelect,
+	MultiSelectFilter,
+	PageContainer,
+	PageHeader,
+	SearchForm,
+} from "@/shared/components";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { SortOrder } from "@/shared/types";
@@ -87,36 +91,35 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			/>
 
 			{/* Barre de recherche et filtres */}
-			<Card className="mb-4 py-4 space-y-4">
-				{/* Recherche */}
-				<div className="px-2 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-					<SearchForm
-						paramName="search"
-						placeholder="Rechercher par nom, email, référence, SIREN..."
-						className="w-full flex-1 max-w-md"
+
+			{/* Recherche */}
+			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4">
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher par nom, email, référence, SIREN..."
+					className="w-full flex-1 max-w-sm"
+				/>
+				<span className="text-xs font-medium text-muted-foreground px-1">
+					Filtrer par:
+				</span>
+				<div className="flex flex-wrap gap-2">
+					<MultiSelectFilter
+						filterKey="status"
+						label="Statut"
+						options={CLIENT_STATUSES}
 					/>
-					<span className="text-xs font-medium text-muted-foreground px-1">
-						Filtrer par:
-					</span>
-					<div className="flex flex-wrap gap-2">
-						<MultiSelectFilter
-							filterKey="status"
-							label="Statut"
-							options={CLIENT_STATUS_OPTIONS}
-						/>
-						<FilterSelect
-							filterKey="clientType"
-							label="Type"
-							options={CLIENT_TYPE_OPTIONS}
-						/>
-					</div>
+					<FilterSelect
+						filterKey="clientType"
+						label="Type"
+						options={CLIENT_TYPES}
+					/>
 				</div>
-			</Card>
+			</div>
 
 			<Card>
 				<DataTable
 					data={clients}
-					columns={columns}
+					columns={clientColumns}
 					pagination={pagination}
 					selection={{ key: "clientId" }}
 				/>

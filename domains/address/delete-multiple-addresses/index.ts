@@ -1,0 +1,1 @@
+export { deleteMultipleAddresses } from "./actions";

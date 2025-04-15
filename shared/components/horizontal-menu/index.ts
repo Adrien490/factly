@@ -1,2 +1,2 @@
-export * from "./components";
+export * from "./horizontal-menu";
 export * from "./types";

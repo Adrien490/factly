@@ -1,3 +1,3 @@
-export * from "./components/navbar";
 export * from "./constants";
 export * from "./hooks";
+export * from "./navbar";

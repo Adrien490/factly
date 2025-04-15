@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/utils";
 import { motion } from "framer-motion";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";

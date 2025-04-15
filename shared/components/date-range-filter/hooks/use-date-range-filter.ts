@@ -8,7 +8,7 @@ import { DateRange, DateValue } from "../types";
  * Hook pour gérer l'état du filtrage avec une plage de dates
  * Gère la synchronisation des dates avec les paramètres d'URL
  */
-export default function useDateRangeFilter(filterKey: string) {
+export function useDateRangeFilter(filterKey: string) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();

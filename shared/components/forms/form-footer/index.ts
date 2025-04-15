@@ -1,1 +1,1 @@
-export { FormFooter } from "./components/form-footer";
+export { FormFooter } from "./form-footer";

@@ -1,1 +1,1 @@
-export { default as useSelectFilter } from "./use-select-filter";
+export * from "./use-select-filter";

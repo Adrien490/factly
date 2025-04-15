@@ -1,4 +1,4 @@
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/utils";
 import React from "react";
 
 interface HighlightProps {

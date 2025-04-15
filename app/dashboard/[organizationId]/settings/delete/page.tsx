@@ -1,7 +1,8 @@
-import { getOrganization } from "@/features/organization/get";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
-import DeleteOrganizationForm from "../components/delete-organization-form";
+import {
+	DeleteOrganizationForm,
+	getOrganization,
+} from "@/domains/organization";
+import { PageContainer, PageHeader } from "@/shared/components";
 
 interface DeleteOrganizationPageProps {
 	params: Promise<{

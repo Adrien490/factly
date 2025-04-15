@@ -1,1 +1,1 @@
-export { FieldInfo } from "./components/field-info";
+export { FieldInfo } from "./field-info";

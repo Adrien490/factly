@@ -1,6 +1,5 @@
-import { getOrganization } from "@/features/organization/get";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
+import { getOrganization } from "@/domains/organization";
+import { PageContainer, PageHeader } from "@/shared/components";
 
 type Props = {
 	params: Promise<{
@@ -12,19 +11,14 @@ export default async function SettingsPage({ params }: Props) {
 	const resolvedParams = await params;
 	const { organizationId } = resolvedParams;
 
-	try {
-		const organization = await getOrganization(organizationId);
-		console.log(organization);
-		return (
-			<PageContainer>
-				<PageHeader
-					title="Informations générales"
-					description="Modifiez les informations de votre organisation."
-				/>
-			</PageContainer>
-		);
-	} catch (error: unknown) {
-		console.error(error);
-		return <></>;
-	}
+	const organization = await getOrganization(organizationId);
+	console.log(organization);
+	return (
+		<PageContainer>
+			<PageHeader
+				title="Informations générales"
+				description="Modifiez les informations de votre organisation."
+			/>
+		</PageContainer>
+	);
 }

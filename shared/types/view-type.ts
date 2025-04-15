@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { viewTypeSchema } from "../schemas/view-type-schema";
+import { viewTypeSchema } from "../schemas";
 
 /**
  * Représente les types de vue disponibles dans l'application

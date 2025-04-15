@@ -1,18 +1,17 @@
-import { auth } from "@/features/auth";
-import { getOrganizations } from "@/features/organization/get-all";
-import { OrganizationSidebar } from "@/shared/components/organization-sidebar";
+import { auth } from "@/domains/auth";
+import { getOrganizations } from "@/domains/organization";
+import { OrganizationSidebar } from "@/domains/organization/components/organization-sidebar";
+import { UserAvatar, UserAvatarSkeleton } from "@/shared/components";
 import { Separator } from "@/shared/components/ui/separator";
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/shared/components/ui/sidebar";
-import { UserAvatar } from "@/shared/components/user-avatar";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cookies, headers } from "next/headers";
 import { Suspense } from "react";
-import { UserAvatarSkeleton } from "../(layout)/components/header/components/header-skeleton";
 
 type OrganizationLayoutProps = {
 	children: React.ReactNode;

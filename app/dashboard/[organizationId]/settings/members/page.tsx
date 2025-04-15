@@ -1,5 +1,4 @@
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
+import { PageContainer, PageHeader } from "@/shared/components";
 import {
 	Alert,
 	AlertDescription,

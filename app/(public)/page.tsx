@@ -11,7 +11,6 @@ export default async function HomePage() {
 			<Hero />
 			<AppShowcase />
 			<Features />
-			{/* <Pricing /> */}
 			<Footer />
 		</>
 	);

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/utils";
 import { animate } from "motion/react";
 import { memo, useCallback, useEffect, useRef } from "react";
 

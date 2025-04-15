@@ -1,1 +1,1 @@
-export { FormLayout } from "./components/form-layout";
+export * from "./form-layout";

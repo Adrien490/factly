@@ -7,7 +7,7 @@ import { useOptimistic, useTransition } from "react";
  * Hook pour gérer l'état du filtrage avec un select simple
  * Gère un seul filtre avec une seule valeur
  */
-export default function useSelectFilter(filterKey: string) {
+export function useSelectFilter(filterKey: string) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();

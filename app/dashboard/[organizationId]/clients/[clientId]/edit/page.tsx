@@ -1,10 +1,8 @@
-import { getClient } from "@/features/client/get";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
+import { getClient, UpdateClientForm } from "@/domains/client";
+import { PageContainer, PageHeader } from "@/shared/components";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { clientNavigation } from "../constants";
-import { UpdateClientForm } from "./components";
 
 type PageProps = {
 	params: Promise<{

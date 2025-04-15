@@ -1,5 +1,8 @@
-import { AddressList, getAddresses } from "@/features/address";
-import { GetAddressesParams } from "@/features/address/get-all/types";
+import {
+	AddressList,
+	getAddresses,
+	GetAddressesParams,
+} from "@/domains/address";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 import { Button } from "@/shared/components/ui/button";

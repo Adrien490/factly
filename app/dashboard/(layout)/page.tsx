@@ -1,15 +1,20 @@
-import { getOrganizations } from "@/features/organization/get-all";
-import { ORGANIZATION_SORT_OPTIONS } from "@/features/organization/get-all/constants";
-import { OrganizationSortableField } from "@/features/organization/get-all/types";
-import { PageContainer } from "@/shared/components/page-container";
-import { SearchForm } from "@/shared/components/search-form";
-import { SortSelector } from "@/shared/components/sort-selector";
+import {
+	PageContainer,
+	SearchForm,
+	SortSelector,
+	ViewToggle,
+} from "@/shared/components";
 import { Button } from "@/shared/components/ui/button";
-import { ViewToggle } from "@/shared/components/view-toggle";
+
+import {
+	getOrganizations,
+	OrganizationList,
+	OrganizationListSkeleton,
+	OrganizationSortableField,
+} from "@/domains/organization";
+import { ORGANIZATION_SORT_OPTIONS } from "@/domains/organization/features/get-organizations/constants";
 import Link from "next/link";
 import { Suspense } from "react";
-import { OrganizationList } from "./components/organization-list";
-import { OrganizationListSkeleton } from "./components/organization-list-skeleton";
 
 type Props = {
 	searchParams: Promise<{

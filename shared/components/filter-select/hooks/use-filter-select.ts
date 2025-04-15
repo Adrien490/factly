@@ -5,7 +5,7 @@ import { useOptimistic, useTransition } from "react";
 
 export type FilterValue = string;
 
-export default function useFilterSelect(filterKey: string) {
+export function useFilterSelect(filterKey: string) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();

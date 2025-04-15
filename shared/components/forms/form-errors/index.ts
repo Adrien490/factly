@@ -1,1 +1,1 @@
-export { FormErrors } from "./components/form-errors";
+export { FormErrors } from "./form-errors";

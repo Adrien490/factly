@@ -1,1 +1,2 @@
-export * from "./components";
+export * from "./components/user-avatar-skeleton";
+export * from "./user-avatar";

@@ -1,4 +1,4 @@
-import { auth } from "@/features/auth/lib/auth";
+import { auth } from "@/domains/auth/lib/auth";
 import { headers } from "next/headers";
 import {
 	createUploadthing,

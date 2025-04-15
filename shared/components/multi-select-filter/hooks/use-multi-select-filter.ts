@@ -7,7 +7,7 @@ import { useOptimistic, useTransition } from "react";
  * Hook pour gérer l'état du filtrage avec un select multiple
  * Gère un filtre avec plusieurs valeurs
  */
-export default function useMultiSelectFilter(filterKey: string) {
+export function useMultiSelectFilter(filterKey: string) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();

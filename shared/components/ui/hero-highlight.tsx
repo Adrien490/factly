@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/utils";
 import {
 	motion,
 	useMotionTemplate,

@@ -3,6 +3,31 @@
 @import "uploadthing/tw/v4";
 @source "../node_modules/@uploadthing/react/dist";
 
+* {
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+}
+
+html,
+body,
+:root {
+	height: 100%;
+}
+
+.loading-indicator {
+	opacity: 0;
+	animation: fadeIn 500ms 100ms forwards, rotate 1s linear infinite;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 :root {
 	--background: hsl(229 57% 100%);
 	--foreground: hsl(229 63% 4%);
