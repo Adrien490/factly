@@ -2,14 +2,9 @@ import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "./domains/auth/lib/auth";
 
-const protectedRoutes = [
-	"/dashboard",
-	"/settings",
-	"/api/files",
-	"/organizations",
-];
+const protectedRoutes = ["/dashboard"];
 const publicOnlyRoutes = ["/login"];
-const publicApiRoutes = ["/api/webhook/stripe", "/api"];
+const publicApiRoutes = ["/api"];
 
 export async function middleware(request: NextRequest) {
 	const session = await auth.api.getSession({
@@ -44,5 +39,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
 	runtime: "nodejs",
-	matcher: ["/dashboard", "/login"], // Apply middleware to specific routes
+	matcher: ["/dashboard", "/login", "/api"], // Apply middleware to specific routes
 };

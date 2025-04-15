@@ -28,19 +28,7 @@ export const auth = betterAuth({
 			  }
 			: {}),
 	},
-	plugins: [
-		nextCookies(),
-		passkey({
-			// Configuration explicite pour localhost
-			rpID: "localhost",
-			rpName: "Factly",
-			origin: process.env.BETTER_AUTH_URL,
-			authenticatorSelection: {
-				residentKey: "preferred",
-				userVerification: "preferred",
-			},
-		}),
-	],
+	plugins: [nextCookies(), passkey()],
 	pages: {
 		error: "/auth/error",
 		signIn: "/login",
