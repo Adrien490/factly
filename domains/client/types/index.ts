@@ -1,3 +1,3 @@
-import { clientSortableFields } from "../constants/client-sortable-fields";
+import { clientSortableFields } from "../constants";
 
 export type ClientSortableField = (typeof clientSortableFields)[number];

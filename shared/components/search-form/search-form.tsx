@@ -1,6 +1,6 @@
 "use client";
 
-import { SpinnerLoader } from "@/shared/components/spinner-loader";
+import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { cn } from "@/shared/utils";

@@ -2,6 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 
+import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -50,10 +51,16 @@ export function NavMain({ items }: NavMainProps) {
 								<SidebarMenuButton tooltip={item.title} asChild>
 									<Link
 										href={item.url}
-										className={cn(isActive && "bg-primary/10")}
+										className={cn(
+											"flex items-center justify-between",
+											isActive && "bg-primary/10"
+										)}
 									>
-										{item.icon && <item.icon />}
-										<span>{item.title}</span>
+										<div className="flex items-center gap-2">
+											{item.icon && <item.icon className="size-4" />}
+											<span>{item.title}</span>
+										</div>
+										<LoadingIndicator />
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -97,12 +104,14 @@ export function NavMain({ items }: NavMainProps) {
 														<Link
 															href={subItem.url}
 															className={cn(
+																"flex items-center justify-between",
 																isSubItemActive &&
 																	!isCollapsed &&
 																	"bg-primary/10"
 															)}
 														>
 															<span>{subItem.title}</span>
+															<LoadingIndicator />
 														</Link>
 													</SidebarMenuSubButton>
 												</SidebarMenuSubItem>

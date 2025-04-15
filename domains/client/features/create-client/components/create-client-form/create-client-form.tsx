@@ -19,7 +19,6 @@ import {
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
-import { DotsLoader } from "@/shared/components/dots-loader";
 import {
 	FieldInfo,
 	FormErrors,
@@ -27,6 +26,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
+import { DotsLoader } from "@/shared/components/loaders/dots-loader";
 import { useToast } from "@/shared/hooks/use-toast";
 import { useCheckReference } from "@/shared/queries";
 import { ServerActionStatus } from "@/shared/types";

@@ -1,13 +1,13 @@
 "use client";
 
-import { SpinnerLoader } from "@/shared/components/spinner-loader";
+import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/shared/components/ui/select";
 import { cn } from "@/shared/utils";
 import { X } from "lucide-react";

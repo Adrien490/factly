@@ -1,7 +1,7 @@
 "use client";
 
 import { GetOrganizationsReturn } from "@/domains/organization";
-import { SpinnerLoader } from "@/shared/components/spinner-loader";
+import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import {
 	DropdownMenu,
 	DropdownMenuContent,

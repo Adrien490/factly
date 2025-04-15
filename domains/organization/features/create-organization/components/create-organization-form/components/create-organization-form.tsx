@@ -14,7 +14,6 @@ import {
 import { FormattedAddressResult, SearchAddressReturn } from "@/domains/address";
 import { useCreateOrganization } from "@/domains/organization";
 import { Autocomplete } from "@/shared/components/autocomplete";
-import { DotsLoader } from "@/shared/components/dots-loader";
 import {
 	FieldInfo,
 	FormErrors,
@@ -22,6 +21,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
+import { DotsLoader } from "@/shared/components/loaders/dots-loader";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { useToast } from "@/shared/hooks/use-toast";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
