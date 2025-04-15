@@ -1,10 +1,6 @@
-"use client";
-
-import { useIsScrolled } from "@/app/(public)/components/navbar/hooks/use-is-scrolled";
 import { HorizontalMenu, Logo, UserAvatar } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { User } from "better-auth";
-import { AnimatePresence, motion } from "framer-motion";
 import { use } from "react";
 import { ANIMATION_CONFIG, menuItems } from "./constants";
 
@@ -15,15 +11,12 @@ type Props = {
 
 export function Header({ userPromise, className }: Props) {
 	const user = use(userPromise);
-	const isScrolled = useIsScrolled(20);
 
 	return (
 		<header
 			className={cn(
-				"sticky top-0 z-50 w-full transition-all",
-				isScrolled
-					? "bg-background/90 backdrop-blur-xs shadow-2xs"
-					: "bg-background",
+				"sticky top-0 z-50 w-full transition-all bg-background",
+
 				className
 			)}
 			style={{
@@ -42,7 +35,7 @@ export function Header({ userPromise, className }: Props) {
 						size="md"
 						shape="softSquare"
 						interactive
-						hideText={isScrolled}
+						hideText={false}
 						text="Factly"
 						textSize="md"
 						hover="fade"
@@ -50,24 +43,6 @@ export function Header({ userPromise, className }: Props) {
 						srText="Logo Factly"
 						href="/"
 					/>
-
-					{/* Menu horizontal à côté du logo lorsqu'on défile */}
-					<AnimatePresence mode="wait">
-						{isScrolled && (
-							<motion.div
-								initial={{ opacity: 0, x: -10 }}
-								animate={{ opacity: 1, x: 0 }}
-								exit={{ opacity: 0, x: -10 }}
-								transition={{
-									duration: ANIMATION_CONFIG.duration,
-									ease: ANIMATION_CONFIG.ease,
-								}}
-								className="ml-8"
-							>
-								<HorizontalMenu items={menuItems} />
-							</motion.div>
-						)}
-					</AnimatePresence>
 				</div>
 
 				{/* Espace central flexible */}
@@ -80,24 +55,10 @@ export function Header({ userPromise, className }: Props) {
 			</div>
 
 			{/* Menu de navigation - Visible uniquement lorsqu'on ne défile pas */}
-			<AnimatePresence>
-				{!isScrolled && (
-					<motion.div
-						initial={{ height: 0, opacity: 0 }}
-						animate={{ height: "auto", opacity: 1 }}
-						exit={{ height: 0, opacity: 0 }}
-						transition={{
-							duration: ANIMATION_CONFIG.duration,
-							ease: ANIMATION_CONFIG.ease,
-						}}
-						className="overflow-hidden"
-					>
-						<div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8 border-b border-border/50">
-							<HorizontalMenu items={menuItems} />
-						</div>
-					</motion.div>
-				)}
-			</AnimatePresence>
+
+			<div className="overflow-hidden">
+				<HorizontalMenu items={menuItems} />
+			</div>
 		</header>
 	);
 }
