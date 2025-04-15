@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,13 +11,7 @@ export function ActionMenu({ id }: { id: string }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<button
-					className="rounded-md p-1 hover:bg-muted transition-colors"
-					aria-label="Options pour cette organisation"
-					onClick={(e) => e.preventDefault()}
-				>
-					<MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-				</button>
+				<MoreHorizontal className="h-4 w-4 text-muted-foreground" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem asChild>
