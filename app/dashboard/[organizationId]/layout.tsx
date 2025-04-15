@@ -15,11 +15,15 @@ import { Suspense } from "react";
 
 interface OrganizationLayoutProps {
 	children: React.ReactNode;
+	params: Promise<{ organizationId: string }>;
 }
 
 export default async function OrganizationLayout({
 	children,
+	params,
 }: OrganizationLayoutProps) {
+	const resolvedParams = await params;
+	const { organizationId } = resolvedParams;
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
@@ -36,6 +40,7 @@ export default async function OrganizationLayout({
 						sortBy: "name",
 						sortOrder: "asc",
 					})}
+					activeOrganizationId={organizationId}
 				/>
 			</Suspense>
 			<SidebarInset>

@@ -13,6 +13,7 @@ import { OrganizationSidebarProps } from "./types";
 
 export function OrganizationSidebar({
 	organizationsPromise,
+	activeOrganizationId,
 	...props
 }: OrganizationSidebarProps) {
 	const organizations = use(organizationsPromise);
@@ -22,7 +23,10 @@ export function OrganizationSidebar({
 			<SidebarHeader className="border-b border-border/30">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<OrganizationSwitcher organizations={organizations} />
+						<OrganizationSwitcher
+							organizations={organizations}
+							activeOrganizationId={activeOrganizationId}
+						/>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
