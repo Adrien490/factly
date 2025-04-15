@@ -24,6 +24,7 @@ export default async function OrganizationLayout({
 }: OrganizationLayoutProps) {
 	const resolvedParams = await params;
 	const { organizationId } = resolvedParams;
+	console.log(organizationId);
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
@@ -40,7 +41,6 @@ export default async function OrganizationLayout({
 						sortBy: "name",
 						sortOrder: "asc",
 					})}
-					activeOrganizationId={organizationId}
 				/>
 			</Suspense>
 			<SidebarInset>

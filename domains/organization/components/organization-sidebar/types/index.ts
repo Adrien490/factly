@@ -5,5 +5,4 @@ import React from "react";
 export interface OrganizationSidebarProps
 	extends React.ComponentProps<typeof Sidebar> {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
-	activeOrganizationId: string;
 }
