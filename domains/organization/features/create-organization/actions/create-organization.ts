@@ -42,16 +42,16 @@ export async function createOrganization(
 			legalName: formData.get("legalName") as string,
 			legalForm: formData.get("legalForm") as string,
 			email: formData.get("email") as string,
-			phone: (formData.get("phone") as string) || null,
-			website: (formData.get("website") as string) || null,
-			siren: (formData.get("siren") as string)?.trim() || null,
-			siret: (formData.get("siret") as string)?.trim() || null,
-			vatNumber: (formData.get("vatNumber") as string)?.trim() || null,
-			addressLine1: (formData.get("addressLine1") as string) || null,
-			addressLine2: (formData.get("addressLine2") as string) || null,
-			postalCode: (formData.get("postalCode") as string) || null,
-			city: (formData.get("city") as string) || null,
-			logoUrl: (formData.get("logoUrl") as string) || null,
+			phone: formData.get("phone") as string,
+			website: formData.get("website") as string,
+			siren: formData.get("siren") as string,
+			siret: formData.get("siret") as string,
+			vatNumber: formData.get("vatNumber") as string,
+			addressLine1: formData.get("addressLine1") as string,
+			addressLine2: formData.get("addressLine2") as string,
+			postalCode: formData.get("postalCode") as string,
+			city: formData.get("city") as string,
+			logoUrl: formData.get("logoUrl") as string,
 			creatorId: session.user.id,
 		};
 
@@ -114,7 +114,21 @@ export async function createOrganization(
 			},
 		});
 
+		// Revalidation des tags de cache
+		// Tag principal pour toutes les organisations
 		revalidateTag("organizations");
+
+		// Tag spécifique pour l'utilisateur actuel
+		revalidateTag(`organizations:${creatorId}`);
+
+		// Tags de tri (pour s'assurer que les listes triées sont actualisées)
+		revalidateTag(`organizations:${creatorId}:sort:name:asc`);
+		revalidateTag(`organizations:${creatorId}:sort:name:desc`);
+		revalidateTag(`organizations:${creatorId}:sort:createdAt:asc`);
+		revalidateTag(`organizations:${creatorId}:sort:createdAt:desc`);
+
+		// Tags de recherche potentiels basés sur le nom
+		revalidateTag(`organizations:${creatorId}:search:`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(
