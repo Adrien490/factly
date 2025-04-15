@@ -5,7 +5,6 @@ import { HorizontalMenu, Logo, UserAvatar } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { User } from "better-auth";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { use } from "react";
 import { ANIMATION_CONFIG, menuItems } from "./constants";
 
@@ -37,24 +36,20 @@ export function Header({ userPromise, className }: Props) {
 			<div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center">
 					{/* Logo */}
-					<Link
-						href="/dashboard/organizations"
-						className="focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
-						aria-label="Tableau de bord Factly"
-					>
-						<Logo
-							variant="minimal"
-							size="md"
-							shape="softSquare"
-							interactive
-							hideText={isScrolled}
-							text="Factly"
-							textSize="md"
-							hover="fade"
-							glow="sm"
-							srText="Logo Factly"
-						/>
-					</Link>
+
+					<Logo
+						variant="minimal"
+						size="md"
+						shape="softSquare"
+						interactive
+						hideText={isScrolled}
+						text="Factly"
+						textSize="md"
+						hover="fade"
+						glow="sm"
+						srText="Logo Factly"
+						href="/dashboard"
+					/>
 
 					{/* Menu horizontal à côté du logo lorsqu'on défile */}
 					<AnimatePresence mode="wait">

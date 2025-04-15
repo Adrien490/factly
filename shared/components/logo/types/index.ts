@@ -16,4 +16,5 @@ export interface LogoProps
 	withBorder?: boolean;
 	animate?: boolean;
 	srText?: string;
+	href?: string;
 }

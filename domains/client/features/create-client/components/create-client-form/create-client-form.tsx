@@ -27,6 +27,7 @@ import {
 	FormSection,
 } from "@/shared/components/forms";
 import { DotsLoader } from "@/shared/components/loaders/dots-loader";
+import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import { useToast } from "@/shared/hooks/use-toast";
 import { useCheckReference } from "@/shared/queries";
 import { ServerActionStatus } from "@/shared/types";
@@ -179,10 +180,14 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				title: "Client créé avec succès",
 				description: "Le client a été créé avec succès",
 				action: (
-					<Link href={`/dashboard/${organizationId}/clients`}>
+					<Link
+						href={`/dashboard/${organizationId}/clients`}
+						className="flex justify-between"
+					>
 						<Button variant="outline" size="sm">
 							Voir la liste
 						</Button>
+						<LoadingIndicator />
 					</Link>
 				),
 			});

@@ -231,7 +231,7 @@ export function Navbar({ userPromise }: Props) {
 							>
 								<Link
 									href="/login"
-									className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+									className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background justify-center"
 									scroll={true}
 								>
 									<motion.span whileTap={{ y: 1 }}>Se connecter</motion.span>

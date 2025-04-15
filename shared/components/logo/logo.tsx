@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/shared/utils";
+import Link from "next/link";
 import {
 	badgeColors,
 	logoBackgroundVariants,
@@ -30,9 +31,10 @@ export function Logo({
 	withBorder = true,
 	animate = false,
 	srText,
+	href = "/",
 	...props
 }: LogoProps) {
-	return (
+	const LogoContent = (
 		<div
 			className={cn(
 				"group flex items-center gap-3 select-none",
@@ -54,11 +56,11 @@ export function Logo({
 					logoVariants({ variant, size, shape, interactive, elevation })
 				)}
 				aria-labelledby={label || srText ? "logo-label" : undefined}
-				role={interactive ? "button" : undefined}
-				tabIndex={interactive ? 0 : undefined}
-				aria-pressed={interactive ? false : undefined}
+				role={interactive && !href ? "button" : undefined}
+				tabIndex={interactive && !href ? 0 : undefined}
+				aria-pressed={interactive && !href ? false : undefined}
 				onKeyDown={
-					interactive
+					interactive && !href
 						? (e) => {
 								if (e.key === "Enter" || e.key === " ") {
 									e.preventDefault();
@@ -161,4 +163,16 @@ export function Logo({
 			)}
 		</div>
 	);
+
+	// Si un href est fourni, on enveloppe le contenu du logo dans un lien
+	if (href) {
+		return (
+			<Link href={href} className="focus:outline-none">
+				{LogoContent}
+			</Link>
+		);
+	}
+
+	// Sinon on retourne simplement le contenu du logo
+	return LogoContent;
 }

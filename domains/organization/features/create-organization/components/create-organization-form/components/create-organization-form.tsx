@@ -22,6 +22,7 @@ import {
 	FormSection,
 } from "@/shared/components/forms";
 import { DotsLoader } from "@/shared/components/loaders/dots-loader";
+import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { useToast } from "@/shared/hooks/use-toast";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
@@ -35,6 +36,7 @@ import {
 } from "@tanstack/react-form";
 import { Building2, Globe, MapPin, Receipt, Upload, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
 
@@ -85,6 +87,14 @@ export function CreateOrganizationForm({
 			toast({
 				title: "Organisation créée",
 				description: state?.message,
+				action: (
+					<Link href={`/dashboard`} className="flex justify-between">
+						<Button variant="outline" size="sm">
+							Voir la liste
+						</Button>
+						<LoadingIndicator />
+					</Link>
+				),
 			});
 
 			setTimeout(() => {
@@ -136,6 +146,8 @@ export function CreateOrganizationForm({
 			router.push(`/dashboard/new?${url.toString()}`);
 		});
 	};
+
+	console.log(state);
 
 	return (
 		<form
@@ -731,7 +743,7 @@ export function CreateOrganizationForm({
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit}
-						cancelHref="/dashboard/organizations"
+						cancelHref="/dashboard"
 						submitLabel={"Créer l'organisation"}
 						isPending={isPending}
 					/>
