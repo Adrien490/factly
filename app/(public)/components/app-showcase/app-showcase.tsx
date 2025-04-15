@@ -1,16 +1,12 @@
-"use client";
-
 import { Button } from "@/shared/components";
 import { PageContainer } from "@/shared/components/page-container";
 import { ContainerScroll } from "@/shared/components/shadcn-ui/container-scroll-animation";
 import { ShootingStars } from "@/shared/components/shadcn-ui/shooting-stars";
 import { StarsBackground } from "@/shared/components/shadcn-ui/stars-background";
 import { cn } from "@/shared/utils";
-import { motion } from "framer-motion";
 import { ChevronDown, ExternalLink, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { containerVariants, itemVariants } from "./constants";
 
 export function AppShowcase() {
 	return (
@@ -51,25 +47,17 @@ export function AppShowcase() {
 						<ContainerScroll
 							titleComponent={
 								<>
-									<motion.div
-										className="max-w-4xl mx-auto text-center mb-12"
-										variants={containerVariants}
-										initial="hidden"
-										animate="visible"
-									>
+									<div className="max-w-4xl mx-auto text-center mb-12">
 										{/* Badge amélioré - design 2025 */}
-										<motion.div
-											variants={itemVariants}
-											className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-linear-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg"
-										>
+										<div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-linear-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg">
 											<Sparkles className="w-4 h-4" />
 											<span className="text-sm font-medium">
 												Tableau de bord intelligent
 											</span>
-										</motion.div>
+										</div>
 
 										{/* Titre avec animation améliorée */}
-										<motion.div variants={itemVariants}>
+										<div>
 											<h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
 												Visualisez votre{" "}
 												<span className="relative inline-block group">
@@ -86,13 +74,10 @@ export function AppShowcase() {
 												informations essentielles pour prendre les bonnes
 												décisions au bon moment.
 											</p>
-										</motion.div>
+										</div>
 
 										{/* Indicateur de défilement - accessibilité améliorée */}
-										<motion.div
-											variants={itemVariants}
-											className="hidden md:flex justify-center mt-10"
-										>
+										<div className="hidden md:flex justify-center mt-10">
 											<button
 												onClick={() =>
 													document
@@ -109,19 +94,13 @@ export function AppShowcase() {
 													<ChevronDown className="h-4 w-4 animate-bounce" />
 												</div>
 											</button>
-										</motion.div>
-									</motion.div>
+										</div>
+									</div>
 								</>
 							}
 						>
 							{/* Conteneur d'image amélioré avec effet 3D */}
-							<motion.div
-								className="relative"
-								initial={{ opacity: 0, y: 30 }}
-								whileInView={{ opacity: 1, y: 0 }}
-								viewport={{ once: true, amount: 0.3 }}
-								transition={{ duration: 0.8, delay: 0.4 }}
-							>
+							<div className="relative">
 								{/* Cadre d'image avec ombre portée améliorée et effet neomorphique 2025 */}
 								<div
 									className={cn(
@@ -163,13 +142,7 @@ export function AppShowcase() {
 								</div>
 
 								{/* CTA centré avec design 2025 */}
-								<motion.div
-									className="mt-10 flex justify-center"
-									initial={{ opacity: 0, y: 20 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									viewport={{ once: true }}
-									transition={{ duration: 0.5, delay: 0.8 }}
-								>
+								<div className="mt-10 flex justify-center">
 									<Button
 										variant="default"
 										size="lg"
@@ -184,8 +157,8 @@ export function AppShowcase() {
 											<span className="absolute inset-0 bg-linear-to-r from-primary to-primary/70 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
 										</Link>
 									</Button>
-								</motion.div>
-							</motion.div>
+								</div>
+							</div>
 						</ContainerScroll>
 					</div>
 				</div>

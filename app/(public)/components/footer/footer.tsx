@@ -1,26 +1,13 @@
-"use client";
-
 import { Logo } from "@/shared/components/logo";
 import { PageContainer } from "@/shared/components/page-container";
 import { GridPattern } from "@/shared/components/shadcn-ui/grid-pattern";
 import { cn } from "@/shared/utils";
-import { motion, useReducedMotion } from "framer-motion";
 import { ChevronUp, Copyright, ExternalLink, Heart } from "lucide-react";
 import Link from "next/link";
 import { footerLinks } from "./constants";
 import { FooterProps } from "./types";
 
 export function Footer({ className }: FooterProps) {
-	// Utilisation de useReducedMotion pour l'accessibilité
-	const prefersReducedMotion = useReducedMotion();
-
-	// Animation conditionnelle basée sur les préférences utilisateur
-	const animationSettings = {
-		initial: prefersReducedMotion ? {} : { opacity: 0, y: 15 },
-		animate: prefersReducedMotion ? {} : { opacity: 1, y: 0 },
-		transition: { duration: prefersReducedMotion ? 0 : 0.4 },
-	};
-
 	return (
 		<PageContainer>
 			<footer
@@ -50,14 +37,7 @@ export function Footer({ className }: FooterProps) {
 					<div className="max-w-7xl mx-auto px-4 sm:px-6">
 						{/* Logo et description - redesign épuré */}
 						<div className="flex justify-center mb-10 sm:mb-16">
-							<motion.div
-								{...animationSettings}
-								transition={{
-									duration: prefersReducedMotion ? 0 : 0.5,
-									delay: 0.1,
-								}}
-								className="flex flex-col items-center text-center"
-							>
+							<div className="flex flex-col items-center text-center">
 								<Logo
 									variant="default"
 									size="lg"
@@ -70,7 +50,7 @@ export function Footer({ className }: FooterProps) {
 									plateforme tout-en-un. Factures, clients, stocks et
 									comptabilité dans une interface intuitive et puissante.
 								</p>
-							</motion.div>
+							</div>
 						</div>
 
 						{/* Navigation - mise en page optimisée et responsive amélioré */}
@@ -79,19 +59,8 @@ export function Footer({ className }: FooterProps) {
 							itemScope
 							itemType="https://schema.org/SiteNavigationElement"
 						>
-							{footerLinks.map((column, idx) => (
-								<motion.div
-									key={column.title}
-									initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-									animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-									transition={{
-										duration: prefersReducedMotion ? 0 : 0.4,
-										delay: prefersReducedMotion
-											? 0
-											: 0.1 + Math.min(idx * 0.08, 0.3),
-									}}
-									className="flex flex-col"
-								>
+							{footerLinks.map((column) => (
+								<div key={column.title}>
 									<h3 className="font-medium text-foreground mb-4 sm:mb-5 text-sm relative inline-block">
 										{column.title}
 										<span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-primary/30 rounded-full"></span>
@@ -110,18 +79,12 @@ export function Footer({ className }: FooterProps) {
 											</li>
 										))}
 									</ul>
-								</motion.div>
+								</div>
 							))}
 						</nav>
 
 						{/* Barre inférieure avec copyright - design modernisé */}
-						<motion.div
-							initial={prefersReducedMotion ? {} : { opacity: 0 }}
-							animate={prefersReducedMotion ? {} : { opacity: 1 }}
-							transition={{
-								duration: prefersReducedMotion ? 0 : 0.5,
-								delay: prefersReducedMotion ? 0 : 0.4,
-							}}
+						<div
 							className="border-t border-border/20 pt-6 sm:pt-8 flex justify-center"
 							itemScope
 							itemType="https://schema.org/Organization"
@@ -156,25 +119,18 @@ export function Footer({ className }: FooterProps) {
 									</span>
 								</span>
 							</div>
-						</motion.div>
+						</div>
 
 						{/* Bouton de retour en haut */}
 						<div className="mt-10 sm:mt-16 flex flex-col items-center">
-							<motion.button
+							<button
 								className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-primary/5 transition-colors duration-300 text-center text-muted-foreground/70 hover:text-foreground cursor-pointer group"
 								onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-								initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
-								animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-								transition={{
-									duration: prefersReducedMotion ? 0 : 0.5,
-									delay: prefersReducedMotion ? 0 : 0.4,
-								}}
-								whileHover={prefersReducedMotion ? {} : { y: -2 }}
 								aria-label="Retour en haut de page"
 							>
 								<ChevronUp className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
 								<span className="text-xs font-medium">Retour en haut</span>
-							</motion.button>
+							</button>
 						</div>
 					</div>
 				</div>

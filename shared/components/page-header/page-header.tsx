@@ -1,5 +1,3 @@
-"use client";
-
 import { Breadcrumbs } from "@/shared/components/breadcrumbs";
 import { HorizontalMenu } from "@/shared/components/horizontal-menu";
 import { cn } from "@/shared/utils";
