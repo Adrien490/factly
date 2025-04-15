@@ -21,7 +21,8 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { DotsLoader } from "@/shared/components/loaders/dots-loader";
+import { GridLoader } from "@/shared/components/loaders";
+import { MiniDotsLoader } from "@/shared/components/loaders/mini-dots-loader";
 import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { useToast } from "@/shared/hooks/use-toast";
@@ -231,22 +232,38 @@ export function CreateOrganizationForm({
 														"Impossible de charger l'image. Veuillez réessayer.",
 												});
 											}}
-											className="border-2 border-dashed border-muted-foreground/25 h-32 rounded-md bg-muted/10 hover:bg-muted/20 transition-colors ut-label:text-sm ut-allowed-content:hidden"
-										/>
+											className="border-2 border-dashed border-muted-foreground/25 h-44 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 flex flex-col items-center justify-center ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer"
+										>
+											<div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
+												<div className="w-12 h-12 rounded-full bg-muted/10 flex items-center justify-center mb-2">
+													<Upload
+														className="h-8 w-8 text-muted-foreground"
+														aria-hidden="true"
+													/>
+												</div>
+												<p className="text-sm font-medium">
+													Glissez-déposez votre logo ici
+												</p>
+												<p className="text-xs text-muted-foreground">
+													ou cliquez pour parcourir vos fichiers
+												</p>
+											</div>
+										</UploadDropzone>
 										{isUploading && (
-											<div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-[2px] rounded-md">
-												<div className="flex items-center gap-2">
-													<DotsLoader color="primary" size="xs" />
-													<p className="text-xs font-medium text-primary">
-														Chargement...
-													</p>
+											<div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-[2px] rounded-lg transition-all duration-300">
+												<div className="flex items-center gap-3 flex-col">
+													<GridLoader color="primary" size="xs" />
+													<div className="text-sm font-medium text-primary/80 flex items-center gap-2">
+														<span>Chargement</span>
+														<MiniDotsLoader color="primary" size="xs" />
+													</div>
 												</div>
 											</div>
 										)}
 									</div>
 								)}
-								<p className="text-xs text-muted-foreground">
-									JPG, PNG ou SVG. Max. 2MB.
+								<p className="text-xs text-muted-foreground mt-2">
+									Formats acceptés: JPG, PNG ou SVG. Max. 2MB.
 								</p>
 								<FieldInfo field={field} />
 							</div>
