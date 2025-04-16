@@ -23,7 +23,8 @@ import {
 } from "lucide-react";
 import { use } from "react";
 
-import { ClientRowActions, SelectionProvider } from "./components";
+import { SelectionProvider } from "@/shared/contexts";
+import { ClientRowActions } from "./components";
 import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {

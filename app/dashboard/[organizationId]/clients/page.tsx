@@ -17,7 +17,8 @@ import {
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
-import { ClientDataTable } from "./components";
+import { Suspense } from "react";
+import { ClientDataTable, ClientDataTableSkeleton } from "./components";
 
 // Options pour le type de client
 
@@ -89,22 +90,24 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</div>
 
 			<Card>
-				<ClientDataTable
-					clientsPromise={getClients({
-						organizationId,
-						perPage: Number(perPage) || 10,
-						page: Number(page) || 1,
-						sortBy: sortBy as ClientSortableField,
-						sortOrder: sortOrder as SortOrder,
-						search,
-						filters: Object.entries(filters).reduce((acc, [key, value]) => {
-							if (value && typeof value === "string") {
-								acc[key] = value;
-							}
-							return acc;
-						}, {} as Record<string, string>),
-					})}
-				/>
+				<Suspense fallback={<ClientDataTableSkeleton />}>
+					<ClientDataTable
+						clientsPromise={getClients({
+							organizationId,
+							perPage: Number(perPage) || 10,
+							page: Number(page) || 1,
+							sortBy: sortBy as ClientSortableField,
+							sortOrder: sortOrder as SortOrder,
+							search,
+							filters: Object.entries(filters).reduce((acc, [key, value]) => {
+								if (value && typeof value === "string") {
+									acc[key] = value;
+								}
+								return acc;
+							}, {} as Record<string, string>),
+						})}
+					/>
+				</Suspense>
 			</Card>
 		</PageContainer>
 	);
