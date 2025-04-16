@@ -1,6 +1,8 @@
 "use server";
 
 import db from "@/shared/lib/db";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import { GET_ORGANIZATION_DEFAULT_SELECT } from "../constants";
 import { getOrganizationSchema } from "../schemas";
@@ -12,7 +14,14 @@ export async function fetchOrganization(
 	params: z.infer<typeof getOrganizationSchema>,
 	userId: string
 ) {
-	console.log("fetchOrganization", params, userId);
+	"use cache";
+
+	cacheTag(`organization:${params.id}:${userId}`);
+	cacheLife({
+		revalidate: 60 * 60 * 24, // 24 heures
+		stale: 60 * 60 * 24, // 24 heures
+		expire: 60 * 60 * 24, // 24 heures
+	});
 
 	try {
 		const organization = await db.organization.findFirst({

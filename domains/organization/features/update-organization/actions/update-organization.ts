@@ -152,6 +152,7 @@ export async function updateOrganization(
 			revalidateTag(`organizations:${session.user.id}:search:`);
 		}
 
+		revalidateTag(`organization:${organization.id}:${session.user.id}`);
 		// 8. Retour de la réponse de succès
 		return createSuccessResponse(
 			organization,
