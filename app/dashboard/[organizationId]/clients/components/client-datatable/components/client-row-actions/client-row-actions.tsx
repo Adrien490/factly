@@ -32,7 +32,12 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 					<MoreVerticalIcon className="h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" side="bottom" sideOffset={4}>
+			<DropdownMenuContent
+				align="end"
+				side="bottom"
+				sideOffset={4}
+				className="w-40"
+			>
 				{menuItems.map((item, index) => (
 					<React.Fragment key={`menu-item-${index}`}>
 						{item.isSeparatorBefore && <DropdownMenuSeparator />}

@@ -10,7 +10,7 @@ export const getClientRowMenuItems = (
 	clientId: string
 ): ClientRowMenuItem[] => [
 	{
-		label: "Voir la fiche client",
+		label: "Fiche client",
 		href: `/dashboard/${organizationId}/clients/${clientId}`,
 	},
 	{
@@ -19,11 +19,11 @@ export const getClientRowMenuItems = (
 		isSeparatorBefore: true,
 	},
 	{
-		label: "Gestion des contacts",
+		label: "Contacts",
 		href: `/dashboard/${organizationId}/clients/${clientId}/contacts`,
 	},
 	{
-		label: "Gestion des adresses",
+		label: "Adresses",
 		href: `/dashboard/${organizationId}/clients/${clientId}/addresses`,
 	},
 	{

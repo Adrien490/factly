@@ -4,7 +4,6 @@ import {
 	ClientSortableField,
 } from "@/domains/client";
 import { getClients } from "@/domains/client/features/get-clients";
-import { ClientDataTable } from "@/domains/client/features/get-clients/components";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
@@ -18,6 +17,7 @@ import {
 import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
+import { ClientDataTable } from "./components";
 
 // Options pour le type de client
 
