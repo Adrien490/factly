@@ -12,7 +12,7 @@ export default async function DashboardPage({ params }: Props) {
 	console.log(organizationId);
 
 	return (
-		<PageContainer className="space-y-6 py-6">
+		<PageContainer className="space-y-6">
 			<PageHeader
 				title="Tableau de bord"
 				description="Aperçu de votre activité commerciale"

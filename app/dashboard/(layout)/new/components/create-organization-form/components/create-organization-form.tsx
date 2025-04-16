@@ -2,14 +2,14 @@
 
 import {
 	Button,
+	FormLabel,
+	Input,
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { FormLabel } from "@/shared/components/shadcn-ui/form";
-import { Input } from "@/shared/components/shadcn-ui/input/input";
 
 import { FormattedAddressResult, SearchAddressReturn } from "@/domains/address";
 import { useCreateOrganization } from "@/domains/organization/features";
