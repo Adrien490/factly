@@ -8,7 +8,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { usePagination } from "@/shared/components/datatable/components/pagination/hooks/use-pagination";
 import { cn } from "@/shared/utils";
 import {
 	ChevronLeft,
@@ -16,6 +15,7 @@ import {
 	ChevronsLeft,
 	ChevronsRight,
 } from "lucide-react";
+import { usePagination } from "../hooks";
 import { getPaginationItems } from "../utils";
 
 export interface PaginationProps {

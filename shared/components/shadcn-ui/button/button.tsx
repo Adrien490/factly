@@ -7,16 +7,7 @@ import { ButtonProps } from "./types";
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	(
-		{
-			className,
-			variant,
-			size,
-			radius,
-			asChild = false,
-			children,
-			disabled,
-			...props
-		},
+		{ className, variant, size, radius, asChild = false, children, ...props },
 		ref
 	) => {
 		const Comp = asChild ? Slot : "button";
@@ -25,7 +16,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			<Comp
 				className={cn(buttonVariants({ variant, size, radius, className }))}
 				ref={ref}
-				{...(!asChild && { disabled })}
 				{...props}
 			>
 				{children}

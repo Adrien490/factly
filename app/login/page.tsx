@@ -3,7 +3,7 @@ import { Logo, Spotlight } from "@/shared/components";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default async function LoginPage() {
+export default function LoginPage() {
 	return (
 		<div className="flex flex-col items-center justify-start sm:justify-center px-4 sm:px-6 py-8 min-h-screen mx-auto relative overflow-hidden">
 			{/* Spotlight avec effet subtil */}

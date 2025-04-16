@@ -1,10 +1,11 @@
 "use client";
 
+import { cn } from "@/shared/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLinkStatus } from "next/link";
 import { MiniDotsLoader } from "../loaders";
 
-export function LoadingIndicator() {
+export function LoadingIndicator({ className }: { className?: string }) {
 	const { pending } = useLinkStatus();
 
 	return (
@@ -20,7 +21,10 @@ export function LoadingIndicator() {
 							duration: 0.3,
 						},
 					}}
-					className="loading-indicator flex items-center justify-center"
+					className={cn(
+						"loading-indicator flex items-center justify-center",
+						className
+					)}
 				>
 					<MiniDotsLoader
 						className="loading-indicator"

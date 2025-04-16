@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { sortingSchema } from "../../sorting-dropdown/schemas";
-import { paginationSchema } from "../components/pagination/schemas";
+import { paginationSchema } from "../components/datatable/pagination/schemas";
+import { sortingSchema } from "../components/sorting-dropdown/schemas";
 
 export const datatableSchema = <T extends [string, ...string[]]>(
 	sortableFields: T

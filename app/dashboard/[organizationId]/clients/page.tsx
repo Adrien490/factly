@@ -28,7 +28,7 @@ type PageProps = {
 		sortBy?: string;
 		sortOrder?: SortOrder;
 		search?: string;
-		[key: string]: string | undefined;
+		[key: string]: string | string[] | undefined;
 	}>;
 	params: Promise<{
 		organizationId: string;
@@ -98,7 +98,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						sortOrder: sortOrder as SortOrder,
 						search,
 						filters: Object.entries(filters).reduce((acc, [key, value]) => {
-							if (value) {
+							if (value && typeof value === "string") {
 								acc[key] = value;
 							}
 							return acc;
