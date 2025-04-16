@@ -1,3 +1,2 @@
-export * from "./organization-card";
-export * from "./organization-card-skeleton";
+export * from "./action-menu";
 export * from "./organization-list-skeleton";
