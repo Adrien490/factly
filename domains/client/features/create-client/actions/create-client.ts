@@ -11,6 +11,7 @@ import {
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
 import { AddressType, Client, ClientStatus, ClientType } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createClientSchema } from "../schemas";
 
@@ -170,6 +171,10 @@ export async function createClient(
 				// Gestion des relations si des données sont fournies
 			},
 		});
+
+		// 8. Invalidation du cache pour forcer un rafraîchissement des données
+		// Invalider le tag de base pour tous les clients de l'organisation
+		revalidateTag(`clients:${validatedOrgId}:user:${userId}`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

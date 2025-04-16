@@ -12,6 +12,7 @@ import {
 	createValidationErrorResponse,
 } from "@/shared/types";
 import { Client, ClientStatus, ClientType } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateClientSchema } from "../schemas";
 
@@ -119,10 +120,15 @@ export async function updateClient(
 			data: clientData,
 		});
 
+		// 8. Invalidation du cache pour forcer un rafraîchissement des données
+		revalidateTag(
+			`clients:${clientData.organizationId}:user:${session.user.id}`
+		);
+
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,
-			`Le client ${client.name} a été créé avec succès`,
+			`Le client ${client.name} a été modifié avec succès`,
 			rawData
 		);
 	} catch (error) {

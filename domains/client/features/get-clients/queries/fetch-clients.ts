@@ -1,5 +1,8 @@
+"use server";
+
 import db from "@/shared/lib/db";
 import { Prisma } from "@prisma/client";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import {
 	DEFAULT_PER_PAGE,
@@ -17,17 +20,45 @@ export async function fetchClients(
 	params: z.infer<typeof getClientsSchema>,
 	userId: string
 ): Promise<GetClientsReturn> {
-	console.log("fetchClients", userId);
+	"use cache";
+
+	// Tag de base pour tous les clients de l'organisation
+	cacheTag(`clients:${params.organizationId}:user:${userId}`);
+
+	// Tag pour la recherche textuelle
+	if (params.search) {
+		cacheTag(`clients:${params.organizationId}:search:${params.search}`);
+	}
+
+	// Tag pour le tri
+	cacheTag(
+		`clients:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
+	);
+
+	// Tag pour la pagination
+	const page = Math.max(1, Number(params.page) || 1);
+	const perPage = Math.min(
+		Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
+		MAX_RESULTS_PER_PAGE
+	);
+	cacheTag(`clients:${params.organizationId}:page:${page}:perPage:${perPage}`);
+
+	// Tags pour les filtres dynamiques
+	if (params.filters && Object.keys(params.filters).length > 0) {
+		Object.entries(params.filters).forEach(([key, value]) => {
+			if (Array.isArray(value)) {
+				// Pour les filtres multivaleurs (comme les tableaux)
+				cacheTag(
+					`clients:${params.organizationId}:filter:${key}:${value.join(",")}`
+				);
+			} else {
+				cacheTag(`clients:${params.organizationId}:filter:${key}:${value}`);
+			}
+		});
+	}
+
 	try {
 		// Normalize pagination parameters
-		const page = Math.max(1, Number(params.page) || 1);
-		const perPage = Math.min(
-			Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
-			MAX_RESULTS_PER_PAGE
-		);
-
-		// Validate parameters
-
 		const where = buildWhereClause(params);
 
 		// Get total count with performance tracking
@@ -70,7 +101,8 @@ export async function fetchClients(
 				pageCount: totalPages,
 			},
 		};
-	} catch {
+	} catch (error) {
+		console.error("[FETCH_CLIENTS]", error);
 		return {
 			clients: [],
 			pagination: {
