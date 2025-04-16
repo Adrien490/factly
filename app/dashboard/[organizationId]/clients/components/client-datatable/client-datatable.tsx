@@ -86,11 +86,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 							<div className="flex-1 font-medium">Adresse</div>
 						</TableHead>
 
-						<TableHead
-							key="actions"
-							role="columnheader"
-							className="hidden lg:table-cell"
-						>
+						<TableHead key="actions" role="columnheader" className="">
 							<div className="flex-1 font-medium"></div>
 						</TableHead>
 					</TableRow>
@@ -186,7 +182,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									)}
 								</div>
 							</TableCell>
-							<TableCell role="gridcell" className="hidden lg:table-cell">
+							<TableCell role="gridcell" className="">
 								<ClientRowActions client={client} />
 							</TableCell>
 						</TableRow>

@@ -40,6 +40,6 @@ export const createClientSchema = z.object({
 	country: z.string().optional().default("France"),
 
 	// Coordonnées géographiques
-	latitude: z.number().optional(),
-	longitude: z.number().optional(),
+	latitude: z.number().optional().nullable(),
+	longitude: z.number().optional().nullable(),
 });

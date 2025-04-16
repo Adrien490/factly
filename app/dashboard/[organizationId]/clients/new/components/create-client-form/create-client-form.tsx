@@ -8,9 +8,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { FormLabel } from "@/shared/components/shadcn-ui/form";
-import { Input } from "@/shared/components/shadcn-ui/input/input";
-import { Textarea } from "@/shared/components/shadcn-ui/textarea/textarea";
+import { FormLabel, Input, Textarea } from "@/shared/components/shadcn-ui";
 
 import {
 	FormattedAddressResult,
@@ -18,6 +16,7 @@ import {
 } from "@/domains/address/features/search-address";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
+import { useCreateClient } from "@/domains/client/features/create-client/hooks";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
@@ -52,7 +51,6 @@ import {
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
-import { useCreateClient } from "../../hooks";
 import { formOpts } from "./constants";
 
 type Props = {
