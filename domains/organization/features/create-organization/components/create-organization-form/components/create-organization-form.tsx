@@ -12,7 +12,7 @@ import { FormLabel } from "@/shared/components/shadcn-ui/form";
 import { Input } from "@/shared/components/shadcn-ui/input/input";
 
 import { FormattedAddressResult, SearchAddressReturn } from "@/domains/address";
-import { useCreateOrganization } from "@/domains/organization";
+import { useCreateOrganization } from "@/domains/organization/features";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,

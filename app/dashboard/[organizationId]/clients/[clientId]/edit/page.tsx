@@ -1,4 +1,5 @@
-import { getClient, UpdateClientForm } from "@/domains/client";
+import { getClient } from "@/domains/client/features/get-client";
+import { UpdateClientForm } from "@/domains/client/features/update-client";
 import { PageContainer, PageHeader } from "@/shared/components";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";

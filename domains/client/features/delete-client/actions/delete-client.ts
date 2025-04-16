@@ -3,7 +3,7 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 
-import { hasOrganizationAccess } from "@/domains/organization";
+import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ServerActionState,
 	ServerActionStatus,

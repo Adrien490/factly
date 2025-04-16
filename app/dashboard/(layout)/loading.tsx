@@ -1,4 +1,4 @@
-import { OrganizationListSkeleton } from "@/domains/organization";
+import { OrganizationListSkeleton } from "@/domains/organization/features/get-organizations";
 import { Button, PageContainer, Skeleton } from "@/shared/components";
 
 export default function DashboardLoading() {

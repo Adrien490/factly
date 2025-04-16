@@ -1,4 +1,11 @@
 import {
+	getOrganizations,
+	ORGANIZATION_SORT_OPTIONS,
+	OrganizationList,
+	OrganizationListSkeleton,
+	OrganizationSortableField,
+} from "@/domains/organization/features/get-organizations";
+import {
 	Button,
 	PageContainer,
 	SearchForm,
@@ -6,13 +13,6 @@ import {
 	ViewToggle,
 } from "@/shared/components";
 
-import {
-	getOrganizations,
-	ORGANIZATION_SORT_OPTIONS,
-	OrganizationList,
-	OrganizationListSkeleton,
-	OrganizationSortableField,
-} from "@/domains/organization";
 import { ViewType } from "@/shared/types";
 import Link from "next/link";
 import { Suspense } from "react";

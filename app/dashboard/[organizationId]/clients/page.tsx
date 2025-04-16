@@ -2,10 +2,10 @@ import {
 	CLIENT_STATUSES,
 	CLIENT_TYPES,
 	ClientSortableField,
-	getClients,
 } from "@/domains/client";
+import { getClients } from "@/domains/client/features/get-clients";
 import { ClientDataTable } from "@/domains/client/features/get-clients/components";
-import { hasOrganizationAccess } from "@/domains/organization";
+import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
 	Card,

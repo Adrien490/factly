@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization";
+import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getClientsSchema } from "../schemas";

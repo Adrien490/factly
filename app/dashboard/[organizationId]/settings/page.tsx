@@ -1,4 +1,4 @@
-import { getOrganization } from "@/domains/organization";
+import { getOrganization } from "@/domains/organization/features/get-organization";
 import { PageContainer, PageHeader } from "@/shared/components";
 
 type Props = {

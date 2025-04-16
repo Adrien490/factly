@@ -1,4 +1,8 @@
-import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client";
+import {
+	CLIENT_STATUSES,
+	CLIENT_TYPES,
+	ClientRowActions,
+} from "@/domains/client";
 import {
 	Badge,
 	EmptyState,
@@ -73,6 +77,14 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 						className="hidden lg:table-cell"
 					>
 						<div className="flex-1 font-medium">Adresse</div>
+					</TableHead>
+
+					<TableHead
+						key="actions"
+						role="columnheader"
+						className="hidden lg:table-cell"
+					>
+						<div className="flex-1 font-medium"></div>
 					</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -163,6 +175,9 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									</span>
 								)}
 							</div>
+						</TableCell>
+						<TableCell role="gridcell" className="hidden lg:table-cell">
+							<ClientRowActions client={client} />
 						</TableCell>
 					</TableRow>
 				))}

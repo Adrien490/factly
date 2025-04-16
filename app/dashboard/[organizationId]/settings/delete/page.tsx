@@ -1,7 +1,5 @@
-import {
-	DeleteOrganizationForm,
-	getOrganization,
-} from "@/domains/organization";
+import { DeleteOrganizationForm } from "@/domains/organization/features/delete-organization";
+import { getOrganization } from "@/domains/organization/features/get-organization";
 import { PageContainer, PageHeader } from "@/shared/components";
 
 interface DeleteOrganizationPageProps {

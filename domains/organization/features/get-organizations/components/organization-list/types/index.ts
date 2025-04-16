@@ -1,4 +1,4 @@
-import { GetOrganizationsReturn } from "@/domains/organization";
+import { GetOrganizationsReturn } from "@/domains/organization/features/get-organizations";
 import { ViewType } from "@/shared/types";
 
 export type OrganizationListProps = {

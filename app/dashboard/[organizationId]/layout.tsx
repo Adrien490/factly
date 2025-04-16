@@ -1,5 +1,6 @@
 import { auth } from "@/domains/auth";
-import { getOrganizations, OrganizationSidebar } from "@/domains/organization";
+import { OrganizationSidebar } from "@/domains/organization/components";
+import { getOrganizations } from "@/domains/organization/features";
 import {
 	Separator,
 	SidebarInset,

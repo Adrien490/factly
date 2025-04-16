@@ -3,7 +3,7 @@
 import {
 	deleteOrganization,
 	deleteOrganizationSchema,
-} from "@/domains/organization";
+} from "@/domains/organization/features/delete-organization";
 import { GetOrganizationReturn } from "@/domains/organization/features/get-organization/types";
 import {
 	AlertDialog,
