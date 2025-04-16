@@ -195,7 +195,10 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 				</TableBody>
 				<TableFooter>
 					<TableRow>
-						<TableCell colSpan={columnCount} className="px-4 py-2">
+						<TableCell
+							colSpan={columnCount}
+							className="px-4 py-2 hover:bg-transparent"
+						>
 							<Pagination
 								total={pagination.total}
 								pageCount={pagination.pageCount}
