@@ -174,7 +174,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		if (state.status === ServerActionStatus.SUCCESS) {
 			form.reset();
 			toast({
-				duration: 4000,
+				duration: 3000,
 				title: "Client créé avec succès",
 				description: "Le client a été créé avec succès",
 				action: (

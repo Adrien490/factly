@@ -12,8 +12,8 @@ export function useMultiSelectFilter(filterKey: string) {
 	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();
 
-	// Préfixe pour les filtres dans l'URL
-	const paramKey = `filter_${filterKey}`;
+	// Utiliser directement la clé du filtre sans préfixe
+	const paramKey = filterKey;
 
 	// Récupérer les valeurs actuelles du filtre
 	const currentValues = searchParams.getAll(paramKey);

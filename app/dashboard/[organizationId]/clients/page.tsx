@@ -100,11 +100,16 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							sortOrder: sortOrder as SortOrder,
 							search,
 							filters: Object.entries(filters).reduce((acc, [key, value]) => {
-								if (value && typeof value === "string") {
-									acc[key] = value;
+								if (value) {
+									// Préserver les tableaux et les strings
+									if (Array.isArray(value)) {
+										acc[key] = value;
+									} else if (typeof value === "string") {
+										acc[key] = value;
+									}
 								}
 								return acc;
-							}, {} as Record<string, string>),
+							}, {} as Record<string, string | string[]>),
 						})}
 					/>
 				</Suspense>
