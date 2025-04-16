@@ -3,10 +3,12 @@ import {
 	Badge,
 	EmptyState,
 	ItemCheckbox,
+	Pagination,
 	SelectAllCheckbox,
 	Table,
 	TableBody,
 	TableCell,
+	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -26,7 +28,7 @@ import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 	const response = use(clientsPromise);
-	const { clients } = response;
+	const { clients, pagination } = response;
 	const clientIds = clients.map((client) => client.id);
 
 	console.log(clients);
@@ -43,6 +45,9 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 			</div>
 		);
 	}
+
+	// Calculer le nombre de colonnes pour le colSpan
+	const columnCount = 7; // Le nombre total de colonnes dans le tableau
 
 	return (
 		<SelectionProvider>
@@ -188,6 +193,18 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 						</TableRow>
 					))}
 				</TableBody>
+				<TableFooter>
+					<TableRow>
+						<TableCell colSpan={columnCount} className="px-4 py-2">
+							<Pagination
+								total={pagination.total}
+								pageCount={pagination.pageCount}
+								page={pagination.page}
+								perPage={pagination.perPage}
+							/>
+						</TableCell>
+					</TableRow>
+				</TableFooter>
 			</Table>
 		</SelectionProvider>
 	);
