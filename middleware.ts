@@ -33,8 +33,9 @@ export async function middleware(request: NextRequest) {
 		redirectUrl.searchParams.set("callbackUrl", nextUrl.pathname);
 		return Response.redirect(redirectUrl);
 	}
-
-	return NextResponse.next();
+	const urlHeaders = new Headers(request.headers);
+	urlHeaders.set("x-current-path", request.nextUrl.pathname);
+	return NextResponse.next({ headers: urlHeaders });
 }
 
 export const config = {

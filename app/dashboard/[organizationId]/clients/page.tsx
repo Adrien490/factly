@@ -4,7 +4,7 @@ import {
 	ClientSortableField,
 	getClients,
 } from "@/domains/client";
-import { ClientDatatable } from "@/domains/client/features/get-clients/components";
+import { ClientDataTable } from "@/domains/client/features/get-clients/components";
 import { hasOrganizationAccess } from "@/domains/organization";
 import {
 	Button,
@@ -89,7 +89,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			</div>
 
 			<Card>
-				<ClientDatatable
+				<ClientDataTable
 					clientsPromise={getClients({
 						organizationId,
 						perPage: Number(perPage) || 10,
