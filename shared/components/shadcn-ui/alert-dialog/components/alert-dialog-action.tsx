@@ -10,11 +10,13 @@ const AlertDialogAction = React.forwardRef<
 	HTMLButtonElement,
 	React.ButtonHTMLAttributes<HTMLButtonElement> & {
 		variant?: "default" | "destructive" | "outline";
+		disabled?: boolean;
 	}
->(({ className, variant = "default", ...props }, ref) => (
+>(({ className, variant = "default", disabled, ...props }, ref) => (
 	<button
 		className={cn(buttonVariants({ variant }), className)}
 		ref={ref}
+		{...(!disabled && { disabled })}
 		{...props}
 	/>
 ));

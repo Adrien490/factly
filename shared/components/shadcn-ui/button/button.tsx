@@ -25,7 +25,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			<Comp
 				className={cn(buttonVariants({ variant, size, radius, className }))}
 				ref={ref}
-				disabled={disabled}
+				{...(!asChild && { disabled })}
 				{...props}
 			>
 				{children}

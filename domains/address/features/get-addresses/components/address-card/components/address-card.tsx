@@ -155,7 +155,7 @@ export function AddressCard({ address, viewMode = "grid" }: AddressCardProps) {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel disabled={isPending}>Annuler</AlertDialogCancel>
+					<AlertDialogCancel>Annuler</AlertDialogCancel>
 					<AlertDialogAction
 						onClick={handleDelete}
 						disabled={isPending}
