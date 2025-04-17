@@ -1,4 +1,5 @@
 import db from "@/shared/lib/db";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 /**
@@ -13,6 +14,11 @@ export async function checkOrganizationAccess(
 
 	// Tag de cache pour cette vérification spécifique
 	cacheTag(`has-organization-access:${organizationId}:${userId}`);
+	cacheLife({
+		revalidate: 60 * 60 * 24, // 24 heures
+		stale: 60 * 60 * 24, // 24 heures
+		expire: 60 * 60 * 24, // 24 heures
+	});
 
 	if (!userId) {
 		console.log("[HAS_ORGANIZATION_ACCESS] Aucun utilisateur authentifié");
