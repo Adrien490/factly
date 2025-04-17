@@ -1,18 +1,18 @@
 import {
-	FileText,
-	Edit,
-	MapPin,
-	Users,
-	Trash2,
-	Mail,
-	Phone,
 	BarChart,
+	Edit,
+	FileText,
+	Mail,
+	MapPin,
+	Phone,
+	Trash2,
+	Users,
 } from "lucide-react";
 
 /**
  * Items du menu dropdown de navigation pour un client
  */
-export const getClientNavigationItems = (
+export const getClientNavigation = (
 	organizationId: string,
 	clientId: string
 ) => [
