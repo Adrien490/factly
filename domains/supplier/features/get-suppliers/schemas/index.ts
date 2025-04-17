@@ -2,22 +2,31 @@ import { sortOrderSchema } from "@/shared/schemas";
 import { SupplierStatus, SupplierType } from "@prisma/client";
 import { z } from "zod";
 
-const filterValueSchema = z.union([
-	// Valeurs uniques (chaînes)
+// Définition des valeurs possibles pour chaque type de filtre
+const statusFilterSchema = z.union([
 	z.nativeEnum(SupplierStatus),
-	z.nativeEnum(SupplierType),
-	z.string(),
-	z.boolean(),
-
-	// Tableaux de valeurs
 	z.array(z.nativeEnum(SupplierStatus)),
-	z.array(z.nativeEnum(SupplierType)),
-	z.array(z.string()),
 ]);
 
-// Le schéma accepte des enregistrements dont les valeurs
-// peuvent être soit des valeurs uniques, soit des tableaux
-const supplierFiltersSchema = z.record(filterValueSchema);
+const typeFilterSchema = z.union([
+	z.nativeEnum(SupplierType),
+	z.array(z.nativeEnum(SupplierType)),
+]);
+
+const textFilterSchema = z.union([z.string(), z.array(z.string())]);
+
+// Schéma strict des filtres de fournisseurs avec seulement les clés autorisées
+const supplierFiltersSchema = z
+	.object({
+		status: statusFilterSchema.optional(),
+		supplierType: typeFilterSchema.optional(),
+		name: textFilterSchema.optional(),
+		legalName: textFilterSchema.optional(),
+		email: textFilterSchema.optional(),
+		siret: textFilterSchema.optional(),
+		siren: textFilterSchema.optional(),
+	})
+	.partial();
 
 export const getSuppliersSchema = z.object({
 	organizationId: z.string(),

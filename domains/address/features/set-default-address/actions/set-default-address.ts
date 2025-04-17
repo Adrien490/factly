@@ -34,15 +34,6 @@ export async function setDefaultAddress(
 
 		const validatedParams = validation.data;
 
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(
-			validatedParams.organizationId
-		);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
-		}
-
 		// Récupérer l'adresse existante
 		const existingAddress = await db.address.findUnique({
 			where: { id: validatedParams.id },
@@ -58,17 +49,20 @@ export async function setDefaultAddress(
 			throw new Error("Address not found");
 		}
 
-		// Vérifier que l'adresse appartient bien à l'organisation spécifiée
-		const addressOrganizationId =
+		// Vérifier les droits d'accès à l'organisation
+		const organizationId =
 			existingAddress.client?.organizationId ||
 			existingAddress.supplier?.organizationId;
 
-		if (!addressOrganizationId) {
+		if (!organizationId) {
 			throw new Error("Address is not associated with any organization");
 		}
 
-		if (addressOrganizationId !== validatedParams.organizationId) {
-			throw new Error("Address does not belong to the specified organization");
+		// Vérifier si l'utilisateur a accès à l'organisation
+		const hasAccess = await hasOrganizationAccess(organizationId);
+
+		if (!hasAccess) {
+			throw new Error("Access denied");
 		}
 
 		// Réinitialiser le statut par défaut pour toutes les autres adresses du même type

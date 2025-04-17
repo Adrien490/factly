@@ -56,6 +56,8 @@ export function CreateAddressForm({
 	const { state, dispatch, isPending } = useCreateAddress();
 	const router = useRouter();
 
+	console.log("state", state);
+
 	// TanStack Form setup
 	const form = useForm({
 		...formOpts(organizationId, clientId, supplierId),

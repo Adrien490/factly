@@ -20,6 +20,7 @@ import {
 	SortingOptionsDropdown,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
+import { ClientStatus, ClientType } from "@prisma/client";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -28,12 +29,21 @@ import { Suspense } from "react";
 
 type PageProps = {
 	searchParams: Promise<{
+		// Pagination
 		perPage?: string;
+		page?: string;
 		cursor?: string;
+
+		// Tri
 		sortBy?: string;
 		sortOrder?: SortOrder;
+
+		// Recherche
 		search?: string;
-		[key: string]: string | string[] | undefined;
+
+		// Filtres
+		status?: ClientStatus | ClientStatus[];
+		clientType?: ClientType;
 	}>;
 	params: Promise<{
 		organizationId: string;
@@ -44,12 +54,17 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	const resolvedSearchParams = await searchParams;
 	const resolvedParams = await params;
 	const { organizationId } = resolvedParams;
-	const { perPage, page, sortBy, sortOrder, search, ...filters } =
+	const { perPage, page, sortBy, sortOrder, search, status, clientType } =
 		resolvedSearchParams;
 
 	if (!hasOrganizationAccess(organizationId)) {
 		forbidden();
 	}
+
+	// Construire l'objet de filtres
+	const filters: Record<string, string | string[]> = {};
+	if (status) filters.status = status;
+	if (clientType) filters.clientType = clientType;
 
 	return (
 		<PageContainer className="pb-12 group">
@@ -110,17 +125,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							sortBy: sortBy as string,
 							sortOrder: sortOrder as SortOrder,
 							search,
-							filters: Object.entries(filters).reduce((acc, [key, value]) => {
-								if (value) {
-									// Préserver les tableaux et les strings
-									if (Array.isArray(value)) {
-										acc[key] = value;
-									} else if (typeof value === "string") {
-										acc[key] = value;
-									}
-								}
-								return acc;
-							}, {} as Record<string, string | string[]>),
+							filters,
 						})}
 					/>
 				</Suspense>

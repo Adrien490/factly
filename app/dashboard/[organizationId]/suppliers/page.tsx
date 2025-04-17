@@ -9,6 +9,7 @@ import {
 	SUPPLIER_TYPES,
 } from "@/domains/supplier/constants";
 import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
+import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
 import {
 	Button,
 	Card,
@@ -19,6 +20,7 @@ import {
 	SortingOptionsDropdown,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
+import { SupplierStatus, SupplierType } from "@prisma/client";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -26,10 +28,12 @@ import { Suspense } from "react";
 type PageProps = {
 	searchParams: Promise<{
 		perPage?: string;
-		cursor?: string;
+		page?: string;
 		sortBy?: string;
 		sortOrder?: SortOrder;
 		search?: string;
+		status?: SupplierStatus | SupplierStatus[];
+		supplierType?: SupplierType | SupplierType[];
 		[key: string]: string | string[] | undefined;
 	}>;
 	params: Promise<{
@@ -112,7 +116,7 @@ export default async function SuppliersPage({
 								Object.entries(filters).filter(
 									([, value]) => value !== undefined
 								)
-							) as Record<string, string | string[] | boolean>,
+							) as GetSuppliersParams["filters"],
 						})}
 					/>
 				</Suspense>
