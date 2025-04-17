@@ -81,7 +81,7 @@ export function CreateOrganizationForm({
 
 	// Toast de suivi pour l'action du formulaire
 	useEffect(() => {
-		if (!isPending && state && state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ServerActionStatus.SUCCESS) {
 			toast.success("Organisation créée avec succès", {
 				description: "La nouvelle organisation a été créée avec succès",
 				duration: 3000,
@@ -93,10 +93,6 @@ export function CreateOrganizationForm({
 					},
 				},
 			});
-
-			setTimeout(() => {
-				router.push(`/dashboard`);
-			}, 500);
 		}
 	}, [isPending, state, router]);
 
@@ -745,7 +741,7 @@ export function CreateOrganizationForm({
 						disabled={!canSubmit}
 						cancelHref="/dashboard"
 						submitLabel={"Créer l'organisation"}
-						isPending={isPending}
+						isPending={isPending || isUploading}
 					/>
 				)}
 			</form.Subscribe>
