@@ -1,10 +1,10 @@
 import {
+	CLIENT_SORT_FIELDS,
 	CLIENT_STATUSES,
 	CLIENT_TYPES,
-	ClientSortableField,
-} from "@/domains/client";
-import { CLIENT_SORT_FIELDS } from "@/domains/client/constants";
+} from "@/domains/client/constants";
 import { getClients } from "@/domains/client/features/get-clients";
+import { ClientSortableField } from "@/domains/client/types";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,

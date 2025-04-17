@@ -9,13 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/shared/components/shadcn-ui/dropdown-menu";
-import {
-	ArrowDown,
-	ArrowUp,
-	RotateCcw,
-	SlidersHorizontal,
-	Star,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { useSortingOptions } from "./hooks";
 
 /**
@@ -39,11 +33,6 @@ export function SortingOptionsDropdown({
 		resetSort,
 		currentField,
 	} = useSortingOptions(sortFields, defaultSortBy, defaultSortOrder);
-
-	// Trouve le champ de tri par défaut
-	const defaultField = sortFields.find(
-		(field) => field.value === defaultSortBy
-	);
 
 	return (
 		<DropdownMenu>
@@ -71,25 +60,6 @@ export function SortingOptionsDropdown({
 			>
 				<DropdownMenuLabel>Trier par</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-
-				{/* Option par défaut distincte */}
-				<DropdownMenuItem
-					key="default-sort"
-					className="flex items-center gap-2 px-2 py-1.5 font-medium"
-					onClick={() => resetSort()}
-				>
-					<Star className="h-4 w-4 text-amber-500" />
-					<span className="flex-1">
-						{defaultField
-							? `${defaultField.label} (par défaut)`
-							: "Tri par défaut"}
-					</span>
-					{defaultSortOrder === "asc" ? (
-						<ArrowUp className="h-4 w-4" />
-					) : (
-						<ArrowDown className="h-4 w-4" />
-					)}
-				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 

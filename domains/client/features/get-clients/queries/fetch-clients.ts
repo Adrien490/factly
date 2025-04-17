@@ -87,13 +87,8 @@ export async function fetchClients(
 		});
 
 		// Transforming clients to match expected return type
-		const clientsWithAddresses = clients.map((client) => ({
-			...client,
-			addresses: [], // Ajouter la propriété 'addresses' requise
-		}));
-
 		return {
-			clients: clientsWithAddresses,
+			clients,
 			pagination: {
 				page: currentPage,
 				perPage,

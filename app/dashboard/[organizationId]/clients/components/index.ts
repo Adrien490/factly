@@ -1,1 +1,1 @@
-export * from "./client-datatable";
+export * from "../../../../../domains/client/components/client-datatable";

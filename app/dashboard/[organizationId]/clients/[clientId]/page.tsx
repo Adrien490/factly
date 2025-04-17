@@ -1,4 +1,4 @@
-import { getClient } from "@/domains/client";
+import { getClient } from "@/domains/client/features/get-client";
 import { PageContainer, PageHeader } from "@/shared/components";
 import { notFound } from "next/navigation";
 import { clientNavigation } from "./constants";

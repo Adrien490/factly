@@ -21,9 +21,9 @@ import { Input } from "@/shared/components/shadcn-ui/input/input";
 import { Textarea } from "@/shared/components/shadcn-ui/textarea/textarea";
 import { ServerActionStatus } from "@/shared/types";
 
-import { GetClientReturn, useUpdateClient } from "@/domains/client";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
+import { GetClientReturn } from "@/domains/client/features/get-client";
 import { useCheckReference } from "@/shared/queries";
 import { generateReference } from "@/shared/utils/generate-reference";
 import { ClientStatus, ClientType } from "@prisma/client";
@@ -36,6 +36,7 @@ import {
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
+import { useUpdateClient } from "../../../hooks";
 
 type Props = {
 	clientPromise: Promise<GetClientReturn>;

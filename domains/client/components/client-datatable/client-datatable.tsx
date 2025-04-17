@@ -1,4 +1,3 @@
-import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client";
 import {
 	Badge,
 	EmptyState,
@@ -25,6 +24,7 @@ import {
 import { use } from "react";
 
 import { SelectionProvider } from "@/shared/contexts";
+import { CLIENT_STATUSES, CLIENT_TYPES } from "../../constants";
 import { ClientRowActions } from "./components";
 import { ClientDataTableProps } from "./types";
 

@@ -37,7 +37,7 @@ export function FilterSelect({
 				onValueChange={handleSingleSelect}
 				disabled={isPending}
 			>
-				<SelectTrigger className="w-full">
+				<SelectTrigger>
 					<span className="text-muted-foreground text-xs mr-2">{label}</span>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
