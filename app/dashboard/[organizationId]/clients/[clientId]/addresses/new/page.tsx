@@ -2,7 +2,6 @@ import { CreateAddressForm } from "@/domains/address/features/create-address";
 import { searchAddress } from "@/domains/address/features/search-address";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
-import { clientBreadcrumbs } from "../../constants/client-breadcrumbs";
 
 type Props = {
 	params: Promise<{
@@ -54,7 +53,6 @@ export default async function NewAddressPage({ params, searchParams }: Props) {
 			<PageHeader
 				title="Nouvelle adresse"
 				description="Ajoutez une nouvelle adresse pour votre client"
-				breadcrumbs={clientBreadcrumbs(organizationId, clientId)}
 			/>
 			<CreateAddressForm
 				searchAddressPromise={searchAddress(searchAddressParams)}

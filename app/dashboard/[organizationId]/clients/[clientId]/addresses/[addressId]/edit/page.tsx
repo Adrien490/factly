@@ -4,7 +4,6 @@ import { UpdateAddressForm } from "@/domains/address/features/update-address";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
 import { notFound } from "next/navigation";
-import { clientBreadcrumbs } from "../../../constants/client-breadcrumbs";
 
 type Props = {
 	params: Promise<{
@@ -68,7 +67,6 @@ export default async function EditAddressPage({ params, searchParams }: Props) {
 			<PageHeader
 				title="Modifier une adresse"
 				description="Modifiez les informations de l'adresse"
-				breadcrumbs={clientBreadcrumbs(organizationId, clientId)}
 			/>
 
 			<UpdateAddressForm
