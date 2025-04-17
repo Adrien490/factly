@@ -43,7 +43,7 @@ export function FilterSelect({
 				</SelectTrigger>
 				<SelectContent>
 					<ScrollArea className={`h-${maxHeight}`}>
-						<SelectItem value="">Tout</SelectItem>
+						<SelectItem value="all">Tout</SelectItem>
 						{options.map((option) => (
 							<SelectItem key={option.value} value={option.value}>
 								{option.label}

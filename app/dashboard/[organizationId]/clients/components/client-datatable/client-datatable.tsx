@@ -130,19 +130,23 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 							</TableCell>
 							<TableCell role="gridcell" className="hidden md:table-cell">
 								<div>
-									<Badge
-										className={
-											CLIENT_STATUSES.find(
-												(option) => option.value === client.status
-											)?.color || "outline"
-										}
-									>
-										{
-											CLIENT_STATUSES.find(
-												(option) => option.value === client.status
-											)?.label
-										}
-									</Badge>
+									{(() => {
+										const statusOption = CLIENT_STATUSES.find(
+											(option) => option.value === client.status
+										);
+										return (
+											<Badge
+												variant="outline"
+												style={{
+													backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
+													color: statusOption?.color,
+													borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
+												}}
+											>
+												{statusOption?.label || client.status}
+											</Badge>
+										);
+									})()}
 								</div>
 							</TableCell>
 							<TableCell role="gridcell" className="hidden lg:table-cell">
