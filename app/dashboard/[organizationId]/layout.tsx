@@ -1,6 +1,9 @@
 import { auth } from "@/domains/auth";
 import { OrganizationSidebar } from "@/domains/organization/components";
-import { getOrganizations } from "@/domains/organization/features";
+import {
+	getOrganizations,
+	hasOrganizationAccess,
+} from "@/domains/organization/features";
 import {
 	Separator,
 	SidebarInset,
@@ -12,6 +15,7 @@ import {
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cookies, headers } from "next/headers";
+import { forbidden } from "next/navigation";
 import { Suspense } from "react";
 
 interface OrganizationLayoutProps {
@@ -25,6 +29,13 @@ export default async function OrganizationLayout({
 }: OrganizationLayoutProps) {
 	const resolvedParams = await params;
 	const { organizationId } = resolvedParams;
+
+	const hasAccess = await hasOrganizationAccess(organizationId);
+
+	if (!hasAccess) {
+		forbidden();
+	}
+
 	console.log(organizationId);
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";

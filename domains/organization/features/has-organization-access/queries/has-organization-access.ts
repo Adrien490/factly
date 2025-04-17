@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import db from "@/shared/lib/db";
 import { headers } from "next/headers";
+import { checkOrganizationAccess } from "./check-organization-access";
 
 /**
  * Vérifie si l'utilisateur authentifié a accès à une organisation spécifique
@@ -18,37 +18,9 @@ export async function hasOrganizationAccess(organizationId: string) {
 	});
 
 	if (!session?.user?.id) {
-		console.log("[HAS_ORGANIZATION_ACCESS] Aucun utilisateur authentifié");
 		return false;
 	}
 
-	// Vérification que l'organisation existe
-	const organization = await db.organization.findUnique({
-		where: { id: organizationId },
-		select: { id: true },
-	});
-
-	if (!organization) {
-		return false;
-	}
-
-	// Vérification que l'utilisateur est membre de l'organisation
-	const membership = await db.member.findUnique({
-		where: {
-			userId_organizationId: {
-				userId: session.user.id,
-				organizationId,
-			},
-		},
-		select: { id: true },
-	});
-
-	if (!membership) {
-		console.log(
-			`[HAS_ORGANIZATION_ACCESS] L'utilisateur ${session.user.id} n'est pas membre de l'organisation ${organizationId}`
-		);
-		return false;
-	}
-
-	return true;
+	// Appel à la fonction interne mise en cache
+	return checkOrganizationAccess(organizationId, session.user.id);
 }
