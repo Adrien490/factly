@@ -4,7 +4,7 @@ import { FileEdit } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use } from "react";
-import { CLIENT_STATUSES, getClientNavigation } from "../../constants";
+import { CLIENT_STATUSES } from "../../constants";
 import { CLIENT_TYPES } from "../../constants/client-types";
 import { ClientHeaderProps } from "./types";
 
@@ -14,11 +14,6 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	if (!client) {
 		notFound();
 	}
-
-	const clientNavigation = getClientNavigation(
-		client.organizationId,
-		client.id
-	);
 
 	const statusInfo = CLIENT_STATUSES.find(
 		(option) => option.value === client.status
