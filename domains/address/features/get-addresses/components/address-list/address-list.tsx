@@ -154,32 +154,28 @@ export function AddressList({
 					);
 				})}
 
-				{addresses.length === 0 && (
-					<Link
-						href={`${baseUrl}/new`}
-						className={`block ${viewType === "grid" ? "h-full" : ""}`}
-					>
-						<div
-							className={`
+				<Link
+					href={`${baseUrl}/new`}
+					className={`block ${viewType === "grid" ? "h-full" : ""}`}
+				>
+					<div
+						className={`
 								border border-dashed rounded-lg flex items-center justify-center 
 								text-muted-foreground hover:text-primary hover:border-primary 
 								transition-colors
 								${viewType === "grid" ? "h-full p-6 flex-col" : "p-4 flex-row"}
 							`}
-						>
-							<PlusCircle
-								className={
-									viewType === "grid" ? "h-10 w-10 mb-2" : "h-5 w-5 mr-2"
-								}
-							/>
-							<span>
-								{viewType === "grid"
-									? "Ajouter une adresse"
-									: "Nouvelle adresse"}
-							</span>
-						</div>
-					</Link>
-				)}
+					>
+						<PlusCircle
+							className={
+								viewType === "grid" ? "h-10 w-10 mb-2" : "h-5 w-5 mr-2"
+							}
+						/>
+						<span>
+							{viewType === "grid" ? "Ajouter une adresse" : "Nouvelle adresse"}
+						</span>
+					</div>
+				</Link>
 			</div>
 		</div>
 	);
