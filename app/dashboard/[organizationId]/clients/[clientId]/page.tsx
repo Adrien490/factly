@@ -2,7 +2,6 @@ import { getClient } from "@/domains/client/features/get-client";
 import { PageContainer, PageHeader } from "@/shared/components";
 import { notFound } from "next/navigation";
 import { clientNavigation } from "./constants";
-import { clientBreadcrumbs } from "./constants/client-breadcrumbs";
 
 type Props = {
 	params: Promise<{
@@ -24,7 +23,6 @@ export default async function ClientPage({ params }: Props) {
 	return (
 		<PageContainer>
 			<PageHeader
-				breadcrumbs={clientBreadcrumbs(organizationId, clientId)}
 				navigation={{
 					items: clientNavigation(organizationId, clientId),
 				}}
