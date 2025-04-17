@@ -9,14 +9,15 @@ import { ReactNode, Suspense } from "react";
 
 type Props = {
 	children: ReactNode;
-	params: {
+	params: Promise<{
 		organizationId: string;
 		clientId: string;
-	};
+	}>;
 };
 
-export default function ClientLayout({ children, params }: Props) {
-	const { organizationId, clientId } = params;
+export default async function ClientLayout({ children, params }: Props) {
+	const resolvedParams = await params;
+	const { organizationId, clientId } = resolvedParams;
 
 	return (
 		<PageContainer className="space-y-8">
