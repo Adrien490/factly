@@ -1,4 +1,8 @@
 import {
+	ClientDataTable,
+	ClientDataTableSkeleton,
+} from "@/domains/client/components";
+import {
 	CLIENT_SORT_FIELDS,
 	CLIENT_STATUSES,
 	CLIENT_TYPES,
@@ -20,7 +24,6 @@ import { SortOrder } from "@/shared/types";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
-import { ClientDataTable, ClientDataTableSkeleton } from "./components";
 
 // Options pour le type de client
 
