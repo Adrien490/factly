@@ -15,7 +15,6 @@ import { AddressType } from "@prisma/client";
 import Link from "next/link";
 import { Suspense } from "react";
 import { clientNavigation } from "../constants";
-import { clientBreadcrumbs } from "../constants/client-breadcrumbs";
 
 type Props = {
 	params: Promise<{
@@ -59,7 +58,6 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						</Link>
 					</Button>
 				}
-				breadcrumbs={clientBreadcrumbs(organizationId, clientId)}
 				navigation={{
 					items: clientNavigation(organizationId, clientId),
 				}}
