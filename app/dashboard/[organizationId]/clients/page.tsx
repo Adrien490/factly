@@ -3,6 +3,7 @@ import {
 	CLIENT_TYPES,
 	ClientSortableField,
 } from "@/domains/client";
+import { CLIENT_SORT_FIELDS } from "@/domains/client/constants";
 import { getClients } from "@/domains/client/features/get-clients";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
@@ -16,7 +17,6 @@ import {
 	SortingOptionsDropdown,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
-import { Calendar, Tag, Users } from "lucide-react";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -48,21 +48,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	if (!hasOrganizationAccess(organizationId)) {
 		forbidden();
 	}
-
-	// Options de tri pour le composant SortingDropdown
-	const sortFields = [
-		{ label: "Nom", value: "name", icon: <Users className="h-4 w-4" /> },
-		{
-			label: "Référence",
-			value: "reference",
-			icon: <Tag className="h-4 w-4" />,
-		},
-		{
-			label: "Date de création",
-			value: "createdAt",
-			icon: <Calendar className="h-4 w-4" />,
-		},
-	];
 
 	return (
 		<PageContainer className="pb-12 group">
@@ -106,7 +91,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 
 					{/* Dropdown de tri compact */}
 					<SortingOptionsDropdown
-						sortFields={sortFields}
+						sortFields={CLIENT_SORT_FIELDS}
 						defaultSortBy="createdAt"
 						defaultSortOrder="desc"
 					/>
