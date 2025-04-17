@@ -1,12 +1,8 @@
-import { Briefcase, Calendar, Store, Tag, Truck } from "lucide-react";
+import { Briefcase, Calendar, Store, Truck } from "lucide-react";
 
 export const SUPPLIER_SORT_FIELDS = [
 	{ label: "Nom", value: "name", icon: <Store className="h-4 w-4" /> },
-	{
-		label: "Référence",
-		value: "reference",
-		icon: <Tag className="h-4 w-4" />,
-	},
+
 	{
 		label: "Type de fournisseur",
 		value: "supplierType",

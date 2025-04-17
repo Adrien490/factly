@@ -12,7 +12,6 @@ import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
 import {
 	Button,
 	Card,
-	FilterSelect,
 	MultiSelectFilter,
 	PageContainer,
 	PageHeader,
@@ -84,7 +83,7 @@ export default async function SuppliersPage({
 						label="Statut"
 						options={SUPPLIER_STATUSES}
 					/>
-					<FilterSelect
+					<MultiSelectFilter
 						filterKey="supplierType"
 						label="Type"
 						options={SUPPLIER_TYPES}
