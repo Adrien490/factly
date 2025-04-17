@@ -67,7 +67,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 
 				{/* Actions et navigation */}
 				<div className="flex flex-wrap gap-3">
-					<Button asChild size="sm" variant="outline">
+					<Button asChild size="sm" variant="default">
 						<Link
 							href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
 						>
