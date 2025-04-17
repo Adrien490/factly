@@ -5,6 +5,6 @@ import { getSupplierSchema } from "../schemas";
 
 export type GetSupplierReturn = Prisma.SupplierGetPayload<{
 	select: typeof GET_SUPPLIER_DEFAULT_SELECT;
-}> | null;
+}>;
 
 export type GetSupplierParams = z.infer<typeof getSupplierSchema>;

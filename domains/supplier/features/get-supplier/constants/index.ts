@@ -5,7 +5,6 @@
 export const GET_SUPPLIER_DEFAULT_SELECT = {
 	id: true,
 	organizationId: true,
-	reference: true,
 	name: true,
 	legalName: true,
 	email: true,
@@ -19,12 +18,6 @@ export const GET_SUPPLIER_DEFAULT_SELECT = {
 	notes: true,
 	createdAt: true,
 	updatedAt: true,
-
-	// Informations ESG (2025)
-	esgScore: true,
-	carbonFootprint: true,
-	localSupplier: true,
-	sustainabilityCertifications: true,
 
 	addresses: {
 		select: {

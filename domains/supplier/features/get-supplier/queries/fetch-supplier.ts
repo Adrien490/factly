@@ -36,9 +36,13 @@ export async function fetchSupplier(
 			select: GET_SUPPLIER_DEFAULT_SELECT,
 		});
 
+		if (!supplier) {
+			throw new Error("Fournisseur non trouvé");
+		}
+
 		return supplier;
 	} catch (error) {
 		console.error("[FETCH_SUPPLIER]", error);
-		return null;
+		throw error;
 	}
 }

@@ -36,7 +36,7 @@ import {
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
-import { useUpdateClient } from "../../../hooks";
+import { useUpdateClient } from "../../hooks";
 
 type Props = {
 	clientPromise: Promise<GetClientReturn>;
