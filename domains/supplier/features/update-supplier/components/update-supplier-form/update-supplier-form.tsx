@@ -34,7 +34,7 @@ import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { toast } from "sonner";
-import { useUpdateSupplier } from "../../../hooks";
+import { useUpdateSupplier } from "../../hooks";
 
 type Props = {
 	supplierPromise: Promise<GetSupplierReturn>;
@@ -383,7 +383,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 			{/* Boutons d'action */}
 			<FormFooter
 				submitLabel="Mettre à jour le fournisseur"
-				cancelHref={`/dashboard/${organizationId}/suppliers/${supplier.id}`}
+				cancelHref={`/dashboard/${organizationId}/suppliers`}
 				isPending={isPending}
 			/>
 		</form>
