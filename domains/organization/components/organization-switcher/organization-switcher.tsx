@@ -19,8 +19,10 @@ import {
 	ChevronsUpDown,
 	GalleryVerticalEnd,
 	Loader2,
+	LogOut,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { GetOrganizationsReturn } from "../../features/get-organizations";
@@ -150,6 +152,14 @@ export function OrganizationSwitcher({
 						)}
 					</DropdownMenuItem>
 				))}
+
+				<DropdownMenuSeparator />
+				<DropdownMenuItem asChild className="text-muted-foreground">
+					<Link href="/dashboard" className="flex items-center gap-2">
+						<LogOut className="size-4" />
+						<span>Quitter le tableau de bord</span>
+					</Link>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

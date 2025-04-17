@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	NavigationMenu,
 	NavigationMenuItem,
@@ -6,12 +8,13 @@ import {
 } from "@/shared/components/shadcn-ui/navigation-menu";
 import { cn } from "@/shared/utils";
 import { cva } from "class-variance-authority";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HorizontalMenuProps } from "./types";
 
 const menuItemVariants = cva(
-	"flex items-center text-sm gap-2 justify-between rounded-md px-3 py-2",
+	"flex items-center text-sm transition-all duration-200 gap-2 justify-between rounded-md px-3 py-2",
 	{
 		variants: {
 			active: {
@@ -90,7 +93,13 @@ export function HorizontalMenu({
 									<span>{item.label}</span>
 
 									{active && variant !== "pills" && (
-										<div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+										<motion.div
+											layoutId="activeIndicator"
+											className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+											initial={{ opacity: 0 }}
+											animate={{ opacity: 1 }}
+											transition={{ duration: 0.2 }}
+										/>
 									)}
 								</Link>
 							</NavigationMenuLink>
