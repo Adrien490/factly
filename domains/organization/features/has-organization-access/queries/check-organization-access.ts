@@ -21,7 +21,6 @@ export async function checkOrganizationAccess(
 	});
 
 	if (!userId) {
-		console.log("[HAS_ORGANIZATION_ACCESS] Aucun utilisateur authentifié");
 		return false;
 	}
 
@@ -47,9 +46,6 @@ export async function checkOrganizationAccess(
 	});
 
 	if (!membership) {
-		console.log(
-			`[HAS_ORGANIZATION_ACCESS] L'utilisateur ${userId} n'est pas membre de l'organisation ${organizationId}`
-		);
 		return false;
 	}
 

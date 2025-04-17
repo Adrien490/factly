@@ -16,7 +16,7 @@ export default function ForbiddenPage() {
 				</p>
 				<div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
 					<Button asChild>
-						<Link href="/" className="flex items-center gap-2">
+						<Link href="/" className="flex items-center gap-2" replace>
 							<HomeIcon className="h-4 w-4" />
 							Accueil
 						</Link>
