@@ -60,7 +60,7 @@ type Props = {
 export function CreateClientForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
 	const params = useParams();
-	const { toast } = useToast();
+	const { toast, dismiss } = useToast();
 	const organizationId = params.organizationId as string;
 	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const [isAddressLoading, startAddressTransition] = useTransition();
@@ -178,19 +178,24 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				title: "Client créé avec succès",
 				description: "Le client a été créé avec succès",
 				action: (
-					<Link
-						href={`/dashboard/${organizationId}/clients`}
-						className="flex justify-between"
-					>
-						<Button variant="outline" size="sm">
+					<Button onClick={() => dismiss()} variant="outline" size="sm" asChild>
+						<Link href={`/dashboard/${organizationId}/clients`}>
 							Voir la liste
-						</Button>
-						<LoadingIndicator />
-					</Link>
+							<LoadingIndicator />
+						</Link>
+					</Button>
 				),
 			});
 		}
-	}, [form, state?.message, state.status, toast, router, organizationId]);
+	}, [
+		form,
+		state?.message,
+		state.status,
+		toast,
+		router,
+		organizationId,
+		dismiss,
+	]);
 
 	return (
 		<form
