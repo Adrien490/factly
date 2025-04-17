@@ -5,10 +5,10 @@ import {
 	AlertDialogAction,
 	AlertDialogCancel,
 } from "@/shared/components/shadcn-ui/alert-dialog";
-import { useToast } from "@/shared/hooks";
 import { ServerActionStatus } from "@/shared/types";
 import { cn } from "@/shared/utils";
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { useDeleteClient } from "../hooks";
 import { DeleteClientFormProps } from "./types";
 
@@ -17,16 +17,12 @@ export function DeleteClientForm({
 	organizationId,
 }: DeleteClientFormProps) {
 	const { state, action, isPending } = useDeleteClient();
-	const { toast, dismiss } = useToast();
 
 	useEffect(() => {
 		if (state.status === ServerActionStatus.SUCCESS) {
-			toast({
-				title: "Client supprimé avec succès",
-				description: "Le client a été supprimé avec succès",
-			});
+			toast.success("Client supprimé avec succès");
 		}
-	}, [state.status, toast, dismiss]);
+	}, [state.status]);
 	return (
 		<form action={action}>
 			<input type="hidden" name="id" value={id} />
