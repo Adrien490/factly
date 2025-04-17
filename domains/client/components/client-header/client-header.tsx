@@ -1,11 +1,12 @@
 import { NavigationDropdown } from "@/shared/components";
 import { Badge } from "@/shared/components/shadcn-ui/badge";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Clock, Mail, Phone } from "lucide-react";
+import { Button } from "@/shared/components/shadcn-ui/button";
+import { FileEdit } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use } from "react";
-import { getClientNavigation } from "../../constants";
+import { CLIENT_STATUSES, getClientNavigation } from "../../constants";
+import { CLIENT_TYPES } from "../../constants/client-types";
 import { ClientHeaderProps } from "./types";
 
 export function ClientHeader({ clientPromise }: ClientHeaderProps) {
@@ -20,54 +21,81 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 		client.id
 	);
 
+	const statusInfo = CLIENT_STATUSES.find(
+		(option) => option.value === client.status
+	);
+
 	return (
-		<div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-			<div className="space-y-2">
-				<div className="flex items-center gap-3">
-					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-						{client.name}
-					</h1>
-					<Badge variant="outline" className="bg-primary/10">
-						Client
-					</Badge>
+		<div>
+			<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+				{/* Section principale avec nom et identifiants */}
+				<div>
+					<div className="flex flex-wrap items-center gap-3">
+						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+							{client.name}
+						</h1>
+						<div className="flex items-center gap-2">
+							<Badge
+								variant="outline"
+								style={{
+									backgroundColor: `${statusInfo?.color}20`,
+									color: statusInfo?.color,
+									borderColor: statusInfo?.color,
+								}}
+							>
+								{statusInfo?.label}
+							</Badge>
+							<Badge variant="outline" className="bg-primary/5">
+								{
+									CLIENT_TYPES.find(
+										(option) => option.value === client.clientType
+									)?.label
+								}
+							</Badge>
+						</div>
+					</div>
+
+					<div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-sm text-muted-foreground">
+						{client.reference && (
+							<div className="flex items-center gap-1.5">
+								<span className="font-medium">Référence:</span>
+								<span>{client.reference}</span>
+							</div>
+						)}
+						{client.reference && (
+							<span className="text-muted-foreground/50">•</span>
+						)}
+						<div className="flex items-center gap-1.5">
+							<span className="font-medium">ID:</span>
+							<span className="font-mono">{client.id.substring(0, 8)}</span>
+						</div>
+					</div>
 				</div>
 
-				<div className="flex items-center gap-3 text-sm text-muted-foreground">
-					<span>Référence: {client.reference || "-"}</span>
-					<span>•</span>
-					<span>ID: {client.id.substring(0, 8)}</span>
-				</div>
-
-				<div className="flex flex-wrap gap-3 mt-1">
-					{client.email && (
-						<div className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-							<Mail className="h-3.5 w-3.5" />
-							<span>{client.email}</span>
-						</div>
-					)}
-					{client.phone && (
-						<div className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-							<Phone className="h-3.5 w-3.5" />
-							<span>{client.phone}</span>
-						</div>
-					)}
-					{client.createdAt && (
-						<div className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-							<Clock className="h-3.5 w-3.5" />
-							<span>
-								Créé le{" "}
-								{format(new Date(client.createdAt), "d MMMM yyyy", {
-									locale: fr,
-								})}
-							</span>
-						</div>
-					)}
+				{/* Actions et navigation */}
+				<div className="flex-shrink-0">
+					<div className="flex items-center gap-2">
+						<Button asChild variant="outline" size="sm">
+							<Link
+								href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
+							>
+								<FileEdit className="h-3.5 w-3.5 mr-1.5" />
+								Modifier
+							</Link>
+						</Button>
+						<NavigationDropdown items={clientNavigation} />
+					</div>
 				</div>
 			</div>
 
-			<div className="sticky top-0 z-10 bg-background pb-2 flex-shrink-0">
-				<NavigationDropdown items={clientNavigation} />
-			</div>
+			{/* Affichage conditionnel des notes */}
+			{client.notes && (
+				<div className="mt-4 pt-4 border-t border-border/50">
+					<div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
+						<p className="italic">{client.notes}</p>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

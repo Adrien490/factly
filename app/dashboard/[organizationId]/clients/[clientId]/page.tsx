@@ -10,7 +10,18 @@ import {
 } from "@/shared/components/shadcn-ui/card";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Mail, MapPin, Phone, PlusIcon } from "lucide-react";
+import {
+	Building2,
+	Calendar,
+	ExternalLink,
+	FileText,
+	Globe,
+	Mail,
+	MapPin,
+	Phone,
+	PlusIcon,
+	User,
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -55,6 +66,7 @@ export default async function ClientPage({ params }: Props) {
 
 			{/* Informations principales avec mise en page améliorée */}
 			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+				{/* Carte d'informations générales */}
 				<Card>
 					<CardHeader className="pb-3">
 						<CardTitle>Informations générales</CardTitle>
@@ -66,8 +78,38 @@ export default async function ClientPage({ params }: Props) {
 								<dt className="text-sm font-medium text-muted-foreground">
 									Nom
 								</dt>
-								<dd className="mt-1">{client.name}</dd>
+								<dd className="mt-1 flex items-center gap-2">
+									<User className="h-4 w-4 text-muted-foreground" />
+									{client.name}
+								</dd>
 							</div>
+							{(client.siren || client.siret) && (
+								<div>
+									<dt className="text-sm font-medium text-muted-foreground">
+										Identifiants légaux
+									</dt>
+									<dd className="mt-1 space-y-1.5">
+										{client.siren && (
+											<div className="flex items-center gap-2 text-sm">
+												<FileText className="h-4 w-4 text-muted-foreground" />
+												<span>SIREN: {client.siren}</span>
+											</div>
+										)}
+										{client.siret && (
+											<div className="flex items-center gap-2 text-sm">
+												<FileText className="h-4 w-4 text-muted-foreground" />
+												<span>SIRET: {client.siret}</span>
+											</div>
+										)}
+										{client.vatNumber && (
+											<div className="flex items-center gap-2 text-sm">
+												<Building2 className="h-4 w-4 text-muted-foreground" />
+												<span>TVA: {client.vatNumber}</span>
+											</div>
+										)}
+									</dd>
+								</div>
+							)}
 							{client.email && (
 								<div>
 									<dt className="text-sm font-medium text-muted-foreground">
@@ -97,6 +139,38 @@ export default async function ClientPage({ params }: Props) {
 									</dd>
 								</div>
 							)}
+							{client.website && (
+								<div>
+									<dt className="text-sm font-medium text-muted-foreground">
+										Site web
+									</dt>
+									<dd className="mt-1 flex items-center gap-2">
+										<Globe className="h-4 w-4 text-muted-foreground" />
+										<a
+											href={client.website}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="hover:underline flex items-center gap-1"
+										>
+											{client.website.replace(/^https?:\/\/(www\.)?/, "")}
+											<ExternalLink className="h-3 w-3" />
+										</a>
+									</dd>
+								</div>
+							)}
+							{client.createdAt && (
+								<div>
+									<dt className="text-sm font-medium text-muted-foreground">
+										Création
+									</dt>
+									<dd className="mt-1 flex items-center gap-2">
+										<Calendar className="h-4 w-4 text-muted-foreground" />
+										{format(new Date(client.createdAt), "d MMMM yyyy", {
+											locale: fr,
+										})}
+									</dd>
+								</div>
+							)}
 						</dl>
 					</CardContent>
 					<CardFooter className="pt-0 border-t px-6 py-4">
@@ -110,6 +184,7 @@ export default async function ClientPage({ params }: Props) {
 					</CardFooter>
 				</Card>
 
+				{/* Carte adresses */}
 				<Card>
 					<CardHeader className="pb-3">
 						<CardTitle>Adresses</CardTitle>
@@ -163,42 +238,59 @@ export default async function ClientPage({ params }: Props) {
 					</CardFooter>
 				</Card>
 
-				<Card className="md:col-span-2 lg:col-span-1">
-					<CardHeader className="pb-3">
-						<CardTitle>Statistiques</CardTitle>
-						<CardDescription>
-							Vue d&apos;ensemble de l&apos;activité
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="grid grid-cols-2 gap-4">
-							<div className="bg-muted/50 p-4 rounded-md text-center">
-								<div className="text-3xl font-semibold">
-									{client.addresses?.length || 0}
+				{/* Carte notes ou statistiques */}
+				{client.notes ? (
+					<Card className="md:col-span-2 lg:col-span-1">
+						<CardHeader className="pb-3">
+							<CardTitle>Notes</CardTitle>
+							<CardDescription>Informations complémentaires</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="bg-muted/50 p-4 rounded-md">
+								<p className="italic text-sm">{client.notes}</p>
+							</div>
+						</CardContent>
+					</Card>
+				) : (
+					<Card className="md:col-span-2 lg:col-span-1">
+						<CardHeader className="pb-3">
+							<CardTitle>Statistiques</CardTitle>
+							<CardDescription>
+								Vue d&apos;ensemble de l&apos;activité
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="grid grid-cols-2 gap-4">
+								<div className="bg-muted/50 p-4 rounded-md text-center">
+									<div className="text-3xl font-semibold">
+										{client.addresses?.length || 0}
+									</div>
+									<div className="text-sm text-muted-foreground mt-1">
+										Adresses
+									</div>
 								</div>
-								<div className="text-sm text-muted-foreground mt-1">
-									Adresses
+								<div className="bg-muted/50 p-4 rounded-md text-center">
+									<div className="text-3xl font-semibold">0</div>
+									<div className="text-sm text-muted-foreground mt-1">
+										Contacts
+									</div>
+								</div>
+								<div className="bg-muted/50 p-4 rounded-md text-center col-span-2">
+									<div className="text-sm text-muted-foreground">
+										Dernier contact
+									</div>
+									<div className="mt-1">
+										{client.updatedAt
+											? format(new Date(client.updatedAt), "PPP", {
+													locale: fr,
+											  })
+											: "Jamais"}
+									</div>
 								</div>
 							</div>
-							<div className="bg-muted/50 p-4 rounded-md text-center">
-								<div className="text-3xl font-semibold">0</div>
-								<div className="text-sm text-muted-foreground mt-1">
-									Contacts
-								</div>
-							</div>
-							<div className="bg-muted/50 p-4 rounded-md text-center col-span-2">
-								<div className="text-sm text-muted-foreground">
-									Dernier contact
-								</div>
-								<div className="mt-1">
-									{client.updatedAt
-										? format(new Date(client.updatedAt), "PPP", { locale: fr })
-										: "Jamais"}
-								</div>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
+						</CardContent>
+					</Card>
+				)}
 			</div>
 		</div>
 	);

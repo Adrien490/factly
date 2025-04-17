@@ -19,3 +19,5 @@ const BreadcrumbLink = React.forwardRef<
 	);
 });
 BreadcrumbLink.displayName = "BreadcrumbLink";
+
+export { BreadcrumbLink };

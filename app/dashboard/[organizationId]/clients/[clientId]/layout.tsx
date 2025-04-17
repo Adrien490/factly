@@ -4,7 +4,6 @@ import {
 } from "@/domains/client/components/client-header";
 import { getClient } from "@/domains/client/features/get-client";
 import { PageContainer } from "@/shared/components";
-import { Separator } from "@/shared/components/shadcn-ui/separator";
 import { ReactNode, Suspense } from "react";
 
 type Props = {
@@ -20,18 +19,22 @@ export default async function ClientLayout({ children, params }: Props) {
 	const { organizationId, clientId } = resolvedParams;
 
 	return (
-		<PageContainer className="space-y-8">
-			{/* En-tête amélioré avec Suspense */}
-			<Suspense fallback={<ClientHeaderSkeleton />}>
-				<ClientHeader
-					clientPromise={getClient({ id: clientId, organizationId })}
-				/>
-			</Suspense>
+		<PageContainer className="pt-6">
+			{/* Breadcrumb amélioré */}
 
-			<Separator />
+			{/* En-tête client */}
+			<div className="border-b">
+				<div className="pb-6">
+					<Suspense fallback={<ClientHeaderSkeleton />}>
+						<ClientHeader
+							clientPromise={getClient({ id: clientId, organizationId })}
+						/>
+					</Suspense>
+				</div>
+			</div>
 
 			{/* Contenu de la page */}
-			<div>{children}</div>
+			<div className="py-6">{children}</div>
 		</PageContainer>
 	);
 }
