@@ -17,6 +17,8 @@ import { ClientRowActionsProps } from "./types";
 export function ClientRowActions({ client }: ClientRowActionsProps) {
 	const menuItems = getClientRowMenuItems(client.organizationId, client.id);
 
+	// Fonction pour résoudre l'icône
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -36,7 +38,7 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 				align="end"
 				side="bottom"
 				sideOffset={4}
-				className="w-40"
+				className="w-48"
 			>
 				{menuItems.map((item, index) => (
 					<React.Fragment key={`menu-item-${index}`}>
@@ -45,12 +47,14 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 							<Link
 								href={item.href}
 								className={cn(
-									"flex w-full items-center justify-between",
+									"flex w-full items-center",
 									item.isDanger && "text-destructive"
 								)}
 							>
+								{item.icon}
 								<span>{item.label}</span>
-								<LoadingIndicator className="ml-2 h-4 w-4" />
+								{/* Indicateur de chargement masqué par défaut */}
+								<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
 							</Link>
 						</DropdownMenuItem>
 					</React.Fragment>
