@@ -1,18 +1,19 @@
 "use client";
 
+import { useSelectionContext } from "@/shared/contexts";
 import { CheckSquare } from "lucide-react";
 
 type Props = {
-	selectedItems?: string[];
 	actions?: React.ReactNode;
 };
 
-export function SelectionToolbar({ selectedItems = [], actions }: Props) {
-	const count = selectedItems.length;
-	const hasSelection = count > 0;
+export function SelectionToolbar({ actions }: Props) {
+	const { getSelectedCount } = useSelectionContext();
+	const selectedCount = getSelectedCount();
+	const hasSelection = selectedCount > 0;
 
 	return (
-		<div className="flex items-center justify-between">
+		<div className="flex items-center justify-between px-4 py-2 bg-background border-b border-b-slate-200 dark:border-b-slate-700">
 			<div className="flex items-center gap-2 h-8">
 				<CheckSquare
 					className={`h-4 w-4 ${
@@ -25,8 +26,10 @@ export function SelectionToolbar({ selectedItems = [], actions }: Props) {
 					}`}
 				>
 					{hasSelection
-						? `${count} ${
-								count > 1 ? "éléments sélectionnés" : "élément sélectionné"
+						? `${selectedCount} ${
+								selectedCount > 1
+									? "éléments sélectionnés"
+									: "élément sélectionné"
 						  }`
 						: "Aucune sélection"}
 				</span>

@@ -5,6 +5,7 @@ import {
 	ItemCheckbox,
 	Pagination,
 	SelectAllCheckbox,
+	SelectionToolbar,
 	Table,
 	TableBody,
 	TableCell,
@@ -52,6 +53,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 
 	return (
 		<SelectionProvider>
+			<SelectionToolbar />
 			<Table className="group-has-[[data-pending]]:animate-pulse">
 				<TableHeader>
 					<TableRow>
