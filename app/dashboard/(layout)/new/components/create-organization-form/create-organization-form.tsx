@@ -23,9 +23,7 @@ import {
 } from "@/shared/components/forms";
 import { GridLoader } from "@/shared/components/loaders";
 import { MiniDotsLoader } from "@/shared/components/loaders/mini-dots-loader";
-import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
-import { useToast } from "@/shared/hooks/use-toast";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { ServerActionStatus } from "@/shared/types/server-action";
 import { LegalForm } from "@prisma/client";
@@ -37,9 +35,9 @@ import {
 } from "@tanstack/react-form";
 import { Building2, Globe, MapPin, Receipt, Upload, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
+import { toast } from "sonner";
 
 interface OrganizationFormProps {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -53,7 +51,6 @@ export function CreateOrganizationForm({
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { isUploading, startUpload } = useUploadThing("organizationLogo");
 	const router = useRouter();
-	const { toast } = useToast();
 
 	// TanStack Form setup
 	const form = useForm({
@@ -85,24 +82,23 @@ export function CreateOrganizationForm({
 	// Toast de suivi pour l'action du formulaire
 	useEffect(() => {
 		if (!isPending && state && state.status === ServerActionStatus.SUCCESS) {
-			toast({
-				title: "Organisation créée",
-				description: state?.message,
-				action: (
-					<Link href={`/dashboard`} className="flex justify-between">
-						<Button variant="outline" size="sm">
-							Voir la liste
-						</Button>
-						<LoadingIndicator />
-					</Link>
-				),
+			toast.success("Organisation créée avec succès", {
+				description: "La nouvelle organisation a été créée avec succès",
+				duration: 3000,
+				action: {
+					label: "Voir la liste",
+					onClick: () => {
+						router.push(`/dashboard`);
+						toast.dismiss();
+					},
+				},
 			});
 
 			setTimeout(() => {
 				router.push(`/dashboard`);
 			}, 500);
 		}
-	}, [isPending, state, toast, router]);
+	}, [isPending, state, router]);
 
 	// Fonction pour sélectionner une adresse dans l'autocomplétion
 	const handleAddressSelect = (address: FormattedAddressResult) => {
@@ -226,8 +222,7 @@ export function CreateOrganizationForm({
 											}}
 											onUploadError={(error) => {
 												console.error(error);
-												toast({
-													title: "Erreur lors de l'upload",
+												toast.error("Erreur lors de l'upload", {
 													description:
 														"Impossible de charger l'image. Veuillez réessayer.",
 												});
