@@ -221,7 +221,7 @@ export default async function ClientPage({ params }: Props) {
 						</CardContent>
 					</Card>
 
-					{/* Adresses avec AddressList */}
+					{/* Adresses */}
 					<Card>
 						<CardHeader className="flex flex-row items-center justify-between pb-2">
 							<div>
@@ -238,20 +238,26 @@ export default async function ClientPage({ params }: Props) {
 							</Button>
 						</CardHeader>
 
-						<CardContent>
-							<Suspense fallback={<AddressListSkeleton viewType="grid" />}>
-								<AddressList
-									viewType="grid"
-									addressesPromise={getAddresses({
-										clientId,
-										filters: {},
-										sortBy: "createdAt",
-										sortOrder: "desc",
-									})}
-									clientId={clientId}
-								/>
-							</Suspense>
+						<CardContent className="p-0 pt-2">
+							{" "}
+							{/* Suppression du padding pour mieux intégrer la liste */}
+							<div className="px-6 pb-6">
+								{" "}
+								<Suspense fallback={<AddressListSkeleton viewType="grid" />}>
+									<AddressList
+										viewType="grid"
+										addressesPromise={getAddresses({
+											clientId,
+											filters: {},
+											sortBy: "createdAt",
+											sortOrder: "desc",
+										})}
+										clientId={clientId}
+									/>
+								</Suspense>
+							</div>
 						</CardContent>
+
 						<CardFooter className="border-t px-6 py-4">
 							<Button asChild variant="outline" size="sm" className="w-full">
 								<Link
@@ -340,7 +346,7 @@ export default async function ClientPage({ params }: Props) {
 							<div className="grid grid-cols-2 gap-4 mb-4">
 								<div className="bg-muted/40 rounded-lg p-4 flex flex-col items-center justify-center">
 									<span className="text-2xl font-bold">
-										{client.addresses?.length || 0}
+										{client.addresses.length || 0}
 									</span>
 									<span className="text-xs text-muted-foreground mt-1">
 										Adresses
