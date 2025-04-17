@@ -26,8 +26,6 @@ import {
 	FormSection,
 } from "@/shared/components/forms";
 import { DotsLoader } from "@/shared/components/loaders/dots-loader";
-import { LoadingIndicator } from "@/shared/components/loading-indicator";
-import { useToast } from "@/shared/hooks/use-toast";
 import { useCheckReference } from "@/shared/queries";
 import { ServerActionStatus } from "@/shared/types";
 import { generateReference } from "@/shared/utils";
@@ -48,9 +46,9 @@ import {
 	Wand2,
 	X,
 } from "lucide-react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { use, useCallback, useEffect, useRef, useTransition } from "react";
+import { use, useEffect, useTransition } from "react";
+import { toast } from "sonner";
 import { formOpts } from "./constants";
 
 type Props = {
@@ -60,7 +58,6 @@ type Props = {
 export function CreateClientForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
 	const params = useParams();
-	const { toast, dismiss } = useToast();
 	const organizationId = params.organizationId as string;
 	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const [isAddressLoading, startAddressTransition] = useTransition();
@@ -68,14 +65,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const router = useRouter();
 	const { state: checkReferenceState, dispatch: checkReferenceDispatch } =
 		useCheckReference();
-	const toastIdRef = useRef<string | null>(null);
-
-	// Créer une version stable de dismiss avec useCallback
-	const handleDismiss = useCallback(() => {
-		if (toastIdRef.current) {
-			dismiss(toastIdRef.current);
-		}
-	}, [dismiss]);
 
 	// TanStack Form setup
 	const form = useForm({
@@ -181,32 +170,19 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	useEffect(() => {
 		if (state.status === ServerActionStatus.SUCCESS) {
 			form.reset();
-			const { id } = toast({
-				duration: 3000,
-				title: "Client créé avec succès",
+			toast.success("Client créé avec succès", {
 				description: "Le client a été créé avec succès",
-				action: (
-					<Button onClick={handleDismiss} variant="outline" size="sm" asChild>
-						<Link href={`/dashboard/${organizationId}/clients`}>
-							Voir la liste
-							<LoadingIndicator />
-						</Link>
-					</Button>
-				),
+				duration: 3000,
+				action: {
+					label: "Voir la liste",
+					onClick: () => {
+						router.push(`/dashboard/${organizationId}/clients`);
+						toast.dismiss();
+					},
+				},
 			});
-
-			// Stocker l'ID du toast
-			toastIdRef.current = id;
 		}
-	}, [
-		form,
-		state?.message,
-		state.status,
-		toast,
-		router,
-		organizationId,
-		handleDismiss,
-	]);
+	}, [form, state?.message, state.status, router, organizationId]);
 
 	return (
 		<form
