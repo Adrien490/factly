@@ -13,6 +13,7 @@ export * from "./loaders/spinner-loader";
 export * from "./logo";
 export * from "./menu-actions";
 export * from "./multi-select-filter";
+export * from "./navigation-dropdown";
 export * from "./page-container";
 export * from "./page-header";
 export * from "./search-form";
@@ -26,3 +27,5 @@ export * from "./user-avatar";
 export * from "./view-toggle";
 
 export * from "./scroll-to-button";
+
+export * from "./loading-indicator";

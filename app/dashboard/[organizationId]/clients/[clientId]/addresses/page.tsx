@@ -5,8 +5,6 @@ import { AddressListSkeleton } from "@/domains/address/features/get-addresses/co
 import {
 	Button,
 	FilterSelect,
-	PageContainer,
-	PageHeader,
 	SearchForm,
 	ViewToggle,
 } from "@/shared/components";
@@ -14,7 +12,6 @@ import { SortOrder, ViewType } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import Link from "next/link";
 import { Suspense } from "react";
-import { clientNavigation } from "../constants";
 
 type Props = {
 	params: Promise<{
@@ -41,45 +38,31 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 		type: type as AddressType,
 	};
 
-	// Conversion des paramètres
-
 	return (
-		<PageContainer className="pb-12">
-			{/* En-tête avec action principale */}
-			<PageHeader
-				title="Adresses"
-				description="Gérez les adresses de votre client"
-				action={
-					<Button asChild>
-						<Link
-							href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
-						>
-							Nouvelle adresse
-						</Link>
-					</Button>
-				}
-				navigation={{
-					items: clientNavigation(organizationId, clientId),
-				}}
-				className="mb-6"
-			/>
+		<div className="space-y-6">
+			<h2 className="text-2xl font-semibold">Liste des adresses</h2>
 
 			{/* Barre de recherche et filtres */}
 			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4">
 				<SearchForm
 					paramName="search"
-					placeholder="Rechercher par nom, email, référence, SIREN..."
-					className="w-full flex-1 shrink-0"
+					placeholder="Rechercher une adresse..."
+					className="flex-1 shrink-0"
 				/>
 				<ViewToggle />
 				<span className="text-xs font-medium text-muted-foreground px-1">
 					Filtrer par:
 				</span>
-				<div className="flex flex-wrap gap-2">
-					<FilterSelect filterKey="type" label="Type" options={ADDRESS_TYPES} />
 
-					{/* Dropdown de tri compact */}
-				</div>
+				<FilterSelect filterKey="type" label="Type" options={ADDRESS_TYPES} />
+
+				<Button className="shrink-0" asChild>
+					<Link
+						href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
+					>
+						Nouvelle adresse
+					</Link>
+				</Button>
 			</div>
 
 			<Suspense fallback={<AddressListSkeleton />}>
@@ -88,10 +71,8 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 					addressesPromise={getAddresses({
 						search,
 						clientId,
-
 						sortBy: "createdAt",
 						sortOrder: (sortOrder as SortOrder) || "desc",
-
 						filters: Object.entries(filters).reduce((acc, [key, value]) => {
 							if (value) {
 								// Préserver les tableaux et les strings
@@ -106,6 +87,6 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 					})}
 				/>
 			</Suspense>
-		</PageContainer>
+		</div>
 	);
 }

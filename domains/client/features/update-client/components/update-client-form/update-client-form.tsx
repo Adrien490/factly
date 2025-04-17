@@ -36,6 +36,7 @@ import {
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
+import { toast } from "sonner";
 import { useUpdateClient } from "../../hooks";
 
 type Props = {
@@ -115,12 +116,15 @@ export function UpdateClientForm({ clientPromise }: Props) {
 
 	useEffect(() => {
 		if (state.status === ServerActionStatus.SUCCESS) {
-			// toast notification removed since we're using server-action-response
+			toast.success("Client mis à jour avec succès", {
+				description: "Le client a été mis à jour avec succès",
+				duration: 2000,
+			});
 		}
 		return () => {
 			form.reset();
 		};
-	}, [form, state?.message, state.status, router, organizationId]);
+	}, [form, state, router, organizationId, client.id]);
 
 	return (
 		<form

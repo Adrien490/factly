@@ -1,7 +1,5 @@
 import { CreateAddressForm } from "@/domains/address/features/create-address";
 import { searchAddress } from "@/domains/address/features/search-address";
-import { PageContainer } from "@/shared/components/page-container";
-import { PageHeader } from "@/shared/components/page-header";
 
 type Props = {
 	params: Promise<{
@@ -49,16 +47,13 @@ export default async function NewAddressPage({ params, searchParams }: Props) {
 	};
 
 	return (
-		<PageContainer>
-			<PageHeader
-				title="Nouvelle adresse"
-				description="Ajoutez une nouvelle adresse pour votre client"
-			/>
+		<div className="space-y-6 flex flex-col gap-2">
+			<h1 className="text-2xl font-semibold">Nouvelle adresse</h1>
 			<CreateAddressForm
 				searchAddressPromise={searchAddress(searchAddressParams)}
 				clientId={clientId}
 				returnUrl={`/dashboard/${organizationId}/clients/${clientId}`}
 			/>
-		</PageContainer>
+		</div>
 	);
 }
