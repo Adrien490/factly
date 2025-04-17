@@ -1,4 +1,4 @@
-import { searchAddress } from "@/domains/address";
+import { searchAddress } from "@/domains/address/features";
 import { CreateOrganizationForm } from "@/domains/organization/features/create-organization/components";
 import { PageContainer } from "@/shared/components";
 

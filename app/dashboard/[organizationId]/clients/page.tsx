@@ -8,7 +8,6 @@ import {
 	CLIENT_TYPES,
 } from "@/domains/client/constants";
 import { getClients } from "@/domains/client/features/get-clients";
-import { ClientSortableField } from "@/domains/client/types";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
@@ -108,7 +107,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							organizationId,
 							perPage: Number(perPage) || 10,
 							page: Number(page) || 1,
-							sortBy: sortBy as ClientSortableField,
+							sortBy: sortBy as string,
 							sortOrder: sortOrder as SortOrder,
 							search,
 							filters: Object.entries(filters).reduce((acc, [key, value]) => {

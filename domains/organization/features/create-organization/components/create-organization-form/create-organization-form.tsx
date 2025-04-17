@@ -11,7 +11,10 @@ import {
 	SelectValue,
 } from "@/shared/components";
 
-import { FormattedAddressResult, SearchAddressReturn } from "@/domains/address";
+import {
+	FormattedAddressResult,
+	SearchAddressReturn,
+} from "@/domains/address/features";
 import { useCreateOrganization } from "@/domains/organization/features";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {

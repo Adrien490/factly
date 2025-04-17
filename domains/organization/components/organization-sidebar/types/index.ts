@@ -1,4 +1,4 @@
-import { GetOrganizationsReturn } from "@/domains/organization/features";
+import { GetOrganizationsReturn } from "@/domains/organization/features/get-organizations";
 import { Sidebar } from "@/shared/components/shadcn-ui/sidebar";
 import React from "react";
 

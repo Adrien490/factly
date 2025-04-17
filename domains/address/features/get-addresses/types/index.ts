@@ -1,9 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { DEFAULT_SELECT } from "../../../constants";
+import { GET_ADDRESSES_DEFAULT_SELECT } from "../constants";
 import { getAddressesSchema } from "../schemas";
 
-export type GetAddressesParams = z.infer<typeof getAddressesSchema>;
+// Type simplifié sans pagination
 export type GetAddressesReturn = Array<
-	Prisma.AddressGetPayload<{ select: typeof DEFAULT_SELECT }>
+	Prisma.AddressGetPayload<{ select: typeof GET_ADDRESSES_DEFAULT_SELECT }>
 >;
+
+export type GetAddressesParams = z.infer<typeof getAddressesSchema>;

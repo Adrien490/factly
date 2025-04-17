@@ -27,5 +27,10 @@ export const buildSearchConditions = (
 				some: { postalCode: { contains: searchTerm, mode: "insensitive" } },
 			},
 		},
+		{
+			addresses: {
+				some: { addressLine1: { contains: searchTerm, mode: "insensitive" } },
+			},
+		},
 	];
 };

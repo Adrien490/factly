@@ -1,19 +1,16 @@
-import { clientSortableFields } from "@/domains/client/constants";
-import { datatableSchema } from "@/shared/schemas";
-import { Civility, ClientStatus, ClientType } from "@prisma/client";
+import { sortOrderSchema } from "@/shared/schemas";
+import { ClientStatus, ClientType } from "@prisma/client";
 import { z } from "zod";
 
 const filterValueSchema = z.union([
 	// Valeurs uniques (chaînes)
 	z.nativeEnum(ClientStatus),
 	z.nativeEnum(ClientType),
-	z.nativeEnum(Civility),
 	z.string(),
 
 	// Tableaux de valeurs
 	z.array(z.nativeEnum(ClientStatus)),
 	z.array(z.nativeEnum(ClientType)),
-	z.array(z.nativeEnum(Civility)),
 	z.array(z.string()),
 ]);
 
@@ -21,12 +18,14 @@ const filterValueSchema = z.union([
 // peuvent être soit des valeurs uniques, soit des tableaux
 const clientFiltersSchema = z.record(filterValueSchema);
 
-export const getClientsSchema = datatableSchema([
-	...clientSortableFields,
-]).extend({
+export const getClientsSchema = z.object({
 	organizationId: z.string(),
 	search: z.string().optional(),
 	filters: clientFiltersSchema.default({}),
+	page: z.number().default(1),
+	perPage: z.number().default(10),
+	sortBy: z.string().default("createdAt"),
+	sortOrder: sortOrderSchema.default("desc"),
 });
 
 // Type pour les paramètres de requête des clients

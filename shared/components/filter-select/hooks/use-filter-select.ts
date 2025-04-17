@@ -42,10 +42,11 @@ export function useFilterSelect(filterKey: string) {
 		// Supprimer d'abord tous les paramètres de ce filtre
 		params.delete(paramKey);
 
-		// Convertir en tableau pour traitement uniforme
-
-		// Ajouter les nouvelles valeurs
-		if (value) params.append(paramKey, value);
+		// Si la valeur est "all", nous supprimons simplement le paramètre sans le réajouter
+		// mais nous conservons la valeur dans l'état optimiste pour l'affichage UI
+		if (value && value !== "all") {
+			params.append(paramKey, value);
+		}
 
 		// IMPORTANT: Réinitialiser la pagination à la page 1 quand un filtre change
 		// Cela permet d'éviter des pages vides quand le nombre de résultats diminue

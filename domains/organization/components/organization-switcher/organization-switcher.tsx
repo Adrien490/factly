@@ -23,7 +23,7 @@ import {
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { GetOrganizationsReturn } from "../../features";
+import { GetOrganizationsReturn } from "../../features/get-organizations";
 
 interface OrganizationSwitcherProps {
 	organizations: GetOrganizationsReturn;

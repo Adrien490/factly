@@ -33,8 +33,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 	const { clients, pagination } = response;
 	const clientIds = clients.map((client) => client.id);
 
-	console.log(clients);
-
 	if (clients.length === 0) {
 		return (
 			<div className="py-12" role="status" aria-live="polite">

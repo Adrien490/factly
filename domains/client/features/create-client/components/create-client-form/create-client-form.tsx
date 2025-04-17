@@ -228,7 +228,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				)}
 			</form.Field>
 
-			<FormLayout withDividers spacing="compact" columns={2} className="mt-6">
+			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
 				<FormSection
 					title="Informations de base"

@@ -2,6 +2,7 @@
 
 import db from "@/shared/lib/db";
 import { Prisma } from "@prisma/client";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import {
@@ -34,6 +35,11 @@ export async function fetchClients(
 	cacheTag(
 		`clients:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
 	);
+	cacheLife({
+		revalidate: 60 * 60 * 24,
+		stale: 60 * 60 * 24,
+		expire: 60 * 60 * 24,
+	});
 
 	// Tag pour la pagination
 	const page = Math.max(1, Number(params.page) || 1);

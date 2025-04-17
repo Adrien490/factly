@@ -14,7 +14,7 @@ export function FormSection({
 	className = "",
 }: FormSectionProps) {
 	return (
-		<Card className={cn("rounded-lg p-6 mb-8 transition-all", className)}>
+		<Card className={cn("p-6 mb-6", className)}>
 			{/* En-tête de section */}
 			<div className="mb-6 pb-4 border-b border-border/30">
 				<div className="flex items-start gap-4">

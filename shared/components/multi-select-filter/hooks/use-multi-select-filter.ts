@@ -46,15 +46,19 @@ export function useMultiSelectFilter(filterKey: string) {
 		// Supprimer d'abord tous les paramètres de ce filtre
 		params.delete(paramKey);
 
-		// Ajouter les nouvelles valeurs
-		values.forEach((val) => {
-			if (val) params.append(paramKey, val);
+		// Filtrer la valeur "all" pour les paramètres URL, mais la conserver dans l'état optimiste
+		const validParams = values.filter((val) => val && val !== "all");
+
+		// Ajouter les nouvelles valeurs valides aux paramètres URL
+		validParams.forEach((val) => {
+			params.append(paramKey, val);
 		});
 
 		// IMPORTANT: Réinitialiser la pagination à la page 1 quand un filtre change
 		// Cela permet d'éviter des pages vides quand le nombre de résultats diminue
 		params.set("page", "1");
 
+		// Mettre à jour avec toutes les valeurs pour l'UI, mais seulement les valides pour l'URL
 		updateUrlWithParams(params, values);
 	};
 

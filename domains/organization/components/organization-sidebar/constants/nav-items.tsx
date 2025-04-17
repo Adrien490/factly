@@ -1,30 +1,42 @@
-"use client";
+import { LayoutDashboard, Truck, Users } from "lucide-react";
 
-import { LayoutDashboard, Users } from "lucide-react";
-
-export const navItems = (organizationId: string) => ({
-	navMain: [
-		{
-			title: "Tableau de bord",
-			url: `/dashboard/${organizationId}`,
-			icon: LayoutDashboard,
-		},
-		{
-			title: "Clients",
-			icon: Users,
-			url: `/dashboard/${organizationId}/clients`,
-			items: [
-				{
-					title: "Liste des clients",
-					url: `/dashboard/${organizationId}/clients`,
-				},
-				{
-					title: "Ajouter un client",
-					url: `/dashboard/${organizationId}/clients/new`,
-				},
-			],
-		},
-		/*
+export const navItems = (organizationId: string) => [
+	{
+		title: "Tableau de bord",
+		url: `/dashboard/${organizationId}`,
+		icon: LayoutDashboard,
+	},
+	{
+		title: "Clients",
+		icon: Users,
+		url: `/dashboard/${organizationId}/clients`,
+		items: [
+			{
+				title: "Liste des clients",
+				url: `/dashboard/${organizationId}/clients`,
+			},
+			{
+				title: "Ajouter un client",
+				url: `/dashboard/${organizationId}/clients/new`,
+			},
+		],
+	},
+	{
+		title: "Fournisseurs",
+		icon: Truck,
+		url: `/dashboard/${organizationId}/suppliers`,
+		items: [
+			{
+				title: "Liste des fournisseurs",
+				url: `/dashboard/${organizationId}/suppliers`,
+			},
+			{
+				title: "Ajouter un fournisseur",
+				url: `/dashboard/${organizationId}/suppliers/new`,
+			},
+		],
+	},
+	/*
 		{
 			title: "Catalogue",
 			icon: Package,
@@ -140,5 +152,4 @@ export const navItems = (organizationId: string) => ({
 			],
 		},
 		*/
-	],
-});
+];

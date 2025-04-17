@@ -10,7 +10,9 @@ import { GetAddressesReturn } from "../types";
 import { fetchAddresses } from "./fetch-addresses";
 
 /**
- * Récupère la liste des adresses pour un client ou fournisseur
+ * Récupère les adresses associées à un client ou un fournisseur
+ * @param params - Paramètres validés par getAddressesSchema
+ * @returns Liste des adresses (sans pagination)
  */
 export async function getAddresses(
 	params: z.infer<typeof getAddressesSchema>
@@ -27,51 +29,53 @@ export async function getAddresses(
 
 		// Validation des paramètres
 		const validation = getAddressesSchema.safeParse(params);
-
 		if (!validation.success) {
 			throw new Error("Invalid parameters");
 		}
 
 		const validatedParams = validation.data;
 
-		// Si nous avons un clientId, nous devons vérifier l'accès à l'organisation du client
+		// Vérification du droit d'accès
+		// Pour déterminer l'organization, nous devons vérifier si c'est un client ou fournisseur
+		let organizationId: string;
+
+		// Pour un client
 		if (validatedParams.clientId) {
-			// Dans un cas réel, il faudrait récupérer l'organizationId du client
-			// pour vérifier les droits d'accès
-			const client = await getClientOrganization(validatedParams.clientId);
+			const client = await db.client.findUnique({
+				where: { id: validatedParams.clientId },
+				select: { organizationId: true },
+			});
 
 			if (!client) {
 				throw new Error("Client not found");
 			}
 
-			const hasAccess = await hasOrganizationAccess(client.organizationId);
-
-			if (!hasAccess) {
-				throw new Error("Access denied");
-			}
+			organizationId = client.organizationId;
 		}
-
-		// Si nous avons un supplierId, nous devons vérifier l'accès à l'organisation du fournisseur
-		if (validatedParams.supplierId) {
-			// Dans un cas réel, il faudrait récupérer l'organizationId du fournisseur
-			// pour vérifier les droits d'accès
-			const supplier = await getSupplierOrganization(
-				validatedParams.supplierId
-			);
+		// Pour un fournisseur
+		else if (validatedParams.supplierId) {
+			const supplier = await db.supplier.findUnique({
+				where: { id: validatedParams.supplierId },
+				select: { organizationId: true },
+			});
 
 			if (!supplier) {
 				throw new Error("Supplier not found");
 			}
 
-			const hasAccess = await hasOrganizationAccess(supplier.organizationId);
-
-			if (!hasAccess) {
-				throw new Error("Access denied");
-			}
+			organizationId = supplier.organizationId;
+		} else {
+			throw new Error("Either clientId or supplierId must be provided");
 		}
 
-		// Appel à la fonction
-		return await fetchAddresses(validatedParams);
+		// Vérification des droits d'accès à l'organisation
+		const hasAccess = await hasOrganizationAccess(organizationId);
+		if (!hasAccess) {
+			throw new Error("Access denied");
+		}
+
+		// Appel à la fonction avec cache
+		return await fetchAddresses(validatedParams, session.user.id);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error("Invalid parameters");
@@ -79,24 +83,4 @@ export async function getAddresses(
 
 		throw error;
 	}
-}
-
-// Fonction utilitaire pour récupérer l'organisation d'un client
-async function getClientOrganization(clientId: string) {
-	const client = await db.client.findUnique({
-		where: { id: clientId },
-		select: { organizationId: true },
-	});
-
-	return client;
-}
-
-// Fonction utilitaire pour récupérer l'organisation d'un fournisseur
-async function getSupplierOrganization(supplierId: string) {
-	const supplier = await db.supplier.findUnique({
-		where: { id: supplierId },
-		select: { organizationId: true },
-	});
-
-	return supplier;
 }
