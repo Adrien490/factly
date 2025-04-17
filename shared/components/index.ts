@@ -20,9 +20,9 @@ export * from "./select-filter";
 export * from "./shadcn-ui";
 export * from "./sort-selector";
 export * from "./sorting-dropdown";
+export * from "./sorting-options-dropdown";
 export * from "./theme-toggle-button";
 export * from "./user-avatar";
-
 export * from "./view-toggle";
 
 export * from "./scroll-to-button";
