@@ -1,4 +1,3 @@
-import { NavigationDropdown } from "@/shared/components";
 import { Badge } from "@/shared/components/shadcn-ui/badge";
 import { Button } from "@/shared/components/shadcn-ui/button";
 import { FileEdit } from "lucide-react";
@@ -83,7 +82,6 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 								Modifier
 							</Link>
 						</Button>
-						<NavigationDropdown items={clientNavigation} />
 					</div>
 				</div>
 			</div>
