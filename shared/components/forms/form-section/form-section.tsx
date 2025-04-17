@@ -36,7 +36,7 @@ export function FormSection({
 			</div>
 
 			{/* Contenu de la section avec meilleur espacement */}
-			<div className="space-y-5">{children}</div>
+			<div className="space-y-4">{children}</div>
 		</Card>
 	);
 }

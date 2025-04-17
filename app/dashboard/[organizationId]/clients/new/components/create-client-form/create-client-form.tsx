@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
+import { use, useCallback, useEffect, useRef, useTransition } from "react";
 import { formOpts } from "./constants";
 
 type Props = {
@@ -68,6 +68,14 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const router = useRouter();
 	const { state: checkReferenceState, dispatch: checkReferenceDispatch } =
 		useCheckReference();
+	const toastIdRef = useRef<string | null>(null);
+
+	// Créer une version stable de dismiss avec useCallback
+	const handleDismiss = useCallback(() => {
+		if (toastIdRef.current) {
+			dismiss(toastIdRef.current);
+		}
+	}, [dismiss]);
 
 	// TanStack Form setup
 	const form = useForm({
@@ -173,12 +181,12 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	useEffect(() => {
 		if (state.status === ServerActionStatus.SUCCESS) {
 			form.reset();
-			toast({
+			const { id } = toast({
 				duration: 3000,
 				title: "Client créé avec succès",
 				description: "Le client a été créé avec succès",
 				action: (
-					<Button onClick={() => dismiss()} variant="outline" size="sm" asChild>
+					<Button onClick={handleDismiss} variant="outline" size="sm" asChild>
 						<Link href={`/dashboard/${organizationId}/clients`}>
 							Voir la liste
 							<LoadingIndicator />
@@ -186,6 +194,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					</Button>
 				),
 			});
+
+			// Stocker l'ID du toast
+			toastIdRef.current = id;
 		}
 	}, [
 		form,
@@ -194,7 +205,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		toast,
 		router,
 		organizationId,
-		dismiss,
+		handleDismiss,
 	]);
 
 	return (
