@@ -1,1 +1,1 @@
-export * from "./create-address";
+export { createAddress } from "./create-address";

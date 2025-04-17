@@ -5,16 +5,14 @@ import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { DEFAULT_SELECT } from "../../../constants";
 import { getAddressSchema } from "../schemas";
-import { GetAddressReturn } from "../types";
+import { fetchAddress } from "./fetch-address";
 
 /**
- * Récupère une adresse par son ID
+ * Récupère les détails d'une adresse spécifique
+ * Gère l'authentification et les accès avant d'appeler la fonction cacheable
  */
-export async function getAddress(
-	params: z.infer<typeof getAddressSchema>
-): Promise<GetAddressReturn | null> {
+export async function getAddress(params: z.infer<typeof getAddressSchema>) {
 	try {
 		// Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -27,57 +25,72 @@ export async function getAddress(
 
 		// Validation des paramètres
 		const validation = getAddressSchema.safeParse(params);
-
 		if (!validation.success) {
 			throw new Error("Invalid parameters");
 		}
 
 		const validatedParams = validation.data;
 
-		// Récupérer l'adresse
+		// D'abord récupérer l'adresse pour vérifier ses relations
 		const address = await db.address.findUnique({
 			where: { id: validatedParams.id },
-			select: DEFAULT_SELECT,
+			select: {
+				clientId: true,
+				supplierId: true,
+			},
 		});
 
 		if (!address) {
-			return null;
+			throw new Error("Address not found");
 		}
 
-		// Vérifier les droits d'accès à l'organisation
-		const organizationId = address.clientId || address.supplierId;
+		// Vérifier que l'adresse appartient à l'organisation spécifiée
+		// Pour cela, on doit vérifier via le client ou le fournisseur selon le cas
+		if (address.clientId) {
+			// Pour les adresses liées à un client
+			const client = await db.client.findUnique({
+				where: { id: address.clientId },
+				select: { organizationId: true },
+			});
 
-		if (!organizationId) {
-			throw new Error("Address is not associated with any organization");
+			if (!client || client.organizationId !== validatedParams.organizationId) {
+				throw new Error(
+					"Address does not belong to the specified organization"
+				);
+			}
+		} else if (address.supplierId) {
+			// Pour les adresses liées à un fournisseur
+			const supplier = await db.supplier.findUnique({
+				where: { id: address.supplierId },
+				select: { organizationId: true },
+			});
+
+			if (
+				!supplier ||
+				supplier.organizationId !== validatedParams.organizationId
+			) {
+				throw new Error(
+					"Address does not belong to the specified organization"
+				);
+			}
+		} else {
+			// Si l'adresse n'est liée ni à un client ni à un fournisseur
+			throw new Error("Address is not associated with any entity");
 		}
 
-		const hasAccess = await hasOrganizationAccess(organizationId);
+		// Vérification des droits d'accès à l'organisation
+		const hasAccess = await hasOrganizationAccess(
+			validatedParams.organizationId
+		);
 
 		if (!hasAccess) {
 			throw new Error("Access denied");
 		}
 
-		// Retourner l'adresse sans les relations client/supplier imbriquées
-		return {
-			id: address.id,
-			addressLine1: address.addressLine1,
-			addressLine2: address.addressLine2,
-			postalCode: address.postalCode,
-			city: address.city,
-			country: address.country,
-			latitude: address.latitude,
-			longitude: address.longitude,
-			isDefault: address.isDefault,
-			clientId: address.clientId,
-			supplierId: address.supplierId,
-			createdAt: address.createdAt,
-			updatedAt: address.updatedAt,
-		};
+		// Appel à la fonction cacheable pour récupérer l'adresse complète
+		return fetchAddress(validatedParams);
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			throw new Error("Invalid parameters");
-		}
-
+		console.error("[GET_ADDRESS]", error);
 		throw error;
 	}
 }

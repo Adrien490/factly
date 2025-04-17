@@ -3,39 +3,80 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
+import {
+	ServerActionState,
+	ServerActionStatus,
+	createErrorResponse,
+	createSuccessResponse,
+	createValidationErrorResponse,
+} from "@/shared/types/server-action";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { z } from "zod";
 import { deleteAddressSchema } from "../schemas";
-import { DeleteAddressReturn } from "../types";
 
 /**
- * Supprime une adresse existante
+ * Action serveur pour supprimer une adresse
+ * Validations :
+ * - L'utilisateur doit être authentifié
+ * - L'utilisateur doit avoir accès à l'organisation
+ * - L'adresse doit exister et appartenir à l'organisation
  */
 export async function deleteAddress(
-	params: z.infer<typeof deleteAddressSchema>
-): Promise<DeleteAddressReturn> {
+	_: ServerActionState<unknown, typeof deleteAddressSchema>,
+	formData: FormData
+): Promise<ServerActionState<null, typeof deleteAddressSchema>> {
 	try {
-		// Vérification de l'authentification
+		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
-
 		if (!session?.user?.id) {
-			throw new Error("Unauthorized");
+			return createErrorResponse(
+				ServerActionStatus.UNAUTHORIZED,
+				"Vous devez être connecté pour supprimer une adresse"
+			);
 		}
 
-		// Validation des paramètres
-		const validation = deleteAddressSchema.safeParse(params);
+		// 2. Vérification de base des données requises
+		const rawId = formData.get("id");
+		const rawOrganizationId = formData.get("organizationId");
+		if (
+			!rawId ||
+			typeof rawId !== "string" ||
+			!rawOrganizationId ||
+			typeof rawOrganizationId !== "string"
+		) {
+			return createErrorResponse(
+				ServerActionStatus.VALIDATION_ERROR,
+				"L'identifiant de l'adresse et de l'organisation sont requis"
+			);
+		}
 
+		// 3. Vérification de l'accès à l'organisation
+		const hasAccess = await hasOrganizationAccess(rawOrganizationId);
+		if (!hasAccess) {
+			return createErrorResponse(
+				ServerActionStatus.FORBIDDEN,
+				"Vous n'avez pas accès à cette organisation"
+			);
+		}
+
+		// 4. Validation complète des données
+		const validation = deleteAddressSchema.safeParse({
+			id: rawId,
+			organizationId: rawOrganizationId,
+		});
 		if (!validation.success) {
-			throw new Error("Invalid parameters");
+			return createValidationErrorResponse(
+				validation.error.flatten().fieldErrors,
+				{ id: rawId, organizationId: rawOrganizationId },
+				"Types invalides"
+			);
 		}
 
-		const validatedParams = validation.data;
-
-		// Récupérer l'adresse existante pour vérifier l'accès
+		// 5. Récupérer l'adresse existante
 		const existingAddress = await db.address.findUnique({
-			where: { id: validatedParams.id },
+			where: { id: validation.data.id },
 			select: {
 				id: true,
 				isDefault: true,
@@ -47,37 +88,42 @@ export async function deleteAddress(
 		});
 
 		if (!existingAddress) {
-			return { success: false, message: "Address not found" };
+			return createErrorResponse(
+				ServerActionStatus.NOT_FOUND,
+				"Adresse introuvable"
+			);
 		}
 
-		// Vérifier les droits d'accès à l'organisation
-		const organizationId =
+		// 6. Vérifier que l'adresse appartient bien à l'organisation spécifiée
+		const addressOrganizationId =
 			existingAddress.client?.organizationId ||
 			existingAddress.supplier?.organizationId;
 
-		if (!organizationId) {
-			throw new Error("Address is not associated with any organization");
+		if (!addressOrganizationId) {
+			return createErrorResponse(
+				ServerActionStatus.ERROR,
+				"L'adresse n'est associée à aucune entité"
+			);
 		}
 
-		const hasAccess = await hasOrganizationAccess(organizationId);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
+		if (addressOrganizationId !== validation.data.organizationId) {
+			return createErrorResponse(
+				ServerActionStatus.FORBIDDEN,
+				"L'adresse n'appartient pas à l'organisation spécifiée"
+			);
 		}
 
-		// Vérifier si c'est une adresse par défaut
+		// 7. Vérifier si c'est une adresse par défaut et gérer le remplacement
 		if (existingAddress.isDefault) {
-			// Si c'est l'adresse par défaut, il faut en définir une autre comme adresse par défaut
-			// ou retourner une erreur si c'est la seule adresse
 			let otherAddresses;
 
 			if (existingAddress.clientId) {
 				otherAddresses = await db.address.findMany({
 					where: {
 						clientId: existingAddress.clientId,
-						id: { not: existingAddress.id },
+						id: { not: validation.data.id },
 					},
-					take: 1, // On a juste besoin de savoir s'il y en a d'autres
+					take: 1,
 				});
 
 				if (otherAddresses.length > 0) {
@@ -91,7 +137,7 @@ export async function deleteAddress(
 				otherAddresses = await db.address.findMany({
 					where: {
 						supplierId: existingAddress.supplierId,
-						id: { not: existingAddress.id },
+						id: { not: validation.data.id },
 					},
 					take: 1,
 				});
@@ -106,27 +152,30 @@ export async function deleteAddress(
 			}
 		}
 
-		// Supprimer l'adresse
+		// 8. Supprimer l'adresse
 		await db.address.delete({
-			where: { id: validatedParams.id },
+			where: { id: validation.data.id },
 		});
 
-		return {
-			success: true,
-			message: "Adresse supprimée avec succès",
-		};
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			return {
-				success: false,
-				message: "Paramètres invalides",
-			};
+		// 9. Revalidation du cache
+		if (existingAddress.clientId) {
+			revalidateTag(`clients:org:${validation.data.organizationId}`);
+			revalidateTag(`client:${existingAddress.clientId}`);
 		}
+		if (existingAddress.supplierId) {
+			revalidateTag(`suppliers:org:${validation.data.organizationId}`);
+			revalidateTag(`supplier:${existingAddress.supplierId}`);
+		}
+		revalidateTag("addresses:list");
 
-		return {
-			success: false,
-			message:
-				error instanceof Error ? error.message : "Une erreur est survenue",
-		};
+		return createSuccessResponse(null, "Adresse supprimée avec succès");
+	} catch (error) {
+		console.error("[DELETE_ADDRESS]", error);
+		return createErrorResponse(
+			ServerActionStatus.ERROR,
+			error instanceof Error
+				? error.message
+				: "Impossible de supprimer l'adresse"
+		);
 	}
 }

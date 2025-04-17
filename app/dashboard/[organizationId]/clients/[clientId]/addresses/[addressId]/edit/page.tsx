@@ -1,11 +1,14 @@
-import { CreateAddressForm } from "@/domains/address/features/create-address";
+import { getAddress } from "@/domains/address/features";
 import { searchAddress } from "@/domains/address/features/search-address";
+import { UpdateAddressForm } from "@/domains/address/features/update-address";
 import { PageContainer } from "@/shared/components/page-container";
 import { PageHeader } from "@/shared/components/page-header";
-import { clientBreadcrumbs } from "../../constants/client-breadcrumbs";
+import { notFound } from "next/navigation";
+import { clientBreadcrumbs } from "../../../constants/client-breadcrumbs";
 
 type Props = {
 	params: Promise<{
+		addressId: string;
 		clientId: string;
 		organizationId: string;
 	}>;
@@ -21,9 +24,20 @@ type Props = {
 	}>;
 };
 
-export default async function NewAddressPage({ params, searchParams }: Props) {
+export default async function EditAddressPage({ params, searchParams }: Props) {
 	const resolvedParams = await params;
-	const { clientId, organizationId } = resolvedParams;
+	const { addressId, clientId, organizationId } = resolvedParams;
+
+	// Récupérer l'adresse à éditer
+	const address = await getAddress({
+		organizationId,
+		id: addressId,
+	});
+
+	// Vérifier que l'adresse existe et appartient au client
+	if (!address || address.clientId !== clientId) {
+		return notFound();
+	}
 
 	const resolvedSearchParams = await searchParams;
 	const {
@@ -52,13 +66,14 @@ export default async function NewAddressPage({ params, searchParams }: Props) {
 	return (
 		<PageContainer>
 			<PageHeader
-				title="Nouvelle adresse"
-				description="Ajoutez une nouvelle adresse pour votre client"
+				title="Modifier une adresse"
+				description="Modifiez les informations de l'adresse"
 				breadcrumbs={clientBreadcrumbs(organizationId, clientId)}
 			/>
-			<CreateAddressForm
+
+			<UpdateAddressForm
+				address={address}
 				searchAddressPromise={searchAddress(searchAddressParams)}
-				clientId={clientId}
 				returnUrl={`/dashboard/${organizationId}/clients/${clientId}`}
 			/>
 		</PageContainer>

@@ -3,121 +3,160 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
-import { ServerActionState } from "@/shared/types";
-import { Address } from "cluster";
+import {
+	ServerActionState,
+	ServerActionStatus,
+	createErrorResponse,
+	createSuccessResponse,
+	createValidationErrorResponse,
+} from "@/shared/types/server-action";
+import { Address, AddressType } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { z } from "zod";
-import { DEFAULT_SELECT } from "../../../constants";
 import { createAddressSchema } from "../schemas";
-import { CreateAddressReturn } from "../types";
+
 /**
- * Crée une nouvelle adresse pour un client ou un fournisseur
+ * Action serveur pour créer une nouvelle adresse
+ * Validations :
+ * - L'utilisateur doit être authentifié
+ * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function createAddress(
 	_: ServerActionState<Address, typeof createAddressSchema>,
 	formData: FormData
-): Promise<CreateAddressReturn> {
+): Promise<ServerActionState<Address, typeof createAddressSchema>> {
 	try {
-		// Vérification de l'authentification
+		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
-
 		if (!session?.user?.id) {
-			throw new Error("Unauthorized");
+			return createErrorResponse(
+				ServerActionStatus.UNAUTHORIZED,
+				"Vous devez être connecté pour créer une adresse"
+			);
 		}
 
+		// 2. Vérification de base des données requises
+		const organizationId = formData.get("organizationId");
+		if (!organizationId) {
+			return createErrorResponse(
+				ServerActionStatus.VALIDATION_ERROR,
+				"L'ID de l'organisation est requis"
+			);
+		}
+
+		// 3. Vérification de l'accès à l'organisation
+		const hasAccess = await hasOrganizationAccess(organizationId.toString());
+		if (!hasAccess) {
+			return createErrorResponse(
+				ServerActionStatus.FORBIDDEN,
+				"Vous n'avez pas accès à cette organisation"
+			);
+		}
+
+		// 4. Préparation et transformation des données brutes
 		const rawData = {
-			addressLine1: formData.get("addressLine1"),
-			addressLine2: formData.get("addressLine2"),
-			postalCode: formData.get("postalCode"),
-			city: formData.get("city"),
-			country: formData.get("country"),
-			isDefault: formData.get("isDefault"),
-			clientId: formData.get("clientId"),
-			supplierId: formData.get("supplierId"),
+			organizationId: organizationId.toString(),
+			addressType:
+				(formData.get("addressType") as AddressType) || AddressType.BILLING,
+			addressLine1: formData.get("addressLine1") as string,
+			addressLine2: formData.get("addressLine2") as string,
+			postalCode: formData.get("postalCode") as string,
+			city: formData.get("city") as string,
+			country: (formData.get("country") as string) || "France",
+			isDefault:
+				formData.get("isDefault") === "on" ||
+				formData.get("isDefault") === "true",
+
+			// Coordonnées géographiques
+			latitude: formData.get("latitude")
+				? parseFloat(formData.get("latitude") as string)
+				: null,
+			longitude: formData.get("longitude")
+				? parseFloat(formData.get("longitude") as string)
+				: null,
+
+			// Relations optionnelles
+			clientId: (formData.get("clientId") as string) || null,
+			supplierId: (formData.get("supplierId") as string) || null,
 		};
 
-		// Validation des paramètres
+		// 5. Validation des données avec le schéma Zod
 		const validation = createAddressSchema.safeParse(rawData);
-
 		if (!validation.success) {
-			throw new Error("Invalid parameters");
+			console.log(
+				"[CREATE_ADDRESS] Validation errors:",
+				validation.error.flatten().fieldErrors
+			);
+			return createValidationErrorResponse(
+				validation.error.flatten().fieldErrors,
+				rawData,
+				"Veuillez remplir tous les champs obligatoires"
+			);
 		}
 
-		const validatedParams = validation.data;
+		// 6. Création de l'adresse dans la base de données
+		const {
+			organizationId: validatedOrgId,
+			clientId,
+			supplierId,
+			...addressData
+		} = validation.data;
 
-		// Vérifier si l'utilisateur a accès à l'organisation associée
-		let organizationId: string | null = null;
-
-		if (validatedParams.clientId) {
-			const client = await db.client.findUnique({
-				where: { id: validatedParams.clientId },
-				select: { organizationId: true },
-			});
-
-			if (!client) {
-				throw new Error("Client not found");
-			}
-
-			organizationId = client.organizationId;
-		} else if (validatedParams.supplierId) {
-			const supplier = await db.supplier.findUnique({
-				where: { id: validatedParams.supplierId },
-				select: { organizationId: true },
-			});
-
-			if (!supplier) {
-				throw new Error("Supplier not found");
-			}
-
-			organizationId = supplier.organizationId;
-		}
-
-		if (!organizationId) {
-			throw new Error("Missing organization reference");
-		}
-
-		const hasAccess = await hasOrganizationAccess(organizationId);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
-		}
-
-		// Si la nouvelle adresse est définie comme adresse par défaut, il faut mettre à jour
-		// les autres adresses du même client/fournisseur
-		if (validatedParams.isDefault) {
-			if (validatedParams.clientId) {
+		// Vérifier si c'est l'adresse par défaut et associée à une entité
+		if (addressData.isDefault) {
+			// Si c'est pour un client, réinitialiser les autres adresses par défaut du client
+			if (clientId) {
 				await db.address.updateMany({
 					where: {
-						clientId: validatedParams.clientId,
+						clientId,
 						isDefault: true,
 					},
-					data: { isDefault: false },
+					data: {
+						isDefault: false,
+					},
 				});
-			} else if (validatedParams.supplierId) {
+			}
+
+			// Si c'est pour un fournisseur, réinitialiser les autres adresses par défaut du fournisseur
+			if (supplierId) {
 				await db.address.updateMany({
 					where: {
-						supplierId: validatedParams.supplierId,
+						supplierId,
 						isDefault: true,
 					},
-					data: { isDefault: false },
+					data: {
+						isDefault: false,
+					},
 				});
 			}
 		}
 
-		// Créer l'adresse
-		const newAddress = await db.address.create({
-			data: validatedParams,
-			select: DEFAULT_SELECT,
+		// Créer l'adresse avec les relations appropriées
+		const address = await db.address.create({
+			data: {
+				...addressData,
+				...(clientId && { client: { connect: { id: clientId } } }),
+				...(supplierId && { supplier: { connect: { id: supplierId } } }),
+			},
 		});
 
-		return newAddress;
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			throw new Error("Invalid parameters");
+		// 7. Invalidation du cache pour forcer un rafraîchissement des données
+		if (clientId) {
+			revalidateTag(`clients:${validatedOrgId}:user:${session.user.id}`);
+		}
+		if (supplierId) {
+			revalidateTag(`suppliers:${validatedOrgId}:user:${session.user.id}`);
 		}
 
-		throw error;
+		// 8. Retour de la réponse de succès
+		return createSuccessResponse(address, `L'adresse a été créée avec succès`);
+	} catch (error) {
+		console.error("[CREATE_ADDRESS]", error);
+		return createErrorResponse(
+			ServerActionStatus.ERROR,
+			error instanceof Error ? error.message : "Impossible de créer l'adresse"
+		);
 	}
 }

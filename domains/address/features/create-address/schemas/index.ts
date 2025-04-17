@@ -1,29 +1,28 @@
+import { AddressType } from "@prisma/client";
 import { z } from "zod";
 
-// Schéma de base pour les addresses sans pagination
-export const addressBaseSchema = z.object({
-	// Champs obligatoires
+/**
+ * Schéma de validation pour le formulaire d'adresse
+ * Basé sur le modèle Prisma Address
+ */
+export const createAddressSchema = z.object({
+	// Organisation
+	organizationId: z.string().min(1, "L'organisation est requise"),
+
+	// Informations d'adresse
+	addressType: z.nativeEnum(AddressType).default(AddressType.BILLING),
 	addressLine1: z.string().min(1, "L'adresse est requise"),
+	addressLine2: z.string().optional(),
 	postalCode: z.string().min(1, "Le code postal est requis"),
 	city: z.string().min(1, "La ville est requise"),
-
-	// Champs optionnels
-	addressLine2: z.string().optional(),
-	country: z.string().default("France"),
-	latitude: z.number().optional().nullable(),
-	longitude: z.number().optional().nullable(),
+	country: z.string().optional().default("France"),
 	isDefault: z.boolean().default(false),
 
-	// Relations (une adresse est toujours liée à un client OU un fournisseur)
+	// Coordonnées géographiques
+	latitude: z.number().optional().nullable(),
+	longitude: z.number().optional().nullable(),
+
+	// Relations optionnelles - ID du client ou du fournisseur associé
 	clientId: z.string().optional(),
 	supplierId: z.string().optional(),
 });
-
-// Schéma pour la création d'une adresse
-export const createAddressSchema = addressBaseSchema.refine(
-	(data) => data.clientId !== undefined || data.supplierId !== undefined,
-	{
-		message: "Une adresse doit être associée à un client ou un fournisseur",
-		path: ["clientId"],
-	}
-);

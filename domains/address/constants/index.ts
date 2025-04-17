@@ -34,3 +34,5 @@ export const addressSortableFields = [
 	"createdAt",
 	"updatedAt",
 ] as const;
+
+export const entityType = ["client", "supplier"] as const;
