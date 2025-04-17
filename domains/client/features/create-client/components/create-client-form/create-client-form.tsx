@@ -174,9 +174,16 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				description: "Le client a été créé avec succès",
 				duration: 3000,
 				action: {
-					label: "Voir la liste",
+					label: "Voir la fiche",
 					onClick: () => {
-						router.push(`/dashboard/${organizationId}/clients`);
+						// Rediriger vers la fiche du client nouvellement créé
+						if (state.data?.id) {
+							router.push(
+								`/dashboard/${organizationId}/clients/${state.data.id}`
+							);
+						} else {
+							router.push(`/dashboard/${organizationId}/clients`);
+						}
 						toast.dismiss();
 					},
 				},
@@ -185,7 +192,14 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		return () => {
 			toast.dismiss();
 		};
-	}, [form, state?.message, state.status, router, organizationId]);
+	}, [
+		form,
+		state?.message,
+		state.status,
+		router,
+		organizationId,
+		state.data?.id,
+	]);
 
 	return (
 		<form
