@@ -90,9 +90,9 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 			});
 		}
 		return () => {
-			form.reset();
+			toast.dismiss();
 		};
-	}, [form, state?.message, state.status, router, organizationId, supplier.id]);
+	}, [form, state, router, organizationId, supplier.id]);
 
 	return (
 		<form
