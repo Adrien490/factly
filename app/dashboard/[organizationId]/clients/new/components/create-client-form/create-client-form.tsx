@@ -182,6 +182,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				},
 			});
 		}
+		return () => {
+			toast.dismiss();
+		};
 	}, [form, state?.message, state.status, router, organizationId]);
 
 	return (
