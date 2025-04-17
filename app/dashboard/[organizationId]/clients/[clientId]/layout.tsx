@@ -19,7 +19,7 @@ export default async function ClientLayout({ children, params }: Props) {
 	const { organizationId, clientId } = resolvedParams;
 
 	return (
-		<PageContainer className="pt-6">
+		<PageContainer className="pt-4">
 			{/* Breadcrumb amélioré */}
 
 			{/* En-tête client */}
