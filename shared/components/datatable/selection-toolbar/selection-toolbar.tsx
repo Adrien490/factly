@@ -1,14 +1,15 @@
 "use client";
 
+import { Button } from "@/shared/components";
 import { useSelectionContext } from "@/shared/contexts";
-import { CheckSquare } from "lucide-react";
+import { CheckSquare, X } from "lucide-react";
 
 type Props = {
 	actions?: React.ReactNode;
 };
 
 export function SelectionToolbar({ actions }: Props) {
-	const { getSelectedCount } = useSelectionContext();
+	const { getSelectedCount, clearSelection } = useSelectionContext();
 	const selectedCount = getSelectedCount();
 	const hasSelection = selectedCount > 0;
 
@@ -33,6 +34,17 @@ export function SelectionToolbar({ actions }: Props) {
 						  }`
 						: "Aucune sélection"}
 				</span>
+				{hasSelection && (
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={clearSelection}
+						className="h-7 px-2 text-xs"
+					>
+						<X className="h-3.5 w-3.5 mr-1" />
+						Effacer
+					</Button>
+				)}
 			</div>
 
 			<div className="flex items-center h-8">
