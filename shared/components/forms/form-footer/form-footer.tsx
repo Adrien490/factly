@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components";
-import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
+import { MiniDotsLoader } from "../../loaders";
 
 interface FormFooterProps {
 	isPending?: boolean;
@@ -61,7 +61,7 @@ export function FormFooter({
 					className="w-full sm:w-auto shadow-sm transition-all"
 					size="default"
 				>
-					{isPending && <SpinnerLoader size="sm" color="primary" />}
+					{isPending && <MiniDotsLoader size="sm" color="default" />}
 					{submitLabel}
 				</Button>
 			</div>
