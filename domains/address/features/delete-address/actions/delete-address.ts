@@ -158,15 +158,25 @@ export async function deleteAddress(
 		});
 
 		// 9. Revalidation du cache
+		// Tags généraux d'adresses
+		revalidateTag(`addresses:list`);
+		revalidateTag(`addresses:sort:createdAt:desc`); // Tag par défaut pour le tri
+
+		// Tags spécifiques au client ou fournisseur
 		if (existingAddress.clientId) {
 			revalidateTag(`clients:org:${validation.data.organizationId}`);
 			revalidateTag(`client:${existingAddress.clientId}`);
+			revalidateTag(
+				`client:${existingAddress.clientId}:addresses:user:${session.user.id}`
+			);
 		}
 		if (existingAddress.supplierId) {
 			revalidateTag(`suppliers:org:${validation.data.organizationId}`);
 			revalidateTag(`supplier:${existingAddress.supplierId}`);
+			revalidateTag(
+				`supplier:${existingAddress.supplierId}:addresses:user:${session.user.id}`
+			);
 		}
-		revalidateTag("addresses:list");
 
 		return createSuccessResponse(null, "Adresse supprimée avec succès");
 	} catch (error) {

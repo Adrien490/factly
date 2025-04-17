@@ -143,11 +143,20 @@ export async function createAddress(
 		});
 
 		// 7. Invalidation du cache pour forcer un rafraîchissement des données
+		// Tags généraux d'adresses
+		revalidateTag(`addresses:list`);
+		revalidateTag(`addresses:sort:createdAt:desc`); // Tag par défaut pour le tri
+
+		// Tags spécifiques au client ou fournisseur
 		if (clientId) {
 			revalidateTag(`clients:${validatedOrgId}:user:${session.user.id}`);
+			revalidateTag(`client:${clientId}`);
+			revalidateTag(`client:${clientId}:addresses:user:${session.user.id}`);
 		}
 		if (supplierId) {
 			revalidateTag(`suppliers:${validatedOrgId}:user:${session.user.id}`);
+			revalidateTag(`supplier:${supplierId}`);
+			revalidateTag(`supplier:${supplierId}:addresses:user:${session.user.id}`);
 		}
 
 		// 8. Retour de la réponse de succès

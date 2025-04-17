@@ -163,13 +163,24 @@ export async function updateAddress(
 		});
 
 		// 9. Invalidation du cache pour forcer un rafraîchissement des données
+		// Tags généraux d'adresses
+		revalidateTag(`addresses:list`);
+		revalidateTag(`addresses:sort:createdAt:desc`); // Tag par défaut pour le tri
+
+		// Tags spécifiques au client ou fournisseur
 		if (existingAddress.clientId) {
 			revalidateTag(`clients:${validatedOrgId}:user:${session.user.id}`);
 			revalidateTag(`client:${existingAddress.clientId}`);
+			revalidateTag(
+				`client:${existingAddress.clientId}:addresses:user:${session.user.id}`
+			);
 		}
 		if (existingAddress.supplierId) {
 			revalidateTag(`suppliers:${validatedOrgId}:user:${session.user.id}`);
 			revalidateTag(`supplier:${existingAddress.supplierId}`);
+			revalidateTag(
+				`supplier:${existingAddress.supplierId}:addresses:user:${session.user.id}`
+			);
 		}
 
 		// 10. Retour de la réponse de succès
