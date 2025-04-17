@@ -23,6 +23,6 @@ export const createAddressSchema = z.object({
 	longitude: z.number().optional().nullable(),
 
 	// Relations optionnelles - ID du client ou du fournisseur associé
-	clientId: z.string().optional(),
-	supplierId: z.string().optional(),
+	clientId: z.string().optional().nullable(),
+	supplierId: z.string().optional().nullable(),
 });
