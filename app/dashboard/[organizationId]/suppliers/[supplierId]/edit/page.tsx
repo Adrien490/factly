@@ -1,5 +1,8 @@
 import { getSupplier } from "@/domains/supplier/features/get-supplier";
-import { UpdateSupplierForm } from "@/domains/supplier/features/update-supplier";
+import {
+	UpdateSupplierForm,
+	UpdateSupplierSkeleton,
+} from "@/domains/supplier/features/update-supplier";
 import { PageContainer, PageHeader } from "@/shared/components";
 import { Suspense } from "react";
 
@@ -22,7 +25,7 @@ export default async function EditClientPage({ params }: PageProps) {
 				title={`Modifier le fournisseur`}
 				description="Modifiez les informations du fournisseur ci-dessous"
 			/>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<UpdateSupplierSkeleton />}>
 				<UpdateSupplierForm
 					supplierPromise={getSupplier({ id: supplierId, organizationId })}
 				/>
