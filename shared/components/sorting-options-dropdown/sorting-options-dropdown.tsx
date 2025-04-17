@@ -9,7 +9,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/shared/components/shadcn-ui/dropdown-menu";
-import { ArrowDown, ArrowUp, SlidersHorizontal } from "lucide-react";
+import {
+	ArrowDown,
+	ArrowUp,
+	RotateCcw,
+	SlidersHorizontal,
+	Star,
+} from "lucide-react";
 import { useSortingOptions } from "./hooks";
 
 /**
@@ -29,9 +35,15 @@ export function SortingOptionsDropdown({
 		currentSortBy,
 		currentSortOrder,
 		isPending,
-		updateSort,
+		toggleSortOrder,
+		resetSort,
 		currentField,
 	} = useSortingOptions(sortFields, defaultSortBy, defaultSortOrder);
+
+	// Trouve le champ de tri par défaut
+	const defaultField = sortFields.find(
+		(field) => field.value === defaultSortBy
+	);
 
 	return (
 		<DropdownMenu>
@@ -52,45 +64,65 @@ export function SortingOptionsDropdown({
 				</Button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent align="start" className="w-56">
+			<DropdownMenuContent
+				data-pending={isPending ? "true" : undefined}
+				align="start"
+				className="w-56"
+			>
 				<DropdownMenuLabel>Trier par</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 
-				{sortFields.map((field) => (
-					<div key={field.value}>
-						<DropdownMenuItem
-							key={`${field.value}-asc`}
-							className="flex items-center gap-2 px-2 py-1.5"
-							onClick={() => updateSort(field.value, "asc")}
-						>
-							{field.icon}
-							<span className="flex-1">{field.label}</span>
-							<ArrowUp
-								className={`h-4 w-4 ${
-									currentSortBy === field.value && currentSortOrder === "asc"
-										? "opacity-100 text-primary"
-										: "opacity-50"
-								}`}
-							/>
-						</DropdownMenuItem>
+				{/* Option par défaut distincte */}
+				<DropdownMenuItem
+					key="default-sort"
+					className="flex items-center gap-2 px-2 py-1.5 font-medium"
+					onClick={() => resetSort()}
+				>
+					<Star className="h-4 w-4 text-amber-500" />
+					<span className="flex-1">
+						{defaultField
+							? `${defaultField.label} (par défaut)`
+							: "Tri par défaut"}
+					</span>
+					{defaultSortOrder === "asc" ? (
+						<ArrowUp className="h-4 w-4" />
+					) : (
+						<ArrowDown className="h-4 w-4" />
+					)}
+				</DropdownMenuItem>
 
-						<DropdownMenuItem
-							key={`${field.value}-desc`}
-							className="flex items-center gap-2 px-2 py-1.5"
-							onClick={() => updateSort(field.value, "desc")}
-						>
-							{field.icon}
-							<span className="flex-1">{field.label}</span>
-							<ArrowDown
-								className={`h-4 w-4 ${
-									currentSortBy === field.value && currentSortOrder === "desc"
-										? "opacity-100 text-primary"
-										: "opacity-50"
-								}`}
-							/>
-						</DropdownMenuItem>
-					</div>
+				<DropdownMenuSeparator />
+
+				{sortFields.map((field) => (
+					<DropdownMenuItem
+						key={field.value}
+						className="flex items-center gap-2 px-2 py-1.5"
+						onClick={() => toggleSortOrder(field.value)}
+					>
+						{field.icon}
+						<span className="flex-1">{field.label}</span>
+						{currentSortBy === field.value ? (
+							currentSortOrder === "asc" ? (
+								<ArrowUp className="h-4 w-4 text-primary" />
+							) : (
+								<ArrowDown className="h-4 w-4 text-primary" />
+							)
+						) : (
+							<div className="h-4 w-4 opacity-50 flex items-center">
+								<ArrowDown className="h-3 w-3" />
+							</div>
+						)}
+					</DropdownMenuItem>
 				))}
+
+				<DropdownMenuSeparator />
+				<DropdownMenuItem
+					className="flex items-center gap-2 px-2 py-1.5 text-muted-foreground"
+					onClick={resetSort}
+				>
+					<RotateCcw className="h-4 w-4" />
+					<span>Réinitialiser le tri</span>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

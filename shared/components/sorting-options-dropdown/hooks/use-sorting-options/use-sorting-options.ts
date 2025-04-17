@@ -51,11 +51,29 @@ export function useSortingOptions(
 		});
 	};
 
+	// Nouvelle fonction pour basculer l'ordre de tri sur un champ
+	const toggleSortOrder = (field: string) => {
+		// Si le champ est déjà sélectionné, on inverse l'ordre
+		if (field === optimisticSort.field) {
+			const newOrder = optimisticSort.order === "asc" ? "desc" : "asc";
+			updateSort(field, newOrder);
+		} else {
+			// Sinon on sélectionne le nouveau champ avec l'ordre par défaut
+			updateSort(field, defaultSortOrder);
+		}
+	};
+
+	// Fonction pour réinitialiser aux valeurs par défaut
+	const resetSort = () => {
+		updateSort(defaultSortBy, defaultSortOrder);
+	};
+
 	return {
 		currentSortBy: optimisticSort.field,
 		currentSortOrder: optimisticSort.order,
 		isPending,
-		updateSort,
+		toggleSortOrder,
+		resetSort,
 		sortFields,
 		currentField,
 	};
