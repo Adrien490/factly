@@ -14,8 +14,10 @@ export * from "./logo";
 export * from "./menu-actions";
 export * from "./multi-select-filter";
 export * from "./navigation-dropdown";
+export * from "./number-ticker";
 export * from "./page-container";
 export * from "./page-header";
+export * from "./scroll-to-button";
 export * from "./search-form";
 export * from "./select-filter";
 export * from "./shadcn-ui";
@@ -25,7 +27,5 @@ export * from "./sorting-options-dropdown";
 export * from "./theme-toggle-button";
 export * from "./user-avatar";
 export * from "./view-toggle";
-
-export * from "./scroll-to-button";
 
 export * from "./loading-indicator";

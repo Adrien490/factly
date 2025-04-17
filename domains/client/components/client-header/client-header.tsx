@@ -1,6 +1,6 @@
+import { Button } from "@/shared/components";
 import { Badge } from "@/shared/components/shadcn-ui/badge";
-import { Button } from "@/shared/components/shadcn-ui/button";
-import { FileEdit } from "lucide-react";
+import { MapPin, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use } from "react";
@@ -17,6 +17,9 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 
 	const statusInfo = CLIENT_STATUSES.find(
 		(option) => option.value === client.status
+	);
+	const clientTypeInfo = CLIENT_TYPES.find(
+		(option) => option.value === client.clientType
 	);
 
 	return (
@@ -40,11 +43,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 								{statusInfo?.label}
 							</Badge>
 							<Badge variant="outline" className="bg-primary/5">
-								{
-									CLIENT_TYPES.find(
-										(option) => option.value === client.clientType
-									)?.label
-								}
+								{clientTypeInfo?.label}
 							</Badge>
 						</div>
 					</div>
@@ -67,17 +66,30 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 				</div>
 
 				{/* Actions et navigation */}
-				<div className="flex-shrink-0">
-					<div className="flex items-center gap-2">
-						<Button asChild variant="outline" size="sm">
-							<Link
-								href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
-							>
-								<FileEdit className="h-3.5 w-3.5 mr-1.5" />
-								Modifier
-							</Link>
-						</Button>
-					</div>
+				<div className="flex flex-wrap gap-3">
+					<Button asChild size="sm" variant="outline">
+						<Link
+							href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
+						>
+							Modifier
+						</Link>
+					</Button>
+					<Button asChild size="sm" variant="outline">
+						<Link
+							href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts/new`}
+						>
+							<PlusIcon className="h-4 w-4 mr-2" />
+							Ajouter un contact
+						</Link>
+					</Button>
+					<Button asChild size="sm" variant="outline">
+						<Link
+							href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses/new`}
+						>
+							<MapPin className="h-4 w-4 mr-2" />
+							Ajouter une adresse
+						</Link>
+					</Button>
 				</div>
 			</div>
 

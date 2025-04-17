@@ -8,6 +8,4 @@ export interface NavigationItem {
 export interface NavigationDropdownProps {
 	items: NavigationItem[];
 	className?: string;
-	label?: string;
-	icon?: React.ReactNode;
 }

@@ -10,18 +10,13 @@ import {
 	DropdownMenuTrigger,
 } from "@/shared/components/shadcn-ui/dropdown-menu";
 import { cn } from "@/shared/utils";
-import { ChevronDown, Menu } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { NavigationDropdownProps } from "./types";
 
-export function NavigationDropdown({
-	items,
-	className,
-	label = "Navigation",
-	icon = <Menu className="h-4 w-4 mr-2" />,
-}: NavigationDropdownProps) {
+export function NavigationDropdown({ items }: NavigationDropdownProps) {
 	const pathname = usePathname();
 
 	// Si pas d'éléments, ne rien afficher
@@ -32,22 +27,15 @@ export function NavigationDropdown({
 	// Vérifier si un élément est actif
 	const isItemActive = (href: string) => pathname === href;
 
-	// Trouver l'élément actif pour l'afficher dans le bouton
-	const activeItem = items.find((item) => isItemActive(item.href));
-	const displayLabel = activeItem ? activeItem.label : label;
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					variant="outline"
-					size="sm"
-					className={cn("flex items-center gap-1", className)}
-				>
-					{icon}
-					<span className="max-w-[150px] truncate">{displayLabel}</span>
-					<ChevronDown className="h-4 w-4 ml-1 opacity-70" />
-				</Button>
+				<div className="flex items-center gap-1">
+					<span className="text-sm font-medium">Actions</span>
+					<Button variant="ghost" size="sm">
+						<MoreVertical className="h-4 w-4" />
+					</Button>
+				</div>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				align="end"
