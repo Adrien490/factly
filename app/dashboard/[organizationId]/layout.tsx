@@ -1,5 +1,8 @@
 import { auth } from "@/domains/auth";
-import { OrganizationSidebar } from "@/domains/organization/components";
+import {
+	OrganizationSidebar,
+	OrganizationSidebarSkeleton,
+} from "@/domains/organization/components";
 import {
 	getOrganizations,
 	hasOrganizationAccess,
@@ -47,7 +50,7 @@ export default async function OrganizationLayout({
 
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<OrganizationSidebarSkeleton />}>
 				<OrganizationSidebar
 					organizationsPromise={getOrganizations({
 						sortBy: "name",
