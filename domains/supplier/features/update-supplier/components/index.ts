@@ -1,2 +1,2 @@
 export * from "./update-supplier-form";
-export * from "./update-supplier-skeleton";
+export * from "./update-supplier-form-skeleton";

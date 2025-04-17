@@ -4,7 +4,7 @@ import { Skeleton } from "@/shared/components";
 import { FormLayout, FormSection } from "@/shared/components/forms";
 import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 
-export function UpdateSupplierSkeleton() {
+export function UpdateSupplierFormSkeleton() {
 	return (
 		<div className="animate-pulse space-y-6">
 			{/* Corps du formulaire */}

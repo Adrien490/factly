@@ -1,5 +1,8 @@
 import { getClient } from "@/domains/client/features/get-client";
-import { UpdateClientForm } from "@/domains/client/features/update-client";
+import {
+	UpdateClientForm,
+	UpdateClientFormSkeleton,
+} from "@/domains/client/features/update-client";
 import { PageContainer, PageHeader } from "@/shared/components";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -40,7 +43,7 @@ export default async function EditClientPage({ params }: PageProps) {
 					items: clientNavigation(organizationId, clientId),
 				}}
 			/>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense fallback={<UpdateClientFormSkeleton />}>
 				<UpdateClientForm
 					clientPromise={getClient({ id: clientId, organizationId })}
 				/>

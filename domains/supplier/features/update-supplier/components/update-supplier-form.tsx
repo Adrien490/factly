@@ -34,7 +34,7 @@ import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { toast } from "sonner";
-import { useUpdateSupplier } from "../../hooks";
+import { useUpdateSupplier } from "../hooks";
 
 type Props = {
 	supplierPromise: Promise<GetSupplierReturn>;
