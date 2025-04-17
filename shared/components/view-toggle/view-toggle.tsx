@@ -9,11 +9,6 @@ import { ViewType } from "@/shared/types/view-type";
 import { LayoutGrid, List } from "lucide-react";
 import { useViewToggle } from "./hooks";
 
-/**
- * Composant pour basculer entre différentes vues (grille/liste)
- * Utilise le hook useToggleView pour gérer la logique
- */
-
 export function ViewToggle() {
 	const { optimisticView, isPending, handleViewChange } = useViewToggle();
 

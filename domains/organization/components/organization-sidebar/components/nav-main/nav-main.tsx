@@ -194,7 +194,7 @@ export function NavMain() {
 										href={item.url}
 										className={cn(
 											"flex items-center justify-between",
-											isActive && "bg-primary/10"
+											isActive && "bg-sidebar-accent"
 										)}
 									>
 										<div className="flex items-center gap-2">
@@ -225,7 +225,7 @@ export function NavMain() {
 											href={isCollapsed ? item.url : ""}
 											className={cn(
 												(isActive && !hasSubItems) || (isActive && isCollapsed)
-													? "bg-primary/10"
+													? "bg-sidebar-accent"
 													: ""
 											)}
 										>
@@ -250,7 +250,7 @@ export function NavMain() {
 																"flex items-center justify-between",
 																isSubItemActive &&
 																	!isCollapsed &&
-																	"bg-primary/10"
+																	"bg-sidebar-accent"
 															)}
 														>
 															<span>{subItem.title}</span>
