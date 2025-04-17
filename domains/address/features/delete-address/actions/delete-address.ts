@@ -84,6 +84,7 @@ export async function deleteAddress(
 				supplierId: true,
 				client: { select: { organizationId: true } },
 				supplier: { select: { organizationId: true } },
+				addressType: true,
 			},
 		});
 
@@ -118,9 +119,11 @@ export async function deleteAddress(
 			let otherAddresses;
 
 			if (existingAddress.clientId) {
+				// Recherche d'une autre adresse du même type pour la définir comme par défaut
 				otherAddresses = await db.address.findMany({
 					where: {
 						clientId: existingAddress.clientId,
+						addressType: existingAddress.addressType, // Filtrer par type d'adresse
 						id: { not: validation.data.id },
 					},
 					take: 1,
@@ -134,9 +137,11 @@ export async function deleteAddress(
 					});
 				}
 			} else if (existingAddress.supplierId) {
+				// Recherche d'une autre adresse du même type pour la définir comme par défaut
 				otherAddresses = await db.address.findMany({
 					where: {
 						supplierId: existingAddress.supplierId,
+						addressType: existingAddress.addressType, // Filtrer par type d'adresse
 						id: { not: validation.data.id },
 					},
 					take: 1,

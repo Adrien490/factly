@@ -106,11 +106,12 @@ export async function createAddress(
 
 		// Vérifier si c'est l'adresse par défaut et associée à une entité
 		if (addressData.isDefault) {
-			// Si c'est pour un client, réinitialiser les autres adresses par défaut du client
+			// Si c'est pour un client, réinitialiser les autres adresses par défaut du même type
 			if (clientId) {
 				await db.address.updateMany({
 					where: {
 						clientId,
+						addressType: addressData.addressType, // Filtrer par type d'adresse
 						isDefault: true,
 					},
 					data: {
@@ -119,11 +120,12 @@ export async function createAddress(
 				});
 			}
 
-			// Si c'est pour un fournisseur, réinitialiser les autres adresses par défaut du fournisseur
+			// Si c'est pour un fournisseur, réinitialiser les autres adresses par défaut du même type
 			if (supplierId) {
 				await db.address.updateMany({
 					where: {
 						supplierId,
+						addressType: addressData.addressType, // Filtrer par type d'adresse
 						isDefault: true,
 					},
 					data: {

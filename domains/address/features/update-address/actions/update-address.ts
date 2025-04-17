@@ -127,11 +127,12 @@ export async function updateAddress(
 
 		// Vérifier si c'est l'adresse par défaut
 		if (addressData.isDefault) {
-			// Si c'est pour un client, réinitialiser les autres adresses par défaut du client
+			// Si c'est pour un client, réinitialiser les autres adresses par défaut du même type
 			if (existingAddress.clientId) {
 				await db.address.updateMany({
 					where: {
 						clientId: existingAddress.clientId,
+						addressType: addressData.addressType, // Filtrer par type d'adresse
 						isDefault: true,
 						id: { not: id }, // Ne pas modifier l'adresse en cours de mise à jour
 					},
@@ -141,11 +142,12 @@ export async function updateAddress(
 				});
 			}
 
-			// Si c'est pour un fournisseur, réinitialiser les autres adresses par défaut du fournisseur
+			// Si c'est pour un fournisseur, réinitialiser les autres adresses par défaut du même type
 			if (existingAddress.supplierId) {
 				await db.address.updateMany({
 					where: {
 						supplierId: existingAddress.supplierId,
+						addressType: addressData.addressType, // Filtrer par type d'adresse
 						isDefault: true,
 						id: { not: id }, // Ne pas modifier l'adresse en cours de mise à jour
 					},
