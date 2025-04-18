@@ -1,14 +1,14 @@
 "use client";
 
-import { Button } from "@/shared/components";
-import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import {
+	Button,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+	LoadingIndicator,
+} from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { MoreVertical } from "lucide-react";
 import Link from "next/link";

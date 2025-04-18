@@ -48,7 +48,7 @@ export function Header({ userPromise, className }: Props) {
 				</div>
 
 				{/* Menu de navigation horizontal */}
-				<div className="h-10 px-4 sm:px-6 lg:px-8 border-t border-border/10">
+				<div className="h-10 px-4 sm:px-6 lg:px-8">
 					<HorizontalMenu items={menuItems} />
 				</div>
 			</div>

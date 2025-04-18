@@ -20,9 +20,9 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
+	Input,
 	Label,
 } from "@/shared/components";
-import { Input } from "@/shared/components/shadcn-ui/input";
 import {
 	ServerActionState,
 	ServerActionStatus,

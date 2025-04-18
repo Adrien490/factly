@@ -1,5 +1,6 @@
 import { OrganizationListSkeleton } from "@/domains/organization/features/get-organizations";
-import { Button, PageContainer, Skeleton } from "@/shared/components";
+import { PageContainer, Skeleton } from "@/shared/components";
+import { Button } from "@/shared/components/shadcn-ui/button";
 
 export default function DashboardLoading() {
 	return (

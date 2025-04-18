@@ -1,13 +1,12 @@
 "use client";
 
-import { Button } from "@/shared/components";
 import {
-	DropdownMenu,
+	Button, DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+	DropdownMenuTrigger
+} from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";

@@ -1,8 +1,5 @@
-import { Button } from "@/shared/components";
+import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/shadcn-ui/badge";
-import { MapPin, PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 import { use } from "react";
 import { CLIENT_STATUSES } from "../../constants";
 import { CLIENT_TYPES } from "../../constants/client-types";
@@ -10,10 +7,6 @@ import { ClientHeaderProps } from "./types";
 
 export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	const client = use(clientPromise);
-
-	if (!client) {
-		notFound();
-	}
 
 	const statusInfo = CLIENT_STATUSES.find(
 		(option) => option.value === client.status
@@ -24,7 +17,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 
 	return (
 		<div>
-			<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+			<div className="flex flex-col gap-4">
 				{/* Section principale avec nom et identifiants */}
 				<div>
 					<div className="flex flex-wrap items-center gap-3">
@@ -67,40 +60,32 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 
 				{/* Actions et navigation */}
 				<div className="flex flex-wrap gap-3">
-					<Button asChild size="sm" variant="default">
-						<Link
-							href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
-						>
-							Modifier
-						</Link>
-					</Button>
-					<Button asChild size="sm" variant="outline">
-						<Link
-							href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts/new`}
-						>
-							<PlusIcon className="h-4 w-4 mr-2" />
-							Ajouter un contact
-						</Link>
-					</Button>
-					<Button asChild size="sm" variant="outline">
-						<Link
-							href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses/new`}
-						>
-							<MapPin className="h-4 w-4 mr-2" />
-							Ajouter une adresse
-						</Link>
-					</Button>
+					<HorizontalMenu
+						items={[
+							{
+								label: "Fiche client",
+								href: `/dashboard/${client.organizationId}/clients/${client.id}`,
+							},
+							{
+								label: "Modifier",
+								href: `/dashboard/${client.organizationId}/clients/${client.id}/edit`,
+							},
+							{
+								label: "Gestion des adresses",
+								href: `/dashboard/${client.organizationId}/clients/${client.id}/addresses`,
+							},
+							{
+								label: "Gestion des contacts",
+								href: `/dashboard/${client.organizationId}/clients/${client.id}/contacts`,
+							},
+							{
+								label: "Supprimer",
+								href: `/dashboard/${client.organizationId}/clients/${client.id}/delete`,
+							},
+						]}
+					/>
 				</div>
 			</div>
-
-			{/* Affichage conditionnel des notes */}
-			{client.notes && (
-				<div className="mt-4 pt-4 border-t border-border/50">
-					<div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
-						<p className="italic">{client.notes}</p>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 }

@@ -34,24 +34,14 @@ export async function deleteClient(
 		console.log(formData);
 
 		// 2. Vérification de base des données requises
-		const rawId = formData.get("id");
-		const rawOrganizationId = formData.get("organizationId");
-		if (
-			!rawId ||
-			typeof rawId !== "string" ||
-			!rawOrganizationId ||
-			typeof rawOrganizationId !== "string"
-		) {
-			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
-				"L'identifiant du client et de l'organisation sont requis"
-			);
-		}
-
-		console.log(rawOrganizationId);
+		const rawData = {
+			id: formData.get("id") as string,
+			organizationId: formData.get("organizationId") as string,
+			confirmation: formData.get("confirmation") as string,
+		};
 
 		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawOrganizationId);
+		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
 				ServerActionStatus.FORBIDDEN,
@@ -60,16 +50,14 @@ export async function deleteClient(
 		}
 
 		// 4. Validation complète des données
-		const validation = deleteClientSchema.safeParse({
-			id: rawId,
-			organizationId: rawOrganizationId,
-		});
+		const validation = deleteClientSchema.safeParse(rawData);
+
 		if (!validation.success) {
 			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ rawId, rawOrganizationId },
-				"Types invalides"
+				rawData,
+				"Validation échouée. Veuillez vérifier votre saisie."
 			);
 		}
 
@@ -82,6 +70,7 @@ export async function deleteClient(
 			select: {
 				id: true,
 				status: true,
+				name: true, // Récupération du nom pour le message de confirmation
 			},
 		});
 
@@ -98,13 +87,18 @@ export async function deleteClient(
 		});
 
 		// Revalidation du cache avec les mêmes tags que get-clients
-		revalidateTag(`clients:org:${rawOrganizationId}`);
-		revalidateTag(`clients:org:${rawOrganizationId}:${existingClient.status}`);
+		revalidateTag(`clients:org:${rawData.organizationId}`);
+		revalidateTag(
+			`clients:org:${rawData.organizationId}:${existingClient.status}`
+		);
 		revalidateTag("clients:list");
 		revalidateTag(`client:${existingClient.id}`);
-		revalidateTag(`client:org:${rawOrganizationId}:${existingClient.id}`);
+		revalidateTag(`client:org:${rawData.organizationId}:${existingClient.id}`);
 
-		return createSuccessResponse(null, "Client supprimé définitivement");
+		return createSuccessResponse(
+			null,
+			`Client "${existingClient.name}" supprimé définitivement`
+		);
 	} catch (error) {
 		console.error("[HARD_DELETE_CLIENT]", error);
 		return createErrorResponse(

@@ -1,11 +1,14 @@
 "use client";
 
 import {
+	FormLabel,
+	Input,
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	Textarea,
 } from "@/shared/components";
 import {
 	FieldInfo,
@@ -14,9 +17,6 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { FormLabel } from "@/shared/components/shadcn-ui/form";
-import { Input } from "@/shared/components/shadcn-ui/input/input";
-import { Textarea } from "@/shared/components/shadcn-ui/textarea/textarea";
 import { ServerActionStatus } from "@/shared/types";
 
 import {

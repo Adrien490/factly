@@ -2,7 +2,6 @@
 
 import {
 	Button,
-	DotsLoader,
 	Select,
 	SelectContent,
 	SelectItem,
@@ -17,13 +16,14 @@ import {
 	FormSection,
 } from "@/shared/components/forms";
 import { FormLabel } from "@/shared/components/shadcn-ui/form";
-import { Input } from "@/shared/components/shadcn-ui/input/input";
-import { Textarea } from "@/shared/components/shadcn-ui/textarea/textarea";
+import { Input } from "@/shared/components/shadcn-ui/input";
+import { Textarea } from "@/shared/components/shadcn-ui/textarea";
 import { ServerActionStatus } from "@/shared/types";
 
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { GetClientReturn } from "@/domains/client/features/get-client";
+import { MiniDotsLoader } from "@/shared/components/loaders";
 import { useCheckReference } from "@/shared/queries";
 import { generateReference } from "@/shared/utils/generate-reference";
 import { ClientStatus, ClientType } from "@prisma/client";
@@ -206,11 +206,15 @@ export function UpdateClientForm({ clientPromise }: Props) {
 											field.state.value.length >= 3 &&
 											isCheckingReference &&
 											!form.state.isSubmitting && (
-												<div className="flex items-center justify-start">
+												<div className="flex items-center gap-2 text-primary mt-1">
 													<p className="text-xs font-medium">
-														Vérification de la disponibilité...
+														Vérification de la disponibilité
 													</p>
-													<DotsLoader color="primary" size="xs" />
+													<MiniDotsLoader
+														color="primary"
+														size="xs"
+														className="translate-y-px"
+													/>
 												</div>
 											)}
 

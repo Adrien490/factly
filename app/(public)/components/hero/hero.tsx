@@ -61,7 +61,7 @@ export function Hero() {
 						<Button
 							size="lg"
 							asChild
-							variant="gradient"
+							variant="default"
 							className="w-full h-12 rounded-full"
 						>
 							<Link

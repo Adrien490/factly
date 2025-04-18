@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/shared/components";
-import { Input } from "@/shared/components/shadcn-ui/input/input";
+import { Button, Input } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { useForm } from "@tanstack/react-form";
 import { Search, X } from "lucide-react";
