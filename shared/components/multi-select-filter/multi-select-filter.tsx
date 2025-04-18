@@ -45,7 +45,7 @@ export function MultiSelectFilter({
 						variant="outline"
 						role="combobox"
 						aria-expanded={open}
-						className="w-full justify-between relative"
+						className="w-full justify-between relative h-10"
 						disabled={isPending}
 						onClick={(e) => {
 							// Si on clique sur l'icône X, on veut simplement effacer et non ouvrir le popover

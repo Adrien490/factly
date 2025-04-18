@@ -45,7 +45,7 @@ export function SelectFilter({
 				onValueChange={handleSelect}
 				disabled={isPending}
 			>
-				<SelectTrigger className="w-full">
+				<SelectTrigger className="w-full h-10">
 					<div className="flex items-center w-full text-left">
 						<span className="text-muted-foreground text-xs mr-2">{label}</span>
 						<div className="flex-1">
