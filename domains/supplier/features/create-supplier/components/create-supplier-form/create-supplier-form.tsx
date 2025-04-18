@@ -24,7 +24,6 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { ActionStatus } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import {
 	mergeForm,
@@ -34,8 +33,7 @@ import {
 } from "@tanstack/react-form";
 import { Building, Globe, MapPin, Receipt, User, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
-import { toast } from "sonner";
+import { use, useTransition } from "react";
 import { formOpts } from "./constants";
 
 type Props = {
@@ -47,7 +45,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch, isPending } = useCreateSupplier();
+	const { state, dispatch } = useCreateSupplier();
 	const router = useRouter();
 
 	// TanStack Form setup
@@ -115,26 +113,6 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 			);
 		});
 	};
-
-	useEffect(() => {
-		if (state.status === ActionStatus.SUCCESS) {
-			form.reset();
-			toast.success("Fournisseur créé avec succès", {
-				description: "Le fournisseur a été créé avec succès",
-				duration: 3000,
-				action: {
-					label: "Voir la liste",
-					onClick: () => {
-						router.push(`/dashboard/${organizationId}/suppliers`);
-						toast.dismiss();
-					},
-				},
-			});
-		}
-		return () => {
-			toast.dismiss();
-		};
-	}, [form, state?.message, state.status, router, organizationId]);
 
 	return (
 		<form
@@ -654,7 +632,6 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 
 			{/* Boutons d'action */}
 			<FormFooter
-				isPending={isPending}
 				cancelHref={`/dashboard/${organizationId}/suppliers`}
 				submitLabel="Créer le fournisseur"
 			/>

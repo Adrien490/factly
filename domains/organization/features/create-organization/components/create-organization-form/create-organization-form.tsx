@@ -28,7 +28,6 @@ import { GridLoader } from "@/shared/components/loaders";
 import { MiniDotsLoader } from "@/shared/components/loaders/mini-dots-loader";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
-import { ActionStatus } from "@/shared/types/server-action";
 import { LegalForm } from "@prisma/client";
 import {
 	mergeForm,
@@ -39,7 +38,7 @@ import {
 import { Building2, Globe, MapPin, Receipt, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
+import { use, useTransition } from "react";
 import { toast } from "sonner";
 
 interface OrganizationFormProps {
@@ -50,7 +49,7 @@ export function CreateOrganizationForm({
 	searchAddressPromise,
 }: OrganizationFormProps) {
 	const response = use(searchAddressPromise);
-	const { state, dispatch, isPending } = useCreateOrganization();
+	const { state, dispatch } = useCreateOrganization();
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { isUploading, startUpload } = useUploadThing("organizationLogo");
 	const router = useRouter();
@@ -81,23 +80,6 @@ export function CreateOrganizationForm({
 			[state]
 		),
 	});
-
-	// Toast de suivi pour l'action du formulaire
-	useEffect(() => {
-		if (state.status === ActionStatus.SUCCESS) {
-			toast.success("Organisation créée avec succès", {
-				description: "La nouvelle organisation a été créée avec succès",
-				duration: 3000,
-				action: {
-					label: "Voir la liste",
-					onClick: () => {
-						router.push(`/dashboard`);
-						toast.dismiss();
-					},
-				},
-			});
-		}
-	}, [isPending, state, router]);
 
 	// Fonction pour sélectionner une adresse dans l'autocomplétion
 	const handleAddressSelect = (address: FormattedAddressResult) => {
@@ -744,7 +726,7 @@ export function CreateOrganizationForm({
 						disabled={!canSubmit}
 						cancelHref="/dashboard"
 						submitLabel={"Créer l'organisation"}
-						isPending={isPending || isUploading}
+						isPending={isUploading}
 					/>
 				)}
 			</form.Subscribe>

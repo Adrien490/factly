@@ -21,7 +21,7 @@ import { createOrganizationSchema } from "../schemas";
  * - Le SIREN/SIRET doit être unique s'il est fourni
  */
 export async function createOrganization(
-	_: ActionState<Organization, typeof createOrganizationSchema>,
+	_: ActionState<Organization, typeof createOrganizationSchema> | null,
 	formData: FormData
 ): Promise<ActionState<Organization, typeof createOrganizationSchema>> {
 	try {

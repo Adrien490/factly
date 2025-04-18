@@ -27,7 +27,7 @@ import { createSupplierSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function createSupplier(
-	_: ActionState<Supplier, typeof createSupplierSchema>,
+	_: ActionState<Supplier, typeof createSupplierSchema> | null,
 	formData: FormData
 ): Promise<ActionState<Supplier, typeof createSupplierSchema>> {
 	try {
