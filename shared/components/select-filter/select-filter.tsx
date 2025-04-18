@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	Button,
 	Select,
 	SelectContent,
 	SelectItem,
@@ -45,8 +46,8 @@ export function SelectFilter({
 				onValueChange={handleSelect}
 				disabled={isPending}
 			>
-				<SelectTrigger className="w-full h-10">
-					<div className="flex items-center w-full text-left">
+				<SelectTrigger className="">
+					<Button className="h-10">
 						<span className="text-muted-foreground text-xs mr-2">{label}</span>
 						<div className="flex-1">
 							<SelectValue placeholder={placeholder} />
@@ -68,7 +69,7 @@ export function SelectFilter({
 								)
 							)}
 						</div>
-					</div>
+					</Button>
 				</SelectTrigger>
 				<SelectContent>
 					<ScrollArea className={`h-${maxHeight}`}>

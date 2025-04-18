@@ -14,11 +14,11 @@ import { usePathname } from "next/navigation";
 import { HorizontalMenuProps } from "./types";
 
 const menuItemVariants = cva(
-	"flex items-center text-sm transition-all duration-200 gap-2 justify-between rounded-md px-3 py-2",
+	"flex items-center text-sm transition-all duration-200 gap-2 justify-between rounded-md py-2",
 	{
 		variants: {
 			active: {
-				true: "text-primary font-medium bg-primary/5",
+				true: "text-primary font-medium",
 				false: "text-muted-foreground hover:text-foreground hover:bg-muted/60",
 			},
 			size: {
@@ -56,7 +56,7 @@ export function HorizontalMenu({
 	return (
 		<NavigationMenu
 			className={cn(
-				"relative z-10 w-full rounded-lg p-1",
+				"relative z-10 w-full rounded-lg py-1",
 				variant === "filled" && "bg-muted/80 backdrop-blur-sm shadow-sm",
 				variant === "bordered" && "border border-border",
 				className
@@ -90,7 +90,7 @@ export function HorizontalMenu({
 											{item.icon}
 										</span>
 									)}
-									<span>{item.label}</span>
+									<span className="line-clamp-1">{item.label}</span>
 
 									{active && variant !== "pills" && (
 										<motion.div
