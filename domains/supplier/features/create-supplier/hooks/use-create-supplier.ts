@@ -17,7 +17,7 @@ export function useCreateSupplier() {
 				onSuccess: (result) => {
 					toast.success(result.message, {
 						action: {
-							label: "Voir le client",
+							label: "Voir le fournisseur",
 							onClick: () => {
 								if (result.data?.id) {
 									router.push(

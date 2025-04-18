@@ -17,7 +17,6 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { ActionStatus } from "@/shared/types";
 
 import {
 	SUPPLIER_STATUSES,
@@ -31,9 +30,8 @@ import {
 	useTransform,
 } from "@tanstack/react-form";
 import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { use, useEffect } from "react";
-import { toast } from "sonner";
+import { useParams } from "next/navigation";
+import { use } from "react";
 import { useUpdateSupplier } from "../hooks";
 
 type Props = {
@@ -44,8 +42,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 	const supplier = use(supplierPromise);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
-	const { state, dispatch, isPending } = useUpdateSupplier();
-	const router = useRouter();
+	const { state, dispatch } = useUpdateSupplier();
 
 	// TanStack Form setup
 	const form = useForm({
@@ -72,27 +69,6 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 	});
 
 	console.log("State:", state);
-
-	useEffect(() => {
-		if (state.status === ActionStatus.SUCCESS) {
-			toast.success("Fournisseur mis à jour avec succès", {
-				description: "Le fournisseur a été mis à jour avec succès",
-				duration: 3000,
-				action: {
-					label: "Retour",
-					onClick: () => {
-						router.push(
-							`/dashboard/${organizationId}/suppliers/${supplier.id}`
-						);
-						toast.dismiss();
-					},
-				},
-			});
-		}
-		return () => {
-			toast.dismiss();
-		};
-	}, [form, state, router, organizationId, supplier.id]);
 
 	return (
 		<form
@@ -384,7 +360,6 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 			<FormFooter
 				submitLabel="Mettre à jour le fournisseur"
 				cancelHref={`/dashboard/${organizationId}/suppliers`}
-				isPending={isPending}
 			/>
 		</form>
 	);

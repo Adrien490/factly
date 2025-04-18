@@ -23,7 +23,7 @@ import { updateSupplierSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function updateSupplier(
-	_: ActionState<Supplier, typeof updateSupplierSchema>,
+	_: ActionState<Supplier, typeof updateSupplierSchema> | null,
 	formData: FormData
 ): Promise<ActionState<Supplier, typeof updateSupplierSchema>> {
 	try {
