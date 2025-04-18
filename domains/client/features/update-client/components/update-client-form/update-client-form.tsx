@@ -18,12 +18,10 @@ import {
 import { FormLabel } from "@/shared/components/shadcn-ui/form";
 import { Input } from "@/shared/components/shadcn-ui/input";
 import { Textarea } from "@/shared/components/shadcn-ui/textarea";
-import { ServerActionStatus } from "@/shared/types";
 
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { GetClientReturn } from "@/domains/client/features/get-client";
-import { MiniDotsLoader } from "@/shared/components/loaders";
 import { useCheckReference } from "@/shared/queries";
 import { generateReference } from "@/shared/utils/generate-reference";
 import { ClientStatus, ClientType } from "@prisma/client";
@@ -34,9 +32,8 @@ import {
 	useTransform,
 } from "@tanstack/react-form";
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
-import { toast } from "sonner";
+import { useParams } from "next/navigation";
+import { use, useTransition } from "react";
 import { useUpdateClient } from "../../hooks";
 
 type Props = {
@@ -49,9 +46,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 	const organizationId = params.organizationId as string;
 	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const { state, dispatch, isPending } = useUpdateClient();
-	const router = useRouter();
-	const { state: checkReferenceState, dispatch: checkReferenceDispatch } =
-		useCheckReference();
+	const { dispatch: checkReferenceDispatch } = useCheckReference();
 
 	// TanStack Form setup
 	const form = useForm({
@@ -111,20 +106,6 @@ export function UpdateClientForm({ clientPromise }: Props) {
 			});
 		}
 	};
-
-	console.log(state);
-
-	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
-			toast.success("Client mis à jour avec succès", {
-				description: "Le client a été mis à jour avec succès",
-				duration: 2000,
-			});
-		}
-		return () => {
-			form.reset();
-		};
-	}, [form, state, router, organizationId, client.id]);
 
 	return (
 		<form
@@ -199,44 +180,8 @@ export function UpdateClientForm({ clientPromise }: Props) {
 									/>
 
 									{/* Message de statut et d'aide */}
-									<div className="min-h-5">
-										<FieldInfo field={field} />
 
-										{field.state.value &&
-											field.state.value.length >= 3 &&
-											isCheckingReference &&
-											!form.state.isSubmitting && (
-												<div className="flex items-center gap-2 text-primary mt-1">
-													<p className="text-xs font-medium">
-														Vérification de la disponibilité
-													</p>
-													<MiniDotsLoader
-														color="primary"
-														size="xs"
-														className="translate-y-px"
-													/>
-												</div>
-											)}
-
-										{!isCheckingReference &&
-											field.state.value &&
-											field.state.value.length >= 3 &&
-											checkReferenceState?.data !== undefined &&
-											checkReferenceState?.data?.reference ===
-												field.state.value && (
-												<p className="text-xs font-medium">
-													{checkReferenceState?.data?.exists ? (
-														<span className="text-destructive">
-															Cette référence est déjà utilisée
-														</span>
-													) : (
-														<span className="text-green-500">
-															Cette référence est disponible
-														</span>
-													)}
-												</p>
-											)}
-									</div>
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>

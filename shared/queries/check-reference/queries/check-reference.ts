@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -15,18 +15,16 @@ import { checkReferenceSchema } from "../schemas";
 import { CheckReferenceResponse } from "../types";
 
 export async function checkReference(
-	_: ServerActionState<unknown, typeof checkReferenceSchema>,
+	_: ActionState<unknown, typeof checkReferenceSchema> | null,
 	formData: FormData
-): Promise<
-	ServerActionState<CheckReferenceResponse, typeof checkReferenceSchema>
-> {
+): Promise<ActionState<CheckReferenceResponse, typeof checkReferenceSchema>> {
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour vérifier une référence"
 			);
 		}
@@ -47,7 +45,7 @@ export async function checkReference(
 		const hasAccess = await hasOrganizationAccess(organizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -72,7 +70,7 @@ export async function checkReference(
 	} catch (error) {
 		console.error("[CHECK_CLIENT_REFERENCE]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error ? error.message : "Erreur inconnue"
 		);
 	}

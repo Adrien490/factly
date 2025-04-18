@@ -29,7 +29,6 @@ import {
 	Receipt,
 	Search,
 	Tag,
-	Trash2,
 	Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -38,6 +37,7 @@ import { use } from "react";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import { CLIENT_STATUSES, CLIENT_TYPES } from "../../constants";
+import { DeleteClientAlertDialogForm } from "../../features/delete-client/components/delete-client-alert-dialog-form";
 import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
@@ -253,24 +253,8 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 													<span>Contacts</span>
 												</Link>
 											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link
-													href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses`}
-													className={cn("flex w-full items-center")}
-												>
-													<MapPin className="h-4 w-4 mr-2" />
-													<span>Adresses</span>
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link
-													href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
-													className={cn("flex w-full items-center")}
-												>
-													<Trash2 className="h-4 w-4 mr-2" />
-													<span>Supprimer</span>
-												</Link>
-											</DropdownMenuItem>
+											<DropdownMenuSeparator />
+											<DeleteClientAlertDialogForm client={client} />
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</TableCell>

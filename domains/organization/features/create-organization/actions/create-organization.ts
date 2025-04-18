@@ -3,8 +3,8 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -21,9 +21,9 @@ import { createOrganizationSchema } from "../schemas";
  * - Le SIREN/SIRET doit être unique s'il est fourni
  */
 export async function createOrganization(
-	_: ServerActionState<Organization, typeof createOrganizationSchema>,
+	_: ActionState<Organization, typeof createOrganizationSchema>,
 	formData: FormData
-): Promise<ServerActionState<Organization, typeof createOrganizationSchema>> {
+): Promise<ActionState<Organization, typeof createOrganizationSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -31,7 +31,7 @@ export async function createOrganization(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour créer une organisation"
 			);
 		}
@@ -87,7 +87,7 @@ export async function createOrganization(
 
 			if (existingOrgBySiren) {
 				return createErrorResponse(
-					ServerActionStatus.CONFLICT,
+					ActionStatus.CONFLICT,
 					"Une organisation avec ce SIREN existe déjà"
 				);
 			}
@@ -101,7 +101,7 @@ export async function createOrganization(
 
 			if (existingOrgBySiret) {
 				return createErrorResponse(
-					ServerActionStatus.CONFLICT,
+					ActionStatus.CONFLICT,
 					"Une organisation avec ce SIRET existe déjà"
 				);
 			}
@@ -116,7 +116,7 @@ export async function createOrganization(
 
 			if (existingOrgByVatNumber) {
 				return createErrorResponse(
-					ServerActionStatus.CONFLICT,
+					ActionStatus.CONFLICT,
 					"Une organisation avec ce numéro de TVA existe déjà"
 				);
 			}
@@ -150,7 +150,7 @@ export async function createOrganization(
 	} catch (error) {
 		console.error("[CREATE_ORGANIZATION]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de créer l'organisation"

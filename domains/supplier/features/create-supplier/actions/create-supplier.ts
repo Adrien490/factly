@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -27,9 +27,9 @@ import { createSupplierSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function createSupplier(
-	_: ServerActionState<Supplier, typeof createSupplierSchema>,
+	_: ActionState<Supplier, typeof createSupplierSchema>,
 	formData: FormData
-): Promise<ServerActionState<Supplier, typeof createSupplierSchema>> {
+): Promise<ActionState<Supplier, typeof createSupplierSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -37,7 +37,7 @@ export async function createSupplier(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour créer un fournisseur"
 			);
 		}
@@ -46,7 +46,7 @@ export async function createSupplier(
 		const organizationId = formData.get("organizationId");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -55,7 +55,7 @@ export async function createSupplier(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -164,7 +164,7 @@ export async function createSupplier(
 	} catch (error) {
 		console.error("[CREATE_SUPPLIER]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de créer le fournisseur"

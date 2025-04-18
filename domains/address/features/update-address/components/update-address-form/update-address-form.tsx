@@ -21,7 +21,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { ServerActionStatus } from "@/shared/types";
+import { ActionStatus } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import {
 	mergeForm,
@@ -124,7 +124,7 @@ export function UpdateAddressForm({
 	};
 
 	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ActionStatus.SUCCESS) {
 			toast.success("Adresse mise à jour avec succès", {
 				description: "L'adresse a été mise à jour avec succès",
 				duration: 3000,

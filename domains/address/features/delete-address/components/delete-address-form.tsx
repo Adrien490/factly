@@ -5,7 +5,7 @@ import {
 	AlertDialogAction,
 	AlertDialogCancel,
 } from "@/shared/components/shadcn-ui/alert-dialog";
-import { ServerActionStatus } from "@/shared/types";
+import { ActionStatus } from "@/shared/types";
 import { cn } from "@/shared/utils";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ export function DeleteAddressForm({
 	const { state, action, isPending } = useDeleteAddress();
 
 	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ActionStatus.SUCCESS) {
 			toast.success("Adresse supprimée avec succès");
 		}
 	}, [state.status]);

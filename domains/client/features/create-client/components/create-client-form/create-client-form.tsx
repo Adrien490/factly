@@ -29,9 +29,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { DotsLoader } from "@/shared/components/loaders/dots-loader";
 import { useCheckReference } from "@/shared/queries";
-import { ServerActionStatus } from "@/shared/types";
 import { generateReference } from "@/shared/utils";
 import { ClientStatus, ClientType } from "@prisma/client";
 import {
@@ -51,8 +49,7 @@ import {
 	X,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
-import { toast } from "sonner";
+import { use, useTransition } from "react";
 import { formOpts } from "./constants";
 
 type Props = {
@@ -67,8 +64,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { state, dispatch, isPending } = useCreateClient();
 	const router = useRouter();
-	const { state: checkReferenceState, dispatch: checkReferenceDispatch } =
-		useCheckReference();
+	const { dispatch: checkReferenceDispatch } = useCheckReference();
 
 	// TanStack Form setup
 	const form = useForm({
@@ -171,40 +167,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 
 	console.log(state);
 
-	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
-			form.reset();
-			toast.success("Client créé avec succès", {
-				description: "Le client a été créé avec succès",
-				duration: 3000,
-				action: {
-					label: "Voir la fiche",
-					onClick: () => {
-						// Rediriger vers la fiche du client nouvellement créé
-						if (state.data?.id) {
-							router.push(
-								`/dashboard/${organizationId}/clients/${state.data.id}`
-							);
-						} else {
-							router.push(`/dashboard/${organizationId}/clients`);
-						}
-						toast.dismiss();
-					},
-				},
-			});
-		}
-		return () => {
-			toast.dismiss();
-		};
-	}, [
-		form,
-		state?.message,
-		state.status,
-		router,
-		organizationId,
-		state.data?.id,
-	]);
-
 	return (
 		<form
 			action={dispatch}
@@ -301,37 +263,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									{/* Message de statut et d'aide */}
 									<div className="min-h-5">
 										<FieldInfo field={field} />
-
-										{field.state.value &&
-											field.state.value.length >= 3 &&
-											isCheckingReference &&
-											!form.state.isSubmitting && (
-												<div className="flex items-center gap-2">
-													<DotsLoader color="primary" size="xs" />
-													<p className="text-xs font-medium text-primary">
-														Vérification de la disponibilité...
-													</p>
-												</div>
-											)}
-
-										{!isCheckingReference &&
-											field.state.value &&
-											field.state.value.length >= 3 &&
-											checkReferenceState?.data !== undefined &&
-											checkReferenceState?.data?.reference ===
-												field.state.value && (
-												<p className="text-xs font-medium">
-													{checkReferenceState?.data?.exists ? (
-														<span className="text-destructive">
-															Cette référence est déjà utilisée
-														</span>
-													) : (
-														<span className="text-green-500">
-															Cette référence est disponible
-														</span>
-													)}
-												</p>
-											)}
 									</div>
 								</div>
 							)}

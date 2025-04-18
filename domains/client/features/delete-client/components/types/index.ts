@@ -1,4 +1,6 @@
+import { GetClientsReturn } from "../../../get-clients";
+
 export interface DeleteClientFormProps {
-	id: string;
-	organizationId: string;
+	client: GetClientsReturn["clients"][number];
+	trigger?: React.ReactNode;
 }

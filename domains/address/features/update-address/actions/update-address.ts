@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -22,9 +22,9 @@ import { updateAddressSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function updateAddress(
-	_: ServerActionState<Address, typeof updateAddressSchema>,
+	_: ActionState<Address, typeof updateAddressSchema>,
 	formData: FormData
-): Promise<ServerActionState<Address, typeof updateAddressSchema>> {
+): Promise<ActionState<Address, typeof updateAddressSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -32,7 +32,7 @@ export async function updateAddress(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour modifier une adresse"
 			);
 		}
@@ -41,7 +41,7 @@ export async function updateAddress(
 		const organizationId = formData.get("organizationId");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -50,7 +50,7 @@ export async function updateAddress(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -59,7 +59,7 @@ export async function updateAddress(
 		const addressId = formData.get("id");
 		if (!addressId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'adresse est requis"
 			);
 		}
@@ -71,7 +71,7 @@ export async function updateAddress(
 
 		if (!existingAddress) {
 			return createErrorResponse(
-				ServerActionStatus.NOT_FOUND,
+				ActionStatus.NOT_FOUND,
 				"L'adresse n'existe pas"
 			);
 		}
@@ -193,7 +193,7 @@ export async function updateAddress(
 	} catch (error) {
 		console.error("[UPDATE_ADDRESS]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de mettre à jour l'adresse"

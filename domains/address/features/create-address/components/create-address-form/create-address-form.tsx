@@ -21,7 +21,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { ServerActionStatus } from "@/shared/types";
+import { ActionStatus } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import {
 	mergeForm,
@@ -132,7 +132,7 @@ export function CreateAddressForm({
 	};
 
 	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ActionStatus.SUCCESS) {
 			form.reset();
 			toast.success("Adresse créée avec succès", {
 				description: "L'adresse a été créée avec succès",

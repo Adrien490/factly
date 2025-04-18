@@ -23,10 +23,7 @@ import {
 	Input,
 	Label,
 } from "@/shared/components";
-import {
-	ServerActionState,
-	ServerActionStatus,
-} from "@/shared/types/server-action";
+import { ActionState, ActionStatus } from "@/shared/types/server-action";
 import { cn } from "@/shared/utils";
 import { Organization } from "@prisma/client";
 import { AlertTriangle } from "lucide-react";
@@ -41,7 +38,7 @@ export function DeleteOrganizationForm({
 }: DeleteOrganizationFormProps) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [state, dispatch, isPending] = useActionState<
-		ServerActionState<Organization, typeof deleteOrganizationSchema>,
+		ActionState<Organization, typeof deleteOrganizationSchema>,
 		FormData
 	>(
 		async (previous, formData) => {
@@ -49,7 +46,7 @@ export function DeleteOrganizationForm({
 
 			return result;
 		},
-		{ status: ServerActionStatus.INITIAL, message: "" }
+		{ status: ActionStatus.INITIAL, message: "" }
 	);
 
 	console.log(state);

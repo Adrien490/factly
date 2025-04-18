@@ -1,25 +1,23 @@
 "use client";
 
-import {
-	ServerActionState,
-	ServerActionStatus,
-} from "@/shared/types/server-action";
+import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
-import { deleteClient } from "../actions";
-import { deleteClientSchema } from "../schemas";
+import { deleteClient, deleteClientSchema } from "../actions";
 
 export const useDeleteClient = () => {
-	const [state, action, isPending] = useActionState<
-		ServerActionState<null, typeof deleteClientSchema>,
-		FormData
-	>(deleteClient, {
-		message: "",
-		status: ServerActionStatus.INITIAL,
-	});
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			deleteClient,
+			createToastCallbacks<null, typeof deleteClientSchema>({
+				loadingMessage: "Suppression du client en cours...",
+			})
+		),
+		null
+	);
 
 	return {
 		state,
-		action,
+		dispatch,
 		isPending,
 	};
 };

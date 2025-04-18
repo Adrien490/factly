@@ -3,8 +3,8 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -23,9 +23,9 @@ import { updateOrganizationSchema } from "../schemas";
  * - Le SIREN/SIRET doit être unique s'il est modifié
  */
 export async function updateOrganization(
-	_: ServerActionState<Organization, typeof updateOrganizationSchema>,
+	_: ActionState<Organization, typeof updateOrganizationSchema>,
 	formData: FormData
-): Promise<ServerActionState<Organization, typeof updateOrganizationSchema>> {
+): Promise<ActionState<Organization, typeof updateOrganizationSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -33,7 +33,7 @@ export async function updateOrganization(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour modifier une organisation"
 			);
 		}
@@ -42,7 +42,7 @@ export async function updateOrganization(
 		const organizationId = formData.get("id");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -51,7 +51,7 @@ export async function updateOrganization(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -102,7 +102,7 @@ export async function updateOrganization(
 
 			if (existingOrgBySiren) {
 				return createErrorResponse(
-					ServerActionStatus.CONFLICT,
+					ActionStatus.CONFLICT,
 					"Une autre organisation avec ce SIREN existe déjà"
 				);
 			}
@@ -119,7 +119,7 @@ export async function updateOrganization(
 
 			if (existingOrgBySiret) {
 				return createErrorResponse(
-					ServerActionStatus.CONFLICT,
+					ActionStatus.CONFLICT,
 					"Une autre organisation avec ce SIRET existe déjà"
 				);
 			}
@@ -137,7 +137,7 @@ export async function updateOrganization(
 
 			if (existingOrgByVatNumber) {
 				return createErrorResponse(
-					ServerActionStatus.CONFLICT,
+					ActionStatus.CONFLICT,
 					"Une autre organisation avec ce numéro de TVA existe déjà"
 				);
 			}
@@ -162,7 +162,7 @@ export async function updateOrganization(
 	} catch (error) {
 		console.error("[UPDATE_ORGANIZATION]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de mettre à jour l'organisation"

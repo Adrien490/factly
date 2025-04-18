@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -22,9 +22,9 @@ import { deleteAddressSchema } from "../schemas";
  * - L'adresse doit exister et appartenir à l'organisation
  */
 export async function deleteAddress(
-	_: ServerActionState<unknown, typeof deleteAddressSchema>,
+	_: ActionState<unknown, typeof deleteAddressSchema>,
 	formData: FormData
-): Promise<ServerActionState<null, typeof deleteAddressSchema>> {
+): Promise<ActionState<null, typeof deleteAddressSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -32,7 +32,7 @@ export async function deleteAddress(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour supprimer une adresse"
 			);
 		}
@@ -47,7 +47,7 @@ export async function deleteAddress(
 			typeof rawOrganizationId !== "string"
 		) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'identifiant de l'adresse et de l'organisation sont requis"
 			);
 		}
@@ -56,7 +56,7 @@ export async function deleteAddress(
 		const hasAccess = await hasOrganizationAccess(rawOrganizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -89,10 +89,7 @@ export async function deleteAddress(
 		});
 
 		if (!existingAddress) {
-			return createErrorResponse(
-				ServerActionStatus.NOT_FOUND,
-				"Adresse introuvable"
-			);
+			return createErrorResponse(ActionStatus.NOT_FOUND, "Adresse introuvable");
 		}
 
 		// 6. Vérifier que l'adresse appartient bien à l'organisation spécifiée
@@ -102,14 +99,14 @@ export async function deleteAddress(
 
 		if (!addressOrganizationId) {
 			return createErrorResponse(
-				ServerActionStatus.ERROR,
+				ActionStatus.ERROR,
 				"L'adresse n'est associée à aucune entité"
 			);
 		}
 
 		if (addressOrganizationId !== validation.data.organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"L'adresse n'appartient pas à l'organisation spécifiée"
 			);
 		}
@@ -187,7 +184,7 @@ export async function deleteAddress(
 	} catch (error) {
 		console.error("[DELETE_ADDRESS]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de supprimer l'adresse"

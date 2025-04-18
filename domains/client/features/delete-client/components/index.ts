@@ -1,1 +1,1 @@
-export * from "./delete-client-form";
+export * from "./delete-client-alert-dialog-form";

@@ -1,9 +1,6 @@
 "use client";
 
-import {
-	ServerActionState,
-	ServerActionStatus,
-} from "@/shared/types/server-action";
+import { ActionState, ActionStatus } from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
 import { useActionState } from "react";
 import { deleteOrganization } from "../actions";
@@ -11,7 +8,7 @@ import { deleteOrganizationSchema } from "../schemas";
 
 export function useDeleteOrganization() {
 	const [state, dispatch, isPending] = useActionState<
-		ServerActionState<Organization, typeof deleteOrganizationSchema>,
+		ActionState<Organization, typeof deleteOrganizationSchema>,
 		FormData
 	>(
 		async (previousState, formData) => {
@@ -19,7 +16,7 @@ export function useDeleteOrganization() {
 		},
 		{
 			message: "",
-			status: ServerActionStatus.INITIAL,
+			status: ActionStatus.INITIAL,
 		}
 	);
 

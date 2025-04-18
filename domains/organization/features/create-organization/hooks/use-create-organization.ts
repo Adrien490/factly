@@ -1,9 +1,6 @@
 "use client";
 
-import {
-	ServerActionState,
-	ServerActionStatus,
-} from "@/shared/types/server-action";
+import { ActionState, ActionStatus } from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
 import { useActionState } from "react";
 import { createOrganization } from "../actions";
@@ -11,7 +8,7 @@ import { createOrganizationSchema } from "../schemas";
 
 export function useCreateOrganization() {
 	const [state, dispatch, isPending] = useActionState<
-		ServerActionState<Organization, typeof createOrganizationSchema>,
+		ActionState<Organization, typeof createOrganizationSchema>,
 		FormData
 	>(
 		async (previousState, formData) => {
@@ -19,7 +16,7 @@ export function useCreateOrganization() {
 		},
 		{
 			message: "",
-			status: ServerActionStatus.INITIAL,
+			status: ActionStatus.INITIAL,
 		}
 	);
 

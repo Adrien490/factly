@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 } from "@/shared/types/server-action";
@@ -21,9 +21,9 @@ import { deleteOrganizationSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function deleteOrganization(
-	_: ServerActionState<Organization, typeof deleteOrganizationSchema>,
+	_: ActionState<Organization, typeof deleteOrganizationSchema>,
 	formData: FormData
-): Promise<ServerActionState<Organization, typeof deleteOrganizationSchema>> {
+): Promise<ActionState<Organization, typeof deleteOrganizationSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -31,7 +31,7 @@ export async function deleteOrganization(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour supprimer une organisation"
 			);
 		}
@@ -40,7 +40,7 @@ export async function deleteOrganization(
 		const organizationId = formData.get("id");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -49,7 +49,7 @@ export async function deleteOrganization(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -61,7 +61,7 @@ export async function deleteOrganization(
 
 		if (!organization) {
 			return createErrorResponse(
-				ServerActionStatus.NOT_FOUND,
+				ActionStatus.NOT_FOUND,
 				"L'organisation n'existe pas"
 			);
 		}
@@ -83,7 +83,7 @@ export async function deleteOrganization(
 	} catch (error) {
 		console.error("[DELETE_ORGANIZATION]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de supprimer l'organisation"

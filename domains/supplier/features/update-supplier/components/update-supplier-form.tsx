@@ -17,7 +17,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { ServerActionStatus } from "@/shared/types";
+import { ActionStatus } from "@/shared/types";
 
 import {
 	SUPPLIER_STATUSES,
@@ -74,7 +74,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 	console.log("State:", state);
 
 	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ActionStatus.SUCCESS) {
 			toast.success("Fournisseur mis à jour avec succès", {
 				description: "Le fournisseur a été mis à jour avec succès",
 				duration: 3000,

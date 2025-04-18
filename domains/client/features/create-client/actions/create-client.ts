@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -23,9 +23,9 @@ import { createClientSchema } from "../schemas";
  * - La référence du client doit être unique dans l'organisation
  */
 export async function createClient(
-	_: ServerActionState<Client, typeof createClientSchema>,
+	_: ActionState<Client, typeof createClientSchema> | null,
 	formData: FormData
-): Promise<ServerActionState<Client, typeof createClientSchema>> {
+): Promise<ActionState<Client, typeof createClientSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -33,7 +33,7 @@ export async function createClient(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour créer un client"
 			);
 		}
@@ -42,7 +42,7 @@ export async function createClient(
 		const organizationId = formData.get("organizationId");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -51,7 +51,7 @@ export async function createClient(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -116,7 +116,7 @@ export async function createClient(
 
 		if (existingClient) {
 			return createErrorResponse(
-				ServerActionStatus.CONFLICT,
+				ActionStatus.CONFLICT,
 				"Un client avec cette référence existe déjà dans l'organisation"
 			);
 		}
@@ -184,7 +184,7 @@ export async function createClient(
 	} catch (error) {
 		console.error("[CREATE_CLIENT]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error ? error.message : "Impossible de créer le client"
 		);
 	}

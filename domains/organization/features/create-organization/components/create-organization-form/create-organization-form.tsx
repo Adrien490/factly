@@ -28,7 +28,7 @@ import { GridLoader } from "@/shared/components/loaders";
 import { MiniDotsLoader } from "@/shared/components/loaders/mini-dots-loader";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
-import { ServerActionStatus } from "@/shared/types/server-action";
+import { ActionStatus } from "@/shared/types/server-action";
 import { LegalForm } from "@prisma/client";
 import {
 	mergeForm,
@@ -84,7 +84,7 @@ export function CreateOrganizationForm({
 
 	// Toast de suivi pour l'action du formulaire
 	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ActionStatus.SUCCESS) {
 			toast.success("Organisation créée avec succès", {
 				description: "La nouvelle organisation a été créée avec succès",
 				duration: 3000,

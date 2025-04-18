@@ -5,8 +5,8 @@ import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -24,9 +24,9 @@ import { updateClientSchema } from "../schemas";
  * - La référence du client doit être unique dans l'organisation
  */
 export async function updateClient(
-	_: ServerActionState<Client, typeof updateClientSchema>,
+	_: ActionState<Client, typeof updateClientSchema> | null,
 	formData: FormData
-): Promise<ServerActionState<Client, typeof updateClientSchema>> {
+): Promise<ActionState<Client, typeof updateClientSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -34,7 +34,7 @@ export async function updateClient(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour créer un client"
 			);
 		}
@@ -43,7 +43,7 @@ export async function updateClient(
 		const organizationId = formData.get("organizationId");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -52,7 +52,7 @@ export async function updateClient(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -105,7 +105,7 @@ export async function updateClient(
 
 		if (existingClient) {
 			return createErrorResponse(
-				ServerActionStatus.CONFLICT,
+				ActionStatus.CONFLICT,
 				"Un client avec cette référence existe déjà dans l'organisation",
 				rawData
 			);
@@ -132,7 +132,7 @@ export async function updateClient(
 	} catch (error) {
 		console.error("[UPDATE_CLIENT]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de modifier le client"

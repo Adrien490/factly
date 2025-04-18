@@ -5,8 +5,8 @@ import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -23,9 +23,9 @@ import { updateSupplierSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function updateSupplier(
-	_: ServerActionState<Supplier, typeof updateSupplierSchema>,
+	_: ActionState<Supplier, typeof updateSupplierSchema>,
 	formData: FormData
-): Promise<ServerActionState<Supplier, typeof updateSupplierSchema>> {
+): Promise<ActionState<Supplier, typeof updateSupplierSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -33,7 +33,7 @@ export async function updateSupplier(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour modifier un fournisseur"
 			);
 		}
@@ -42,7 +42,7 @@ export async function updateSupplier(
 		const organizationId = formData.get("organizationId");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -51,7 +51,7 @@ export async function updateSupplier(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -100,7 +100,7 @@ export async function updateSupplier(
 
 		if (!existingSupplier) {
 			return createErrorResponse(
-				ServerActionStatus.NOT_FOUND,
+				ActionStatus.NOT_FOUND,
 				"Le fournisseur à mettre à jour n'existe pas",
 				rawData
 			);
@@ -130,7 +130,7 @@ export async function updateSupplier(
 	} catch (error) {
 		console.error("[UPDATE_SUPPLIER]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error
 				? error.message
 				: "Impossible de modifier le fournisseur"

@@ -4,8 +4,8 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -22,9 +22,9 @@ import { createAddressSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function createAddress(
-	_: ServerActionState<Address, typeof createAddressSchema>,
+	_: ActionState<Address, typeof createAddressSchema>,
 	formData: FormData
-): Promise<ServerActionState<Address, typeof createAddressSchema>> {
+): Promise<ActionState<Address, typeof createAddressSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -32,7 +32,7 @@ export async function createAddress(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour créer une adresse"
 			);
 		}
@@ -41,7 +41,7 @@ export async function createAddress(
 		const organizationId = formData.get("organizationId");
 		if (!organizationId) {
 			return createErrorResponse(
-				ServerActionStatus.VALIDATION_ERROR,
+				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
 			);
 		}
@@ -50,7 +50,7 @@ export async function createAddress(
 		const hasAccess = await hasOrganizationAccess(organizationId.toString());
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -166,7 +166,7 @@ export async function createAddress(
 	} catch (error) {
 		console.error("[CREATE_ADDRESS]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			error instanceof Error ? error.message : "Impossible de créer l'adresse"
 		);
 	}

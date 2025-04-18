@@ -5,8 +5,8 @@ import db from "@/shared/lib/db";
 
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
-	ServerActionState,
-	ServerActionStatus,
+	ActionState,
+	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
@@ -16,9 +16,9 @@ import { headers } from "next/headers";
 import { deleteClientSchema } from "../schemas";
 
 export async function deleteClient(
-	_: ServerActionState<unknown, typeof deleteClientSchema>,
+	_: ActionState<null, typeof deleteClientSchema> | null,
 	formData: FormData
-): Promise<ServerActionState<null, typeof deleteClientSchema>> {
+): Promise<ActionState<null, typeof deleteClientSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -26,7 +26,7 @@ export async function deleteClient(
 		});
 		if (!session?.user?.id) {
 			return createErrorResponse(
-				ServerActionStatus.UNAUTHORIZED,
+				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour effectuer cette action"
 			);
 		}
@@ -40,11 +40,25 @@ export async function deleteClient(
 			confirmation: formData.get("confirmation") as string,
 		};
 
+		console.log("[DELETE_CLIENT] Form Data:", {
+			id: rawData.id,
+			organizationId: rawData.organizationId,
+			confirmation: rawData.confirmation,
+		});
+
+		// Vérification que l'organizationId n'est pas vide
+		if (!rawData.organizationId) {
+			return createErrorResponse(
+				ActionStatus.ERROR,
+				"L'ID de l'organisation est manquant"
+			);
+		}
+
 		// 3. Vérification de l'accès à l'organisation
 		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
-				ServerActionStatus.FORBIDDEN,
+				ActionStatus.FORBIDDEN,
 				"Vous n'avez pas accès à cette organisation"
 			);
 		}
@@ -75,10 +89,7 @@ export async function deleteClient(
 		});
 
 		if (!existingClient) {
-			return createErrorResponse(
-				ServerActionStatus.NOT_FOUND,
-				"Client introuvable"
-			);
+			return createErrorResponse(ActionStatus.NOT_FOUND, "Client introuvable");
 		}
 
 		// 6. Suppression
@@ -99,7 +110,7 @@ export async function deleteClient(
 	} catch (error) {
 		console.error("[HARD_DELETE_CLIENT]", error);
 		return createErrorResponse(
-			ServerActionStatus.ERROR,
+			ActionStatus.ERROR,
 			"Impossible de supprimer définitivement le client"
 		);
 	}

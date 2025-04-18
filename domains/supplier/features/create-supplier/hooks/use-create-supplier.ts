@@ -1,9 +1,6 @@
 "use client";
 
-import {
-	ServerActionState,
-	ServerActionStatus,
-} from "@/shared/types/server-action";
+import { ActionState, ActionStatus } from "@/shared/types/server-action";
 import { Supplier } from "@prisma/client";
 import { useActionState } from "react";
 import { createSupplier } from "../actions/create-supplier";
@@ -11,7 +8,7 @@ import { createSupplierSchema } from "../schemas";
 
 export function useCreateSupplier() {
 	const [state, dispatch, isPending] = useActionState<
-		ServerActionState<Supplier, typeof createSupplierSchema>,
+		ActionState<Supplier, typeof createSupplierSchema>,
 		FormData
 	>(
 		async (previousState, formData) => {
@@ -19,7 +16,7 @@ export function useCreateSupplier() {
 		},
 		{
 			message: "",
-			status: ServerActionStatus.INITIAL,
+			status: ActionStatus.INITIAL,
 		}
 	);
 

@@ -24,7 +24,7 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { ServerActionStatus } from "@/shared/types";
+import { ActionStatus } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import {
 	mergeForm,
@@ -117,7 +117,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	};
 
 	useEffect(() => {
-		if (state.status === ServerActionStatus.SUCCESS) {
+		if (state.status === ActionStatus.SUCCESS) {
 			form.reset();
 			toast.success("Fournisseur créé avec succès", {
 				description: "Le fournisseur a été créé avec succès",

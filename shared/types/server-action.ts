@@ -1,7 +1,7 @@
 // types/server-action.ts
 import { z } from "zod";
 
-export enum ServerActionStatus {
+export enum ActionStatus {
 	SUCCESS = "success",
 	ERROR = "error",
 	UNAUTHORIZED = "unauthorized",
@@ -9,7 +9,6 @@ export enum ServerActionStatus {
 	NOT_FOUND = "not_found",
 	CONFLICT = "conflict",
 	FORBIDDEN = "forbidden",
-	PENDING = "pending",
 	INITIAL = "initial",
 }
 
@@ -18,12 +17,12 @@ export type ValidationErrors<T> = {
 };
 
 export type ServerResponse<TData> = {
-	status: ServerActionStatus;
+	status: ActionStatus;
 	message: string;
 	data?: TData;
 };
 
-export type ServerActionState<
+export type ActionState<
 	TData,
 	TSchema extends z.ZodType
 > = ServerResponse<TData> & {
@@ -33,17 +32,17 @@ export type ServerActionState<
 };
 
 export type ServerAction<TData, TSchema extends z.ZodType> = (
-	state: ServerActionState<TData, TSchema> | undefined,
+	state: ActionState<TData, TSchema> | undefined,
 	formData: FormData
-) => Promise<ServerActionState<TData, TSchema>>;
+) => Promise<ActionState<TData, TSchema>>;
 
 export function createSuccessResponse<TData, TSchema extends z.ZodType>(
 	data: TData,
 	message: string,
 	inputs?: z.infer<TSchema>
-): ServerActionState<TData, TSchema> {
+): ActionState<TData, TSchema> {
 	return {
-		status: ServerActionStatus.SUCCESS,
+		status: ActionStatus.SUCCESS,
 		message,
 		data,
 		inputs,
@@ -51,10 +50,10 @@ export function createSuccessResponse<TData, TSchema extends z.ZodType>(
 }
 
 export function createErrorResponse<TData, TSchema extends z.ZodType>(
-	status: ServerActionStatus,
+	status: ActionStatus,
 	message: string,
 	inputs?: z.infer<TSchema>
-): ServerActionState<TData, TSchema> {
+): ActionState<TData, TSchema> {
 	return {
 		status,
 		message,
@@ -67,9 +66,9 @@ export function createValidationErrorResponse<TData, TSchema extends z.ZodType>(
 	formData: z.infer<TSchema>,
 	message: string,
 	inputs?: z.infer<TSchema>
-): ServerActionState<TData, TSchema> {
+): ActionState<TData, TSchema> {
 	return {
-		status: ServerActionStatus.VALIDATION_ERROR,
+		status: ActionStatus.VALIDATION_ERROR,
 		message,
 		validationErrors,
 		formData,

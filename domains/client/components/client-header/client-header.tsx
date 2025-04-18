@@ -35,7 +35,14 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 							>
 								{statusInfo?.label}
 							</Badge>
-							<Badge variant="outline" className="bg-primary/5">
+							<Badge
+								style={{
+									backgroundColor: `${clientTypeInfo?.color}20`,
+									color: clientTypeInfo?.color,
+									borderColor: clientTypeInfo?.color,
+								}}
+								variant="outline"
+							>
 								{clientTypeInfo?.label}
 							</Badge>
 						</div>
