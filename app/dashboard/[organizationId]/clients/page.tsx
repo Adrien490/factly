@@ -85,11 +85,11 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			{/* Barre de recherche et filtres */}
 
 			{/* Recherche */}
-			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4">
+			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4 sm">
 				<SearchForm
 					paramName="search"
 					placeholder="Rechercher par nom, email, référence, SIREN..."
-					className="w-full flex-1 max-w-sm"
+					className="w-full sm:max-w-xs"
 				/>
 				<span className="text-xs font-medium text-muted-foreground px-1">
 					Filtrer par:

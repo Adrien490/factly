@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
 	content: [
@@ -13,5 +14,5 @@ export default {
 			// et sont accessibles via les variables CSS
 		},
 	},
-	plugins: [],
+	plugins: [animate],
 } satisfies Config;
