@@ -4,4 +4,5 @@ export interface ClientTypeOption {
 	value: ClientType;
 	label: string;
 	description: string;
+	color: string;
 }

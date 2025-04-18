@@ -21,7 +21,6 @@ import {
 	TableRow,
 } from "@/shared/components";
 import {
-	BuildingIcon,
 	CircleDot,
 	Edit2,
 	FileText,
@@ -60,7 +59,9 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 	}
 
 	// Calculer le nombre de colonnes pour le colSpan
-	const columnCount = 7; // Le nombre total de colonnes dans le tableau
+	const columnCount = 7;
+
+	// Le nombre total de colonnes dans le tableau
 
 	return (
 		<SelectionProvider>
@@ -109,174 +110,173 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{clients.map((client) => (
-						<TableRow key={client.id} role="row" tabIndex={0}>
-							<TableCell role="gridcell">
-								<ItemCheckbox itemId={client.id} />
-							</TableCell>
-							<TableCell role="gridcell">
-								<div className="w-[200px] flex flex-col space-y-1">
-									<div className="flex items-center gap-2">
-										<div className="font-medium truncate">{client.name}</div>
+					{clients.map((client) => {
+						const statusOption = CLIENT_STATUSES.find(
+							(option) => option.value === client.status
+						);
+						const clientTypeOption = CLIENT_TYPES.find(
+							(option) => option.value === client.clientType
+						);
+						return (
+							<TableRow key={client.id} role="row" tabIndex={0}>
+								<TableCell role="gridcell">
+									<ItemCheckbox itemId={client.id} />
+								</TableCell>
+								<TableCell role="gridcell">
+									<div className="w-[200px] flex flex-col space-y-1">
+										<div className="flex items-center gap-2">
+											<div className="font-medium truncate">{client.name}</div>
+										</div>
+										{client.reference && (
+											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+												<Tag className="h-3 w-3 shrink-0" />
+												<span>{client.reference}</span>
+											</div>
+										)}
 									</div>
-									{client.reference && (
-										<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-											<Tag className="h-3 w-3 shrink-0" />
-											<span>{client.reference}</span>
-										</div>
-									)}
-								</div>
-							</TableCell>
-							<TableCell role="gridcell" className="hidden md:table-cell">
-								<div className="flex items-center gap-2">
-									<BuildingIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-									<span>
-										{
-											CLIENT_TYPES.find(
-												(option) => option.value === client.clientType
-											)?.label
-										}
-									</span>
-								</div>
-							</TableCell>
-							<TableCell role="gridcell" className="hidden md:table-cell">
-								<div>
-									{(() => {
-										const statusOption = CLIENT_STATUSES.find(
-											(option) => option.value === client.status
-										);
-										return (
-											<Badge
-												variant="outline"
-												style={{
-													backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
-													color: statusOption?.color,
-													borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
-												}}
-											>
-												{statusOption?.label || client.status}
-											</Badge>
-										);
-									})()}
-								</div>
-							</TableCell>
-							<TableCell role="gridcell" className="hidden lg:table-cell">
-								<div className="flex flex-col space-y-1 max-w-[150px]">
-									{client.siret && (
-										<div className="flex items-center gap-1.5 text-xs">
-											<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
-											<span className="truncate">{client.siret}</span>
-										</div>
-									)}
-									{client.vatNumber && (
-										<div className="flex items-center gap-1.5 text-xs">
-											<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
-											<span className="truncate">{client.vatNumber}</span>
-										</div>
-									)}
-									{!client.siret && !client.vatNumber && (
-										<span className="text-xs text-muted-foreground italic">
-											Non renseignées
-										</span>
-									)}
-								</div>
-							</TableCell>
-							<TableCell role="gridcell" className="hidden lg:table-cell">
-								<div className="flex items-center gap-2 max-w-[200px]">
-									<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-									{client.addresses?.find((addr) => addr.isDefault) ? (
-										<span className="truncate">
-											{[
-												client.addresses.find((addr) => addr.isDefault)
-													?.addressLine1,
-												client.addresses.find((addr) => addr.isDefault)
-													?.postalCode,
-												client.addresses.find((addr) => addr.isDefault)?.city,
-											]
-												.filter(Boolean)
-												.join(", ")}
-										</span>
-									) : (
-										<span className="text-muted-foreground italic">
-											Non renseignée
-										</span>
-									)}
-								</div>
-							</TableCell>
-							<TableCell role="gridcell" className="">
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button
-											variant="ghost"
-											size="icon"
-											className={cn(
-												"h-8 w-8 rounded-full hover:bg-muted focus-visible:bg-muted"
-											)}
-											aria-label="Menu d'actions"
-											type="button"
-										>
-											<MoreVerticalIcon className="h-4 w-4" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent
-										align="end"
-										side="bottom"
-										sideOffset={4}
-										className="w-48"
+								</TableCell>
+								<TableCell role="gridcell" className="hidden md:table-cell">
+									<Badge
+										variant="outline"
+										style={{
+											backgroundColor: `${clientTypeOption?.color}20`, // Couleur avec opacity 20%
+											color: clientTypeOption?.color,
+											borderColor: `${clientTypeOption?.color}40`, // Couleur avec opacity 40%
+										}}
 									>
-										<DropdownMenuItem asChild>
-											<Link
-												href={`/dashboard/${client.organizationId}/clients/${client.id}`}
-												className={cn("flex w-full items-center")}
+										{clientTypeOption?.label}
+									</Badge>
+								</TableCell>
+								<TableCell role="gridcell" className="hidden md:table-cell">
+									<Badge
+										variant="outline"
+										style={{
+											backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
+											color: statusOption?.color,
+											borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
+										}}
+									>
+										{statusOption?.label || client.status}
+									</Badge>
+								</TableCell>
+								<TableCell role="gridcell" className="hidden lg:table-cell">
+									<div className="flex flex-col space-y-1 max-w-[150px]">
+										{client.siret && (
+											<div className="flex items-center gap-1.5 text-xs">
+												<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
+												<span className="truncate">{client.siret}</span>
+											</div>
+										)}
+										{client.vatNumber && (
+											<div className="flex items-center gap-1.5 text-xs">
+												<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
+												<span className="truncate">{client.vatNumber}</span>
+											</div>
+										)}
+										{!client.siret && !client.vatNumber && (
+											<span className="text-xs text-muted-foreground italic">
+												Non renseignées
+											</span>
+										)}
+									</div>
+								</TableCell>
+								<TableCell role="gridcell" className="hidden lg:table-cell">
+									<div className="flex items-center gap-2 max-w-[200px]">
+										<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+										{client.addresses?.find((addr) => addr.isDefault) ? (
+											<span className="truncate">
+												{[
+													client.addresses.find((addr) => addr.isDefault)
+														?.addressLine1,
+													client.addresses.find((addr) => addr.isDefault)
+														?.postalCode,
+													client.addresses.find((addr) => addr.isDefault)?.city,
+												]
+													.filter(Boolean)
+													.join(", ")}
+											</span>
+										) : (
+											<span className="text-muted-foreground italic">
+												Non renseignée
+											</span>
+										)}
+									</div>
+								</TableCell>
+								<TableCell role="gridcell" className="">
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button
+												variant="ghost"
+												size="icon"
+												className={cn(
+													"h-8 w-8 rounded-full hover:bg-muted focus-visible:bg-muted"
+												)}
+												aria-label="Menu d'actions"
+												type="button"
 											>
-												<FileText className="h-4 w-4 mr-2" />
-												<span>Fiche client</span>
-												{/* Indicateur de chargement masqué par défaut */}
-												<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
-											</Link>
-										</DropdownMenuItem>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem asChild>
-											<Link
-												href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
-												className={cn("flex w-full items-center")}
-											>
-												<Edit2 className="h-4 w-4 mr-2" />
-												<span>Modifier</span>
-											</Link>
-										</DropdownMenuItem>
-										<DropdownMenuItem asChild>
-											<Link
-												href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
-												className={cn("flex w-full items-center")}
-											>
-												<Users className="h-4 w-4 mr-2" />
-												<span>Contacts</span>
-											</Link>
-										</DropdownMenuItem>
-										<DropdownMenuItem asChild>
-											<Link
-												href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses`}
-												className={cn("flex w-full items-center")}
-											>
-												<MapPin className="h-4 w-4 mr-2" />
-												<span>Adresses</span>
-											</Link>
-										</DropdownMenuItem>
-										<DropdownMenuItem asChild>
-											<Link
-												href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
-												className={cn("flex w-full items-center")}
-											>
-												<Trash2 className="h-4 w-4 mr-2" />
-												<span>Supprimer</span>
-											</Link>
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</TableCell>
-						</TableRow>
-					))}
+												<MoreVerticalIcon className="h-4 w-4" />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent
+											align="end"
+											side="bottom"
+											sideOffset={4}
+											className="w-48"
+										>
+											<DropdownMenuItem asChild>
+												<Link
+													href={`/dashboard/${client.organizationId}/clients/${client.id}`}
+													className={cn("flex w-full items-center")}
+												>
+													<FileText className="h-4 w-4 mr-2" />
+													<span>Fiche client</span>
+													{/* Indicateur de chargement masqué par défaut */}
+													<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuSeparator />
+											<DropdownMenuItem asChild>
+												<Link
+													href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
+													className={cn("flex w-full items-center")}
+												>
+													<Edit2 className="h-4 w-4 mr-2" />
+													<span>Modifier</span>
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link
+													href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
+													className={cn("flex w-full items-center")}
+												>
+													<Users className="h-4 w-4 mr-2" />
+													<span>Contacts</span>
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link
+													href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses`}
+													className={cn("flex w-full items-center")}
+												>
+													<MapPin className="h-4 w-4 mr-2" />
+													<span>Adresses</span>
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link
+													href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
+													className={cn("flex w-full items-center")}
+												>
+													<Trash2 className="h-4 w-4 mr-2" />
+													<span>Supprimer</span>
+												</Link>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</TableCell>
+							</TableRow>
+						);
+					})}
 				</TableBody>
 				<TableFooter>
 					<TableRow>

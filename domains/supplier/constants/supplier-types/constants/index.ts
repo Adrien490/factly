@@ -27,6 +27,18 @@ const SUPPLIER_TYPE_DESCRIPTIONS: Record<SupplierType, string> = {
 };
 
 /**
+ * Couleurs pour chaque type de fournisseur (palette professionnelle)
+ */
+const SUPPLIER_TYPE_COLORS: Record<SupplierType, string> = {
+	[SupplierType.MANUFACTURER]: "#0369a1", // Bleu profond
+	[SupplierType.WHOLESALER]: "#0284c7", // Bleu standard
+	[SupplierType.DISTRIBUTOR]: "#0ea5e9", // Bleu clair
+	[SupplierType.RETAILER]: "#06b6d4", // Bleu-cyan
+	[SupplierType.SERVICE_PROVIDER]: "#0891b2", // Cyan profond
+	[SupplierType.SUBCONTRACTOR]: "#14b8a6", // Turquoise
+};
+
+/**
  * Génère les options de type de fournisseur pour les composants de formulaire
  * @returns Un tableau d'options prêtes à l'emploi pour les composants de sélection
  */
@@ -35,6 +47,7 @@ export function getSupplierTypes(): SupplierTypeOption[] {
 		value: type,
 		label: SUPPLIER_TYPE_LABELS[type] || String(type),
 		description: SUPPLIER_TYPE_DESCRIPTIONS[type] || "",
+		color: SUPPLIER_TYPE_COLORS[type] || "#cbd5e1",
 	}));
 }
 
