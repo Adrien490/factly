@@ -16,7 +16,9 @@ export function useCheckReference() {
 						if (result.data?.exists) {
 							toast.error("Cette référence existe déjà");
 						} else if (result.message) {
-							toast.success(result.message);
+							toast.success(result.message, {
+								duration: 1750,
+							});
 						}
 					},
 				}
