@@ -40,12 +40,8 @@ export const withCallbacks = <
 			if (result?.status === ActionStatus.SUCCESS) {
 				callbacks.onSuccess?.(result);
 			}
-
-			// Appel du callback d'erreur si l'action a échoué
-			if (
-				result?.status === ActionStatus.ERROR ||
-				result?.status === ActionStatus.VALIDATION_ERROR
-			) {
+			// Appel du callback d'erreur pour tous les statuts d'erreur
+			else {
 				callbacks.onError?.(result);
 			}
 
