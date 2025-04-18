@@ -119,12 +119,8 @@ export async function updateClient(
 			where: { id: clientData.id },
 			data: clientData,
 		});
-
-		// 8. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(
-			`clients:${clientData.organizationId}:user:${session.user.id}`
-		);
-
+		revalidateTag(`org:${clientData.organizationId}:client:${clientData.id}`);
+		revalidateTag(`org:${clientData.organizationId}:clients`);
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,
@@ -132,10 +128,12 @@ export async function updateClient(
 			rawData
 		);
 	} catch (error) {
-		console.error("[CREATE_CLIENT]", error);
+		console.error("[UPDATE_CLIENT]", error);
 		return createErrorResponse(
 			ServerActionStatus.ERROR,
-			error instanceof Error ? error.message : "Impossible de créer le client"
+			error instanceof Error
+				? error.message
+				: "Impossible de modifier le client"
 		);
 	}
 }

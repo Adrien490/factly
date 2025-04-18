@@ -23,17 +23,19 @@ export async function fetchClients(
 ): Promise<GetClientsReturn> {
 	"use cache";
 
+	console.log(userId);
+
 	// Tag de base pour tous les clients de l'organisation
-	cacheTag(`clients:${params.organizationId}:user:${userId}`);
+	cacheTag(`org:${params.organizationId}:clients`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`clients:${params.organizationId}:search:${params.search}`);
+		cacheTag(`org:${params.organizationId}:search:${params.search}`);
 	}
 
 	// Tag pour le tri
 	cacheTag(
-		`clients:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
+		`org:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
 	);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
@@ -47,7 +49,7 @@ export async function fetchClients(
 		Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
 		MAX_RESULTS_PER_PAGE
 	);
-	cacheTag(`clients:${params.organizationId}:page:${page}:perPage:${perPage}`);
+	cacheTag(`org:${params.organizationId}:page:${page}:perPage:${perPage}`);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
@@ -55,10 +57,10 @@ export async function fetchClients(
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
 				cacheTag(
-					`clients:${params.organizationId}:filter:${key}:${value.join(",")}`
+					`org:${params.organizationId}:filter:${key}:${value.join(",")}`
 				);
 			} else {
-				cacheTag(`clients:${params.organizationId}:filter:${key}:${value}`);
+				cacheTag(`org:${params.organizationId}:filter:${key}:${value}`);
 			}
 		});
 	}

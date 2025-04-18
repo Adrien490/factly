@@ -174,7 +174,7 @@ export async function createClient(
 
 		// 8. Invalidation du cache pour forcer un rafraîchissement des données
 		// Invalider le tag de base pour tous les clients de l'organisation
-		revalidateTag(`clients:${validatedOrgId}:user:${userId}`);
+		revalidateTag(`org:${validatedOrgId}:clients`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
