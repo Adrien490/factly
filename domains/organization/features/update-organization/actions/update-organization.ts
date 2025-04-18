@@ -134,26 +134,9 @@ export async function updateOrganization(
 		});
 
 		// Revalidation des tags de cache
-		// Tag principal pour toutes les organisations
 		revalidateTag("organizations");
+		revalidateTag(`organization:${organization.id}`);
 
-		// Tag spécifique pour l'utilisateur actuel
-		revalidateTag(`organizations:${session.user.id}`);
-
-		// Tags de tri (pour s'assurer que les listes triées sont actualisées)
-		revalidateTag(`organizations:${session.user.id}:sort:name:asc`);
-		revalidateTag(`organizations:${session.user.id}:sort:name:desc`);
-		revalidateTag(`organizations:${session.user.id}:sort:createdAt:asc`);
-		revalidateTag(`organizations:${session.user.id}:sort:createdAt:desc`);
-
-		// Tags de recherche si le nom a été modifié
-		if (updateData.name !== organization.name) {
-			// Revalider les recherches potentielles qui pourraient maintenant inclure ou exclure cette organisation
-			revalidateTag(`organizations:${session.user.id}:search:`);
-		}
-
-		revalidateTag(`organization:${organization.id}:${session.user.id}`);
-		// 8. Retour de la réponse de succès
 		return createSuccessResponse(
 			organization,
 			`L'organisation ${organization.name} a été mise à jour avec succès`

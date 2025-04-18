@@ -10,6 +10,7 @@ import {
 	createSuccessResponse,
 } from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { deleteOrganizationSchema } from "../schemas";
 
@@ -69,6 +70,10 @@ export async function deleteOrganization(
 		await db.organization.delete({
 			where: { id: organizationId.toString() },
 		});
+
+		revalidateTag(`organizations`);
+		revalidateTag(`organization:${organization.id}`);
+		revalidateTag(`organization:${organization.id}:user:${session.user.id}`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(

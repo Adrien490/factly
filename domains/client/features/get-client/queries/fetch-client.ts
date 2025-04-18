@@ -17,7 +17,7 @@ export async function fetchClient(
 	console.log(userId);
 
 	// Tag de base pour tous les clients de l'organisation
-	cacheTag(`org:${params.organizationId}:client:${params.id}`);
+	cacheTag(`organization:${params.organizationId}:client:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
 		stale: 60 * 60 * 24,

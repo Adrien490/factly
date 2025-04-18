@@ -16,7 +16,7 @@ export async function fetchOrganization(
 ) {
 	"use cache";
 
-	cacheTag(`organization:${params.id}:${userId}`);
+	cacheTag(`organization:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures

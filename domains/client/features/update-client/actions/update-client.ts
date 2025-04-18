@@ -119,8 +119,10 @@ export async function updateClient(
 			where: { id: clientData.id },
 			data: clientData,
 		});
-		revalidateTag(`org:${clientData.organizationId}:client:${clientData.id}`);
-		revalidateTag(`org:${clientData.organizationId}:clients`);
+		revalidateTag(
+			`organization:${clientData.organizationId}:client:${clientData.id}`
+		);
+		revalidateTag(`organization:${clientData.organizationId}:clients`);
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,

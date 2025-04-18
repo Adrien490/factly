@@ -118,18 +118,6 @@ export async function createOrganization(
 		// Tag principal pour toutes les organisations
 		revalidateTag("organizations");
 
-		// Tag spécifique pour l'utilisateur actuel
-		revalidateTag(`organizations:${creatorId}`);
-
-		// Tags de tri (pour s'assurer que les listes triées sont actualisées)
-		revalidateTag(`organizations:${creatorId}:sort:name:asc`);
-		revalidateTag(`organizations:${creatorId}:sort:name:desc`);
-		revalidateTag(`organizations:${creatorId}:sort:createdAt:asc`);
-		revalidateTag(`organizations:${creatorId}:sort:createdAt:desc`);
-
-		// Tags de recherche potentiels basés sur le nom
-		revalidateTag(`organizations:${creatorId}:search:`);
-
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(
 			organization,

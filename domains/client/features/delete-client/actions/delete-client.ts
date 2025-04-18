@@ -87,8 +87,10 @@ export async function deleteClient(
 		});
 
 		// Revalidation du cache avec les mêmes tags que get-clients
-		revalidateTag(`org:${rawData.organizationId}:clients`);
-		revalidateTag(`org:${rawData.organizationId}:client:${existingClient.id}`);
+		revalidateTag(`organization:${rawData.organizationId}:clients`);
+		revalidateTag(
+			`organization:${rawData.organizationId}:client:${existingClient.id}`
+		);
 
 		return createSuccessResponse(
 			null,

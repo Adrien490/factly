@@ -16,16 +16,18 @@ export async function fetchOrganizations(
 ): Promise<GetOrganizationsReturn> {
 	"use cache";
 
+	console.log(userId);
+
 	// Tag de base pour toutes les organisations de l'utilisateur
-	cacheTag(`organizations:${userId}`);
+	cacheTag(`organizations`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`organizations:${userId}:search:${params.search}`);
+		cacheTag(`organizations:search:${params.search}`);
 	}
 
 	// Tag pour le tri - toujours présent car les valeurs par défaut sont définies
-	cacheTag(`organizations:${userId}:sort:${params.sortBy}:${params.sortOrder}`);
+	cacheTag(`organizations:sort:${params.sortBy}:${params.sortOrder}`);
 
 	// Tags pour les autres filtres
 

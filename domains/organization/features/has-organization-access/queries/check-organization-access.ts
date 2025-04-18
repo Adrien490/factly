@@ -13,7 +13,7 @@ export async function checkOrganizationAccess(
 	"use cache";
 
 	// Tag de cache pour cette vérification spécifique
-	cacheTag(`has-organization-access:${organizationId}:${userId}`);
+	cacheTag(`organization:${organizationId}:user:${userId}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures
