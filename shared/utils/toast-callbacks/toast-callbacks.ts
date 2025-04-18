@@ -33,6 +33,7 @@ export const createToastCallbacks = <
 	return {
 		// Affiche le toast de chargement
 		onStart: () => {
+			// On garde le toast de chargement sans fermer les autres
 			return toast.loading(options.loadingMessage || "Chargement...");
 		},
 
@@ -45,12 +46,18 @@ export const createToastCallbacks = <
 		onSuccess: (result: ActionState<TData, TSchema>) => {
 			// Si l'utilisateur a défini son propre comportement
 			if (options.onSuccess) {
+				// Fermer tous les toasts existants (sauf celui de chargement)
+				toast.dismiss();
+
 				options.onSuccess(result);
 				return;
 			}
 
 			// Comportement par défaut
 			if (result?.message) {
+				// Fermer tous les toasts existants (sauf celui de chargement)
+				toast.dismiss();
+
 				let action;
 
 				if (options.action && result.data) {
@@ -68,12 +75,18 @@ export const createToastCallbacks = <
 		onError: (result: ActionState<TData, TSchema>) => {
 			// Si l'utilisateur a défini son propre comportement
 			if (options.onError) {
+				// Fermer tous les toasts existants (sauf celui de chargement)
+				toast.dismiss();
+
 				options.onError(result);
 				return;
 			}
 
 			// Comportement par défaut
 			if (result?.message) {
+				// Fermer tous les toasts existants (sauf celui de chargement)
+				toast.dismiss();
+
 				toast.error(result.message);
 			}
 		},
