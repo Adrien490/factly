@@ -2,13 +2,14 @@
 
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Organization } from "@prisma/client";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
 import { createOrganization } from "../actions";
 import { createOrganizationSchema } from "../schemas";
 
 export function useCreateOrganization() {
+	const router = useRouter();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			createOrganization,
