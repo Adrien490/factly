@@ -117,8 +117,9 @@ export async function updateSupplier(
 
 		// 8. Invalidation du cache pour forcer un rafraîchissement des données
 		revalidateTag(
-			`suppliers:${supplierData.organizationId}:user:${session.user.id}`
+			`organization:${supplierData.organizationId}:supplier:${supplierData.id}`
 		);
+		revalidateTag(`organizations:${supplierData.organizationId}:suppliers`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

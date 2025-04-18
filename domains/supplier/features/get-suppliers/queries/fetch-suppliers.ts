@@ -18,22 +18,23 @@ import { buildWhereClause } from "./build-where-clause";
  * Fonction interne qui récupère les fournisseurs avec cache
  */
 export async function fetchSuppliers(
-	params: z.infer<typeof getSuppliersSchema>,
-	userId: string
+	params: z.infer<typeof getSuppliersSchema>
 ): Promise<GetSuppliersReturn> {
 	"use cache";
 
 	// Tag de base pour tous les fournisseurs de l'organisation
-	cacheTag(`suppliers:${params.organizationId}:user:${userId}`);
+	cacheTag(`organization:${params.organizationId}:suppliers`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`suppliers:${params.organizationId}:search:${params.search}`);
+		cacheTag(
+			`organization:${params.organizationId}:suppliers:search:${params.search}`
+		);
 	}
 
 	// Tag pour le tri
 	cacheTag(
-		`suppliers:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
+		`organization:${params.organizationId}:suppliers:sort:${params.sortBy}:${params.sortOrder}`
 	);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
@@ -48,7 +49,7 @@ export async function fetchSuppliers(
 		MAX_RESULTS_PER_PAGE
 	);
 	cacheTag(
-		`suppliers:${params.organizationId}:page:${page}:perPage:${perPage}`
+		`organization:${params.organizationId}:suppliers:page:${page}:perPage:${perPage}`
 	);
 
 	// Tags pour les filtres dynamiques
@@ -57,10 +58,14 @@ export async function fetchSuppliers(
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
 				cacheTag(
-					`suppliers:${params.organizationId}:filter:${key}:${value.join(",")}`
+					`organization:${
+						params.organizationId
+					}:suppliers:filter:${key}:${value.join(",")}`
 				);
 			} else {
-				cacheTag(`suppliers:${params.organizationId}:filter:${key}:${value}`);
+				cacheTag(
+					`organization:${params.organizationId}:suppliers:filter:${key}:${value}`
+				);
 			}
 		});
 	}

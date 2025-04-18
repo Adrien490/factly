@@ -44,7 +44,7 @@ export async function getSuppliers(
 		const validatedParams = validation.data;
 
 		// Appel à la fonction avec cache
-		return await fetchSuppliers(validatedParams, session.user.id);
+		return await fetchSuppliers(validatedParams);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error("Invalid parameters");

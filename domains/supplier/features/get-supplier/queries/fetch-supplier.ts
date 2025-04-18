@@ -12,14 +12,12 @@ import { GetSupplierReturn } from "../types";
  * Récupère un fournisseur par ID avec cache
  */
 export async function fetchSupplier(
-	params: z.infer<typeof getSupplierSchema>,
-	userId: string
+	params: z.infer<typeof getSupplierSchema>
 ): Promise<GetSupplierReturn> {
 	"use cache";
 
 	// Tags de cache
-	cacheTag(`suppliers:${params.organizationId}:user:${userId}`);
-	cacheTag(`supplier:${params.id}`);
+	cacheTag(`organization:${params.organizationId}:supplier:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures

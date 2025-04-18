@@ -40,7 +40,7 @@ export async function getSupplier(params: z.infer<typeof getSupplierSchema>) {
 		}
 
 		// Appel à la fonction cacheable
-		return fetchSupplier(validatedParams, session.user.id);
+		return fetchSupplier(validatedParams);
 	} catch (error) {
 		console.error("[GET_SUPPLIER]", error);
 		throw error;

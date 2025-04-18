@@ -154,7 +154,7 @@ export async function createSupplier(
 		});
 
 		// 7. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`suppliers:${validatedOrgId}:user:${session.user.id}`);
+		revalidateTag(`organizations:${validatedOrgId}:suppliers`);
 
 		// 8. Retour de la réponse de succès
 		return createSuccessResponse(
