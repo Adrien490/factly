@@ -241,7 +241,7 @@ export default async function ClientPage({ params }: Props) {
 						<CardContent className="p-0 pt-2">
 							{" "}
 							{/* Suppression du padding pour mieux intégrer la liste */}
-							<div className="px-6 pb-6">
+							<div className="pb-6">
 								{" "}
 								<Suspense fallback={<AddressListSkeleton viewType="grid" />}>
 									<AddressList
@@ -273,7 +273,7 @@ export default async function ClientPage({ params }: Props) {
 					<Card>
 						<CardHeader>
 							<CardTitle className="text-lg">Activité</CardTitle>
-							<CardDescription>Devis, factures et interactions</CardDescription>
+							<CardDescription>Devis et factures</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<Tabs defaultValue="contacts" className="w-full">
@@ -289,10 +289,6 @@ export default async function ClientPage({ params }: Props) {
 									<TabsTrigger value="invoices">
 										<CircleDollarSign className="h-4 w-4 mr-2" />
 										Factures
-									</TabsTrigger>
-									<TabsTrigger value="activity">
-										<Calendar className="h-4 w-4 mr-2" />
-										Historique
 									</TabsTrigger>
 								</TabsList>
 
