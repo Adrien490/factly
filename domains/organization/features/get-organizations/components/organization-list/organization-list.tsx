@@ -78,7 +78,7 @@ export function OrganizationList({
 					return (
 						<Link key={id} href={`/dashboard/${id}`} className="block h-full">
 							<Card className="h-full transition-all duration-200 hover:border-primary/50 hover:bg-accent/30">
-								<CardContent className="p-4 flex flex-col h-full">
+								<CardContent className="flex flex-col h-full">
 									<div className="flex items-start gap-3">
 										{/* Logo */}
 										<div className="h-12 w-12 shrink-0 flex items-center justify-center">
