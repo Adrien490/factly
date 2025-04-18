@@ -125,6 +125,24 @@ export async function updateOrganization(
 			}
 		}
 
+		// Vérification de l'unicité du numéro de TVA s'il est fourni
+		if (validation.data.vatNumber) {
+			const existingOrgByVatNumber = await db.organization.findFirst({
+				where: {
+					vatNumber: validation.data.vatNumber,
+					id: { not: validation.data.id },
+				},
+				select: { id: true },
+			});
+
+			if (existingOrgByVatNumber) {
+				return createErrorResponse(
+					ServerActionStatus.CONFLICT,
+					"Une autre organisation avec ce numéro de TVA existe déjà"
+				);
+			}
+		}
+
 		// 7. Mise à jour de l'organisation dans la base de données
 		const { id, ...updateData } = validation.data;
 

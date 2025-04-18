@@ -25,12 +25,16 @@ export const createOrganizationSchema = z.object({
 	// Informations fiscales
 	siren: z
 		.string()
-		.regex(/^\d{9}$/, "Le SIREN doit être composé de 9 chiffres")
+		.refine((val) => val === "" || /^\d{9}$/.test(val), {
+			message: "Le SIREN doit être composé de 9 chiffres",
+		})
 		.optional()
 		.nullable(),
 	siret: z
 		.string()
-		.regex(/^\d{14}$/, "Le SIRET doit être composé de 14 chiffres")
+		.refine((val) => val === "" || /^\d{14}$/.test(val), {
+			message: "Le SIRET doit être composé de 14 chiffres",
+		})
 		.optional()
 		.nullable(),
 	vatNumber: z.string().optional().nullable(),

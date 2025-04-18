@@ -44,9 +44,18 @@ export async function createOrganization(
 			email: formData.get("email") as string,
 			phone: formData.get("phone") as string,
 			website: formData.get("website") as string,
-			siren: formData.get("siren") as string,
-			siret: formData.get("siret") as string,
-			vatNumber: formData.get("vatNumber") as string,
+			siren:
+				((formData.get("siren") as string) || "").trim() === ""
+					? null
+					: (formData.get("siren") as string),
+			siret:
+				((formData.get("siret") as string) || "").trim() === ""
+					? null
+					: (formData.get("siret") as string),
+			vatNumber:
+				((formData.get("vatNumber") as string) || "").trim() === ""
+					? null
+					: (formData.get("vatNumber") as string),
 			addressLine1: formData.get("addressLine1") as string,
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
@@ -94,6 +103,21 @@ export async function createOrganization(
 				return createErrorResponse(
 					ServerActionStatus.CONFLICT,
 					"Une organisation avec ce SIRET existe déjà"
+				);
+			}
+		}
+
+		// Vérification de l'unicité du numéro de TVA s'il est fourni
+		if (validation.data.vatNumber) {
+			const existingOrgByVatNumber = await db.organization.findFirst({
+				where: { vatNumber: validation.data.vatNumber },
+				select: { id: true },
+			});
+
+			if (existingOrgByVatNumber) {
+				return createErrorResponse(
+					ServerActionStatus.CONFLICT,
+					"Une organisation avec ce numéro de TVA existe déjà"
 				);
 			}
 		}
