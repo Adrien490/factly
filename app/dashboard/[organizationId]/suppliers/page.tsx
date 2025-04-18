@@ -12,7 +12,6 @@ import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
 import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
 import {
 	Button,
-	Card,
 	MultiSelectFilter,
 	PageContainer,
 	PageHeader,
@@ -102,25 +101,21 @@ export default async function SuppliersPage({
 				</div>
 			</div>
 
-			<Card>
-				<Suspense fallback={<SupplierDataTableSkeleton />}>
-					<SupplierDataTable
-						suppliersPromise={getSuppliers({
-							organizationId,
-							perPage: Number(perPage) || 10,
-							page: Number(page) || 1,
-							sortBy: sortBy as string,
-							sortOrder: sortOrder as SortOrder,
-							search,
-							filters: Object.fromEntries(
-								Object.entries(filters).filter(
-									([, value]) => value !== undefined
-								)
-							) as GetSuppliersParams["filters"],
-						})}
-					/>
-				</Suspense>
-			</Card>
+			<Suspense fallback={<SupplierDataTableSkeleton />}>
+				<SupplierDataTable
+					suppliersPromise={getSuppliers({
+						organizationId,
+						perPage: Number(perPage) || 10,
+						page: Number(page) || 1,
+						sortBy: sortBy as string,
+						sortOrder: sortOrder as SortOrder,
+						search,
+						filters: Object.fromEntries(
+							Object.entries(filters).filter(([, value]) => value !== undefined)
+						) as GetSuppliersParams["filters"],
+					})}
+				/>
+			</Suspense>
 		</PageContainer>
 	);
 }
