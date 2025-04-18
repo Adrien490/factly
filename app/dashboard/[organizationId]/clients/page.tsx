@@ -11,7 +11,6 @@ import { getClients } from "@/domains/client/features/get-clients";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
-	Card,
 	FilterSelect,
 	MultiSelectFilter,
 	PageContainer,
@@ -115,21 +114,19 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				</div>
 			</div>
 
-			<Card>
-				<Suspense fallback={<ClientDataTableSkeleton />}>
-					<ClientDataTable
-						clientsPromise={getClients({
-							organizationId,
-							perPage: Number(perPage) || 10,
-							page: Number(page) || 1,
-							sortBy: sortBy as string,
-							sortOrder: sortOrder as SortOrder,
-							search,
-							filters,
-						})}
-					/>
-				</Suspense>
-			</Card>
+			<Suspense fallback={<ClientDataTableSkeleton />}>
+				<ClientDataTable
+					clientsPromise={getClients({
+						organizationId,
+						perPage: Number(perPage) || 10,
+						page: Number(page) || 1,
+						sortBy: sortBy as string,
+						sortOrder: sortOrder as SortOrder,
+						search,
+						filters,
+					})}
+				/>
+			</Suspense>
 		</PageContainer>
 	);
 }
