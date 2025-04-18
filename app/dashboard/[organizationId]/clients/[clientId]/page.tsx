@@ -34,7 +34,6 @@ import {
 	Users,
 } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type Props = {
@@ -49,10 +48,6 @@ export default async function ClientPage({ params }: Props) {
 	const { organizationId, clientId } = resolvedParams;
 
 	const client = await getClient({ id: clientId, organizationId });
-
-	if (!client) {
-		return notFound();
-	}
 
 	return (
 		<div className="space-y-6">

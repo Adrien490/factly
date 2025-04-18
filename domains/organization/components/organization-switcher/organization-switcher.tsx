@@ -1,6 +1,5 @@
 "use client";
 
-import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -8,7 +7,8 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+} from "@/shared/components";
+import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
 import {
 	SidebarMenuButton,
 	useSidebar,
@@ -58,7 +58,6 @@ export function OrganizationSwitcher({
 					// Mode collapsed - structure simplifiée
 					<SidebarMenuButton
 						size="default"
-						disabled={isPending}
 						className="relative overflow-hidden my-2"
 					>
 						{isPending ? (
@@ -84,7 +83,6 @@ export function OrganizationSwitcher({
 					// Mode normal - avec informations
 					<SidebarMenuButton
 						size="lg"
-						disabled={isPending}
 						className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 					>
 						<div className="rounded-lg bg-sidebar-primary/10 text-sidebar-primary size-8 flex items-center justify-center overflow-hidden transition-none">
