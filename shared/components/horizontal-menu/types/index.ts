@@ -10,6 +10,4 @@ export interface MenuItem {
 export interface HorizontalMenuProps {
 	items: MenuItem[];
 	className?: string;
-	variant?: "default" | "filled" | "bordered" | "pills";
-	size?: "default" | "sm" | "lg";
 }
