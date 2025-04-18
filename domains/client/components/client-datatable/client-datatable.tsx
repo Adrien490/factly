@@ -1,7 +1,14 @@
 import {
 	Badge,
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 	EmptyState,
 	ItemCheckbox,
+	LoadingIndicator,
 	Pagination,
 	SelectAllCheckbox,
 	SelectionToolbar,
@@ -16,16 +23,22 @@ import {
 import {
 	BuildingIcon,
 	CircleDot,
+	Edit2,
+	FileText,
 	MapPin,
+	MoreVerticalIcon,
 	Receipt,
 	Search,
 	Tag,
+	Trash2,
+	Users,
 } from "lucide-react";
+import Link from "next/link";
 import { use } from "react";
 
 import { SelectionProvider } from "@/shared/contexts";
+import { cn } from "@/shared/utils";
 import { CLIENT_STATUSES, CLIENT_TYPES } from "../../constants";
-import { ClientRowActions } from "./components";
 import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
@@ -191,7 +204,76 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 								</div>
 							</TableCell>
 							<TableCell role="gridcell" className="">
-								<ClientRowActions client={client} />
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button
+											variant="ghost"
+											size="icon"
+											className={cn(
+												"h-8 w-8 rounded-full hover:bg-muted focus-visible:bg-muted"
+											)}
+											aria-label="Menu d'actions"
+											type="button"
+										>
+											<MoreVerticalIcon className="h-4 w-4" />
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent
+										align="end"
+										side="bottom"
+										sideOffset={4}
+										className="w-48"
+									>
+										<DropdownMenuItem asChild>
+											<Link
+												href={`/dashboard/${client.organizationId}/clients/${client.id}`}
+												className={cn("flex w-full items-center")}
+											>
+												<FileText className="h-4 w-4 mr-2" />
+												<span>Fiche client</span>
+												{/* Indicateur de chargement masqué par défaut */}
+												<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuSeparator />
+										<DropdownMenuItem asChild>
+											<Link
+												href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
+												className={cn("flex w-full items-center")}
+											>
+												<Edit2 className="h-4 w-4 mr-2" />
+												<span>Modifier</span>
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuItem asChild>
+											<Link
+												href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
+												className={cn("flex w-full items-center")}
+											>
+												<Users className="h-4 w-4 mr-2" />
+												<span>Contacts</span>
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuItem asChild>
+											<Link
+												href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses`}
+												className={cn("flex w-full items-center")}
+											>
+												<MapPin className="h-4 w-4 mr-2" />
+												<span>Adresses</span>
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuItem asChild>
+											<Link
+												href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
+												className={cn("flex w-full items-center")}
+											>
+												<Trash2 className="h-4 w-4 mr-2" />
+												<span>Supprimer</span>
+											</Link>
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
 							</TableCell>
 						</TableRow>
 					))}

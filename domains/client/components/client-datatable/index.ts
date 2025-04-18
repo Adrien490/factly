@@ -1,2 +1,2 @@
 export * from "./client-datatable";
-export * from "./components";
+export * from "./components/client-datatable-skeleton";

@@ -1,6 +1,6 @@
+import { ORGANIZATION_SORT_FIELDS } from "@/domains/organization/constants";
 import {
 	getOrganizations,
-	ORGANIZATION_SORT_OPTIONS,
 	OrganizationList,
 	OrganizationListSkeleton,
 	OrganizationSortableField,
@@ -9,7 +9,7 @@ import {
 	Button,
 	PageContainer,
 	SearchForm,
-	SortSelector,
+	SortingOptionsDropdown,
 	ViewToggle,
 } from "@/shared/components";
 
@@ -47,10 +47,10 @@ export default async function DashboardPage({ searchParams }: Props) {
 				{/* Actions à droite */}
 				<div className="flex flex-wrap items-center gap-2 shrink-0">
 					{/* Sélecteur de tri */}
-					<SortSelector
-						options={ORGANIZATION_SORT_OPTIONS}
-						defaultValue="name"
-						defaultOrder="asc"
+					<SortingOptionsDropdown
+						sortFields={ORGANIZATION_SORT_FIELDS}
+						defaultSortBy="name"
+						defaultSortOrder="asc"
 					/>
 
 					{/* Sélecteur de vue */}

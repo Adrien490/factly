@@ -18,7 +18,7 @@ export function ViewToggle() {
 			value={optimisticView}
 			onValueChange={(value) => handleViewChange(value as ViewType)}
 		>
-			<TabsList className="grid grid-cols-2 h-9 w-[100px]">
+			<TabsList className="grid grid-cols-2 h-10 w-[100px]">
 				<TabsTrigger
 					value="grid"
 					className="flex items-center justify-center px-3"
