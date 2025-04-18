@@ -56,44 +56,42 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 				<TableHeader>
 					<TableRow>
 						<TableHead key="select" role="columnheader">
-							<div className="flex-1 font-medium">
-								<SelectAllCheckbox itemIds={clientIds} />
-							</div>
+							<SelectAllCheckbox itemIds={clientIds} />
 						</TableHead>
 						<TableHead key="name" role="columnheader">
-							<div className="flex-1 font-medium">Client</div>
+							Client
 						</TableHead>
 						<TableHead
 							key="clientType"
 							role="columnheader"
 							className="hidden md:table-cell"
 						>
-							<div className="flex-1 font-medium">Type</div>
+							Type
 						</TableHead>
 						<TableHead
 							key="status"
 							role="columnheader"
 							className="hidden md:table-cell"
 						>
-							<div className="flex-1 font-medium">Statut</div>
+							Statut
 						</TableHead>
 						<TableHead
 							key="fiscalInfo"
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							<div className="flex-1 font-medium">Infos fiscales</div>
+							Infos fiscales
 						</TableHead>
 						<TableHead
 							key="address"
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							<div className="flex-1 font-medium">Adresse</div>
+							Adresse
 						</TableHead>
 
 						<TableHead key="actions" role="columnheader" className="">
-							<div className="flex-1 font-medium"></div>
+							<></>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
