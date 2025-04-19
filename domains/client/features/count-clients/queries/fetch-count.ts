@@ -1,7 +1,8 @@
 import db from "@/shared/lib/db";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import { countClientsSchema } from "../schemas";
-import { CountClientsReturn } from "../types";
 import { buildWhereClause } from "./build-where-clause";
 
 /**
@@ -9,7 +10,37 @@ import { buildWhereClause } from "./build-where-clause";
  */
 export async function fetchCount(
 	params: z.infer<typeof countClientsSchema>
-): Promise<CountClientsReturn> {
+): Promise<number> {
+	"use cache";
+
+	// Tag de base pour tous les clients de l'organisation
+	cacheTag(`organization:${params.organizationId}:clients:count`);
+
+	// Tags pour les filtres dynamiques
+	if (params.filters && Object.keys(params.filters).length > 0) {
+		Object.entries(params.filters).forEach(([key, value]) => {
+			if (Array.isArray(value)) {
+				// Pour les filtres multivaleurs (comme les tableaux)
+				cacheTag(
+					`organization:${params.organizationId}:filter:${key}:${value.join(
+						","
+					)}:count`
+				);
+			} else {
+				cacheTag(
+					`organization:${params.organizationId}:filter:${key}:${value}:count`
+				);
+			}
+		});
+	}
+
+	// Définir la durée de vie du cache
+	cacheLife({
+		revalidate: 60 * 60, // Revalidate after 1 hour
+		stale: 60 * 5, // Stale after 5 minutes
+		expire: 60 * 60 * 24, // Expire after 1 day
+	});
+
 	try {
 		// Validation des paramètres
 		const validation = countClientsSchema.safeParse(params);
@@ -23,9 +54,9 @@ export async function fetchCount(
 		// Compter le nombre de clients
 		const count = await db.client.count({ where });
 
-		return { count };
+		return count;
 	} catch (error) {
 		console.error("[COUNT_CLIENTS]", error);
-		return { count: 0 };
+		return 0;
 	}
 }

@@ -25,7 +25,6 @@ export function MultiSelectFilter({
 	options,
 	placeholder = "Sélectionner...",
 	className,
-	maxHeight = 250,
 }: MultiSelectFilterProps) {
 	const { values, toggleValue, clearFilter, isSelected, isPending } =
 		useMultiSelectFilter(filterKey);
@@ -37,7 +36,7 @@ export function MultiSelectFilter({
 	return (
 		<div
 			data-pending={isPending ? "" : undefined}
-			className={cn("min-w-[220px] max-w-[300px] relative", className)}
+			className={cn("min-w-[220px] relative", className)}
 		>
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
@@ -45,7 +44,7 @@ export function MultiSelectFilter({
 						variant="outline"
 						role="combobox"
 						aria-expanded={open}
-						className="w-full justify-between relative h-10"
+						className="w-full justify-between relative"
 						disabled={isPending}
 						onClick={(e) => {
 							// Si on clique sur l'icône X, on veut simplement effacer et non ouvrir le popover
@@ -57,8 +56,8 @@ export function MultiSelectFilter({
 						}}
 					>
 						<div className="flex items-center w-full text-left">
-							<span className="text-muted-foreground text-xs font-medium mr-2 flex-shrink-0 min-w-[50px]">
-								{label}:
+							<span className="text-muted-foreground text-xs font-medium mr-2 flex-shrink-0">
+								{label}
 							</span>
 							<div className="flex-1 overflow-hidden">
 								{selectedOptions.length === 0 ? (
@@ -98,12 +97,12 @@ export function MultiSelectFilter({
 						</div>
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent className="p-0" align="start">
+				<PopoverContent className="p-0 w-[300px]" align="start" sideOffset={5}>
 					<Command>
 						<CommandInput placeholder="Rechercher..." />
 						<CommandEmpty>Aucun résultat trouvé</CommandEmpty>
 						<CommandGroup>
-							<ScrollArea className={`h-${maxHeight}`}>
+							<ScrollArea className="max-h-[300px]">
 								{options.map((option) => (
 									<CommandItem
 										key={option.value}

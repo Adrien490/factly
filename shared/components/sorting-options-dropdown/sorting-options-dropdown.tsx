@@ -1,14 +1,15 @@
 "use client";
 
-import { Button } from "@/shared/components/shadcn-ui/button";
 import {
+	Button,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+} from "@/shared/components";
+import { cn } from "@/shared/utils";
 import { ArrowDown, ArrowUp, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { useSortingOptions } from "./hooks";
 
@@ -20,10 +21,12 @@ export function SortingOptionsDropdown({
 	sortFields,
 	defaultSortBy = "createdAt",
 	defaultSortOrder = "desc",
+	className = "",
 }: {
 	sortFields: Array<{ label: string; value: string; icon: React.ReactNode }>;
 	defaultSortBy?: string;
 	defaultSortOrder?: "asc" | "desc";
+	className?: string;
 }) {
 	const {
 		currentSortBy,
@@ -39,14 +42,14 @@ export function SortingOptionsDropdown({
 			<DropdownMenuTrigger asChild>
 				<Button
 					variant="outline"
-					className="h-10 gap-2"
+					className={cn("gap-2", className)}
 					disabled={isPending}
 					data-pending={isPending ? "true" : undefined}
 				>
 					<SlidersHorizontal
 						className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`}
 					/>
-					<span>
+					<span className="truncate overflow-hidden text-ellipsis">
 						Tri: {currentField?.label || "Date"}{" "}
 						{currentSortOrder === "asc" ? "↑" : "↓"}
 					</span>

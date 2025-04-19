@@ -37,16 +37,25 @@ export function FilterSelect({
 				onValueChange={handleSingleSelect}
 				disabled={isPending}
 			>
-				<SelectTrigger>
-					<span className="text-muted-foreground text-xs mr-2">{label}</span>
-					<SelectValue placeholder={placeholder} />
+				<SelectTrigger
+					className="h-10 data-[size=default]:h-10 w-full"
+					size="default"
+				>
+					<div className="flex items-center w-full overflow-hidden">
+						<span className="text-muted-foreground text-xs mr-2 flex-shrink-0">
+							{label}
+						</span>
+						<div className="flex-1 overflow-hidden">
+							<SelectValue placeholder={placeholder} className="truncate" />
+						</div>
+					</div>
 				</SelectTrigger>
 				<SelectContent>
 					<ScrollArea className={`h-${maxHeight}`}>
 						<SelectItem value="all">Tout</SelectItem>
 						{options.map((option) => (
 							<SelectItem key={option.value} value={option.value}>
-								{option.label}
+								<span className="truncate">{option.label}</span>
 							</SelectItem>
 						))}
 					</ScrollArea>

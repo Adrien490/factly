@@ -6,7 +6,6 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { fetchCount } from ".";
 import { countClientsSchema } from "../schemas";
-import { CountClientsReturn } from "../types";
 
 /**
  * Compte le nombre de clients d'une organisation selon les critères de recherche et de filtrage
@@ -15,7 +14,7 @@ import { CountClientsReturn } from "../types";
  */
 export async function countClients(
 	params: z.infer<typeof countClientsSchema>
-): Promise<CountClientsReturn> {
+): Promise<number> {
 	try {
 		// Vérification de l'authentification
 		const session = await auth.api.getSession({

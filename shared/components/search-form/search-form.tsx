@@ -93,7 +93,7 @@ export function SearchForm({
 						value={field.state.value}
 						onChange={(e) => field.handleChange(e.target.value)}
 						className={cn(
-							"pl-10 pr-10 h-9",
+							"pl-10 pr-10",
 							"border-none shadow-none focus-visible:ring-0",
 							"bg-transparent",
 							"placeholder:text-muted-foreground/50",

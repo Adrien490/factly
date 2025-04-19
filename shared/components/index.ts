@@ -7,6 +7,7 @@ export * from "./empty-state";
 export * from "./filter-select";
 export * from "./forms";
 export * from "./horizontal-menu";
+export * from "./kpi-card/kpi-card";
 export * from "./loaders/dots-loader";
 export * from "./loaders/pulse-loader";
 export * from "./loaders/spinner-loader";

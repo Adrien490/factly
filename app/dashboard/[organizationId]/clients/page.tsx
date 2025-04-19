@@ -2,17 +2,12 @@ import {
 	ClientDataTable,
 	ClientDataTableSkeleton,
 } from "@/domains/client/components";
-import {
-	CLIENT_SORT_FIELDS,
-	CLIENT_STATUSES,
-	CLIENT_TYPES,
-} from "@/domains/client/constants";
+import { CLIENT_SORT_FIELDS } from "@/domains/client/constants";
+import { RefreshClientsButton } from "@/domains/client/features";
 import { getClients } from "@/domains/client/features/get-clients";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
-	FilterSelect,
-	MultiSelectFilter,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -20,6 +15,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
+import { Filter } from "lucide-react";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -71,49 +67,56 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			<PageHeader
 				title="Clients"
 				description="Gérez votre portefeuille clients"
-				action={
-					<Button asChild size="default">
-						<Link href={`/dashboard/${organizationId}/clients/new`}>
-							Nouveau client
-						</Link>
-					</Button>
-				}
 				className="mb-6"
 			/>
 
-			{/* Barre de recherche et filtres */}
-
-			{/* Recherche */}
-			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4 sm">
-				<SearchForm
-					paramName="search"
-					placeholder="Rechercher par nom, email, référence, SIREN..."
-					className="w-full sm:max-w-xs"
-				/>
-				<span className="text-xs font-medium text-muted-foreground px-1">
-					Filtrer par:
-				</span>
-				<div className="flex flex-wrap gap-2">
-					<MultiSelectFilter
-						filterKey="status"
-						label="Statut"
-						options={CLIENT_STATUSES}
+			{/* Barre d'actions principale */}
+			<div className="mb-6 flex items-center justify-between gap-3 pb-2">
+				<div className="flex items-center gap-3 shrink-0">
+					<SearchForm
+						paramName="search"
+						placeholder="Rechercher..."
+						className="shrink-0"
 					/>
-					<FilterSelect
+					<RefreshClientsButton organizationId={organizationId} />
+				</div>
+
+				<div className="flex items-center gap-3 shrink-0">
+					{/* <MultiSelectFilter
+						filterKey="status"
+						label="Status"
+						options={CLIENT_STATUSES}
+						className="min-w-[120px] shrink-0"
+					/>
+					<SelectFilter
 						filterKey="clientType"
 						label="Type"
 						options={CLIENT_TYPES}
+						className="min-w-[120px] shrink-0"
 					/>
-
-					{/* Dropdown de tri compact */}
+					 */}
 					<SortingOptionsDropdown
 						sortFields={CLIENT_SORT_FIELDS}
 						defaultSortBy="createdAt"
 						defaultSortOrder="desc"
+						className="min-w-[120px] shrink-0"
 					/>
+					<Button asChild variant="outline">
+						<div className="flex items-center gap-1">
+							<Filter className="h-4 w-4" />
+							<span>Filtres</span>
+						</div>
+					</Button>
+
+					<Button className="shrink-0" asChild>
+						<Link href={`/dashboard/${organizationId}/clients/new`}>
+							Nouveau client
+						</Link>
+					</Button>
 				</div>
 			</div>
 
+			{/* Tableau de données */}
 			<Suspense fallback={<ClientDataTableSkeleton />}>
 				<ClientDataTable
 					clientsPromise={getClients({

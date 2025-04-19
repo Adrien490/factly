@@ -19,10 +19,7 @@ import { useTransition } from "react";
 import { useDeleteClient } from "../hooks";
 import { DeleteClientFormProps } from "./types";
 
-export function DeleteClientAlertDialogForm({
-	client,
-	trigger,
-}: DeleteClientFormProps) {
+export function DeleteClientAlertDialogForm({ client }: DeleteClientFormProps) {
 	const { dispatch, isPending } = useDeleteClient();
 	const [isActionPending, startTransition] = useTransition();
 
@@ -40,17 +37,13 @@ export function DeleteClientAlertDialogForm({
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				{trigger ? (
-					trigger
-				) : (
-					<DropdownMenuItem
-						onSelect={(e) => e.preventDefault()}
-						className="text-destructive focus:text-destructive"
-					>
-						<Trash className="h-4 w-4 mr-2" />
-						<span>Supprimer</span>
-					</DropdownMenuItem>
-				)}
+				<DropdownMenuItem
+					onSelect={(e) => e.preventDefault()}
+					className="text-destructive focus:text-destructive"
+				>
+					<Trash className="h-4 w-4 mr-2" />
+					<span>Supprimer</span>
+				</DropdownMenuItem>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>

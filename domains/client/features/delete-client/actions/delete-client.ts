@@ -102,6 +102,7 @@ export async function deleteClient(
 		revalidateTag(
 			`organization:${rawData.organizationId}:client:${existingClient.id}`
 		);
+		revalidateTag(`organization:${rawData.organizationId}:clients:count`);
 
 		return createSuccessResponse(
 			null,

@@ -2,7 +2,6 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { countClientsSchema } from "../schemas";
 import { buildFilterConditions } from "./build-filter-conditions";
-import { buildSearchConditions } from "./build-search-conditions";
 
 /**
  * Construit la clause WHERE pour la requête Prisma
@@ -16,9 +15,6 @@ export function buildWhereClause(
 	};
 
 	// Ajouter les conditions de recherche textuelle
-	if (params.search?.trim()) {
-		whereClause.OR = buildSearchConditions(params.search);
-	}
 
 	// Ajouter les filtres spécifiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
