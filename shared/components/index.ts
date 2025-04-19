@@ -26,6 +26,7 @@ export * from "./sort-selector";
 export * from "./sorting-dropdown";
 export * from "./sorting-options-dropdown";
 export * from "./theme-toggle-button";
+export * from "./toolbar";
 export * from "./user-avatar";
 export * from "./view-toggle";
 

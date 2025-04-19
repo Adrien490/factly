@@ -11,12 +11,12 @@ import { getClients } from "@/domains/client/features/get-clients";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
-	DataTableToolbar,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
 	SortingOptionsDropdown,
+	Toolbar,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
@@ -77,7 +77,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			<HorizontalMenu items={getClientNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
-			<DataTableToolbar
+			<Toolbar
 				leftContent={
 					<>
 						<SearchForm

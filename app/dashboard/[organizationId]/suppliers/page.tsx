@@ -10,12 +10,12 @@ import type { GetSuppliersParams } from "@/domains/supplier/features/get-supplie
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
 import {
 	Button,
-	DataTableToolbar,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
 	SortingOptionsDropdown,
+	Toolbar,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
@@ -65,7 +65,7 @@ export default async function SuppliersPage({
 			<HorizontalMenu items={getSupplierNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
-			<DataTableToolbar
+			<Toolbar
 				leftContent={
 					<>
 						<SearchForm

@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 
-interface DataTableToolbarProps {
+interface ToolbarProps {
 	/**
 	 * Éléments à afficher sur le côté gauche de la barre d'outils
 	 */
@@ -23,11 +23,11 @@ interface DataTableToolbarProps {
  * Barre d'outils responsive pour les tables de données
  * Permet de définir les éléments à gauche (recherche, filtres) et à droite (actions, tri)
  */
-export function DataTableToolbar({
+export function Toolbar({
 	leftContent,
 	rightContent,
 	className = "",
-}: DataTableToolbarProps) {
+}: ToolbarProps) {
 	return (
 		<div
 			className={`mb-6 flex flex-wrap items-center justify-between gap-4 pb-2 ${className}`}
