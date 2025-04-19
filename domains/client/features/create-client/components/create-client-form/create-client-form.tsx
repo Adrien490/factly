@@ -1,16 +1,14 @@
 "use client";
 
 import {
+	Button,
+	FormLabel,
+	Input,
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/shared/components";
-import {
-	Button,
-	FormLabel,
-	Input,
 	Textarea,
 } from "@/shared/components/shadcn-ui";
 
@@ -20,7 +18,6 @@ import {
 } from "@/domains/address/features/search-address";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
-import { useCreateClient } from "@/domains/client/features/create-client/hooks";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
@@ -29,9 +26,12 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { useCheckReference } from "@/shared/queries";
-import { generateReference } from "@/shared/utils";
-import { ClientStatus, ClientType } from "@prisma/client";
+import {
+	createToastCallbacks,
+	generateReference,
+	withCallbacks,
+} from "@/shared/utils";
+import { Client, ClientStatus, ClientType } from "@prisma/client";
 import {
 	mergeForm,
 	Updater,
@@ -49,7 +49,10 @@ import {
 	X,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { use, useTransition } from "react";
+import { use, useActionState, useTransition } from "react";
+import { toast } from "sonner";
+import { createClient } from "../../actions";
+import { createClientSchema } from "../../schemas";
 import { formOpts } from "./constants";
 
 type Props = {
@@ -60,11 +63,49 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
-	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch, isPending } = useCreateClient();
 	const router = useRouter();
-	const { dispatch: checkReferenceDispatch } = useCheckReference();
+
+	const [state, dispatch] = useActionState(
+		withCallbacks(
+			createClient,
+			createToastCallbacks<Client, typeof createClientSchema>({
+				loadingMessage: "Création du client en cours...",
+				onSuccess: (result) => {
+					toast.success("Client créé avec succès", {
+						description: `Le client "${
+							result.data?.name || ""
+						}" a été ajouté à votre organisation.`,
+						duration: 5000,
+						action: {
+							label: "Voir le client",
+							onClick: () => {
+								if (result.data?.id) {
+									router.push(
+										`/dashboard/${result.data.organizationId}/clients/${result.data.id}`
+									);
+								}
+							},
+						},
+					});
+					form.reset();
+				},
+				action: {
+					label: "Voir le client",
+					onClick: (data) => {
+						if (data?.id) {
+							router.push(
+								`/dashboard/${data.organizationId}/clients/${data.id}`
+							);
+						}
+					},
+				},
+			})
+		),
+		null
+	);
+
+	console.log(state);
 
 	// TanStack Form setup
 	const form = useForm({
@@ -75,41 +116,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			[state]
 		),
 	});
-
-	// Fonction pour générer une référence automatique
-	const handleGenerateReference = async () => {
-		try {
-			const reference = await generateReference({
-				prefix: "CLI",
-				format: "alphanumeric",
-				length: 2,
-				separator: "-",
-			});
-
-			form.setFieldValue("reference", reference);
-			const formData = new FormData();
-			formData.set("reference", reference);
-			formData.set("organizationId", organizationId);
-			startReferenceTransition(() => checkReferenceDispatch(formData));
-		} catch {
-			// Silencieusement gérer l'erreur sans afficher de toast
-			console.error("Erreur lors de la génération de référence");
-		}
-	};
-
-	// Fonction pour vérifier la disponibilité d'une référence
-	const checkReference = (reference: string) => {
-		if (reference && reference.length >= 3) {
-			const formData = new FormData();
-			formData.set("reference", reference);
-			formData.set("organizationId", organizationId);
-
-			// Toujours utiliser startReferenceTransition
-			startReferenceTransition(() => {
-				checkReferenceDispatch(formData);
-			});
-		}
-	};
 
 	// Fonction pour sélectionner une adresse dans l'autocomplétion
 	const handleAddressSelect = (address: FormattedAddressResult) => {
@@ -163,6 +169,22 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		startAddressTransition(() => {
 			router.push(`/dashboard/${organizationId}/clients/new?${url.toString()}`);
 		});
+	};
+
+	// Fonction simplifiée pour générer une référence automatique (sans vérification)
+	const handleGenerateReference = async () => {
+		try {
+			const reference = await generateReference({
+				prefix: "CLI",
+				format: "alphanumeric",
+				length: 2,
+				separator: "-",
+			});
+
+			form.setFieldValue("reference", reference);
+		} catch (error) {
+			console.error("Erreur lors de la génération de référence", error);
+		}
 	};
 
 	console.log(state);
@@ -225,10 +247,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									if (value.length < 3)
 										return "La référence doit comporter au moins 3 caractères";
 								},
-								onChangeAsync: async ({ value }) => {
-									if (form.state.isSubmitting) return undefined;
-									checkReference(value);
-								},
 							}}
 						>
 							{(field) => (
@@ -242,7 +260,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 											type="button"
 											variant="ghost"
 											size="sm"
-											disabled={isCheckingReference}
 											onClick={handleGenerateReference}
 											title="Générer une référence unique"
 											className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
@@ -252,18 +269,18 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										</Button>
 									</div>
 
-									<Input
-										id="reference"
-										name="reference"
-										placeholder="Référence unique (ex: CLI-001)"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-
-									{/* Message de statut et d'aide */}
-									<div className="min-h-5">
-										<FieldInfo field={field} />
+									<div className="relative">
+										<Input
+											id="reference"
+											name="reference"
+											placeholder="Référence unique (ex: CLI-001)"
+											value={field.state.value}
+											onChange={(e) => field.handleChange(e.target.value)}
+										/>
 									</div>
+
+									{/* Messages d'aide et erreurs standard */}
+									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
@@ -419,7 +436,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									</div>
 									{field.state.value && field.state.value.length < 3 && (
 										<p
-											className="text-xs text-muted-foreground"
+											className="text-xs text-muted-foreground mt-1.5"
 											id="addressLine1-info"
 											role="status"
 										>
@@ -429,13 +446,18 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									{field.state.value &&
 										!/^[a-zA-Z0-9]/.test(field.state.value) && (
 											<p
-												className="text-xs text-amber-500"
+												className="text-xs text-amber-500 mt-1.5"
 												id="addressLine1-warning"
 												role="alert"
 											>
 												La recherche doit commencer par une lettre ou un chiffre
 											</p>
 										)}
+									{field.state.meta.errors.length > 0 && (
+										<p className="text-xs text-destructive mt-1.5">
+											{String(field.state.meta.errors[0])}
+										</p>
+									)}
 									<FieldInfo field={field} />
 								</div>
 							)}
@@ -472,7 +494,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 											onChange={(e) => field.handleChange(e.target.value)}
 										/>
 										{field.state.meta.errors.length > 0 && (
-											<p className="text-xs text-destructive">
+											<p className="text-xs text-destructive mt-1.5">
 												{String(field.state.meta.errors[0])}
 											</p>
 										)}
@@ -781,7 +803,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						disabled={!canSubmit}
 						cancelHref={`/dashboard/${organizationId}/clients`}
 						submitLabel="Créer le client"
-						isPending={isPending}
 					/>
 				)}
 			</form.Subscribe>

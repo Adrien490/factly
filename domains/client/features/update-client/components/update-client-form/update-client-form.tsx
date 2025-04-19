@@ -22,7 +22,6 @@ import { Textarea } from "@/shared/components/shadcn-ui/textarea";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { GetClientReturn } from "@/domains/client/features/get-client";
-import { useCheckReference } from "@/shared/queries";
 import { generateReference } from "@/shared/utils/generate-reference";
 import { ClientStatus, ClientType } from "@prisma/client";
 import {
@@ -33,7 +32,7 @@ import {
 } from "@tanstack/react-form";
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { use, useTransition } from "react";
+import { use } from "react";
 import { useUpdateClient } from "../../hooks";
 
 type Props = {
@@ -44,9 +43,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 	const client = use(clientPromise);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
-	const [isCheckingReference, startReferenceTransition] = useTransition();
 	const { state, dispatch, isPending } = useUpdateClient();
-	const { dispatch: checkReferenceDispatch } = useCheckReference();
 
 	// TanStack Form setup
 	const form = useForm({
@@ -86,24 +83,9 @@ export function UpdateClientForm({ clientPromise }: Props) {
 			const formData = new FormData();
 			formData.set("reference", reference);
 			formData.set("organizationId", organizationId);
-			startReferenceTransition(() => checkReferenceDispatch(formData));
 		} catch {
 			// Silencieusement gérer l'erreur sans afficher de toast
 			console.error("Erreur lors de la génération de référence");
-		}
-	};
-
-	// Fonction pour vérifier la disponibilité d'une référence
-	const checkReference = (reference: string) => {
-		if (reference && reference.length >= 3) {
-			const formData = new FormData();
-			formData.set("reference", reference);
-			formData.set("organizationId", organizationId);
-
-			// Toujours utiliser startReferenceTransition
-			startReferenceTransition(() => {
-				checkReferenceDispatch(formData);
-			});
 		}
 	};
 
@@ -143,11 +125,6 @@ export function UpdateClientForm({ clientPromise }: Props) {
 									if (value.length < 3)
 										return "La référence doit comporter au moins 3 caractères";
 								},
-								onChangeAsync: async ({ value }) => {
-									if (form.state.isSubmitting) return undefined;
-									if (!value) return undefined;
-									checkReference(value);
-								},
 							}}
 						>
 							{(field) => (
@@ -161,7 +138,6 @@ export function UpdateClientForm({ clientPromise }: Props) {
 											type="button"
 											variant="ghost"
 											size="sm"
-											disabled={isCheckingReference}
 											onClick={handleGenerateReference}
 											title="Générer une référence unique"
 											className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
@@ -171,13 +147,16 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										</Button>
 									</div>
 
-									<Input
-										id="reference"
-										name="reference"
-										placeholder="Référence unique (ex: CLI-001)"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
+									<div className="relative">
+										<Input
+											id="reference"
+											name="reference"
+											placeholder="Référence unique (ex: CLI-001)"
+											value={field.state.value}
+											onChange={(e) => field.handleChange(e.target.value)}
+										/>
+										{/* Indicateurs de statut discrets */}
+									</div>
 
 									{/* Message de statut et d'aide */}
 

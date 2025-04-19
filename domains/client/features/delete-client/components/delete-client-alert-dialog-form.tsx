@@ -16,7 +16,6 @@ import { MiniDotsLoader } from "@/shared/components/loaders";
 import { cn } from "@/shared/utils";
 import { Trash } from "lucide-react";
 import { useTransition } from "react";
-import { undefined } from "zod";
 import { useDeleteClient } from "../hooks";
 import { DeleteClientFormProps } from "./types";
 
@@ -49,7 +48,7 @@ export function DeleteClientAlertDialogForm({
 						className="text-destructive focus:text-destructive"
 					>
 						<Trash className="h-4 w-4 mr-2" />
-						<span data-pending={isPending ? "" : undefined}>Supprimer</span>
+						<span>Supprimer</span>
 					</DropdownMenuItem>
 				)}
 			</AlertDialogTrigger>

@@ -50,11 +50,8 @@ export const createToastCallbacks = <
 				toast.dismiss();
 
 				options.onSuccess(result);
-				return;
-			}
-
-			// Comportement par défaut
-			if (result?.message) {
+			} else if (result?.message) {
+				// Comportement par défaut
 				// Fermer tous les toasts existants (sauf celui de chargement)
 				toast.dismiss();
 
@@ -69,6 +66,8 @@ export const createToastCallbacks = <
 
 				toast.success(result.message, { action });
 			}
+
+			// Réinitialiser le formulaire si la fonction est fournie
 		},
 
 		// Gère l'erreur

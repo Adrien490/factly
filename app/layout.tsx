@@ -45,7 +45,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Toaster />
+					<Toaster position="top-center" />
 					<Suspense>
 						<UTSSR />
 					</Suspense>

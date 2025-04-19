@@ -1,3 +1,4 @@
+export * from "./check-reference";
 export * from "./count-clients";
 export * from "./create-client";
 export * from "./delete-client";
