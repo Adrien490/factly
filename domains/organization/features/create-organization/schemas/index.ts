@@ -1,4 +1,4 @@
-import { LegalForm } from "@prisma/client";
+import { Country, LegalForm } from "@prisma/client";
 import { z } from "zod";
 
 /**
@@ -44,6 +44,7 @@ export const createOrganizationSchema = z.object({
 	addressLine2: z.string().optional().nullable(),
 	postalCode: z.string().optional().nullable(),
 	city: z.string().optional().nullable(),
+	country: z.nativeEnum(Country).default(Country.FRANCE),
 
 	// Champs système
 	creatorId: z.string().optional(),

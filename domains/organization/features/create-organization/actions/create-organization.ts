@@ -9,7 +9,7 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
-import { Organization } from "@prisma/client";
+import { Country, Organization } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createOrganizationSchema } from "../schemas";
@@ -60,6 +60,7 @@ export async function createOrganization(
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
 			city: formData.get("city") as string,
+			country: formData.get("country") as Country,
 			logoUrl: formData.get("logoUrl") as string,
 			creatorId: session.user.id,
 		};

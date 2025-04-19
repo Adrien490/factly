@@ -11,6 +11,7 @@ import {
 	SelectValue,
 } from "@/shared/components";
 
+import { COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -69,7 +70,7 @@ export function CreateOrganizationForm({
 			addressLine2: state?.data?.addressLine2 ?? "",
 			postalCode: state?.data?.postalCode ?? "",
 			city: state?.data?.city ?? "",
-			country: state?.data?.country ?? "France",
+			country: state?.data?.country ?? "",
 			phone: state?.data?.phone ?? "",
 			website: state?.data?.website ?? "",
 			logoUrl: state?.data?.logoUrl ?? "",
@@ -148,7 +149,35 @@ export function CreateOrganizationForm({
 
 			<form.Field name="country">
 				{(field) => (
-					<input type="hidden" name="country" value={field.state.value ?? ""} />
+					<div className="space-y-1.5">
+						<FormLabel htmlFor="country" className="flex items-center">
+							Pays
+						</FormLabel>
+						<Select
+							name="country"
+							onValueChange={(value) => {
+								field.handleChange(value);
+							}}
+							value={field.state.value || "FRANCE"}
+							defaultValue="FRANCE"
+						>
+							<SelectTrigger id="country" className="w-full">
+								<SelectValue placeholder="Sélectionnez un pays" />
+							</SelectTrigger>
+							<SelectContent>
+								{COUNTRIES.map((country) => (
+									<SelectItem
+										key={country.value}
+										value={country.value}
+										title={`${country.label} (${country.iso})`}
+									>
+										{country.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<FieldInfo field={field} />
+					</div>
 				)}
 			</form.Field>
 
