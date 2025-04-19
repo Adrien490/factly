@@ -195,7 +195,7 @@ export function SupplierDataTable({
 										)}
 									</div>
 								</TableCell>
-								<TableCell role="gridcell" className="">
+								<TableCell role="gridcell" className="flex justify-end">
 									<SupplierRowActions supplier={supplier} />
 								</TableCell>
 							</TableRow>

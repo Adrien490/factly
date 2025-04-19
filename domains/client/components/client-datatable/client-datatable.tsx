@@ -202,7 +202,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 										)}
 									</div>
 								</TableCell>
-								<TableCell role="gridcell" className="">
+								<TableCell role="gridcell" className="flex justify-end">
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button
