@@ -10,8 +10,10 @@ import {
 } from "@/domains/supplier/constants";
 import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
 import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
+import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
 import {
 	Button,
+	DataTableToolbar,
 	MultiSelectFilter,
 	PageContainer,
 	PageHeader,
@@ -20,6 +22,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
+import { Filter } from "lucide-react";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -60,46 +63,56 @@ export default async function SuppliersPage({
 			<PageHeader
 				title="Fournisseurs"
 				description="Gérez votre base de fournisseurs"
-				action={
-					<Button asChild size="default">
-						<Link href={`/dashboard/${organizationId}/suppliers/new`}>
-							Nouveau fournisseur
-						</Link>
-					</Button>
-				}
 				className="mb-6"
 			/>
 
-			{/* Barre de recherche et filtres */}
-			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4">
-				<SearchForm
-					paramName="search"
-					placeholder="Rechercher par nom, email, référence, SIREN..."
-					className="w-full flex-1 max-w-sm"
-				/>
-				<span className="text-xs font-medium text-muted-foreground px-1">
-					Filtrer par:
-				</span>
-				<div className="flex flex-wrap gap-2">
-					<MultiSelectFilter
-						filterKey="status"
-						label="Statut"
-						options={SUPPLIER_STATUSES}
-					/>
-					<MultiSelectFilter
-						filterKey="supplierType"
-						label="Type"
-						options={SUPPLIER_TYPES}
-					/>
+			{/* Barre d'actions principale */}
+			<DataTableToolbar
+				leftContent={
+					<>
+						<SearchForm
+							paramName="search"
+							placeholder="Rechercher par nom, email, référence, SIREN..."
+							className="w-[275px] shrink-0 sm:w-[200px] lg:w-[275px]"
+						/>
+						<RefreshSuppliersButton organizationId={organizationId} />
+					</>
+				}
+				rightContent={
+					<>
+						<MultiSelectFilter
+							filterKey="status"
+							label="Statut"
+							options={SUPPLIER_STATUSES}
+							className="w-[150px]"
+						/>
+						<MultiSelectFilter
+							filterKey="supplierType"
+							label="Type"
+							options={SUPPLIER_TYPES}
+							className="w-[150px]"
+						/>
+						<SortingOptionsDropdown
+							sortFields={SUPPLIER_SORT_FIELDS}
+							defaultSortBy="createdAt"
+							defaultSortOrder="desc"
+							className="w-[200px] shrink-0"
+						/>
+						<Button asChild variant="outline">
+							<div className="flex items-center gap-1">
+								<Filter className="h-4 w-4" />
+								<span>Filtres</span>
+							</div>
+						</Button>
 
-					{/* Dropdown de tri compact */}
-					<SortingOptionsDropdown
-						sortFields={SUPPLIER_SORT_FIELDS}
-						defaultSortBy="createdAt"
-						defaultSortOrder="desc"
-					/>
-				</div>
-			</div>
+						<Button className="shrink-0" asChild>
+							<Link href={`/dashboard/${organizationId}/suppliers/new`}>
+								Nouveau fournisseur
+							</Link>
+						</Button>
+					</>
+				}
+			/>
 
 			<Suspense fallback={<SupplierDataTableSkeleton />}>
 				<SupplierDataTable

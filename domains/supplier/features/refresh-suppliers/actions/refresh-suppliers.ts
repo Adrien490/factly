@@ -11,19 +11,18 @@ import {
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { refreshClientsSchema } from "../schemas";
+import { refreshSuppliersSchema } from "../schemas";
 
 /**
- * Action serveur pour créer un nouveau client
+ * Action serveur pour rafraîchir les données des fournisseurs
  * Validations :
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
- * - La référence du client doit être unique dans l'organisation
  */
-export async function refreshClients(
-	_: ActionState<null, typeof refreshClientsSchema> | null,
+export async function refreshSuppliers(
+	_: ActionState<null, typeof refreshSuppliersSchema> | null,
 	formData: FormData
-): Promise<ActionState<null, typeof refreshClientsSchema>> {
+): Promise<ActionState<null, typeof refreshSuppliersSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -32,7 +31,7 @@ export async function refreshClients(
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour créer un client"
+				"Vous devez être connecté pour rafraîchir les fournisseurs"
 			);
 		}
 
@@ -50,8 +49,8 @@ export async function refreshClients(
 			);
 		}
 
-		// 5. Validation des données avec le schéma Zod
-		const validation = refreshClientsSchema.safeParse({
+		// 3. Validation des données avec le schéma Zod
+		const validation = refreshSuppliersSchema.safeParse({
 			organizationId,
 		});
 
@@ -63,7 +62,7 @@ export async function refreshClients(
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
+		// 4. Vérification de l'accès à l'organisation
 		const hasAccess = await hasOrganizationAccess(organizationId);
 
 		if (!hasAccess) {
@@ -73,19 +72,22 @@ export async function refreshClients(
 			);
 		}
 
-		revalidateTag(`organization:${organizationId}:clients`);
-		revalidateTag(`organization:${organizationId}:clients:count`);
+		// 5. Revalidation des tags pour les fournisseurs
+		revalidateTag(`organization:${organizationId}:suppliers`);
+		revalidateTag(`organization:${organizationId}:suppliers:count`);
 
-		// 9. Retour de la réponse de succès
+		// 6. Retour de la réponse de succès
 		return createSuccessResponse(
 			null,
-			`Les clients ont été rafraîchis avec succès`
+			`Les fournisseurs ont été rafraîchis avec succès`
 		);
 	} catch (error) {
-		console.error("[CREATE_CLIENT]", error);
+		console.error("[REFRESH_SUPPLIERS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			error instanceof Error ? error.message : "Impossible de créer le client"
+			error instanceof Error
+				? error.message
+				: "Impossible de rafraîchir les fournisseurs"
 		);
 	}
 }
