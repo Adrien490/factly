@@ -1,4 +1,5 @@
 import { searchAddress } from "@/domains/address/features/search-address";
+import { getClientNavigation } from "@/domains/client/constants";
 import { CreateClientForm } from "@/domains/client/features/create-client";
 import { PageContainer, PageHeader } from "@/shared/components";
 
@@ -18,7 +19,12 @@ type PageProps = {
 	}>;
 };
 
-export default async function NewClientPage({ searchParams }: PageProps) {
+export default async function NewClientPage({
+	params,
+	searchParams,
+}: PageProps) {
+	const resolvedParams = await params;
+	const { organizationId } = resolvedParams;
 	const resolvedSearchParams = await searchParams;
 	const {
 		q = "",
@@ -49,6 +55,9 @@ export default async function NewClientPage({ searchParams }: PageProps) {
 			<PageHeader
 				title="Nouveau client"
 				description="Créez un nouveau client pour votre organisation"
+				navigation={{
+					items: getClientNavigation(organizationId),
+				}}
 			/>
 			{/* Contenu principal */}
 			<CreateClientForm

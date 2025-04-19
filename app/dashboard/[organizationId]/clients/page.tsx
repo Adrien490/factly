@@ -2,7 +2,10 @@ import {
 	ClientDataTable,
 	ClientDataTableSkeleton,
 } from "@/domains/client/components";
-import { CLIENT_SORT_FIELDS } from "@/domains/client/constants";
+import {
+	CLIENT_SORT_FIELDS,
+	getClientNavigation,
+} from "@/domains/client/constants";
 import { RefreshClientsButton } from "@/domains/client/features";
 import { getClients } from "@/domains/client/features/get-clients";
 import { hasOrganizationAccess } from "@/domains/organization/features";
@@ -69,6 +72,9 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				title="Clients"
 				description="Gérez votre portefeuille clients"
 				className="mb-6"
+				navigation={{
+					items: getClientNavigation(organizationId),
+				}}
 			/>
 
 			{/* Barre d'actions principale */}

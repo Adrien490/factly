@@ -53,7 +53,7 @@ export function NavMain() {
 							<SidebarMenuItem key={item.title}>
 								<SidebarMenuButton tooltip={item.title} asChild>
 									<Link
-										href={item.url}
+										href={item.url ?? ""}
 										className={cn(
 											"flex items-center justify-between",
 											isActive && "bg-sidebar-accent"
@@ -84,7 +84,7 @@ export function NavMain() {
 								<CollapsibleTrigger asChild>
 									<SidebarMenuButton tooltip={item.title} asChild>
 										<Link
-											href={isCollapsed ? item.url : ""}
+											href={isCollapsed ? item.url ?? "" : ""}
 											className={cn(
 												(isActive && !hasSubItems) || (isActive && isCollapsed)
 													? "bg-sidebar-accent"

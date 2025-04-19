@@ -16,8 +16,6 @@ export async function fetchOrganizations(
 ): Promise<GetOrganizationsReturn> {
 	"use cache";
 
-	console.log(userId);
-
 	// Tag de base pour toutes les organisations de l'utilisateur
 	cacheTag(`organizations`);
 

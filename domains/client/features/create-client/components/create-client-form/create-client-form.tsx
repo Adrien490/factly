@@ -328,7 +328,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										}}
 										value={field.state.value}
 									>
-										<SelectTrigger id="clientType">
+										<SelectTrigger id="clientType" className="w-full">
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
@@ -663,10 +663,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										name="status"
 										value={field.state.value}
 									>
-										<SelectTrigger
-											id="status"
-											className="border-input focus:ring-1 focus:ring-primary"
-										>
+										<SelectTrigger id="status" className="w-full">
 											<SelectValue placeholder="Sélectionnez un statut" />
 										</SelectTrigger>
 										<SelectContent>
