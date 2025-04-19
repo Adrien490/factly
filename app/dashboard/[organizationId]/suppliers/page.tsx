@@ -3,18 +3,13 @@ import {
 	SupplierDataTable,
 	SupplierDataTableSkeleton,
 } from "@/domains/supplier/components/supplier-datatable";
-import {
-	SUPPLIER_SORT_FIELDS,
-	SUPPLIER_STATUSES,
-	SUPPLIER_TYPES,
-} from "@/domains/supplier/constants";
+import { SUPPLIER_SORT_FIELDS } from "@/domains/supplier/constants";
 import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
 import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
 import {
 	Button,
 	DataTableToolbar,
-	MultiSelectFilter,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -80,18 +75,6 @@ export default async function SuppliersPage({
 				}
 				rightContent={
 					<>
-						<MultiSelectFilter
-							filterKey="status"
-							label="Statut"
-							options={SUPPLIER_STATUSES}
-							className="w-[150px]"
-						/>
-						<MultiSelectFilter
-							filterKey="supplierType"
-							label="Type"
-							options={SUPPLIER_TYPES}
-							className="w-[150px]"
-						/>
 						<SortingOptionsDropdown
 							sortFields={SUPPLIER_SORT_FIELDS}
 							defaultSortBy="createdAt"
