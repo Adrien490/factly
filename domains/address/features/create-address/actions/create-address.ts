@@ -10,7 +10,7 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
-import { Address, AddressType } from "@prisma/client";
+import { Address, AddressType, Country } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createAddressSchema } from "../schemas";
@@ -139,6 +139,7 @@ export async function createAddress(
 		const address = await db.address.create({
 			data: {
 				...addressData,
+				country: addressData.country as Country,
 				...(clientId && { client: { connect: { id: clientId } } }),
 				...(supplierId && { supplier: { connect: { id: supplierId } } }),
 			},

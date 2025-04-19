@@ -10,7 +10,13 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
-import { AddressType, Client, ClientStatus, ClientType } from "@prisma/client";
+import {
+	AddressType,
+	Client,
+	ClientStatus,
+	ClientType,
+	Country,
+} from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createClientSchema } from "../schemas";
@@ -78,7 +84,7 @@ export async function createClient(
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
 			city: formData.get("city") as string,
-			country: (formData.get("country") as string) || "France",
+			country: (formData.get("country") as Country) || Country.FRANCE,
 
 			// Coordonnées géographiques
 			latitude: formData.get("latitude")
@@ -156,7 +162,7 @@ export async function createClient(
 									addressLine2,
 									postalCode: postalCode || "",
 									city: city || "",
-									country: country || "France",
+									country: country as Country,
 									isDefault: true,
 									...(latitude !== null &&
 										longitude !== null && {

@@ -1,6 +1,7 @@
 import { ADDRESS_TYPES } from "@/domains/address/constants/address-types";
 import { Card } from "@/shared/components";
 import { cn } from "@/shared/utils";
+import { Country } from "@prisma/client";
 import { MapPin, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
@@ -87,7 +88,11 @@ export function AddressList({
 								)}
 
 								<p className="text-xs text-muted-foreground mt-0.5">
-									{[postalCode, city, country !== "France" ? country : null]
+									{[
+										postalCode,
+										city,
+										country !== Country.FRANCE ? country : null,
+									]
 										.filter(Boolean)
 										.join(", ")}
 								</p>

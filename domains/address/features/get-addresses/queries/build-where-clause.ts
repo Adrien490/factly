@@ -1,4 +1,4 @@
-import { AddressType, Prisma } from "@prisma/client";
+import { AddressType, Country, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { getAddressesSchema } from "../schemas";
 
@@ -29,7 +29,7 @@ export function buildWhereClause(
 			{ addressLine2: { contains: searchTerm, mode: "insensitive" } },
 			{ city: { contains: searchTerm, mode: "insensitive" } },
 			{ postalCode: { contains: searchTerm, mode: "insensitive" } },
-			{ country: { contains: searchTerm, mode: "insensitive" } },
+			{ country: { equals: searchTerm as Country } },
 		];
 	}
 

@@ -12,6 +12,7 @@ import {
 } from "@/shared/types/server-action";
 import {
 	AddressType,
+	Country,
 	Supplier,
 	SupplierStatus,
 	SupplierType,
@@ -139,7 +140,7 @@ export async function createSupplier(
 									addressLine2,
 									postalCode: postalCode || "",
 									city: city || "",
-									country: country || "France",
+									country: country as Country,
 									isDefault: true,
 									...(latitude !== null &&
 										longitude !== null && {

@@ -9,7 +9,7 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
-import { Organization } from "@prisma/client";
+import { Country, Organization } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { hasOrganizationAccess } from "../../has-organization-access";
@@ -72,7 +72,7 @@ export async function updateOrganization(
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
 			city: formData.get("city") as string,
-			country: (formData.get("country") as string) || "France",
+			country: formData.get("country") as Country,
 			logoUrl: formData.get("logoUrl") as string,
 		};
 
@@ -148,7 +148,10 @@ export async function updateOrganization(
 
 		const organization = await db.organization.update({
 			where: { id },
-			data: updateData,
+			data: {
+				...updateData,
+				country: updateData.country as Country,
+			},
 		});
 
 		// Revalidation des tags de cache

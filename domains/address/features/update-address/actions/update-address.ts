@@ -10,7 +10,7 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types/server-action";
-import { Address, AddressType } from "@prisma/client";
+import { Address, AddressType, Country } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateAddressSchema } from "../schemas";
@@ -161,7 +161,10 @@ export async function updateAddress(
 		// Mettre à jour l'adresse
 		const updatedAddress = await db.address.update({
 			where: { id },
-			data: addressData,
+			data: {
+				...addressData,
+				country: addressData.country as Country,
+			},
 		});
 
 		// 9. Invalidation du cache pour forcer un rafraîchissement des données
