@@ -77,7 +77,7 @@ export function OrganizationList({
 					// Rendu en mode grille
 					return (
 						<Link key={id} href={`/dashboard/${id}`} className="block h-full">
-							<Card className="h-full transition-all duration-200 hover:border-primary/50 hover:bg-accent/30">
+							<Card className="h-full transition-all duration-200 hover:border-primary/50 hover:bg-accent/30 p-4">
 								<CardContent className="flex flex-col h-full">
 									<div className="flex items-start gap-3">
 										{/* Logo */}

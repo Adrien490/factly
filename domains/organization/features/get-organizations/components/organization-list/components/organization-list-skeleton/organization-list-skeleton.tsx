@@ -37,7 +37,7 @@ export function OrganizationListSkeleton({
 						</div>
 					) : (
 						// Mode grille - inline
-						<Card key={i} className="h-full">
+						<Card key={i} className="h-full p-4">
 							<CardContent className="flex flex-col h-full">
 								<div className="flex items-start gap-3">
 									{/* Logo placeholder */}
