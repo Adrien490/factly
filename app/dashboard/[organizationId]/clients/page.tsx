@@ -8,6 +8,7 @@ import { getClients } from "@/domains/client/features/get-clients";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
+	DataTableToolbar,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -71,50 +72,40 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			/>
 
 			{/* Barre d'actions principale */}
-			<div className="mb-6 flex items-center justify-between gap-3 pb-2">
-				<div className="flex items-center gap-3 shrink-0">
-					<SearchForm
-						paramName="search"
-						placeholder="Rechercher..."
-						className="shrink-0"
-					/>
-					<RefreshClientsButton organizationId={organizationId} />
-				</div>
+			<DataTableToolbar
+				leftContent={
+					<>
+						<SearchForm
+							paramName="search"
+							placeholder="Rechercher..."
+							className="w-[275px] shrink-0 sm:w-[200px] lg:w-[275px]"
+						/>
+						<RefreshClientsButton organizationId={organizationId} />
+					</>
+				}
+				rightContent={
+					<>
+						<SortingOptionsDropdown
+							sortFields={CLIENT_SORT_FIELDS}
+							defaultSortBy="createdAt"
+							defaultSortOrder="desc"
+							className="w-[200px] shrink-0"
+						/>
+						<Button asChild variant="outline">
+							<div className="flex items-center gap-1">
+								<Filter className="h-4 w-4" />
+								<span>Filtres</span>
+							</div>
+						</Button>
 
-				<div className="flex items-center gap-3 shrink-0">
-					{/* <MultiSelectFilter
-						filterKey="status"
-						label="Status"
-						options={CLIENT_STATUSES}
-						className="min-w-[120px] shrink-0"
-					/>
-					<SelectFilter
-						filterKey="clientType"
-						label="Type"
-						options={CLIENT_TYPES}
-						className="min-w-[120px] shrink-0"
-					/>
-					 */}
-					<SortingOptionsDropdown
-						sortFields={CLIENT_SORT_FIELDS}
-						defaultSortBy="createdAt"
-						defaultSortOrder="desc"
-						className="min-w-[120px] shrink-0"
-					/>
-					<Button asChild variant="outline">
-						<div className="flex items-center gap-1">
-							<Filter className="h-4 w-4" />
-							<span>Filtres</span>
-						</div>
-					</Button>
-
-					<Button className="shrink-0" asChild>
-						<Link href={`/dashboard/${organizationId}/clients/new`}>
-							Nouveau client
-						</Link>
-					</Button>
-				</div>
-			</div>
+						<Button className="shrink-0" asChild>
+							<Link href={`/dashboard/${organizationId}/clients/new`}>
+								Nouveau client
+							</Link>
+						</Button>
+					</>
+				}
+			/>
 
 			{/* Tableau de données */}
 			<Suspense fallback={<ClientDataTableSkeleton />}>
