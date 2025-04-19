@@ -1,6 +1,3 @@
-/**
- * Items du menu dropdown de navigation pour un client
- */
 export const getClientNavigation = (organizationId: string) => [
 	{
 		label: "Liste des clients",

@@ -1,22 +1,17 @@
 import { Breadcrumbs } from "@/shared/components/breadcrumbs";
-import { HorizontalMenu } from "@/shared/components/horizontal-menu";
 import { cn } from "@/shared/utils";
 import { PageHeaderProps } from "./types";
 
 export function PageHeader({
 	title,
 	description,
-	navigation,
 	action,
 	breadcrumbs,
 	className,
 	...props
 }: PageHeaderProps) {
 	return (
-		<div
-			className={cn("pt-4 space-y-4 mb-6 sm:mb-8 lg:mb-10", className)}
-			{...props}
-		>
+		<div className={cn("pt-4 space-y-4 mb-4", className)} {...props}>
 			{breadcrumbs && breadcrumbs.length > 0 && (
 				<Breadcrumbs items={breadcrumbs} className="text-sm mb-2" />
 			)}
@@ -41,12 +36,6 @@ export function PageHeader({
 					)}
 				</div>
 			</div>
-
-			{navigation && (
-				<div className="pt-1">
-					<HorizontalMenu items={navigation.items} />
-				</div>
-			)}
 		</div>
 	);
 }

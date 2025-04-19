@@ -22,7 +22,7 @@ export function HorizontalMenu({ items, className }: HorizontalMenuProps) {
 
 	return (
 		<div
-			className={cn("relative z-10 w-full rounded-lg py-1", className)}
+			className={cn("relative z-10 w-full rounded-lg py-1 mb-6", className)}
 			aria-label="Main navigation"
 		>
 			<div className="flex overflow-x-auto sm:overflow-visible no-scrollbar gap-4">

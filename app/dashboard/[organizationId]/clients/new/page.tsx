@@ -1,7 +1,7 @@
 import { searchAddress } from "@/domains/address/features/search-address";
 import { getClientNavigation } from "@/domains/client/constants";
 import { CreateClientForm } from "@/domains/client/features/create-client";
-import { PageContainer, PageHeader } from "@/shared/components";
+import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
 type PageProps = {
 	params: Promise<{
@@ -55,10 +55,10 @@ export default async function NewClientPage({
 			<PageHeader
 				title="Nouveau client"
 				description="Créez un nouveau client pour votre organisation"
-				navigation={{
-					items: getClientNavigation(organizationId),
-				}}
 			/>
+
+			<HorizontalMenu items={getClientNavigation(organizationId)} />
+
 			{/* Contenu principal */}
 			<CreateClientForm
 				searchAddressPromise={searchAddress(searchAddressParams)}

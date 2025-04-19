@@ -12,6 +12,7 @@ import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	Button,
 	DataTableToolbar,
+	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -71,11 +72,9 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			<PageHeader
 				title="Clients"
 				description="Gérez votre portefeuille clients"
-				className="mb-6"
-				navigation={{
-					items: getClientNavigation(organizationId),
-				}}
 			/>
+
+			<HorizontalMenu items={getClientNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
 			<DataTableToolbar

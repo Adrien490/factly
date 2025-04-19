@@ -1,11 +1,17 @@
-import { Building2, CalendarClock, Truck, Users } from "lucide-react";
+import {
+	Building2,
+	CalendarClock,
+	LayoutDashboard,
+	Truck,
+	Users,
+} from "lucide-react";
 
 export const navItems = (organizationId: string) => [
-	/*{
+	{
 		title: "Tableau de bord",
 		url: `/dashboard/${organizationId}`,
 		icon: LayoutDashboard,
-	},*/
+	},
 	{
 		title: "Clients",
 		icon: Users,

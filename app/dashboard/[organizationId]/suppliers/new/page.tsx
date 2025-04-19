@@ -1,6 +1,7 @@
 import { searchAddress } from "@/domains/address/features/search-address";
+import { getSupplierNavigation } from "@/domains/supplier/constants/get-supplier-navigation";
 import { CreateSupplierForm } from "@/domains/supplier/features/create-supplier";
-import { PageContainer, PageHeader } from "@/shared/components";
+import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
 type PageProps = {
 	params: Promise<{
@@ -56,6 +57,8 @@ export default async function NewSupplierPage({
 				title="Nouveau fournisseur"
 				description="Créez un nouveau fournisseur pour votre organisation"
 			/>
+
+			<HorizontalMenu items={getSupplierNavigation(organizationId)} />
 			{/* Contenu principal */}
 			<CreateSupplierForm
 				searchAddressPromise={searchAddress(searchAddressParams)}

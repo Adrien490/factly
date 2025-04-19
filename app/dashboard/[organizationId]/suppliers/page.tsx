@@ -4,12 +4,14 @@ import {
 	SupplierDataTableSkeleton,
 } from "@/domains/supplier/components/supplier-datatable";
 import { SUPPLIER_SORT_FIELDS } from "@/domains/supplier/constants";
+import { getSupplierNavigation } from "@/domains/supplier/constants/get-supplier-navigation";
 import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
 import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
 import {
 	Button,
 	DataTableToolbar,
+	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -53,13 +55,14 @@ export default async function SuppliersPage({
 	}
 
 	return (
-		<PageContainer className="pb-12 group">
+		<PageContainer className="group">
 			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Fournisseurs"
 				description="Gérez votre base de fournisseurs"
-				className="mb-6"
 			/>
+
+			<HorizontalMenu items={getSupplierNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
 			<DataTableToolbar
