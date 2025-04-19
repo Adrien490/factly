@@ -85,10 +85,6 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 								label: "Gestion des contacts",
 								href: `/dashboard/${client.organizationId}/clients/${client.id}/contacts`,
 							},
-							{
-								label: "Supprimer",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}/delete`,
-							},
 						]}
 					/>
 				</div>
