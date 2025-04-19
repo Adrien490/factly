@@ -9,6 +9,7 @@ import {
 } from "@/shared/components";
 import { FormLabel, Input, Textarea } from "@/shared/components/shadcn-ui";
 
+import { COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -97,6 +98,10 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 			form.setFieldValue("longitude", null);
 			form.setFieldValue("latitude", null);
 		}
+
+		// Définir le pays en fonction des données de l'API
+		// L'API française retourne principalement des adresses en France
+		form.setFieldValue("country", "FRANCE");
 	};
 
 	// Fonction pour effacer le champ d'adresse
@@ -224,7 +229,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										}}
 										value={field.state.value}
 									>
-										<SelectTrigger id="supplierType">
+										<SelectTrigger id="supplierType" className="w-full">
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
@@ -260,7 +265,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										}}
 										value={field.state.value}
 									>
-										<SelectTrigger id="status">
+										<SelectTrigger id="status" className="w-full">
 											<SelectValue placeholder="Sélectionnez un statut" />
 										</SelectTrigger>
 										<SelectContent>
@@ -282,147 +287,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					</div>
 				</FormSection>
 
-				{/* Section 2: Coordonnées */}
-				<FormSection
-					title="Coordonnées"
-					description="Informations de contact du fournisseur"
-					icon={User}
-				>
-					<div className="space-y-4">
-						<form.Field
-							name="email"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^\S+@\S+\.\S+$/.test(value)) {
-										return "L&apos;email doit être valide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="email">Email</FormLabel>
-									<Input
-										id="email"
-										name="email"
-										type="email"
-										placeholder="email@exemple.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="phone">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="phone">Téléphone</FormLabel>
-									<Input
-										id="phone"
-										name="phone"
-										placeholder="0123456789"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field
-							name="website"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(
-											value
-										)
-									) {
-										return "L&apos;URL doit être valide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="website">Site web</FormLabel>
-									<Input
-										id="website"
-										name="website"
-										placeholder="https://www.exemple.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-					</div>
-				</FormSection>
-
-				{/* Section 3: Informations fiscales */}
-				<FormSection
-					title="Informations fiscales"
-					description="Identifiants fiscaux du fournisseur"
-					icon={Receipt}
-				>
-					<div className="space-y-4">
-						<form.Field name="siren">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siren">SIREN</FormLabel>
-									<Input
-										id="siren"
-										name="siren"
-										placeholder="123456789"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="siret">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siret">SIRET</FormLabel>
-									<Input
-										id="siret"
-										name="siret"
-										placeholder="12345678900001"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="vatNumber">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="vatNumber">Numéro de TVA</FormLabel>
-									<Input
-										id="vatNumber"
-										name="vatNumber"
-										placeholder="FR12345678900"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-					</div>
-				</FormSection>
-
-				{/* Section 4: Adresse */}
+				{/* Section 2: Adresse */}
 				<FormSection
 					title="Adresse"
 					description="Adresse principale du fournisseur"
@@ -445,7 +310,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										}}
 										value={field.state.value}
 									>
-										<SelectTrigger id="addressType">
+										<SelectTrigger id="addressType" className="w-full">
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
@@ -588,10 +453,168 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							{(field) => (
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="country">Pays</FormLabel>
-									<Input
-										id="country"
+									<Select
 										name="country"
-										placeholder="Pays"
+										onValueChange={(value) => {
+											field.handleChange(
+												value as unknown as Updater<typeof field.state.value>
+											);
+										}}
+										value={field.state.value || "FRANCE"}
+										defaultValue="FRANCE"
+									>
+										<SelectTrigger id="country" className="w-full">
+											<SelectValue placeholder="Sélectionnez un pays" />
+										</SelectTrigger>
+										<SelectContent>
+											{COUNTRIES.map((country) => (
+												<SelectItem
+													key={country.value}
+													value={country.value}
+													title={`${country.label} (${country.iso})`}
+												>
+													{country.label}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+									<FieldInfo field={field} />
+								</div>
+							)}
+						</form.Field>
+					</div>
+				</FormSection>
+
+				{/* Section 3: Coordonnées */}
+				<FormSection
+					title="Coordonnées"
+					description="Informations de contact du fournisseur"
+					icon={User}
+				>
+					<div className="space-y-4">
+						<form.Field
+							name="email"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^\S+@\S+\.\S+$/.test(value)) {
+										return "L&apos;email doit être valide";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="email">Email</FormLabel>
+									<Input
+										id="email"
+										name="email"
+										type="email"
+										placeholder="email@exemple.com"
+										value={field.state.value}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									<FieldInfo field={field} />
+								</div>
+							)}
+						</form.Field>
+
+						<form.Field name="phone">
+							{(field) => (
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="phone">Téléphone</FormLabel>
+									<Input
+										id="phone"
+										name="phone"
+										placeholder="0123456789"
+										value={field.state.value}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									<FieldInfo field={field} />
+								</div>
+							)}
+						</form.Field>
+
+						<form.Field
+							name="website"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(
+											value
+										)
+									) {
+										return "L&apos;URL doit être valide";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="website">Site web</FormLabel>
+									<Input
+										id="website"
+										name="website"
+										placeholder="https://www.exemple.com"
+										value={field.state.value}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									<FieldInfo field={field} />
+								</div>
+							)}
+						</form.Field>
+					</div>
+				</FormSection>
+
+				{/* Section 4: Informations fiscales */}
+				<FormSection
+					title="Informations fiscales"
+					description="Identifiants fiscaux du fournisseur"
+					icon={Receipt}
+				>
+					<div className="space-y-4">
+						<form.Field name="siren">
+							{(field) => (
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="siren">SIREN</FormLabel>
+									<Input
+										id="siren"
+										name="siren"
+										placeholder="123456789"
+										value={field.state.value}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									<FieldInfo field={field} />
+								</div>
+							)}
+						</form.Field>
+
+						<form.Field name="siret">
+							{(field) => (
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="siret">SIRET</FormLabel>
+									<Input
+										id="siret"
+										name="siret"
+										placeholder="12345678900001"
+										value={field.state.value}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									<FieldInfo field={field} />
+								</div>
+							)}
+						</form.Field>
+
+						<form.Field name="vatNumber">
+							{(field) => (
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="vatNumber">Numéro de TVA</FormLabel>
+									<Input
+										id="vatNumber"
+										name="vatNumber"
+										placeholder="FR12345678900"
 										value={field.state.value}
 										onChange={(e) => field.handleChange(e.target.value)}
 									/>

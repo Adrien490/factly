@@ -111,9 +111,11 @@ export function SupplierDataTable({
 									<div className="w-[200px] flex flex-col space-y-1">
 										{supplier.name && (
 											<div className="flex flex-col gap-0.5">
-												<span className="font-medium">{supplier.name}</span>
+												<span className="font-medium truncate">
+													{supplier.name}
+												</span>
 												{supplier.legalName && (
-													<span className="text-xs text-muted-foreground">
+													<span className="text-xs text-muted-foreground truncate">
 														{supplier.legalName}
 													</span>
 												)}

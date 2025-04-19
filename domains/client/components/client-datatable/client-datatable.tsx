@@ -130,7 +130,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 										{client.reference && (
 											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
 												<Tag className="h-3 w-3 shrink-0" />
-												<span>{client.reference}</span>
+												<span className="truncate">{client.reference}</span>
 											</div>
 										)}
 									</div>

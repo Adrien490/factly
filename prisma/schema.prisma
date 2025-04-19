@@ -108,7 +108,7 @@ model Organization {
   city         String? // Ville
   postalCode   String? // Code postal
   region       String? // Région, département
-  country      String? @default("France") // Pays
+  country      Country @default(FRANCE) // Pays
 
   // Informations légales françaises
   legalForm         LegalForm? // Forme juridique (SARL, SAS, etc.)
@@ -307,7 +307,7 @@ model Address {
   addressLine2 String?
   postalCode   String
   city         String
-  country      String      @default("France")
+  country      Country     @default(FRANCE)
   latitude     Float?
   longitude    Float?
   isDefault    Boolean     @default(false)
@@ -320,6 +320,63 @@ model Address {
   clientId   String?
 
   @@index([supplierId])
+}
+
+enum Country {
+  FRANCE
+  GERMANY
+  SPAIN
+  ITALY
+  UNITED_KINGDOM
+  BELGIUM
+  SWITZERLAND
+  NETHERLANDS
+  LUXEMBOURG
+  PORTUGAL
+  AUSTRIA
+  SWEDEN
+  DENMARK
+  NORWAY
+  FINLAND
+  IRELAND
+  GREECE
+  POLAND
+  CZECH_REPUBLIC
+  HUNGARY
+  ROMANIA
+  BULGARIA
+  CROATIA
+  SLOVAKIA
+  SLOVENIA
+  ESTONIA
+  LATVIA
+  LITHUANIA
+  MALTA
+  CYPRUS
+  UNITED_STATES
+  CANADA
+  AUSTRALIA
+  JAPAN
+  CHINA
+  INDIA
+  BRAZIL
+  MEXICO
+  ARGENTINA
+  MOROCCO
+  TUNISIA
+  ALGERIA
+  SENEGAL
+  COTE_DIVOIRE
+  CAMEROON
+  SOUTH_AFRICA
+  RUSSIA
+  UKRAINE
+  TURKEY
+  ISRAEL
+  UNITED_ARAB_EMIRATES
+  QATAR
+  SAUDI_ARABIA
+  OTHER
 }
 
 enum AddressType {
