@@ -61,12 +61,12 @@ export default async function DashboardLayout({
 						<HorizontalMenu
 							items={[
 								{
-									label: "Accueil",
-									href: "/",
+									label: "Organisations",
+									href: "/dashboard",
 								},
 								{
-									label: "Accueil",
-									href: "/",
+									label: "Nouvelle organisation",
+									href: "/dashboard/new",
 								},
 							]}
 						/>

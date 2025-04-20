@@ -9,7 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/shared/components";
 
-import { LogoutButton } from "@/domains/auth/components/logout-button";
+import { LogoutButton } from "@/domains/auth/features/logout/components/logout-button";
 import { cn, getUserInitials } from "@/shared/utils";
 import { User } from "better-auth/types";
 import { LogOut } from "lucide-react";

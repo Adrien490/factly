@@ -3,5 +3,5 @@ export type Callbacks<T, R = unknown> = {
 	onStart?: () => R;
 	onEnd?: (reference: R) => void;
 	onSuccess?: (result: T) => void;
-	onError?: (result: T) => void;
+	onError?: (result: T | Error | unknown) => void;
 };

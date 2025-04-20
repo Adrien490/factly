@@ -45,12 +45,25 @@ export const withCallbacks = <
 				callbacks.onError?.(result);
 			}
 
-			return promise;
+			return result; // Retourne le résultat résolu, pas la promesse initiale
 		} catch (error) {
 			// En cas d'erreur, appel du callback de fin et réémission de l'erreur
 			if (reference) {
 				callbacks.onEnd?.(reference);
 			}
+
+			// Transmission de l'erreur au callback onError si disponible
+			if (callbacks.onError) {
+				try {
+					callbacks.onError(error instanceof Error ? error : error);
+				} catch (callbackError) {
+					console.error(
+						"Erreur lors de l'exécution du callback onError:",
+						callbackError
+					);
+				}
+			}
+
 			throw error;
 		}
 	};

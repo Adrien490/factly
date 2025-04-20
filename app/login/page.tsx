@@ -1,4 +1,4 @@
-import { MagicLinkForm, ProviderLogin } from "@/domains/auth";
+import { LoginWithSocialProviderForm } from "@/domains/auth/features/login-with-social-provider/components";
 import { Logo, Spotlight } from "@/shared/components";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -54,7 +54,7 @@ export default function LoginPage() {
 
 				{/* Options de connexion sociale */}
 				<div className="py-2">
-					<ProviderLogin />
+					<LoginWithSocialProviderForm />
 				</div>
 
 				{/* Séparateur simple */}
@@ -67,11 +67,6 @@ export default function LoginPage() {
 							ou
 						</span>
 					</div>
-				</div>
-
-				{/* Formulaire de magic link */}
-				<div className="py-2">
-					<MagicLinkForm />
 				</div>
 
 				{/* Mentions légales simplifiées */}
