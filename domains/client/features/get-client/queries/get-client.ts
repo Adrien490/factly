@@ -5,16 +5,13 @@ import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getClientSchema } from "../schemas";
-import { GetClientReturn } from "../types";
 import { fetchClient } from "./fetch-client";
 
 /**
  * Récupère les détails d'un client spécifique
  * Gère l'authentification et les accès avant d'appeler la fonction cacheable
  */
-export async function getClient(
-	params: z.infer<typeof getClientSchema>
-): Promise<GetClientReturn> {
+export async function getClient(params: z.infer<typeof getClientSchema>) {
 	// Vérification de l'authentification
 	const session = await auth.api.getSession({
 		headers: await headers(),
