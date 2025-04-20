@@ -9,7 +9,7 @@ export function UpdateClientFormSkeleton() {
 		<div className="animate-pulse space-y-6">
 			{/* Corps du formulaire */}
 			<div className="space-y-6">
-				<FormLayout withDividers columns={2} className="mt-6">
+				<FormLayout withDividers columns={2}>
 					{/* Section 1: Informations de base */}
 					<FormSection
 						title="Informations de base"

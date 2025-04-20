@@ -47,13 +47,10 @@ export default async function NewAddressPage({ params, searchParams }: Props) {
 	};
 
 	return (
-		<div className="space-y-6 flex flex-col gap-2">
-			<h1 className="text-2xl font-semibold">Nouvelle adresse</h1>
-			<CreateAddressForm
-				searchAddressPromise={searchAddress(searchAddressParams)}
-				clientId={clientId}
-				returnUrl={`/dashboard/${organizationId}/clients/${clientId}`}
-			/>
-		</div>
+		<CreateAddressForm
+			searchAddressPromise={searchAddress(searchAddressParams)}
+			clientId={clientId}
+			returnUrl={`/dashboard/${organizationId}/clients/${clientId}`}
+		/>
 	);
 }
