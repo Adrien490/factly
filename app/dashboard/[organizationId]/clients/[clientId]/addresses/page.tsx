@@ -6,6 +6,7 @@ import {
 	Button,
 	FilterSelect,
 	SearchForm,
+	Toolbar,
 	ViewToggle,
 } from "@/shared/components";
 import { SortOrder, ViewType } from "@/shared/types";
@@ -40,30 +41,40 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 
 	return (
 		<div className="space-y-6">
-			<h2 className="text-2xl font-semibold">Liste des adresses</h2>
-
 			{/* Barre de recherche et filtres */}
-			<div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4">
-				<SearchForm
-					paramName="search"
-					placeholder="Rechercher une adresse..."
-					className="flex-1 shrink-0"
-				/>
-				<ViewToggle />
-				<span className="text-xs font-medium text-muted-foreground px-1">
-					Filtrer par:
-				</span>
+			<Toolbar
+				leftContent={
+					<>
+						<SearchForm
+							paramName="search"
+							placeholder="Rechercher une adresse..."
+							className="flex-1 shrink-0"
+						/>
+					</>
+				}
+				rightContent={
+					<>
+						<ViewToggle />
+						<span className="text-xs font-medium text-muted-foreground px-1">
+							Filtrer par:
+						</span>
 
-				<FilterSelect filterKey="type" label="Type" options={ADDRESS_TYPES} />
+						<FilterSelect
+							filterKey="type"
+							label="Type"
+							options={ADDRESS_TYPES}
+						/>
 
-				<Button className="shrink-0" asChild>
-					<Link
-						href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
-					>
-						Nouvelle adresse
-					</Link>
-				</Button>
-			</div>
+						<Button className="shrink-0" asChild>
+							<Link
+								href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
+							>
+								Nouvelle adresse
+							</Link>
+						</Button>
+					</>
+				}
+			/>
 
 			<Suspense fallback={<AddressListSkeleton />}>
 				<AddressList

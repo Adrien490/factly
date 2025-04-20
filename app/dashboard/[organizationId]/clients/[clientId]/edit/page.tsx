@@ -17,13 +17,10 @@ export default async function EditClientPage({ params }: PageProps) {
 	const { organizationId, clientId } = resolvedParams;
 
 	return (
-		<div className="flex flex-col gap-2">
-			<h1 className="text-2xl font-semibold">Modifier le client</h1>
-			<Suspense fallback={<UpdateClientFormSkeleton />}>
-				<UpdateClientForm
-					clientPromise={getClient({ id: clientId, organizationId })}
-				/>
-			</Suspense>
-		</div>
+		<Suspense fallback={<UpdateClientFormSkeleton />}>
+			<UpdateClientForm
+				clientPromise={getClient({ id: clientId, organizationId })}
+			/>
+		</Suspense>
 	);
 }
