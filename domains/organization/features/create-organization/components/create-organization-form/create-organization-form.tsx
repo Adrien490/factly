@@ -767,7 +767,7 @@ export function CreateOrganizationForm({
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (
 					<FormFooter
-						disabled={!canSubmit}
+						disabled={!canSubmit || isPending}
 						cancelHref="/dashboard"
 						submitLabel={"Créer l'organisation"}
 						isPending={isUploading}

@@ -804,7 +804,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (
 					<FormFooter
-						disabled={!canSubmit}
+						disabled={!canSubmit || isPending}
 						cancelHref={`/dashboard/${organizationId}/clients`}
 						submitLabel="Créer le client"
 					/>

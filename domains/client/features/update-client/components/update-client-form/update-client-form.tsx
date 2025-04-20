@@ -517,7 +517,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (
 					<FormFooter
-						disabled={!canSubmit}
+						disabled={!canSubmit || isPending}
 						submitLabel="Modifier le client"
 						isPending={isPending}
 					/>
