@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getInvitationsSchema } from "../schemas";
@@ -34,14 +33,7 @@ export async function getInvitations(
 
 		const validatedParams = validation.data;
 
-		const { organizationId } = validatedParams;
-
 		// Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-
-		if (!hasAccess) {
-			throw new Error("Unauthorized: No access to this organization");
-		}
 
 		// Appel à la fonction de récupération
 		return await fetchInvitations(validatedParams);

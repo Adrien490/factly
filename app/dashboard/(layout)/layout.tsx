@@ -68,6 +68,10 @@ export default async function DashboardLayout({
 									label: "Nouvelle organisation",
 									href: "/dashboard/new",
 								},
+								{
+									label: "Invitations",
+									href: "/dashboard/invitations",
+								},
 							]}
 						/>
 					</div>

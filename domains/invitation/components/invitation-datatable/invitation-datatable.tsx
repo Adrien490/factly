@@ -25,20 +25,22 @@ import {
 	Mail,
 	MoreVerticalIcon,
 	Search,
+	Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
 
 import { cn } from "@/shared/utils";
 import { InvitationStatus } from "@prisma/client";
-import { toast } from "sonner";
 import { INVITATION_STATUSES } from "../../features/get-invitation-statuses";
 import { InvitationDataTableProps } from "./types";
 
 export function InvitationDataTable({
 	invitationsPromise,
+	userPromise,
 }: InvitationDataTableProps) {
 	const invitations = use(invitationsPromise);
+	const user = use(userPromise);
 
 	if (invitations.length === 0) {
 		return (
@@ -80,6 +82,12 @@ export function InvitationDataTable({
 					const isExpired =
 						invitation.expiresAt && new Date(invitation.expiresAt) < new Date();
 					const isPending = invitation.status === InvitationStatus.PENDING;
+
+					// Vérifier si l'utilisateur actuel est l'expéditeur de l'invitation
+					// On vérifie si la propriété userId existe sur l'invitation, si oui on compare avec l'id de l'utilisateur actuel
+					const isInvitationSender =
+						invitation.userId === user?.id ||
+						(invitation.userId && invitation.userId === user?.id);
 
 					return (
 						<TableRow key={invitation.id} role="row" tabIndex={0}>
@@ -166,26 +174,51 @@ export function InvitationDataTable({
 										{isPending && !isExpired && (
 											<>
 												<DropdownMenuSeparator />
-												<DropdownMenuItem asChild>
-													<Link
-														href={`/dashboard/${invitation.organization.id}/settings/invitations/${invitation.id}`}
-														className={cn("flex w-full items-center")}
-													>
-														<Edit2 className="h-4 w-4 mr-2" />
-														<span>Modifier</span>
-													</Link>
-												</DropdownMenuItem>
-												<DropdownMenuItem
-													onClick={() => {
-														// Fonction à implémenter pour renvoyer l'invitation
-														toast.info("Fonctionnalité à implémenter", {
-															description: "Renvoyer l'invitation",
-														});
-													}}
-												>
-													<Mail className="h-4 w-4 mr-2" />
-													<span>Renvoyer</span>
-												</DropdownMenuItem>
+
+												{/* Actions disponibles seulement pour l'expéditeur de l'invitation */}
+												{isInvitationSender && (
+													<>
+														<DropdownMenuItem asChild>
+															<Link
+																href={`/dashboard/${invitation.organization.id}/settings/invitations/${invitation.id}`}
+																className={cn("flex w-full items-center")}
+															>
+																<Edit2 className="h-4 w-4 mr-2" />
+																<span>Modifier</span>
+															</Link>
+														</DropdownMenuItem>
+
+														<DropdownMenuItem>
+															<Mail className="h-4 w-4 mr-2" />
+															<span>Renvoyer</span>
+														</DropdownMenuItem>
+
+														<DropdownMenuItem className="text-destructive focus:text-destructive">
+															<Trash2 className="h-4 w-4 mr-2" />
+															<span>Supprimer</span>
+														</DropdownMenuItem>
+													</>
+												)}
+
+												{/* Si l'utilisateur n'est pas l'expéditeur */}
+												{!isInvitationSender && (
+													<DropdownMenuItem className="text-muted-foreground">
+														<span>Aucune action disponible</span>
+													</DropdownMenuItem>
+												)}
+											</>
+										)}
+
+										{/* Pour les invitations expirées ou dans un autre statut */}
+										{(!isPending || isExpired) && (
+											<>
+												<DropdownMenuSeparator />
+												{isInvitationSender && (
+													<DropdownMenuItem className="text-destructive focus:text-destructive">
+														<Trash2 className="h-4 w-4 mr-2" />
+														<span>Supprimer</span>
+													</DropdownMenuItem>
+												)}
 											</>
 										)}
 									</DropdownMenuContent>

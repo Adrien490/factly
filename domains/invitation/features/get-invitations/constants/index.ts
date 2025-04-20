@@ -9,6 +9,7 @@ export const GET_INVITATIONS_DEFAULT_SELECT = {
 	id: true,
 	email: true,
 	status: true,
+	userId: true,
 
 	// Relations
 	organization: {

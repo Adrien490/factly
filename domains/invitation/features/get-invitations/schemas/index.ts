@@ -7,7 +7,7 @@ import { INVITATION_SORTABLE_FIELDS } from "../constants";
  * Sans recherche textuelle comme demandé
  */
 export const getInvitationsSchema = z.object({
-	organizationId: z.string(),
+	organizationId: z.string().optional(),
 	status: z
 		.union([
 			z.nativeEnum(InvitationStatus),

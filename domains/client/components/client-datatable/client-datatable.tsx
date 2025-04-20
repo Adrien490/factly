@@ -1,4 +1,13 @@
 import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
 	Badge,
 	Button,
 	DropdownMenu,
@@ -29,6 +38,7 @@ import {
 	Receipt,
 	Search,
 	Tag,
+	Trash,
 	Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -37,7 +47,7 @@ import { use } from "react";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import { CLIENT_STATUSES, CLIENT_TYPES } from "../../constants";
-import { DeleteClientAlertDialogForm } from "../../features/delete-client/components/delete-client-alert-dialog-form";
+import { DeleteClientButton } from "../../features/delete-client/components/delete-client-button";
 import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
@@ -254,7 +264,41 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 												</Link>
 											</DropdownMenuItem>
 											<DropdownMenuSeparator />
-											<DeleteClientAlertDialogForm client={client} />
+											<AlertDialog>
+												<AlertDialogTrigger asChild>
+													<DropdownMenuItem
+														preventDefault
+														className="text-destructive focus:text-destructive"
+													>
+														<Trash className="h-4 w-4 mr-2" />
+														<span>Supprimer</span>
+													</DropdownMenuItem>
+												</AlertDialogTrigger>
+												<AlertDialogContent>
+													<AlertDialogHeader>
+														<AlertDialogTitle className="text-destructive">
+															Êtes-vous sûr de vouloir supprimer ce client ?
+														</AlertDialogTitle>
+														<AlertDialogDescription>
+															Cette action est irréversible. Cela supprimera
+															définitivement le client
+															{client.name && (
+																<strong> {client.name}</strong>
+															)}{" "}
+															et toutes ses données associées.
+														</AlertDialogDescription>
+													</AlertDialogHeader>
+													<AlertDialogFooter>
+														<AlertDialogCancel>Annuler</AlertDialogCancel>
+														<DeleteClientButton
+															organizationId={client.organizationId}
+															id={client.id}
+														>
+															<AlertDialogAction>Supprimer</AlertDialogAction>
+														</DeleteClientButton>
+													</AlertDialogFooter>
+												</AlertDialogContent>
+											</AlertDialog>
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</TableCell>

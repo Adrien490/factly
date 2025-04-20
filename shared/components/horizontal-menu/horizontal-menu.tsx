@@ -25,7 +25,7 @@ export function HorizontalMenu({ items, className }: HorizontalMenuProps) {
 			className={cn("relative z-10 w-full rounded-lg py-1 mb-6", className)}
 			aria-label="Main navigation"
 		>
-			<div className="flex overflow-x-auto sm:overflow-visible no-scrollbar gap-4">
+			<div className="flex overflow-x-auto sm:overflow-visible no-scrollbar gap-5">
 				{items.map((item, index) => {
 					const active = isItemActive(item.href);
 

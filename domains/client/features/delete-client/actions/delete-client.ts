@@ -37,13 +37,11 @@ export async function deleteClient(
 		const rawData = {
 			id: formData.get("id") as string,
 			organizationId: formData.get("organizationId") as string,
-			confirmation: formData.get("confirmation") as string,
 		};
 
 		console.log("[DELETE_CLIENT] Form Data:", {
 			id: rawData.id,
 			organizationId: rawData.organizationId,
-			confirmation: rawData.confirmation,
 		});
 
 		// Vérification que l'organizationId n'est pas vide

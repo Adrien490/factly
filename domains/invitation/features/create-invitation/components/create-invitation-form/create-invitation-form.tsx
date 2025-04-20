@@ -1,21 +1,21 @@
 "use client";
 
-import { FormLabel, Input } from "@/shared/components/ui";
+import { Button, FormLabel, Input } from "@/shared/components/ui";
 
+import { FieldInfo, FormErrors } from "@/shared/components/forms";
 import {
-	FieldInfo,
-	FormErrors,
-	FormFooter,
-	FormLayout,
-	FormSection,
-} from "@/shared/components/forms";
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/shared/components/ui/dialog";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Invitation, InvitationStatus } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { addDays } from "date-fns";
-import { Mail } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { createInvitation } from "../../actions";
 import { createInvitationSchema } from "../../schemas";
 
@@ -24,11 +24,10 @@ interface CreateInvitationFormProps {
 }
 
 export function CreateInvitationForm({
-	organizationId: propOrgId,
+	organizationId,
 }: CreateInvitationFormProps) {
-	const params = useParams();
-	const router = useRouter();
-	const orgId = propOrgId || (params.organizationId as string);
+	const orgId = organizationId;
+	const [open, setOpen] = useState(false);
 
 	const [state, dispatch] = useActionState(
 		withCallbacks(
@@ -37,14 +36,7 @@ export function CreateInvitationForm({
 				loadingMessage: "Envoi de l'invitation en cours...",
 				onSuccess: () => {
 					form.reset();
-				},
-				action: {
-					label: "Voir les invitations",
-					onClick: (data) => {
-						if (data?.organizationId) {
-							router.push(`/dashboard/${data.organizationId}/settings/members`);
-						}
-					},
+					setOpen(false);
 				},
 			})
 		),
@@ -69,32 +61,36 @@ export function CreateInvitationForm({
 	});
 
 	return (
-		<form
-			action={dispatch}
-			className="space-y-6"
-			onSubmit={() => form.handleSubmit()}
-		>
-			{/* Erreurs globales du formulaire */}
-			<form.Subscribe selector={(state) => state.errors}>
-				{(errors) => <FormErrors errors={errors} />}
-			</form.Subscribe>
-
-			{/* Champs cachés */}
-			<input type="hidden" name="organizationId" value={orgId} />
-			<input
-				type="hidden"
-				name="expiresAt"
-				value={addDays(new Date(), 7).toISOString()}
-			/>
-			<input type="hidden" name="status" value={InvitationStatus.PENDING} />
-
-			<FormLayout columns={1} className="mt-6">
-				{/* Section principale: information d'invitation */}
-				<FormSection
-					title="Inviter un nouveau membre"
-					description="Envoyer une invitation par email pour rejoindre l'organisation"
-					icon={Mail}
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
+				<Button variant="outline">Inviter un nouveau membre</Button>
+			</DialogTrigger>
+			<DialogContent className="sm:max-w-[425px]">
+				<DialogHeader>
+					<DialogTitle>Inviter un nouveau membre</DialogTitle>
+					<DialogDescription>
+						Envoyer une invitation par email pour rejoindre l&apos;organisation
+					</DialogDescription>
+				</DialogHeader>
+				<form
+					action={dispatch}
+					className="space-y-6"
+					onSubmit={() => form.handleSubmit()}
 				>
+					{/* Erreurs globales du formulaire */}
+					<form.Subscribe selector={(state) => state.errors}>
+						{(errors) => <FormErrors errors={errors} />}
+					</form.Subscribe>
+
+					{/* Champs cachés */}
+					<input type="hidden" name="organizationId" value={orgId} />
+					<input
+						type="hidden"
+						name="expiresAt"
+						value={addDays(new Date(), 7).toISOString()}
+					/>
+					<input type="hidden" name="status" value={InvitationStatus.PENDING} />
+
 					<div className="space-y-4">
 						<form.Field
 							name="email"
@@ -128,18 +124,10 @@ export function CreateInvitationForm({
 							)}
 						</form.Field>
 					</div>
-				</FormSection>
-			</FormLayout>
 
-			<form.Subscribe selector={(state) => [state.canSubmit]}>
-				{([canSubmit]) => (
-					<FormFooter
-						disabled={!canSubmit}
-						cancelHref={`/dashboard/${orgId}/settings/members`}
-						submitLabel="Envoyer l'invitation"
-					/>
-				)}
-			</form.Subscribe>
-		</form>
+					<Button type="submit">Envoyer l&apos;invitation</Button>
+				</form>
+			</DialogContent>
+		</Dialog>
 	);
 }

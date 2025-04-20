@@ -101,6 +101,43 @@ export async function createInvitation(
 			);
 		}
 
+		// Vérification pour empêcher un utilisateur de s'inviter lui-même
+		const currentUser = await db.user.findUnique({
+			where: { id: session.user.id },
+			select: { email: true },
+		});
+
+		if (currentUser && currentUser.email === validation.data.email) {
+			return createErrorResponse(
+				ActionStatus.CONFLICT,
+				"Vous ne pouvez pas vous envoyer une invitation à vous-même"
+			);
+		}
+
+		// Vérification si l'utilisateur est déjà membre de l'organisation
+		const existingUser = await db.user.findUnique({
+			where: { email: validation.data.email },
+			select: { id: true },
+		});
+
+		if (existingUser) {
+			const existingMember = await db.member.findUnique({
+				where: {
+					userId_organizationId: {
+						userId: existingUser.id,
+						organizationId: validation.data.organizationId,
+					},
+				},
+			});
+
+			if (existingMember) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					"Cette personne est déjà membre de l'organisation"
+				);
+			}
+		}
+
 		// 7. Création de l'invitation dans la base de données
 		const invitation = await db.invitation.create({
 			data: {
