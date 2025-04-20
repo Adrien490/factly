@@ -31,11 +31,15 @@ export function Toolbar({
 			className={`mb-6 flex flex-wrap items-center justify-between gap-4 pb-2 ${className}`}
 		>
 			{leftContent && (
-				<div className="flex flex-wrap items-center gap-3">{leftContent}</div>
+				<div className="flex flex-wrap items-center gap-3 flex-1 min-w-0">
+					{leftContent}
+				</div>
 			)}
 
 			{rightContent && (
-				<div className="flex flex-wrap items-center gap-3">{rightContent}</div>
+				<div className="flex flex-wrap items-center gap-3 shrink-0">
+					{rightContent}
+				</div>
 			)}
 		</div>
 	);

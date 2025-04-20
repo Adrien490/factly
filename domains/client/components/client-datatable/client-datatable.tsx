@@ -57,14 +57,12 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 
 	if (clients.length === 0) {
 		return (
-			<div className="py-12" role="status" aria-live="polite">
-				<EmptyState
-					icon={<Search className="w-10 h-10" />}
-					title="Aucune donnée trouvée"
-					description="Aucune donnée ne correspond à vos critères de recherche."
-					className="group-has-[[data-pending]]:animate-pulse"
-				/>
-			</div>
+			<EmptyState
+				icon={<Search className="w-10 h-10" />}
+				title="Aucun client trouvé"
+				description="Aucun client n'a été trouvé. Vous pouvez en créer un nouveau."
+				className="group-has-[[data-pending]]:animate-pulse py-12"
+			/>
 		);
 	}
 

@@ -78,14 +78,14 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			{/* Barre d'actions principale */}
 			<Toolbar
 				leftContent={
-					<>
+					<div className="flex items-center gap-3 flex-1 min-w-0">
 						<SearchForm
 							paramName="search"
 							placeholder="Rechercher..."
-							className="w-[275px] shrink-0 sm:w-[200px] lg:w-[275px]"
+							className="flex-1 min-w-0"
 						/>
 						<RefreshClientsButton organizationId={organizationId} />
-					</>
+					</div>
 				}
 				rightContent={
 					<>

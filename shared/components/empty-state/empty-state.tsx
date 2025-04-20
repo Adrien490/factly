@@ -1,4 +1,5 @@
 import { cn } from "@/shared/utils";
+import { Card } from "../ui";
 import { EmptyStateProps } from "./types";
 
 export function EmptyState({
@@ -12,9 +13,9 @@ export function EmptyState({
 	...props
 }: EmptyStateProps) {
 	return (
-		<div
+		<Card
 			className={cn(
-				"flex flex-col items-center justify-center text-center w-full p-6 bg-card rounded-lg",
+				"flex flex-col items-center justify-center text-center w-full p-6",
 				className
 			)}
 			{...props}
@@ -38,6 +39,6 @@ export function EmptyState({
 			)}
 
 			{children && <div className="mt-6 w-full">{children}</div>}
-		</div>
+		</Card>
 	);
 }

@@ -1,5 +1,6 @@
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
+import { notFound } from "next/navigation";
 import { use } from "react";
 import { CLIENT_STATUSES } from "../../constants";
 import { CLIENT_TYPES } from "../../constants/client-types";
@@ -7,6 +8,10 @@ import { ClientHeaderProps } from "./types";
 
 export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	const client = use(clientPromise);
+
+	if (!client) {
+		return notFound();
+	}
 
 	const statusInfo = CLIENT_STATUSES.find(
 		(option) => option.value === client.status
