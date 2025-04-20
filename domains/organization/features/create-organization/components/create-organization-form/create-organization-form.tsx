@@ -50,7 +50,7 @@ export function CreateOrganizationForm({
 	searchAddressPromise,
 }: OrganizationFormProps) {
 	const response = use(searchAddressPromise);
-	const { state, dispatch } = useCreateOrganization();
+	const { state, dispatch, isPending } = useCreateOrganization();
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { isUploading, startUpload } = useUploadThing("organizationLogo");
 	const router = useRouter();
@@ -154,6 +154,7 @@ export function CreateOrganizationForm({
 							Pays
 						</FormLabel>
 						<Select
+							disabled={isPending}
 							name="country"
 							onValueChange={(value) => {
 								field.handleChange(value);
@@ -195,6 +196,7 @@ export function CreateOrganizationForm({
 									<FormLabel className="text-base">Logo</FormLabel>
 									{field.state.value && (
 										<Button
+											disabled={isPending}
 											type="button"
 											variant="ghost"
 											size="sm"
@@ -286,6 +288,7 @@ export function CreateOrganizationForm({
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="name"
 										name="name"
 										placeholder="Nom utilisé au quotidien"
@@ -314,6 +317,7 @@ export function CreateOrganizationForm({
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="legalName"
 										name="legalName"
 										placeholder="Nom juridique officiel"
@@ -342,6 +346,7 @@ export function CreateOrganizationForm({
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="legalForm"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -388,6 +393,7 @@ export function CreateOrganizationForm({
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="email"
 										name="email"
 										type="email"
@@ -428,6 +434,7 @@ export function CreateOrganizationForm({
 										SIREN
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="siren"
 										name="siren"
 										placeholder="9 chiffres (ex: 123456789)"
@@ -461,6 +468,7 @@ export function CreateOrganizationForm({
 										SIRET
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="siret"
 										name="siret"
 										placeholder="14 chiffres (ex: 12345678900001)"
@@ -493,6 +501,7 @@ export function CreateOrganizationForm({
 										N° TVA
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="vatNumber"
 										name="vatNumber"
 										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
@@ -560,6 +569,7 @@ export function CreateOrganizationForm({
 									<FormLabel htmlFor="addressLine1">Adresse ligne 1</FormLabel>
 									<div className="relative">
 										<Autocomplete
+											disabled={isPending}
 											name="addressLine1"
 											value={field.state.value}
 											onChange={(value) => {
@@ -629,6 +639,7 @@ export function CreateOrganizationForm({
 										Complément d&apos;adresse
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="addressLine2"
 										name="addressLine2"
 										placeholder="Bâtiment, étage, etc."
@@ -652,6 +663,7 @@ export function CreateOrganizationForm({
 											Code postal
 										</FormLabel>
 										<Input
+											disabled={isPending}
 											id="postalCode"
 											name="postalCode"
 											placeholder="Ex: 75000"
@@ -671,6 +683,7 @@ export function CreateOrganizationForm({
 											Ville
 										</FormLabel>
 										<Input
+											disabled={isPending}
 											id="city"
 											name="city"
 											placeholder="Ex: Paris"
@@ -700,6 +713,7 @@ export function CreateOrganizationForm({
 										Téléphone
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="phone"
 										name="phone"
 										placeholder="Ex: +33 1 23 45 67 89"
@@ -734,6 +748,7 @@ export function CreateOrganizationForm({
 										Site web
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="website"
 										name="website"
 										placeholder="Ex: https://www.example.com"
