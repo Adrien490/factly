@@ -12,7 +12,7 @@ export type ToastCallbacksOptions<
 
 	// Callbacks personnalisables
 	onSuccess?: (result: ActionState<TData, TSchema>) => void;
-	onError?: (result: ActionState<TData, TSchema>) => void;
+	onError?: (result: unknown) => void;
 
 	// Action pour les toasts (bouton dans le toast)
 	action?: {
@@ -71,7 +71,7 @@ export const createToastCallbacks = <
 		},
 
 		// Gère l'erreur
-		onError: (result: ActionState<TData, TSchema>) => {
+		onError: (result: unknown) => {
 			// Si l'utilisateur a défini son propre comportement
 			if (options.onError) {
 				// Fermer tous les toasts existants (sauf celui de chargement)
@@ -79,14 +79,6 @@ export const createToastCallbacks = <
 
 				options.onError(result);
 				return;
-			}
-
-			// Comportement par défaut
-			if (result?.message) {
-				// Fermer tous les toasts existants (sauf celui de chargement)
-				toast.dismiss();
-
-				toast.error(result.message);
 			}
 		},
 	};

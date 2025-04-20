@@ -28,43 +28,22 @@ export const withCallbacks = <
 		// Appel du callback de démarrage et récupération de la référence (pour les toasts par exemple)
 		const reference = callbacks.onStart?.();
 
-		try {
-			const result = await promise;
+		const result = await promise;
 
-			// Appel du callback de fin si une référence est disponible
-			if (reference) {
-				callbacks.onEnd?.(reference);
-			}
-
-			// Appel du callback de succès si l'action a réussi
-			if (result?.status === ActionStatus.SUCCESS) {
-				callbacks.onSuccess?.(result);
-			}
-			// Appel du callback d'erreur pour tous les statuts d'erreur
-			else {
-				callbacks.onError?.(result);
-			}
-
-			return result; // Retourne le résultat résolu, pas la promesse initiale
-		} catch (error) {
-			// En cas d'erreur, appel du callback de fin et réémission de l'erreur
-			if (reference) {
-				callbacks.onEnd?.(reference);
-			}
-
-			// Transmission de l'erreur au callback onError si disponible
-			if (callbacks.onError) {
-				try {
-					callbacks.onError(error instanceof Error ? error : error);
-				} catch (callbackError) {
-					console.error(
-						"Erreur lors de l'exécution du callback onError:",
-						callbackError
-					);
-				}
-			}
-
-			throw error;
+		// Appel du callback de fin si une référence est disponible
+		if (reference) {
+			callbacks.onEnd?.(reference);
 		}
+
+		// Appel du callback de succès si l'action a réussi
+		if (result?.status === ActionStatus.SUCCESS) {
+			callbacks.onSuccess?.(result);
+		}
+		// Appel du callback d'erreur pour tous les statuts d'erreur
+		else {
+			callbacks.onError?.(result);
+		}
+
+		return result; // Retourne le résultat résolu, pas la promesse initiale
 	};
 };
