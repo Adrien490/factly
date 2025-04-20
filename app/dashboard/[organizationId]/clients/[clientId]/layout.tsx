@@ -23,18 +23,15 @@ export default async function ClientLayout({ children, params }: Props) {
 			{/* Breadcrumb amélioré */}
 
 			{/* En-tête client */}
-			<div className="border-b">
-				<div className="pb-6">
-					<Suspense fallback={<ClientHeaderSkeleton />}>
-						<ClientHeader
-							clientPromise={getClient({ id: clientId, organizationId })}
-						/>
-					</Suspense>
-				</div>
-			</div>
+
+			<Suspense fallback={<ClientHeaderSkeleton />}>
+				<ClientHeader
+					clientPromise={getClient({ id: clientId, organizationId })}
+				/>
+			</Suspense>
 
 			{/* Contenu de la page */}
-			<div className="py-6">{children}</div>
+			{children}
 		</PageContainer>
 	);
 }
