@@ -20,7 +20,6 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { Filter } from "lucide-react";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -96,12 +95,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							defaultSortOrder="desc"
 							className="w-[200px] shrink-0"
 						/>
-						<Button asChild variant="outline">
-							<div className="flex items-center gap-1">
-								<Filter className="h-4 w-4" />
-								<span>Filtres</span>
-							</div>
-						</Button>
 
 						<Button className="shrink-0" asChild>
 							<Link href={`/dashboard/${organizationId}/clients/new`}>

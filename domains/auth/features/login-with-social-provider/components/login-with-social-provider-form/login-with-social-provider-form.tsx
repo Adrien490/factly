@@ -1,32 +1,28 @@
 "use client";
 
-import { authClient } from "@/domains/auth/lib";
 import { Button } from "@/shared/components";
 import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
-import { providers } from "./constants";
-import { Provider } from "./types";
+import { useTransition } from "react";
+import { providers } from "../../constants";
+import { useLoginWithSocialProvider } from "../../hooks/use-login-with-social-provider";
 
 export function LoginWithSocialProviderForm() {
 	const searchParams = useSearchParams();
 	const callbackURL = searchParams.get("callbackURL") || "/dashboard";
+	const [isPending, startTransition] = useTransition();
+	const { dispatch } = useLoginWithSocialProvider();
 
 	// Fonction simplifiée pour la redirection directe
-	const handleLoginWithSocialProvider = async (provider: Provider) => {
-		try {
-			// Marquer ce provider comme chargement
+	const handleLoginWithSocialProvider = async (
+		provider: (typeof providers)[number]
+	) => {
+		const formData = new FormData();
+		formData.append("provider", provider.id);
+		formData.append("callbackURL", callbackURL);
 
-			// Utiliser directement l'API client plutôt que l'API server
-			await authClient.signIn.social({
-				provider: provider.id as "google" | "github",
-				callbackURL: callbackURL,
-			});
-
-			// Note: Cette partie ne sera probablement pas exécutée car la redirection se fera automatiquement
-		} catch (error) {
-			console.error("Erreur lors de la connexion:", error);
-			toast.error(`Erreur lors de la connexion avec ${provider.name}`);
-		}
+		startTransition(async () => {
+			dispatch(formData);
+		});
 	};
 
 	return (
@@ -34,6 +30,7 @@ export function LoginWithSocialProviderForm() {
 			<div className="grid grid-cols-1 gap-3">
 				{providers.map((provider) => (
 					<Button
+						disabled={isPending}
 						key={provider.id}
 						type="button"
 						value={provider.id}

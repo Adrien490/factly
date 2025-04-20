@@ -5,21 +5,24 @@ import {
 	ActionState,
 	ActionStatus,
 	createErrorResponse,
-	createSuccessResponse,
 	createValidationErrorResponse,
 } from "@/shared/types";
+import console from "console";
 import { headers } from "next/headers";
-import { ResponseState } from "../components/login-with-social-provider-form/types";
+import { redirect } from "next/navigation";
 import { loginWithSocialProviderSchema } from "../schemas";
-import { Provider } from "../types";
+import { ResponseState } from "../types";
+
+// Interface pour typer l'erreur de redirection Next.js
+interface NextRedirectError extends Error {
+	digest?: string;
+}
 
 export async function loginWithSocialProvider(
-	_: ActionState<ResponseState, typeof loginWithSocialProviderSchema> | null,
+	_: unknown,
 	formData: FormData
 ): Promise<ActionState<ResponseState, typeof loginWithSocialProviderSchema>> {
 	try {
-		console.log("🚀 loginWithSocialProvider: début");
-
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
@@ -32,18 +35,14 @@ export async function loginWithSocialProvider(
 		}
 
 		const rawData = {
-			provider: formData.get("provider") as Provider,
+			provider: formData.get("provider") as string,
 			callbackURL: (formData.get("callbackURL") as string) || "/dashboard",
 		};
-		console.log(
-			"📝 Provider:",
-			rawData.provider,
-			"CallbackURL:",
-			rawData.callbackURL
-		);
+
+		console.log("🚀 rawData:", rawData);
 
 		const validation = loginWithSocialProviderSchema.safeParse(rawData);
-
+		console.log("🚀 validation:", validation);
 		if (!validation.success) {
 			console.log("❌ Validation échec:", validation.error.flatten());
 			return createValidationErrorResponse(
@@ -54,12 +53,6 @@ export async function loginWithSocialProvider(
 		}
 
 		const { provider, callbackURL } = validation.data;
-		console.log(
-			"🔄 Appel signInSocial avec provider:",
-			provider,
-			"et callbackURL:",
-			callbackURL
-		);
 
 		try {
 			const response = await auth.api.signInSocial({
@@ -69,6 +62,8 @@ export async function loginWithSocialProvider(
 				},
 			});
 
+			console.log("🚀 response:", response);
+
 			if (!response) {
 				console.error("❌ Réponse signInSocial vide");
 				return createErrorResponse(
@@ -76,14 +71,28 @@ export async function loginWithSocialProvider(
 					"Aucune réponse du service d'authentification"
 				);
 			}
+			if (!response.url) {
+				console.error("❌ URL de redirection manquante");
+				return createErrorResponse(
+					ActionStatus.ERROR,
+					"URL de redirection manquante"
+				);
+			}
 
-			console.log(
-				"✅ Réponse signInSocial:",
-				JSON.stringify(response, null, 2)
-			);
-
-			return createSuccessResponse(response, "Connexion réussie");
+			// La redirection va lancer une erreur NEXT_REDIRECT, c'est normal
+			// Next.js utilise cette erreur en interne pour gérer les redirections
+			redirect(response.url);
 		} catch (error) {
+			// Vérifier si l'erreur est liée à une redirection Next.js
+			if (
+				error instanceof Error &&
+				(error.message === "NEXT_REDIRECT" ||
+					(error as NextRedirectError).digest?.startsWith("NEXT_REDIRECT"))
+			) {
+				// Laisser l'erreur de redirection se propager
+				throw error;
+			}
+
 			const errorMessage =
 				error instanceof Error
 					? error.message
@@ -93,6 +102,16 @@ export async function loginWithSocialProvider(
 			return createErrorResponse(ActionStatus.ERROR, errorMessage);
 		}
 	} catch (error) {
+		// Vérifier si l'erreur est liée à une redirection Next.js
+		if (
+			error instanceof Error &&
+			(error.message === "NEXT_REDIRECT" ||
+				(error as NextRedirectError).digest?.startsWith("NEXT_REDIRECT"))
+		) {
+			// Laisser l'erreur de redirection se propager
+			throw error;
+		}
+
 		const errorMessage =
 			error instanceof Error
 				? error.message

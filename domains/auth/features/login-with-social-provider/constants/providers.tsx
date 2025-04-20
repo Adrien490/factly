@@ -1,8 +1,6 @@
-export const providers: {
-	id: "google" | "github";
-	name: string;
-	icon: React.ReactNode;
-}[] = [
+// Définissez un type local qui correspond à la structure utilisée
+
+export const providers = [
 	{
 		id: "google",
 		name: "Google",

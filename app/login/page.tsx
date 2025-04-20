@@ -34,9 +34,8 @@ export default function LoginPage() {
 			<div
 				className="w-full max-w-md p-6 sm:p-8 space-y-5 rounded-xl relative z-10 
                 bg-background/90 backdrop-blur-xs 
-                border border-border/10
-                shadow-[4px_4px_0_0_rgba(0,0,0,0.05)]
-                dark:shadow-[4px_4px_0_0_rgba(255,255,255,0.05)]
+                border border-border
+                
                 mt-16 sm:mt-0"
 			>
 				{/* En-tête simplifié */}
