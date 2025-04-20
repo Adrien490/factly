@@ -12,7 +12,6 @@ export * from "./loaders/dots-loader";
 export * from "./loaders/pulse-loader";
 export * from "./loaders/spinner-loader";
 export * from "./logo";
-export * from "./menu-actions";
 export * from "./multi-select-filter";
 export * from "./navigation-dropdown";
 export * from "./number-ticker";

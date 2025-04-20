@@ -1,1 +1,1 @@
-export * from "./delete-supplier-alert-dialog-form";
+export * from "./delete-supplier-button";

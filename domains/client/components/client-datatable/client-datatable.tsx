@@ -270,7 +270,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 														preventDefault
 														className="text-destructive focus:text-destructive"
 													>
-														<Trash className="h-4 w-4 mr-2" />
+														<Trash className="text-destructive h-4 w-4 mr-2" />
 														<span>Supprimer</span>
 													</DropdownMenuItem>
 												</AlertDialogTrigger>
