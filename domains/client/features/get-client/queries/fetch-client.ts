@@ -33,6 +33,10 @@ export async function fetchClient(
 			select: GET_CLIENT_DEFAULT_SELECT,
 		});
 
+		if (!client) {
+			throw new Error("Client not found");
+		}
+
 		return client;
 	} catch (error) {
 		console.error("[FETCH_CLIENT]", error);
