@@ -1,5 +1,5 @@
 import { HorizontalMenu } from "@/shared/components";
-import { Badge } from "@/shared/components/shadcn-ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { use } from "react";
 import { CLIENT_STATUSES } from "../../constants";
 import { CLIENT_TYPES } from "../../constants/client-types";

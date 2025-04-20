@@ -7,7 +7,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { FormLabel, Input } from "@/shared/components/shadcn-ui";
+import { FormLabel, Input } from "@/shared/components/ui";
 
 import {
 	FormattedAddressResult,

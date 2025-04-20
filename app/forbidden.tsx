@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/shadcn-ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { HomeIcon, ShieldAlertIcon } from "lucide-react";
 import Link from "next/link";
 

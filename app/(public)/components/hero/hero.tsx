@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components";
-import { BackgroundLines } from "@/shared/components/shadcn-ui/background-lines";
-import { Highlight } from "@/shared/components/shadcn-ui/hero-highlight";
+import { BackgroundLines } from "@/shared/components/ui/background-lines";
+import { Highlight } from "@/shared/components/ui/hero-highlight";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { advantages } from "./constants";

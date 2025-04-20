@@ -7,7 +7,6 @@ import { z } from "zod";
 import { GET_INVITATION_DEFAULT_SELECT } from "../constants";
 import { getInvitationSchema } from "../schemas";
 import { GetInvitationReturn } from "../types";
-
 /**
  * Récupère une invitation par ID avec cache
  */

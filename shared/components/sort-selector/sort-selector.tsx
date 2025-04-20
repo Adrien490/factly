@@ -6,7 +6,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+} from "@/shared/components/ui/dropdown-menu";
 import { SortOrder } from "@/shared/types";
 import { ChevronDown, SortAsc, SortDesc } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";

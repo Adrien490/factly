@@ -8,7 +8,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+} from "@/shared/components/ui/dropdown-menu";
 import { SortDirection, useSorting } from "@/shared/hooks/use-sorting";
 import { cn } from "@/shared/utils";
 import { Filter, SlidersHorizontal } from "lucide-react";

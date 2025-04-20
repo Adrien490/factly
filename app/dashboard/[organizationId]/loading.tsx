@@ -1,5 +1,5 @@
 import { PageContainer } from "@/shared/components";
-import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export default function Loading() {
 	return (

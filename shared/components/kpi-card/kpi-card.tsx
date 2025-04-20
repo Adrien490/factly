@@ -1,6 +1,6 @@
 import { use } from "react";
 import { cn } from "../../utils";
-import { Card, CardContent } from "../shadcn-ui";
+import { Card, CardContent } from "../ui";
 import { variantStyles } from "./constants";
 import { KpiCardProps } from "./types";
 

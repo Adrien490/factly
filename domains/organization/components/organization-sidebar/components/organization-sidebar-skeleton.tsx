@@ -5,8 +5,8 @@ import {
 	SidebarMenu,
 	SidebarMenuItem,
 	SidebarRail,
-} from "@/shared/components/shadcn-ui/sidebar";
-import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
+} from "@/shared/components/ui/sidebar";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 /**
  * Composant skeleton pour la barre latérale d'organisation

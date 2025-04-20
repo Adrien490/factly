@@ -1,5 +1,5 @@
 import { GetOrganizationsReturn } from "@/domains/organization/features/get-organizations";
-import { Sidebar } from "@/shared/components/shadcn-ui/sidebar";
+import { Sidebar } from "@/shared/components/ui/sidebar";
 import React from "react";
 
 export interface OrganizationSidebarProps

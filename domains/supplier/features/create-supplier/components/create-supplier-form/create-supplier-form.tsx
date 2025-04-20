@@ -7,7 +7,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { FormLabel, Input, Textarea } from "@/shared/components/shadcn-ui";
+import { FormLabel, Input, Textarea } from "@/shared/components/ui";
 
 import { COUNTRIES } from "@/domains/address/constants";
 import {

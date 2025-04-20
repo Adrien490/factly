@@ -4,7 +4,7 @@ import { AlertDialogFooter } from "@/shared/components";
 import {
 	AlertDialogAction,
 	AlertDialogCancel,
-} from "@/shared/components/shadcn-ui/alert-dialog";
+} from "@/shared/components/ui/alert-dialog";
 import { ActionStatus } from "@/shared/types";
 import { cn } from "@/shared/utils";
 import { useEffect } from "react";

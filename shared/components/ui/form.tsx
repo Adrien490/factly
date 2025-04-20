@@ -4,7 +4,7 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 
-import { Label } from "@/shared/components/shadcn-ui/label";
+import { Label } from "@/shared/components/ui/label";
 import { cn } from "@/shared/utils";
 
 type FormItemContextValue = {

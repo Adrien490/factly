@@ -5,7 +5,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/shared/components/shadcn-ui/popover";
+} from "@/shared/components/ui/popover";
 import { cn } from "@/shared/utils";
 import { addDays, format } from "date-fns";
 import { fr } from "date-fns/locale";

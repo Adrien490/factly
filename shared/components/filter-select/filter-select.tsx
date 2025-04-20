@@ -7,7 +7,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { cn } from "@/shared/utils";
 import { useFilterSelect } from "./hooks/use-filter-select";
 import { FilterSelectProps } from "./types";

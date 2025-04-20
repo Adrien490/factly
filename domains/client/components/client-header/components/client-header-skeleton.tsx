@@ -1,4 +1,4 @@
-import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export function ClientHeaderSkeleton() {
 	return (

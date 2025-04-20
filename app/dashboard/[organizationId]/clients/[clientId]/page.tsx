@@ -2,7 +2,7 @@ import { getAddresses } from "@/domains/address/features";
 import { AddressList } from "@/domains/address/features/get-addresses/components";
 import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list/components/address-list-skeleton/address-list-skeleton";
 import { getClient } from "@/domains/client/features/get-client";
-import { Button } from "@/shared/components/shadcn-ui/button";
+import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -10,14 +10,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/shared/components/shadcn-ui/card";
-import { Separator } from "@/shared/components/shadcn-ui/separator";
+} from "@/shared/components/ui/card";
+import { Separator } from "@/shared/components/ui/separator";
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
-} from "@/shared/components/shadcn-ui/tabs";
+} from "@/shared/components/ui/tabs";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {

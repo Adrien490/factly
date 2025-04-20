@@ -10,7 +10,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 	Textarea,
-} from "@/shared/components/shadcn-ui";
+} from "@/shared/components/ui";
 
 import {
 	FormattedAddressResult,

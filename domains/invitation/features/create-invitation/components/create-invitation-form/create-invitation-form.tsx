@@ -1,6 +1,6 @@
 "use client";
 
-import { FormLabel, Input } from "@/shared/components/shadcn-ui";
+import { FormLabel, Input } from "@/shared/components/ui";
 
 import {
 	FieldInfo,

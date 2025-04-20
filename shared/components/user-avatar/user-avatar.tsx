@@ -1,85 +1,61 @@
-"use client";
-
-import { authClient } from "@/domains/auth";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
 } from "@/shared/components";
 
-import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { LogoutButton } from "@/domains/auth/components/logout-button";
 import { cn, getUserInitials } from "@/shared/utils";
 import { User } from "better-auth/types";
-import { useRouter } from "next/navigation";
-import { MenuItems, SheetMenuItems } from "./components";
+import { LogOut } from "lucide-react";
+import { use } from "react";
 import { avatarSizes } from "./constants";
 
-interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface UserAvatarProps {
 	size?: "sm" | "md" | "lg";
-	user: User | null;
+	userPromise: Promise<User | null>;
 }
 
-export function UserAvatar({ size = "md", className, user }: UserAvatarProps) {
-	const isMobile = useIsMobile();
-	const router = useRouter();
-
-	const onLogout = async () => {
-		await authClient.signOut({
-			fetchOptions: {
-				onSuccess: () => {
-					router.push("/login");
-				},
-			},
-		});
-	};
-
-	if (!user) return null;
-
-	const avatar = (
-		<Avatar
-			className={cn(
-				avatarSizes[size],
-				"transition-opacity cursor-pointer hover:opacity-80",
-				className
-			)}
-		>
-			<AvatarImage
-				src={user.image || undefined}
-				alt={user.name || "Avatar de l'utilisateur"}
-			/>
-			<AvatarFallback className="font-medium">
-				{getUserInitials(user.name, user.email)}
-			</AvatarFallback>
-		</Avatar>
-	);
-
-	if (isMobile) {
-		return (
-			<Sheet>
-				<SheetTrigger asChild>{avatar}</SheetTrigger>
-				<SheetContent side="right" className="w-full sm:w-[400px] p-0">
-					<SheetHeader className="p-4 text-left">
-						<SheetTitle>Mon compte</SheetTitle>
-					</SheetHeader>
-					<SheetMenuItems user={user} onLogout={onLogout} />
-				</SheetContent>
-			</Sheet>
-		);
-	}
+export function UserAvatar({ size = "md", userPromise }: UserAvatarProps) {
+	const user = use(userPromise);
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>{avatar}</DropdownMenuTrigger>
+			<DropdownMenuTrigger asChild>
+				<Avatar
+					className={cn(
+						avatarSizes[size],
+						"transition-opacity cursor-pointer hover:opacity-80"
+					)}
+				>
+					<AvatarImage
+						src={user?.image || undefined}
+						alt={user?.name || "Avatar de l'utilisateur"}
+					/>
+					<AvatarFallback className="font-medium">
+						{getUserInitials(user?.name, user?.email)}
+					</AvatarFallback>
+				</Avatar>
+			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56" align="end">
-				<MenuItems user={user} onLogout={onLogout} />
+				<div className="flex flex-col px-2 py-1.5">
+					<span className="text-sm font-semibold">{user?.name}</span>
+					<span className="text-xs text-muted-foreground truncate">
+						{user?.email}
+					</span>
+				</div>
+				<DropdownMenuSeparator />
+				<LogoutButton>
+					<DropdownMenuItem className="text-red-600 dark:text-red-400 hover:!bg-red-100 dark:hover:!bg-red-900/20">
+						<LogOut className="mr-2 h-4 w-4" />
+						<span>Déconnexion</span>
+					</DropdownMenuItem>
+				</LogoutButton>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

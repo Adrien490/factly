@@ -1,7 +1,7 @@
 import { ScrollToButton } from "@/shared/components";
 import { Logo } from "@/shared/components/logo";
 import { PageContainer } from "@/shared/components/page-container";
-import { GridPattern } from "@/shared/components/shadcn-ui/grid-pattern";
+import { GridPattern } from "@/shared/components/ui/grid-pattern";
 import { cn } from "@/shared/utils";
 import { ChevronUp, Copyright, ExternalLink, Heart } from "lucide-react";
 import Link from "next/link";

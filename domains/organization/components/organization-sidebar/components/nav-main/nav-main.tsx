@@ -7,7 +7,7 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from "@/shared/components/shadcn-ui/collapsible";
+} from "@/shared/components/ui/collapsible";
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
@@ -18,7 +18,7 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 	useSidebar,
-} from "@/shared/components/shadcn-ui/sidebar";
+} from "@/shared/components/ui/sidebar";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";

@@ -15,9 +15,9 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { FormLabel } from "@/shared/components/shadcn-ui/form";
-import { Input } from "@/shared/components/shadcn-ui/input";
-import { Textarea } from "@/shared/components/shadcn-ui/textarea";
+import { FormLabel } from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
+import { Textarea } from "@/shared/components/ui/textarea";
 
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";

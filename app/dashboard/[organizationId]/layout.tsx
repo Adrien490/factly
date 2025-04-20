@@ -70,7 +70,7 @@ export default async function OrganizationLayout({
 					<div className="ml-auto px-4">
 						<Suspense fallback={<UserAvatarSkeleton />}>
 							<UserAvatar
-								user={await auth.api
+								userPromise={auth.api
 									.getSession({ headers: await headers() })
 									.then((session) => session?.user ?? null)}
 								size="sm"

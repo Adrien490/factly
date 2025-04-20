@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/shared/components/";
-import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { OrganizationListSkeletonProps } from "./types";
 
 export function OrganizationListSkeleton({

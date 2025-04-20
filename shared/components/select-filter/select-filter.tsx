@@ -7,7 +7,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { cn } from "@/shared/utils";
 import { X } from "lucide-react";
 import { useSelectFilter } from "./hooks/use-select-filter";

@@ -6,7 +6,7 @@ import {
 	SidebarMenu,
 	SidebarMenuItem,
 	SidebarRail,
-} from "@/shared/components/shadcn-ui/sidebar";
+} from "@/shared/components/ui/sidebar";
 import { use } from "react";
 import { NavMain } from "./components/nav-main/nav-main";
 import { OrganizationSidebarProps } from "./types";

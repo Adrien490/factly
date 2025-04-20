@@ -9,10 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/shared/components";
 import { SpinnerLoader } from "@/shared/components/loaders/spinner-loader";
-import {
-	SidebarMenuButton,
-	useSidebar,
-} from "@/shared/components/shadcn-ui/sidebar";
+import { SidebarMenuButton, useSidebar } from "@/shared/components/ui/sidebar";
 import { cn } from "@/shared/utils";
 import {
 	Check,

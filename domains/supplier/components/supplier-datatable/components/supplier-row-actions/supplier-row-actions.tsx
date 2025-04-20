@@ -6,7 +6,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/shared/components/shadcn-ui/dropdown-menu";
+} from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
