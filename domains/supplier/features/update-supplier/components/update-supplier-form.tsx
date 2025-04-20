@@ -42,7 +42,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 	const supplier = use(supplierPromise);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
-	const { state, dispatch } = useUpdateSupplier();
+	const { state, dispatch, isPending } = useUpdateSupplier();
 
 	// TanStack Form setup
 	const form = useForm({
@@ -113,6 +113,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="name"
 										name="name"
 										placeholder="Nom du fournisseur"
@@ -129,6 +130,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="legalName">Raison sociale</FormLabel>
 									<Input
+										disabled={isPending}
 										id="legalName"
 										name="legalName"
 										placeholder="Raison sociale"
@@ -156,6 +158,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="supplierType"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -188,6 +191,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="status"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -226,6 +230,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="email">Email</FormLabel>
 									<Input
+										disabled={isPending}
 										id="email"
 										name="email"
 										type="email"
@@ -243,6 +248,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="phone">Téléphone</FormLabel>
 									<Input
+										disabled={isPending}
 										id="phone"
 										name="phone"
 										placeholder="Numéro de téléphone"
@@ -259,6 +265,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="website">Site web</FormLabel>
 									<Input
+										disabled={isPending}
 										id="website"
 										name="website"
 										placeholder="Site web"
@@ -300,6 +307,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="siret">SIRET</FormLabel>
 									<Input
+										disabled={isPending}
 										id="siret"
 										name="siret"
 										placeholder="SIRET"
@@ -316,6 +324,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="vatNumber">Numéro de TVA</FormLabel>
 									<Input
+										disabled={isPending}
 										id="vatNumber"
 										name="vatNumber"
 										placeholder="Numéro de TVA"
@@ -341,6 +350,7 @@ export function UpdateSupplierForm({ supplierPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="notes">Notes</FormLabel>
 									<Textarea
+										disabled={isPending}
 										id="notes"
 										name="notes"
 										placeholder="Notes sur le fournisseur"

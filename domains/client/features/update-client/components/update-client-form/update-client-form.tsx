@@ -135,6 +135,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 											<span className="text-destructive ml-1">*</span>
 										</FormLabel>
 										<Button
+											disabled={isPending}
 											type="button"
 											variant="ghost"
 											size="sm"
@@ -149,6 +150,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 
 									<div className="relative">
 										<Input
+											disabled={isPending}
 											id="reference"
 											name="reference"
 											placeholder="Référence unique (ex: CLI-001)"
@@ -182,6 +184,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="name"
 										name="name"
 										placeholder="Nom du client ou de l'entreprise"
@@ -202,6 +205,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="clientType"
 										onValueChange={(value) => {
 											field.handleChange(value as Updater<ClientType>);
@@ -248,6 +252,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 															SIREN
 														</FormLabel>
 														<Input
+															disabled={isPending}
 															id="siren"
 															name="siren"
 															placeholder="9 chiffres (ex: 123456789)"
@@ -274,6 +279,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 															SIRET
 														</FormLabel>
 														<Input
+															disabled={isPending}
 															id="siret"
 															name="siret"
 															placeholder="14 chiffres (ex: 12345678900001)"
@@ -323,6 +329,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										N° TVA
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="vatNumber"
 										name="vatNumber"
 										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
@@ -362,6 +369,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										onValueChange={(value) => {
 											field.handleChange(value as Updater<ClientStatus>);
 										}}
@@ -413,6 +421,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										Email
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="email"
 										name="email"
 										type="email"
@@ -432,6 +441,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 										Téléphone
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="phone"
 										name="phone"
 										placeholder="Ex: +33 1 23 45 67 89"
@@ -463,6 +473,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="website">Site web</FormLabel>
 									<Input
+										disabled={isPending}
 										id="website"
 										name="website"
 										placeholder="Ex: https://www.example.com"
@@ -487,6 +498,7 @@ export function UpdateClientForm({ clientPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="notes">Notes</FormLabel>
 									<Textarea
+										disabled={isPending}
 										id="notes"
 										name="notes"
 										rows={4}

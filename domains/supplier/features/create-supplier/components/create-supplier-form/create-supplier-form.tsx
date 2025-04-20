@@ -46,7 +46,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch } = useCreateSupplier();
+	const { state, dispatch, isPending } = useCreateSupplier();
 	const router = useRouter();
 
 	// TanStack Form setup
@@ -185,6 +185,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="name"
 										name="name"
 										placeholder="Nom du fournisseur ou de l'entreprise"
@@ -202,6 +203,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="legalName">Raison sociale</FormLabel>
 									<Input
+										disabled={isPending}
 										id="legalName"
 										name="legalName"
 										placeholder="Raison sociale ou nom légal"
@@ -221,6 +223,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="supplierType"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -257,6 +260,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="status"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -302,6 +306,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="addressType"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -367,6 +372,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									<FormLabel htmlFor="addressLine1">Adresse ligne 1</FormLabel>
 									<div className="relative">
 										<Autocomplete
+											disabled={isPending}
 											name="addressLine1"
 											value={field.state.value}
 											onChange={(value) => {
@@ -404,6 +410,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="addressLine2">Adresse ligne 2</FormLabel>
 									<Input
+										disabled={isPending}
 										id="addressLine2"
 										name="addressLine2"
 										placeholder="Complément d'adresse"
@@ -421,6 +428,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									<div className="space-y-1.5">
 										<FormLabel htmlFor="postalCode">Code postal</FormLabel>
 										<Input
+											disabled={isPending}
 											id="postalCode"
 											name="postalCode"
 											placeholder="Code postal"
@@ -437,6 +445,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									<div className="space-y-1.5">
 										<FormLabel htmlFor="city">Ville</FormLabel>
 										<Input
+											disabled={isPending}
 											id="city"
 											name="city"
 											placeholder="Ville"
@@ -454,6 +463,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="country">Pays</FormLabel>
 									<Select
+										disabled={isPending}
 										name="country"
 										onValueChange={(value) => {
 											field.handleChange(
@@ -507,6 +517,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="email">Email</FormLabel>
 									<Input
+										disabled={isPending}
 										id="email"
 										name="email"
 										type="email"
@@ -524,6 +535,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="phone">Téléphone</FormLabel>
 									<Input
+										disabled={isPending}
 										id="phone"
 										name="phone"
 										placeholder="0123456789"
@@ -555,6 +567,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="website">Site web</FormLabel>
 									<Input
+										disabled={isPending}
 										id="website"
 										name="website"
 										placeholder="https://www.exemple.com"
@@ -596,6 +609,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="siret">SIRET</FormLabel>
 									<Input
+										disabled={isPending}
 										id="siret"
 										name="siret"
 										placeholder="12345678900001"
@@ -612,6 +626,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="vatNumber">Numéro de TVA</FormLabel>
 									<Input
+										disabled={isPending}
 										id="vatNumber"
 										name="vatNumber"
 										placeholder="FR12345678900"
@@ -638,6 +653,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="notes">Notes</FormLabel>
 									<Textarea
+										disabled={isPending}
 										id="notes"
 										name="notes"
 										placeholder="Informations complémentaires sur le fournisseur"
