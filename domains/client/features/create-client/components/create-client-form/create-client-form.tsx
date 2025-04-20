@@ -66,7 +66,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const router = useRouter();
 
-	const [state, dispatch] = useActionState(
+	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			createClient,
 			createToastCallbacks<Client, typeof createClientSchema>({
@@ -259,6 +259,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										<Button
 											type="button"
 											variant="ghost"
+											disabled={isPending}
 											size="sm"
 											onClick={handleGenerateReference}
 											title="Générer une référence unique"
@@ -272,6 +273,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<div className="relative">
 										<Input
 											id="reference"
+											disabled={isPending}
 											name="reference"
 											placeholder="Référence unique (ex: CLI-001)"
 											value={field.state.value}
@@ -303,6 +305,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									</FormLabel>
 									<Input
 										id="name"
+										disabled={isPending}
 										name="name"
 										placeholder="Nom du client ou de l'entreprise"
 										value={field.state.value}
@@ -322,6 +325,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										name="clientType"
 										onValueChange={(value) => {
 											field.handleChange(value as Updater<ClientType>);
@@ -366,15 +370,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										const url = new URLSearchParams();
 										url.set("q", value);
 
-										// Ajouter des paramètres supplémentaires si nécessaire
-										// Par exemple, si on connaît déjà le code postal
-										/*	const postalCode = form.getFieldValue("postalCode");
-										if (postalCode) {
-											url.set("postcode", postalCode);
-										}*/
-
-										// Utiliser un flag pour indiquer si on est dans un onChange manuel
-										// ou dans une validation de soumission
 										const isSubmitting = form.state.isSubmitting;
 
 										if (!isSubmitting) {
@@ -401,6 +396,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										<Autocomplete
 											name="addressLine1"
 											value={field.state.value}
+											disabled={isPending}
 											onChange={(value) => {
 												field.handleChange(value);
 											}}
@@ -470,6 +466,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										Adresse ligne 2 (optionnelle)
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="addressLine2"
 										name="addressLine2"
 										placeholder="Complément d'adresse, étage, etc."
@@ -487,6 +484,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<div className="space-y-1.5">
 										<FormLabel htmlFor="postalCode">Code postal</FormLabel>
 										<Input
+											disabled={isPending}
 											id="postalCode"
 											name="postalCode"
 											placeholder="Ex: 75001"
@@ -507,6 +505,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<div className="space-y-1.5">
 										<FormLabel htmlFor="city">Ville</FormLabel>
 										<Input
+											disabled={isPending}
 											id="city"
 											name="city"
 											placeholder="Ex: Paris"
@@ -543,6 +542,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 															SIREN
 														</FormLabel>
 														<Input
+															disabled={isPending}
 															id="siren"
 															name="siren"
 															placeholder="9 chiffres (ex: 123456789)"
@@ -569,6 +569,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 															SIRET
 														</FormLabel>
 														<Input
+															disabled={isPending}
 															id="siret"
 															name="siret"
 															placeholder="14 chiffres (ex: 12345678900001)"
@@ -618,6 +619,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										N° TVA
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="vatNumber"
 										name="vatNumber"
 										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
@@ -657,6 +659,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										<span className="text-destructive ml-1">*</span>
 									</FormLabel>
 									<Select
+										disabled={isPending}
 										onValueChange={(value) => {
 											field.handleChange(value as Updater<ClientStatus>);
 										}}
@@ -705,6 +708,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										Email
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="email"
 										name="email"
 										type="email"
@@ -724,6 +728,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										Téléphone
 									</FormLabel>
 									<Input
+										disabled={isPending}
 										id="phone"
 										name="phone"
 										placeholder="Ex: +33 1 23 45 67 89"
@@ -755,6 +760,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="website">Site web</FormLabel>
 									<Input
+										disabled={isPending}
 										id="website"
 										name="website"
 										placeholder="Ex: https://www.example.com"
@@ -779,6 +785,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="notes">Notes</FormLabel>
 									<Textarea
+										disabled={isPending}
 										id="notes"
 										name="notes"
 										rows={4}

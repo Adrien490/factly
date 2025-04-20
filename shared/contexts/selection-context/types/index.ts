@@ -4,6 +4,7 @@ export interface SelectionContextType {
 	areAllSelected: (ids: string[]) => boolean;
 	handleSelectionChange: (ids: string[], checked: boolean) => void;
 	getSelectedCount: () => number;
+	selectedItems: string[];
 	isPending: boolean;
 	clearSelection: () => void;
 }

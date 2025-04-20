@@ -11,6 +11,7 @@ export function Autocomplete<T>({
 	name,
 	value,
 	onChange,
+	disabled,
 	onSelect,
 	items,
 	getItemLabel,
@@ -40,6 +41,7 @@ export function Autocomplete<T>({
 			<Input
 				name={name}
 				type="text"
+				disabled={disabled}
 				value={value}
 				onChange={(e) => handleInputChange(e, onChange)}
 				onFocus={handleFocus}

@@ -1,6 +1,7 @@
 export interface AutocompleteProps<T> {
 	name: string;
 	value: string;
+	disabled?: boolean;
 	onChange: (value: string) => void;
 	onSelect: (item: T) => void;
 	items: T[];

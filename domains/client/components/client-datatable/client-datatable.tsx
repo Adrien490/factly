@@ -20,7 +20,6 @@ import {
 	LoadingIndicator,
 	Pagination,
 	SelectAllCheckbox,
-	SelectionToolbar,
 	Table,
 	TableBody,
 	TableCell,
@@ -48,6 +47,7 @@ import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import { CLIENT_STATUSES, CLIENT_TYPES } from "../../constants";
 import { DeleteClientButton } from "../../features/delete-client/components/delete-client-button";
+import { ClientSelectionToolbar } from "../client-selection-toolbar";
 import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
@@ -75,7 +75,8 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 
 	return (
 		<SelectionProvider>
-			<SelectionToolbar />
+			<ClientSelectionToolbar />
+
 			<Table className="group-has-[[data-pending]]:animate-pulse">
 				<TableHeader>
 					<TableRow>

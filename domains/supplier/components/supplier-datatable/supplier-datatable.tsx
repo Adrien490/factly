@@ -20,7 +20,6 @@ import {
 	LoadingIndicator,
 	Pagination,
 	SelectAllCheckbox,
-	SelectionToolbar,
 	Table,
 	TableBody,
 	TableCell,
@@ -47,6 +46,7 @@ import { cn } from "@/shared/utils";
 import Link from "next/link";
 import { SUPPLIER_STATUSES, SUPPLIER_TYPES } from "../../constants";
 import { DeleteSupplierButton } from "../../features";
+import { SupplierSelectionToolbar } from "../supplier-selection-toolbar";
 import { SupplierDataTableProps } from "./types";
 
 export function SupplierDataTable({
@@ -74,7 +74,7 @@ export function SupplierDataTable({
 
 	return (
 		<SelectionProvider>
-			<SelectionToolbar />
+			<SupplierSelectionToolbar />
 			<Table className="group-has-[[data-pending]]:animate-pulse">
 				<TableHeader>
 					<TableRow>
