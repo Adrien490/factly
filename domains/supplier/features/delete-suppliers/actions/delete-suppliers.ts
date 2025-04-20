@@ -13,12 +13,12 @@ import {
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { deleteMultipleSuppliersSchema } from "../schemas";
+import { deleteSuppliersSchema } from "../schemas";
 
-export async function deleteMultipleSuppliers(
-	_: ActionState<null, typeof deleteMultipleSuppliersSchema> | null,
+export async function deleteSuppliers(
+	_: ActionState<null, typeof deleteSuppliersSchema> | null,
 	formData: FormData
-): Promise<ActionState<null, typeof deleteMultipleSuppliersSchema>> {
+): Promise<ActionState<null, typeof deleteSuppliersSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -35,7 +35,7 @@ export async function deleteMultipleSuppliers(
 		const organizationId = formData.get("organizationId") as string;
 		const supplierIds = formData.getAll("ids") as string[];
 
-		console.log("[DELETE_MULTIPLE_SUPPLIERS] Form Data:", {
+		console.log("[DELETE_SUPPLIERS] Form Data:", {
 			ids: supplierIds,
 			organizationId,
 		});
@@ -58,7 +58,7 @@ export async function deleteMultipleSuppliers(
 		}
 
 		// 4. Validation complète des données
-		const validation = deleteMultipleSuppliersSchema.safeParse({
+		const validation = deleteSuppliersSchema.safeParse({
 			ids: supplierIds,
 			organizationId,
 		});

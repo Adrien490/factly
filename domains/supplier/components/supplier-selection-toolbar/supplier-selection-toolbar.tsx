@@ -21,7 +21,7 @@ import { useSelectionContext } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DeleteMultipleSuppliersButton } from "../../features/delete-multiple-suppliers";
+import { DeleteSuppliersButton } from "../../features/delete-suppliers";
 
 export function SupplierSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearSelection } =
@@ -80,12 +80,12 @@ export function SupplierSelectionToolbar() {
 							</AlertDialogHeader>
 							<AlertDialogFooter>
 								<AlertDialogCancel>Annuler</AlertDialogCancel>
-								<DeleteMultipleSuppliersButton
+								<DeleteSuppliersButton
 									organizationId={organizationId}
 									ids={selectedItems}
 								>
 									<AlertDialogAction>Supprimer</AlertDialogAction>
-								</DeleteMultipleSuppliersButton>
+								</DeleteSuppliersButton>
 							</AlertDialogFooter>
 						</AlertDialogContent>
 					</AlertDialog>

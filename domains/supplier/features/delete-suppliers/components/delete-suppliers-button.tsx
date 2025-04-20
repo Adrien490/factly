@@ -1,19 +1,19 @@
 "use client";
 import { useTransition } from "react";
-import { useDeleteMultipleClients } from "../hooks";
+import { useDeleteSuppliers } from "../hooks";
 
-interface DeleteMultipleClientsButtonProps {
+interface DeleteSuppliersButtonProps {
 	organizationId: string;
 	ids: string[];
 	children: React.ReactNode;
 }
 
-export function DeleteMultipleClientsButton({
+export function DeleteSuppliersButton({
 	organizationId,
 	ids,
 	children,
-}: DeleteMultipleClientsButtonProps) {
-	const { dispatch } = useDeleteMultipleClients();
+}: DeleteSuppliersButtonProps) {
+	const { dispatch } = useDeleteSuppliers();
 
 	const [, startTransition] = useTransition();
 

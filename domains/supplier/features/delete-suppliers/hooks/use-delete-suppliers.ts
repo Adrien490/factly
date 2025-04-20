@@ -4,17 +4,16 @@ import { useSelectionContext } from "@/shared/contexts";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { deleteMultipleClients } from "../actions";
-import { deleteMultipleClientsSchema } from "../schemas";
+import { deleteSuppliers } from "../actions";
+import { deleteSuppliersSchema } from "../schemas";
 
-export const useDeleteMultipleClients = () => {
+export const useDeleteSuppliers = () => {
 	const { clearSelection } = useSelectionContext();
-
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
-			deleteMultipleClients,
-			createToastCallbacks<null, typeof deleteMultipleClientsSchema>({
-				loadingMessage: "Suppression des clients en cours...",
+			deleteSuppliers,
+			createToastCallbacks<null, typeof deleteSuppliersSchema>({
+				loadingMessage: "Suppression des fournisseurs en cours...",
 				onSuccess: (data) => {
 					clearSelection();
 					toast.success(data?.message);

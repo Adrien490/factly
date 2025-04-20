@@ -13,12 +13,12 @@ import {
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { deleteMultipleClientsSchema } from "../schemas";
+import { deleteClientsSchema } from "../schemas";
 
-export async function deleteMultipleClients(
-	_: ActionState<null, typeof deleteMultipleClientsSchema> | null,
+export async function deleteClients(
+	_: ActionState<null, typeof deleteClientsSchema> | null,
 	formData: FormData
-): Promise<ActionState<null, typeof deleteMultipleClientsSchema>> {
+): Promise<ActionState<null, typeof deleteClientsSchema>> {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -35,7 +35,7 @@ export async function deleteMultipleClients(
 		const organizationId = formData.get("organizationId") as string;
 		const clientIds = formData.getAll("ids") as string[];
 
-		console.log("[DELETE_MULTIPLE_CLIENTS] Form Data:", {
+		console.log("[DELETE_CLIENTS] Form Data:", {
 			ids: clientIds,
 			organizationId,
 		});
@@ -58,7 +58,7 @@ export async function deleteMultipleClients(
 		}
 
 		// 4. Validation complète des données
-		const validation = deleteMultipleClientsSchema.safeParse({
+		const validation = deleteClientsSchema.safeParse({
 			ids: clientIds,
 			organizationId,
 		});

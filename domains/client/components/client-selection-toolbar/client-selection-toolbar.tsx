@@ -21,7 +21,7 @@ import { useSelectionContext } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DeleteMultipleClientsButton } from "../../features/delete-multiple-clients";
+import { DeleteClientsButton } from "../../features/delete-clients";
 
 export function ClientSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearSelection } =
@@ -80,12 +80,12 @@ export function ClientSelectionToolbar() {
 							</AlertDialogHeader>
 							<AlertDialogFooter>
 								<AlertDialogCancel>Annuler</AlertDialogCancel>
-								<DeleteMultipleClientsButton
+								<DeleteClientsButton
 									organizationId={organizationId}
 									ids={selectedItems}
 								>
 									<AlertDialogAction>Supprimer</AlertDialogAction>
-								</DeleteMultipleClientsButton>
+								</DeleteClientsButton>
 							</AlertDialogFooter>
 						</AlertDialogContent>
 					</AlertDialog>
