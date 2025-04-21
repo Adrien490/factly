@@ -11,7 +11,6 @@ import { AddressTypeOption } from "../types";
 const ADDRESS_TYPE_LABELS: Record<AddressType, string> = {
 	[AddressType.BILLING]: "Facturation",
 	[AddressType.SHIPPING]: "Livraison",
-	[AddressType.OTHER]: "Autre",
 };
 
 /**
