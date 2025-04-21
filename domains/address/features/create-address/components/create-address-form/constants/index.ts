@@ -1,5 +1,5 @@
 import { createAddressSchema } from "@/domains/address/features/create-address/schemas";
-import { AddressType } from "@prisma/client";
+import { AddressType, Country } from "@prisma/client";
 import { z } from "zod";
 
 export type FormValues = z.infer<typeof createAddressSchema>;
@@ -20,7 +20,7 @@ export const formOpts = (
 		addressLine2: "",
 		postalCode: "",
 		city: "",
-		country: "France",
+		country: Country.FRANCE,
 		isDefault: false,
 		latitude: null,
 		longitude: null,

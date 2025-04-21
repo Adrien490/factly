@@ -25,8 +25,9 @@ export function EmptyState({
 			) : (
 				Icon && <div className="rounded-full bg-muted/30 p-3 mb-4">{Icon}</div>
 			)}
-
-			<div className="text-lg font-medium text-foreground">{title}</div>
+			{title && (
+				<div className="text-lg font-medium text-foreground">{title}</div>
+			)}
 
 			{description && (
 				<div className="mt-2 text-sm text-muted-foreground mx-auto max-w-2xl">

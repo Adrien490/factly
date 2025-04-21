@@ -1,23 +1,21 @@
 "use client";
 
-import { ActionState, ActionStatus } from "@/shared/types/server-action";
+import { withCallbacks } from "@/shared/utils";
+import { createToastCallbacks } from "@/shared/utils/create-toast-callbacks";
 import { Address } from "@prisma/client";
 import { useActionState } from "react";
 import { createAddress } from "../actions/create-address";
 import { createAddressSchema } from "../schemas";
 
 export function useCreateAddress() {
-	const [state, dispatch, isPending] = useActionState<
-		ActionState<Address, typeof createAddressSchema>,
-		FormData
-	>(
-		async (previousState, formData) => {
-			return await createAddress(previousState, formData);
-		},
-		{
-			message: "",
-			status: ActionStatus.INITIAL,
-		}
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			createAddress,
+			createToastCallbacks<Address, typeof createAddressSchema>({
+				loadingMessage: "Création de l'adresse en cours...",
+			})
+		),
+		null
 	);
 
 	return { state, dispatch, isPending };

@@ -1,4 +1,4 @@
-import { AddressType } from "@prisma/client";
+import { AddressType, Country } from "@prisma/client";
 import { z } from "zod";
 
 /**
@@ -15,7 +15,7 @@ export const createAddressSchema = z.object({
 	addressLine2: z.string().optional(),
 	postalCode: z.string().min(1, "Le code postal est requis"),
 	city: z.string().min(1, "La ville est requise"),
-	country: z.string().optional().default("France"),
+	country: z.nativeEnum(Country).default(Country.FRANCE),
 	isDefault: z.boolean().default(false),
 
 	// Coordonnées géographiques

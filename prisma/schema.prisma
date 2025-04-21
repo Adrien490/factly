@@ -336,7 +336,6 @@ model Address {
 enum AddressType {
   BILLING
   SHIPPING
-  OTHER
 }
 
 model ProductSupplier {

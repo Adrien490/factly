@@ -9,14 +9,15 @@ import {
 } from "@/shared/components";
 import { Button, FormLabel, Input } from "@/shared/components/ui";
 
+import { COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { FieldInfo, FormErrors } from "@/shared/components/forms";
-import { ActionStatus } from "@/shared/types";
-import { AddressType } from "@prisma/client";
+import { createToastCallbacks, withCallbacks } from "@/shared/utils";
+import { Address, AddressType, Country } from "@prisma/client";
 import {
 	mergeForm,
 	Updater,
@@ -25,37 +26,58 @@ import {
 } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { use, useEffect, useTransition } from "react";
+import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
-import { useCreateAddress } from "../../hooks";
-import { formOpts } from "./constants";
+import { createAddress } from "../../actions";
+import { createAddressSchema } from "../../schemas";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;
-	clientId?: string;
-	supplierId?: string;
-	returnUrl?: string; // URL de retour après création
 };
 
-export function CreateAddressForm({
-	searchAddressPromise,
-	clientId,
-	supplierId,
-	returnUrl,
-}: Props) {
+export function CreateAddressForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
 	const params = useParams();
 	const pathname = usePathname();
 	const organizationId = params.organizationId as string;
+	const clientId = params.clientId as string;
+	const supplierId = params.supplierId as string;
+
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch } = useCreateAddress();
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			createAddress,
+			createToastCallbacks<Address, typeof createAddressSchema>({
+				loadingMessage: "Création de l'adresse en cours...",
+				onSuccess: (data) => {
+					form.reset();
+					toast.success(data?.message);
+				},
+			})
+		),
+		null
+	);
 	const router = useRouter();
 
 	console.log("state", state);
 
 	// TanStack Form setup
 	const form = useForm({
-		...formOpts(organizationId, clientId, supplierId),
+		defaultValues: {
+			organizationId,
+			addressType: AddressType.BILLING,
+			addressLine1: "",
+			addressLine2: "",
+			postalCode: "",
+			city: "",
+			country: Country.FRANCE,
+			isDefault: false,
+			latitude: null as number | null,
+			longitude: null as number | null,
+
+			clientId: clientId || undefined,
+			supplierId: supplierId || undefined,
+		},
 
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
@@ -126,26 +148,6 @@ export function CreateAddressForm({
 		});
 	};
 
-	useEffect(() => {
-		if (state.status === ActionStatus.SUCCESS) {
-			form.reset();
-			toast.success("Adresse créée avec succès", {
-				description: "L'adresse a été créée avec succès",
-				duration: 3000,
-				action: {
-					label: "Retour",
-					onClick: () => {
-						router.push(returnUrl || `/dashboard/${organizationId}`);
-						toast.dismiss();
-					},
-				},
-			});
-		}
-		return () => {
-			toast.dismiss();
-		};
-	}, [form, state?.message, state.status, router, organizationId, returnUrl]);
-
 	return (
 		<form
 			action={dispatch}
@@ -191,6 +193,7 @@ export function CreateAddressForm({
 								<span className="text-destructive ml-1">*</span>
 							</FormLabel>
 							<Select
+								disabled={isPending}
 								name="addressType"
 								onValueChange={(value) => {
 									field.handleChange(
@@ -223,6 +226,7 @@ export function CreateAddressForm({
 						<div className="space-y-1.5">
 							<div className="flex items-center space-x-2">
 								<input
+									disabled={isPending}
 									type="checkbox"
 									id="isDefault"
 									name="isDefault"
@@ -286,6 +290,7 @@ export function CreateAddressForm({
 							</FormLabel>
 							<div className="relative">
 								<Autocomplete
+									disabled={isPending}
 									items={response.results}
 									onSelect={(item) =>
 										handleAddressSelect(item as FormattedAddressResult)
@@ -351,6 +356,7 @@ export function CreateAddressForm({
 								Complément d&apos;adresse
 							</FormLabel>
 							<Input
+								disabled={isPending}
 								id="addressLine2"
 								name="addressLine2"
 								placeholder="Appartement, étage, etc."
@@ -379,6 +385,7 @@ export function CreateAddressForm({
 									<span className="text-destructive ml-1">*</span>
 								</FormLabel>
 								<Input
+									disabled={isPending}
 									id="postalCode"
 									name="postalCode"
 									placeholder="Code postal"
@@ -406,6 +413,7 @@ export function CreateAddressForm({
 									<span className="text-destructive ml-1">*</span>
 								</FormLabel>
 								<Input
+									disabled={isPending}
 									id="city"
 									name="city"
 									placeholder="Ville"
@@ -433,13 +441,25 @@ export function CreateAddressForm({
 								Pays
 								<span className="text-destructive ml-1">*</span>
 							</FormLabel>
-							<Input
-								id="country"
+							<Select
+								disabled={isPending}
 								name="country"
-								placeholder="Pays"
-								value={field.state.value || "France"}
-								onChange={(e) => field.handleChange(e.target.value)}
-							/>
+								value={field.state.value}
+								onValueChange={(value) =>
+									field.handleChange(value as Updater<typeof field.state.value>)
+								}
+							>
+								<SelectTrigger id="country" className="w-full">
+									<SelectValue placeholder="Sélectionnez un pays" />
+								</SelectTrigger>
+								<SelectContent>
+									{COUNTRIES.map((country) => (
+										<SelectItem key={country.value} value={country.value}>
+											{country.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<FieldInfo field={field} />
 						</div>
 					)}
@@ -447,7 +467,11 @@ export function CreateAddressForm({
 			</div>
 			<form.Subscribe selector={(state) => state.canSubmit}>
 				{(canSubmit) => (
-					<Button type="submit" className="w-full" disabled={!canSubmit}>
+					<Button
+						type="submit"
+						className="w-full"
+						disabled={!canSubmit || isPending}
+					>
 						Créer l&apos;adresse
 					</Button>
 				)}

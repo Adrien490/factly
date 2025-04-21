@@ -1,11 +1,16 @@
 import { ADDRESS_TYPES } from "@/domains/address/constants/address-types";
-import { Card } from "@/shared/components";
+import {
+	Card,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+	EmptyState,
+} from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { Country } from "@prisma/client";
-import { MapPin, PlusIcon } from "lucide-react";
-import Link from "next/link";
+import { MapPin, MoreHorizontal } from "lucide-react";
 import { use } from "react";
-import { ActionMenu } from "./components";
 import { AddressListProps } from "./types";
 
 // Fonction utilitaire pour traduire les types d'adresse en françai
@@ -16,33 +21,14 @@ export function AddressList({
 	clientId,
 	supplierId,
 }: AddressListProps) {
+	console.log(clientId, supplierId);
 	// Utilisation du hook use pour résoudre la Promise
 	const addresses = use(addressesPromise);
 
 	// Déterminer le contexte (client ou fournisseur) pour les liens d'ajout
-	const baseUrl = clientId
-		? `/clients/${clientId}/addresses`
-		: `/suppliers/${supplierId}/addresses`;
 
 	if (addresses.length === 0) {
-		return (
-			<div className="text-center py-8">
-				<div className="inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-dashed mb-3">
-					<MapPin className="h-5 w-5 text-muted-foreground" />
-				</div>
-				<h3 className="font-medium mb-1">Aucune adresse</h3>
-				<p className="text-sm text-muted-foreground mb-4">
-					Ajoutez votre première adresse
-				</p>
-				<Link
-					href={`${baseUrl}/new`}
-					className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-				>
-					<PlusIcon className="h-4 w-4" />
-					Ajouter une adresse
-				</Link>
-			</div>
-		);
+		return <EmptyState description="Aucune adresse trouvée" />;
 	}
 
 	return (
@@ -105,7 +91,15 @@ export function AddressList({
 								</p>
 							</div>
 
-							<ActionMenu id={id} clientId={clientId} supplierId={supplierId} />
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<MoreHorizontal className="h-4 w-4 text-muted-foreground cursor-pointer" />
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="end">
+									<DropdownMenuItem asChild>Modifier</DropdownMenuItem>
+									<DropdownMenuItem asChild>Supprimer</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</div>
 					</Card>
 				);

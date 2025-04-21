@@ -22,7 +22,7 @@ import { createAddressSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  */
 export async function createAddress(
-	_: ActionState<Address, typeof createAddressSchema>,
+	_: ActionState<Address, typeof createAddressSchema> | null,
 	formData: FormData
 ): Promise<ActionState<Address, typeof createAddressSchema>> {
 	try {
@@ -64,7 +64,7 @@ export async function createAddress(
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
 			city: formData.get("city") as string,
-			country: (formData.get("country") as string) || "France",
+			country: formData.get("country") as Country,
 			isDefault:
 				formData.get("isDefault") === "on" ||
 				formData.get("isDefault") === "true",
@@ -103,6 +103,14 @@ export async function createAddress(
 			supplierId,
 			...addressData
 		} = validation.data;
+
+		// Vérifier qu'au moins clientId ou supplierId est défini
+		if (!clientId && !supplierId) {
+			return createErrorResponse(
+				ActionStatus.VALIDATION_ERROR,
+				"L'adresse doit être associée à un client ou un fournisseur"
+			);
+		}
 
 		// Vérifier si c'est l'adresse par défaut et associée à une entité
 		if (addressData.isDefault) {
@@ -144,11 +152,6 @@ export async function createAddress(
 				...(supplierId && { supplier: { connect: { id: supplierId } } }),
 			},
 		});
-
-		// 7. Invalidation du cache pour forcer un rafraîchissement des données
-		// Tags généraux d'adresses
-		revalidateTag(`addresses:list`);
-		revalidateTag(`addresses:sort:createdAt:desc`); // Tag par défaut pour le tri
 
 		// Tags spécifiques au client ou fournisseur
 		if (clientId) {
