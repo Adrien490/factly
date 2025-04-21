@@ -64,7 +64,7 @@ export default async function SuppliersPage({
 						<SearchForm
 							paramName="search"
 							placeholder="Rechercher par nom, email, référence, SIREN..."
-							className="w-[275px] shrink-0 sm:w-[200px] lg:w-[275px]"
+							className="flex-1 shrink-0"
 						/>
 						<RefreshSuppliersButton organizationId={organizationId} />
 					</>

@@ -69,7 +69,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 	return (
 		<SelectionProvider>
 			<ClientSelectionToolbar />
-
 			<Table className="group-has-[[data-pending]]:animate-pulse">
 				<TableHeader>
 					<TableRow>
