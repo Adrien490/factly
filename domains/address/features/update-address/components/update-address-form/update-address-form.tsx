@@ -9,6 +9,7 @@ import {
 } from "@/shared/components";
 import { FormLabel, Input } from "@/shared/components/ui";
 
+import { ADDRESS_TYPES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -22,7 +23,6 @@ import {
 	FormSection,
 } from "@/shared/components/forms";
 import { ActionStatus } from "@/shared/types";
-import { AddressType } from "@prisma/client";
 import {
 	mergeForm,
 	Updater,
@@ -226,13 +226,14 @@ export function UpdateAddressForm({
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value={AddressType.BILLING}>
-												Facturation
-											</SelectItem>
-											<SelectItem value={AddressType.SHIPPING}>
-												Livraison
-											</SelectItem>
-											<SelectItem value={AddressType.OTHER}>Autre</SelectItem>
+											{ADDRESS_TYPES.map((addressType) => (
+												<SelectItem
+													key={addressType.value}
+													value={addressType.value}
+												>
+													{addressType.label}
+												</SelectItem>
+											))}
 										</SelectContent>
 									</Select>
 									<FieldInfo field={field} />
