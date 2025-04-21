@@ -108,7 +108,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							Adresse par défaut
+							Adresse
 						</TableHead>
 
 						<TableHead key="actions" role="columnheader" className="">
