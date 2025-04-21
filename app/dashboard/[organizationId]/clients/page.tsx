@@ -2,12 +2,13 @@ import {
 	CLIENT_SORT_FIELDS,
 	getClientNavigation,
 } from "@/domains/client/constants";
-import { RefreshClientsButton } from "@/domains/client/features";
 import { getClients } from "@/domains/client/features/get-clients";
+
 import {
 	ClientDataTable,
 	ClientDataTableSkeleton,
 } from "@/domains/client/features/get-clients/components";
+import { RefreshClientsButton } from "@/domains/client/features/refresh-clients/components";
 import {
 	Button,
 	HorizontalMenu,
