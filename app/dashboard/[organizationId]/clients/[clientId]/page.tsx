@@ -1,10 +1,5 @@
-import {
-	CreateAddressForm,
-	getAddresses,
-	searchAddress,
-} from "@/domains/address/features";
-import { AddressList } from "@/domains/address/features/get-addresses/components";
-import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list/components/address-list-skeleton/address-list-skeleton";
+import { ADDRESS_TYPES } from "@/domains/address/constants";
+import { CreateAddressForm, searchAddress } from "@/domains/address/features";
 import { getClient } from "@/domains/client/features/get-client";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -22,23 +17,28 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/shared/components/ui/dialog";
-import { Separator } from "@/shared/components/ui/separator";
+import { Country } from "@prisma/client";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
 	Building2,
 	Calendar,
 	CircleDollarSign,
-	FileEdit,
 	FileText,
 	Globe,
 	Mail,
 	MapPin,
+	MoreHorizontal,
 	Phone,
 	PlusIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
 import NotFound from "../../not-found";
 
 type Props = {
@@ -261,18 +261,79 @@ export default async function ClientPage({ params }: Props) {
 							{/* Suppression du padding pour mieux intégrer la liste */}
 							<div className="pb-6">
 								{" "}
-								<Suspense fallback={<AddressListSkeleton viewType="grid" />}>
-									<AddressList
-										viewType="grid"
-										addressesPromise={getAddresses({
-											clientId,
-											filters: {},
-											sortBy: "createdAt",
-											sortOrder: "desc",
-										})}
-										clientId={clientId}
-									/>
-								</Suspense>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+									{client.addresses.map((address) => {
+										const {
+											id,
+											addressType,
+											addressLine1,
+											addressLine2,
+											city,
+											postalCode,
+											country,
+											isDefault,
+										} = address;
+
+										const addressTypeLabel = ADDRESS_TYPES.find(
+											(type) => type.value === addressType
+										)?.label;
+
+										return (
+											<Card key={id} className="p-3">
+												<div className="flex items-start gap-2">
+													<MapPin className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+
+													<div className="min-w-0 flex-1">
+														<div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+															<p className="text-sm font-medium">
+																{addressLine1}
+															</p>
+															{isDefault && (
+																<span className="text-xs px-1.5 py-0.5 bg-primary/10 text-primary rounded">
+																	Par défaut
+																</span>
+															)}
+														</div>
+
+														{addressLine2 && (
+															<p className="text-xs text-muted-foreground">
+																{addressLine2}
+															</p>
+														)}
+
+														<p className="text-xs text-muted-foreground mt-0.5">
+															{[
+																postalCode,
+																city,
+																country !== Country.FRANCE ? country : null,
+															]
+																.filter(Boolean)
+																.join(", ")}
+														</p>
+
+														<p className="text-xs mt-1.5 text-muted-foreground">
+															{addressTypeLabel}
+														</p>
+													</div>
+
+													<DropdownMenu>
+														<DropdownMenuTrigger asChild>
+															<MoreHorizontal className="h-4 w-4 text-muted-foreground cursor-pointer" />
+														</DropdownMenuTrigger>
+														<DropdownMenuContent align="end">
+															<DropdownMenuItem asChild>
+																Modifier
+															</DropdownMenuItem>
+															<DropdownMenuItem asChild>
+																Supprimer
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</div>
+											</Card>
+										);
+									})}
+								</div>
 							</div>
 						</CardContent>
 					</Card>
@@ -309,24 +370,6 @@ export default async function ClientPage({ params }: Props) {
 											: "Jamais"}
 									</span>
 								</div>
-							</div>
-
-							<Separator className="my-4" />
-
-							{/* Raccourcis d'action */}
-							<div className="space-y-2">
-								<Button
-									asChild
-									variant="outline"
-									className="w-full justify-start"
-								>
-									<Link
-										href={`/dashboard/${organizationId}/clients/${clientId}/edit`}
-									>
-										<FileEdit className="h-4 w-4 mr-2" />
-										Modifier le client
-									</Link>
-								</Button>
 							</div>
 						</CardContent>
 					</Card>

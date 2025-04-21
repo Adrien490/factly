@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { AddressType, Prisma } from "@prisma/client";
 
 export const MAX_RESULTS_PER_PAGE = 100;
 export const DEFAULT_PER_PAGE = 10;
@@ -33,6 +33,7 @@ export const GET_CLIENTS_DEFAULT_SELECT = {
 	addresses: {
 		select: {
 			id: true,
+			addressType: true,
 			addressLine1: true,
 			addressLine2: true,
 			postalCode: true,
@@ -44,6 +45,9 @@ export const GET_CLIENTS_DEFAULT_SELECT = {
 		},
 		where: {
 			isDefault: true,
+			addressType: {
+				in: [AddressType.BILLING, AddressType.SHIPPING],
+			},
 		},
 	},
 } as const satisfies Prisma.ClientSelect;

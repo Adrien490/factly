@@ -36,147 +36,169 @@ import {
 	MoreVerticalIcon,
 	Receipt,
 	Search,
-	Tag,
 	Trash,
 	Users,
 } from "lucide-react";
-import Link from "next/link";
 import { use } from "react";
 
-import { ClientSelectionToolbar } from "@/domains/client/components/client-selection-toolbar";
-import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
+import { SupplierSelectionToolbar } from "@/domains/supplier/components";
+import {
+	SUPPLIER_STATUSES,
+	SUPPLIER_TYPES,
+} from "@/domains/supplier/constants";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import { DeleteClientButton } from "../../../delete-client";
-import { ClientDataTableProps } from "./types";
+import Link from "next/link";
+import { DeleteSupplierButton } from "../../delete-supplier";
+import { GetSuppliersReturn } from "../types";
 
-export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
-	const response = use(clientsPromise);
-	const { clients, pagination } = response;
-	const clientIds = clients.map((client) => client.id);
+export interface SupplierDataTableProps {
+	suppliersPromise: Promise<GetSuppliersReturn>;
+}
 
-	if (clients.length === 0) {
+export function SupplierDataTable({
+	suppliersPromise,
+}: SupplierDataTableProps) {
+	const response = use(suppliersPromise);
+	const { suppliers, pagination } = response;
+	const supplierIds = suppliers.map((supplier) => supplier.id);
+
+	if (suppliers.length === 0) {
 		return (
 			<EmptyState
 				icon={<Search className="w-10 h-10" />}
-				title="Aucun client trouvé"
-				description="Aucun client n'a été trouvé. Vous pouvez en créer un nouveau."
+				title="Aucune donnée trouvée"
+				description="Aucune donnée ne correspond à vos critères de recherche."
 				className="group-has-[[data-pending]]:animate-pulse py-12"
 			/>
 		);
 	}
 
+	// Calculer le nombre de colonnes pour le colSpan
+	const columnCount = 7; // Le nombre total de colonnes dans le tableau
+
 	return (
 		<SelectionProvider>
-			<ClientSelectionToolbar />
+			<SupplierSelectionToolbar />
 			<Table className="group-has-[[data-pending]]:animate-pulse">
 				<TableHeader>
 					<TableRow>
 						<TableHead key="select" role="columnheader">
-							<SelectAllCheckbox itemIds={clientIds} />
+							<div className="flex-1 font-medium">
+								<SelectAllCheckbox itemIds={supplierIds} />
+							</div>
 						</TableHead>
 						<TableHead key="name" role="columnheader">
-							Client
+							<div className="flex-1 font-medium">Fournisseur</div>
 						</TableHead>
 						<TableHead
-							key="clientType"
+							key="supplierType"
 							role="columnheader"
 							className="hidden md:table-cell"
 						>
-							Type
+							<div className="flex-1 font-medium">Type</div>
 						</TableHead>
 						<TableHead
 							key="status"
 							role="columnheader"
 							className="hidden md:table-cell"
 						>
-							Statut
+							<div className="flex-1 font-medium">Statut</div>
 						</TableHead>
 						<TableHead
 							key="fiscalInfo"
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							Infos fiscales
+							<div className="flex-1 font-medium">Infos fiscales</div>
 						</TableHead>
 						<TableHead
 							key="address"
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							Adresse
+							<div className="flex-1 font-medium">Adresse</div>
 						</TableHead>
 
 						<TableHead key="actions" role="columnheader" className="">
-							<></>
+							<div className="flex-1 font-medium"></div>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{clients.map((client) => {
-						const statusOption = CLIENT_STATUSES.find(
-							(option) => option.value === client.status
+					{suppliers.map((supplier) => {
+						const supplierTypeOption = SUPPLIER_TYPES.find(
+							(option) => option.value === supplier.supplierType
 						);
-						const clientTypeOption = CLIENT_TYPES.find(
-							(option) => option.value === client.clientType
+
+						const statusOption = SUPPLIER_STATUSES.find(
+							(option) => option.value === supplier.status
 						);
+
 						return (
-							<TableRow key={client.id} role="row" tabIndex={0}>
+							<TableRow key={supplier.id} role="row" tabIndex={0}>
 								<TableCell role="gridcell">
-									<ItemCheckbox itemId={client.id} />
+									<ItemCheckbox itemId={supplier.id} />
 								</TableCell>
 								<TableCell role="gridcell">
 									<div className="w-[200px] flex flex-col space-y-1">
-										<div className="flex items-center gap-2">
-											<div className="font-medium truncate">{client.name}</div>
-										</div>
-										{client.reference && (
-											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-												<Tag className="h-3 w-3 shrink-0" />
-												<span className="truncate">{client.reference}</span>
+										{supplier.name && (
+											<div className="flex flex-col gap-0.5">
+												<span className="font-medium truncate">
+													{supplier.name}
+												</span>
+												{supplier.legalName && (
+													<span className="text-xs text-muted-foreground truncate">
+														{supplier.legalName}
+													</span>
+												)}
 											</div>
 										)}
 									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden md:table-cell">
-									<Badge
-										variant="outline"
-										style={{
-											backgroundColor: `${clientTypeOption?.color}20`, // Couleur avec opacity 20%
-											color: clientTypeOption?.color,
-											borderColor: `${clientTypeOption?.color}40`, // Couleur avec opacity 40%
-										}}
-									>
-										{clientTypeOption?.label}
-									</Badge>
+									<div className="flex items-center gap-2">
+										<Badge
+											variant="outline"
+											style={{
+												backgroundColor: `${supplierTypeOption?.color}20`, // Couleur avec opacity 20%
+												color: supplierTypeOption?.color,
+												borderColor: `${supplierTypeOption?.color}40`, // Couleur avec opacity 40%
+											}}
+										>
+											{supplierTypeOption?.label || supplier.supplierType}
+										</Badge>
+									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden md:table-cell">
-									<Badge
-										variant="outline"
-										style={{
-											backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
-											color: statusOption?.color,
-											borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
-										}}
-									>
-										{statusOption?.label || client.status}
-									</Badge>
+									<div>
+										<Badge
+											variant="outline"
+											style={{
+												backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
+												color: statusOption?.color,
+												borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
+											}}
+										>
+											{statusOption?.label || supplier.status}
+										</Badge>
+									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden lg:table-cell">
 									<div className="flex flex-col space-y-1 max-w-[150px]">
-										{client.siret && (
+										{supplier.siret && (
 											<div className="flex items-center gap-1.5 text-xs">
 												<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
-												<span className="truncate">{client.siret}</span>
+												<span className="truncate">{supplier.siret}</span>
 											</div>
 										)}
-										{client.vatNumber && (
+										{supplier.vatNumber && (
 											<div className="flex items-center gap-1.5 text-xs">
 												<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
-												<span className="truncate">{client.vatNumber}</span>
+												<span className="truncate">{supplier.vatNumber}</span>
 											</div>
 										)}
-										{!client.siret && !client.vatNumber && (
+										{!supplier.siret && !supplier.vatNumber && (
 											<span className="text-xs text-muted-foreground italic">
 												Non renseignées
 											</span>
@@ -186,14 +208,15 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 								<TableCell role="gridcell" className="hidden lg:table-cell">
 									<div className="flex items-center gap-2 max-w-[200px]">
 										<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-										{client.addresses?.find((addr) => addr.isDefault) ? (
+										{supplier.addresses?.find((addr) => addr.isDefault) ? (
 											<span className="truncate">
 												{[
-													client.addresses.find((addr) => addr.isDefault)
+													supplier.addresses.find((addr) => addr.isDefault)
 														?.addressLine1,
-													client.addresses.find((addr) => addr.isDefault)
+													supplier.addresses.find((addr) => addr.isDefault)
 														?.postalCode,
-													client.addresses.find((addr) => addr.isDefault)?.city,
+													supplier.addresses.find((addr) => addr.isDefault)
+														?.city,
 												]
 													.filter(Boolean)
 													.join(", ")}
@@ -228,7 +251,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 										>
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${client.organizationId}/clients/${client.id}`}
+													href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}`}
 													className={cn("flex w-full items-center")}
 												>
 													<FileText className="h-4 w-4 mr-2" />
@@ -240,7 +263,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 											<DropdownMenuSeparator />
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
+													href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`}
 													className={cn("flex w-full items-center")}
 												>
 													<Edit2 className="h-4 w-4 mr-2" />
@@ -249,7 +272,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 											</DropdownMenuItem>
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
+													href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`}
 													className={cn("flex w-full items-center")}
 												>
 													<Users className="h-4 w-4 mr-2" />
@@ -270,25 +293,26 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 												<AlertDialogContent>
 													<AlertDialogHeader>
 														<AlertDialogTitle className="text-destructive">
-															Êtes-vous sûr de vouloir supprimer ce client ?
+															Êtes-vous sûr de vouloir supprimer ce fournisseur
+															?
 														</AlertDialogTitle>
 														<AlertDialogDescription>
 															Cette action est irréversible. Cela supprimera
-															définitivement le client
-															{client.name && (
-																<strong> {client.name}</strong>
+															définitivement le fournisseur
+															{supplier.name && (
+																<strong> {supplier.name}</strong>
 															)}{" "}
 															et toutes ses données associées.
 														</AlertDialogDescription>
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<DeleteClientButton
-															organizationId={client.organizationId}
-															id={client.id}
+														<DeleteSupplierButton
+															organizationId={supplier.organizationId}
+															id={supplier.id}
 														>
 															<AlertDialogAction>Supprimer</AlertDialogAction>
-														</DeleteClientButton>
+														</DeleteSupplierButton>
 													</AlertDialogFooter>
 												</AlertDialogContent>
 											</AlertDialog>
@@ -301,7 +325,10 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 				</TableBody>
 				<TableFooter>
 					<TableRow>
-						<TableCell colSpan={7} className="px-4 py-2 hover:bg-transparent">
+						<TableCell
+							colSpan={columnCount}
+							className="px-4 py-2 hover:bg-transparent"
+						>
 							<Pagination
 								total={pagination.total}
 								pageCount={pagination.pageCount}

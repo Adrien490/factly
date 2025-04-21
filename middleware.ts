@@ -45,6 +45,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	runtime: "nodejs",
 	matcher: ["/dashboard", "/login", "/api"], // Apply middleware to specific routes
 };

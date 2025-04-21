@@ -1,2 +1,1 @@
-export * from "./supplier-datatable";
 export * from "./supplier-selection-toolbar";

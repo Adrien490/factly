@@ -36,162 +36,151 @@ import {
 	MoreVerticalIcon,
 	Receipt,
 	Search,
+	Tag,
 	Trash,
 	Users,
 } from "lucide-react";
+import Link from "next/link";
 import { use } from "react";
 
+import { ClientSelectionToolbar } from "@/domains/client/components/client-selection-toolbar";
+import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import Link from "next/link";
-import { SUPPLIER_STATUSES, SUPPLIER_TYPES } from "../../constants";
-import { DeleteSupplierButton } from "../../features";
-import { SupplierSelectionToolbar } from "../supplier-selection-toolbar";
-import { SupplierDataTableProps } from "./types";
+import { DeleteClientButton } from "../../delete-client";
+import { GetClientsReturn } from "../types";
 
-export function SupplierDataTable({
-	suppliersPromise,
-}: SupplierDataTableProps) {
-	const response = use(suppliersPromise);
-	const { suppliers, pagination } = response;
-	const supplierIds = suppliers.map((supplier) => supplier.id);
+export interface ClientDataTableProps {
+	clientsPromise: Promise<GetClientsReturn>;
+}
 
-	if (suppliers.length === 0) {
+export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
+	const response = use(clientsPromise);
+	const { clients, pagination } = response;
+	const clientIds = clients.map((client) => client.id);
+
+	if (clients.length === 0) {
 		return (
 			<EmptyState
 				icon={<Search className="w-10 h-10" />}
-				title="Aucune donnée trouvée"
-				description="Aucune donnée ne correspond à vos critères de recherche."
+				title="Aucun client trouvé"
+				description="Aucun client n'a été trouvé. Vous pouvez en créer un nouveau."
 				className="group-has-[[data-pending]]:animate-pulse py-12"
 			/>
 		);
 	}
 
-	// Calculer le nombre de colonnes pour le colSpan
-	const columnCount = 7; // Le nombre total de colonnes dans le tableau
-
 	return (
 		<SelectionProvider>
-			<SupplierSelectionToolbar />
+			<ClientSelectionToolbar />
 			<Table className="group-has-[[data-pending]]:animate-pulse">
 				<TableHeader>
 					<TableRow>
 						<TableHead key="select" role="columnheader">
-							<div className="flex-1 font-medium">
-								<SelectAllCheckbox itemIds={supplierIds} />
-							</div>
+							<SelectAllCheckbox itemIds={clientIds} />
 						</TableHead>
 						<TableHead key="name" role="columnheader">
-							<div className="flex-1 font-medium">Fournisseur</div>
+							Client
 						</TableHead>
 						<TableHead
-							key="supplierType"
+							key="clientType"
 							role="columnheader"
 							className="hidden md:table-cell"
 						>
-							<div className="flex-1 font-medium">Type</div>
+							Type
 						</TableHead>
 						<TableHead
 							key="status"
 							role="columnheader"
 							className="hidden md:table-cell"
 						>
-							<div className="flex-1 font-medium">Statut</div>
+							Statut
 						</TableHead>
 						<TableHead
 							key="fiscalInfo"
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							<div className="flex-1 font-medium">Infos fiscales</div>
+							Infos fiscales
 						</TableHead>
 						<TableHead
 							key="address"
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							<div className="flex-1 font-medium">Adresse</div>
+							Adresse par défaut
 						</TableHead>
 
 						<TableHead key="actions" role="columnheader" className="">
-							<div className="flex-1 font-medium"></div>
+							<></>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{suppliers.map((supplier) => {
-						const supplierTypeOption = SUPPLIER_TYPES.find(
-							(option) => option.value === supplier.supplierType
+					{clients.map((client) => {
+						const statusOption = CLIENT_STATUSES.find(
+							(option) => option.value === client.status
 						);
-
-						const statusOption = SUPPLIER_STATUSES.find(
-							(option) => option.value === supplier.status
+						const clientTypeOption = CLIENT_TYPES.find(
+							(option) => option.value === client.clientType
 						);
-
 						return (
-							<TableRow key={supplier.id} role="row" tabIndex={0}>
+							<TableRow key={client.id} role="row" tabIndex={0}>
 								<TableCell role="gridcell">
-									<ItemCheckbox itemId={supplier.id} />
+									<ItemCheckbox itemId={client.id} />
 								</TableCell>
 								<TableCell role="gridcell">
 									<div className="w-[200px] flex flex-col space-y-1">
-										{supplier.name && (
-											<div className="flex flex-col gap-0.5">
-												<span className="font-medium truncate">
-													{supplier.name}
-												</span>
-												{supplier.legalName && (
-													<span className="text-xs text-muted-foreground truncate">
-														{supplier.legalName}
-													</span>
-												)}
+										<div className="flex items-center gap-2">
+											<div className="font-medium truncate">{client.name}</div>
+										</div>
+										{client.reference && (
+											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+												<Tag className="h-3 w-3 shrink-0" />
+												<span className="truncate">{client.reference}</span>
 											</div>
 										)}
 									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden md:table-cell">
-									<div className="flex items-center gap-2">
-										<Badge
-											variant="outline"
-											style={{
-												backgroundColor: `${supplierTypeOption?.color}20`, // Couleur avec opacity 20%
-												color: supplierTypeOption?.color,
-												borderColor: `${supplierTypeOption?.color}40`, // Couleur avec opacity 40%
-											}}
-										>
-											{supplierTypeOption?.label || supplier.supplierType}
-										</Badge>
-									</div>
+									<Badge
+										variant="outline"
+										style={{
+											backgroundColor: `${clientTypeOption?.color}20`, // Couleur avec opacity 20%
+											color: clientTypeOption?.color,
+											borderColor: `${clientTypeOption?.color}40`, // Couleur avec opacity 40%
+										}}
+									>
+										{clientTypeOption?.label}
+									</Badge>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden md:table-cell">
-									<div>
-										<Badge
-											variant="outline"
-											style={{
-												backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
-												color: statusOption?.color,
-												borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
-											}}
-										>
-											{statusOption?.label || supplier.status}
-										</Badge>
-									</div>
+									<Badge
+										variant="outline"
+										style={{
+											backgroundColor: `${statusOption?.color}20`, // Couleur avec opacity 20%
+											color: statusOption?.color,
+											borderColor: `${statusOption?.color}40`, // Couleur avec opacity 40%
+										}}
+									>
+										{statusOption?.label || client.status}
+									</Badge>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden lg:table-cell">
 									<div className="flex flex-col space-y-1 max-w-[150px]">
-										{supplier.siret && (
+										{client.siret && (
 											<div className="flex items-center gap-1.5 text-xs">
 												<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
-												<span className="truncate">{supplier.siret}</span>
+												<span className="truncate">{client.siret}</span>
 											</div>
 										)}
-										{supplier.vatNumber && (
+										{client.vatNumber && (
 											<div className="flex items-center gap-1.5 text-xs">
 												<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
-												<span className="truncate">{supplier.vatNumber}</span>
+												<span className="truncate">{client.vatNumber}</span>
 											</div>
 										)}
-										{!supplier.siret && !supplier.vatNumber && (
+										{!client.siret && !client.vatNumber && (
 											<span className="text-xs text-muted-foreground italic">
 												Non renseignées
 											</span>
@@ -199,25 +188,36 @@ export function SupplierDataTable({
 									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="hidden lg:table-cell">
-									<div className="flex items-center gap-2 max-w-[200px]">
-										<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-										{supplier.addresses?.find((addr) => addr.isDefault) ? (
-											<span className="truncate">
-												{[
-													supplier.addresses.find((addr) => addr.isDefault)
-														?.addressLine1,
-													supplier.addresses.find((addr) => addr.isDefault)
-														?.postalCode,
-													supplier.addresses.find((addr) => addr.isDefault)
-														?.city,
-												]
-													.filter(Boolean)
-													.join(", ")}
-											</span>
+									<div className="flex flex-col space-y-2 max-w-[250px] text-sm">
+										{client.addresses && client.addresses.length > 0 ? (
+											<>
+												{client.addresses.map((addr) => (
+													<div key={addr.id} className="flex items-start gap-2">
+														<MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+														<div className="flex flex-col">
+															<span className="text-xs font-medium">
+																{addr.addressType === "BILLING"
+																	? "Facturation"
+																	: addr.addressType === "SHIPPING"
+																	? "Livraison"
+																	: "Autre"}
+															</span>
+															<span className="truncate text-muted-foreground">
+																{[addr.addressLine1, addr.postalCode, addr.city]
+																	.filter(Boolean)
+																	.join(", ")}
+															</span>
+														</div>
+													</div>
+												))}
+											</>
 										) : (
-											<span className="text-muted-foreground italic">
-												Non renseignée
-											</span>
+											<div className="flex items-center gap-2">
+												<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+												<span className="text-muted-foreground italic">
+													Non renseignée
+												</span>
+											</div>
 										)}
 									</div>
 								</TableCell>
@@ -244,7 +244,7 @@ export function SupplierDataTable({
 										>
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}`}
+													href={`/dashboard/${client.organizationId}/clients/${client.id}`}
 													className={cn("flex w-full items-center")}
 												>
 													<FileText className="h-4 w-4 mr-2" />
@@ -256,7 +256,7 @@ export function SupplierDataTable({
 											<DropdownMenuSeparator />
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`}
+													href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
 													className={cn("flex w-full items-center")}
 												>
 													<Edit2 className="h-4 w-4 mr-2" />
@@ -265,7 +265,7 @@ export function SupplierDataTable({
 											</DropdownMenuItem>
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`}
+													href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
 													className={cn("flex w-full items-center")}
 												>
 													<Users className="h-4 w-4 mr-2" />
@@ -286,26 +286,25 @@ export function SupplierDataTable({
 												<AlertDialogContent>
 													<AlertDialogHeader>
 														<AlertDialogTitle className="text-destructive">
-															Êtes-vous sûr de vouloir supprimer ce fournisseur
-															?
+															Êtes-vous sûr de vouloir supprimer ce client ?
 														</AlertDialogTitle>
 														<AlertDialogDescription>
 															Cette action est irréversible. Cela supprimera
-															définitivement le fournisseur
-															{supplier.name && (
-																<strong> {supplier.name}</strong>
+															définitivement le client
+															{client.name && (
+																<strong> {client.name}</strong>
 															)}{" "}
 															et toutes ses données associées.
 														</AlertDialogDescription>
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<DeleteSupplierButton
-															organizationId={supplier.organizationId}
-															id={supplier.id}
+														<DeleteClientButton
+															organizationId={client.organizationId}
+															id={client.id}
 														>
 															<AlertDialogAction>Supprimer</AlertDialogAction>
-														</DeleteSupplierButton>
+														</DeleteClientButton>
 													</AlertDialogFooter>
 												</AlertDialogContent>
 											</AlertDialog>
@@ -318,10 +317,7 @@ export function SupplierDataTable({
 				</TableBody>
 				<TableFooter>
 					<TableRow>
-						<TableCell
-							colSpan={columnCount}
-							className="px-4 py-2 hover:bg-transparent"
-						>
+						<TableCell colSpan={7} className="px-4 py-2 hover:bg-transparent">
 							<Pagination
 								total={pagination.total}
 								pageCount={pagination.pageCount}

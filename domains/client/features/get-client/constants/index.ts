@@ -19,20 +19,5 @@ export const GET_CLIENT_DEFAULT_SELECT = {
 	userId: true,
 	createdAt: true,
 	updatedAt: true,
-	addresses: {
-		select: {
-			id: true,
-			addressLine1: true,
-			addressLine2: true,
-			postalCode: true,
-			city: true,
-			country: true,
-			latitude: true,
-			longitude: true,
-			isDefault: true,
-		},
-		where: {
-			isDefault: true,
-		},
-	},
+	addresses: true,
 } as const;

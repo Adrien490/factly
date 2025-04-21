@@ -28,8 +28,8 @@ import { X } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
-import { createAddress } from "../../actions";
-import { createAddressSchema } from "../../schemas";
+import { createAddress } from "../actions";
+import { createAddressSchema } from "../schemas";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;

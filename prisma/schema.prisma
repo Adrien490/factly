@@ -336,6 +336,10 @@ model Address {
 enum AddressType {
   BILLING
   SHIPPING
+  HEADQUARTERS // Siège social
+  WAREHOUSE // Entrepôt
+  PRODUCTION // Site de production
+  COMMERCIAL // Bureau commercial
 }
 
 model ProductSupplier {
