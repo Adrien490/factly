@@ -55,6 +55,7 @@
 		"@tabler/icons-react": "^3.31.0",
 		"@tanstack/react-form": "^1.3.3",
 		"@uploadthing/react": "^7.3.0",
+		"@vercel/speed-insights": "^1.2.0",
 		"better-auth": "^1.2.7",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",

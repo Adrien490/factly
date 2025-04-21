@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import "./globals.css";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -50,7 +51,9 @@ export default function RootLayout({
 						<UTSSR />
 					</Suspense>
 					{children}
+					
 				</ThemeProvider>
+				<SpeedInsights />
 			</body>
 		</html>
 	);
