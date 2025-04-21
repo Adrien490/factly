@@ -16,9 +16,14 @@ import {
 	SearchForm,
 	SortingOptionsDropdown,
 	Toolbar,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
+import { RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -60,7 +65,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	if (clientType) filters.clientType = clientType;
 
 	return (
-		<PageContainer className="pb-12 group">
+		<PageContainer className="group">
 			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Clients"
@@ -72,13 +77,26 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			{/* Barre d'actions principale */}
 			<Toolbar
 				leftContent={
-					<div className="flex items-center gap-3 flex-1 min-w-0">
+					<div className="flex items-center gap-3 flex-1">
 						<SearchForm
 							paramName="search"
 							placeholder="Rechercher..."
-							className="flex-1 min-w-0"
+							className="flex-1 shrink-0"
 						/>
-						<RefreshClientsButton organizationId={organizationId} />
+						<RefreshClientsButton organizationId={organizationId}>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button type="submit" variant="outline">
+											<RefreshCw className="h-4 w-4" />
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>Rafraîchir la liste des clients</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</RefreshClientsButton>
 					</div>
 				}
 				rightContent={

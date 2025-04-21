@@ -15,9 +15,14 @@ import {
 	SearchForm,
 	SortingOptionsDropdown,
 	Toolbar,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
+import { RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -66,7 +71,20 @@ export default async function SuppliersPage({
 							placeholder="Rechercher par nom, email, référence, SIREN..."
 							className="flex-1 shrink-0"
 						/>
-						<RefreshSuppliersButton organizationId={organizationId} />
+						<RefreshSuppliersButton organizationId={organizationId}>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button type="submit" variant="outline">
+											<RefreshCw className="h-4 w-4" />
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>Rafraîchir la liste des fournisseurs</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</RefreshSuppliersButton>
 					</>
 				}
 				rightContent={
