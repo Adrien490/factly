@@ -1,10 +1,4 @@
-import {
-	Building2,
-	CalendarClock,
-	LayoutDashboard,
-	Truck,
-	Users,
-} from "lucide-react";
+import { CalendarClock, LayoutDashboard, Truck, Users } from "lucide-react";
 
 export const navItems = (organizationId: string) => [
 	{
@@ -114,6 +108,7 @@ export const navItems = (organizationId: string) => [
 			},
 		],
 	},*/
+
 	{
 		title: "Années fiscales",
 		icon: CalendarClock,
@@ -175,7 +170,7 @@ export const navItems = (organizationId: string) => [
 				url: `/dashboard/${organizationId}/analytics/suppliers`,
 			},
 		],
-	},*/
+	},
 	{
 		title: "Organisation",
 		icon: Building2,
@@ -183,7 +178,7 @@ export const navItems = (organizationId: string) => [
 			/*{
 				title: "Informations légales",
 				url: `/dashboard/${organizationId}/legal`,
-			},*/
+			},
 			{
 				title: "Membres",
 				url: `/dashboard/${organizationId}/members`,
