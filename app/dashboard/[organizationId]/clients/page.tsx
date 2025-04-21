@@ -23,7 +23,6 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -83,20 +82,17 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							placeholder="Rechercher..."
 							className="flex-1 shrink-0"
 						/>
-						<RefreshClientsButton organizationId={organizationId}>
-							<TooltipProvider>
-								<Tooltip>
-									<TooltipTrigger asChild>
-										<Button type="submit" variant="outline">
-											<RefreshCw className="h-4 w-4" />
-										</Button>
-									</TooltipTrigger>
-									<TooltipContent>
-										<p>Rafraîchir la liste des clients</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						</RefreshClientsButton>
+
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<RefreshClientsButton organizationId={organizationId} />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Rafraîchir la liste des clients</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</div>
 				}
 				rightContent={

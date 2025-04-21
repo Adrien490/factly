@@ -1,29 +1,36 @@
 "use client";
 
-import { useTransition } from "react";
+import { Button } from "@/shared/components";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/shared/components/ui";
+import { RefreshCw } from "lucide-react";
 import { useRefreshSuppliers } from "../../hooks";
 import { RefreshSuppliersButtonProps } from "./types";
 
 export function RefreshSuppliersButton({
 	organizationId,
-	children,
 }: RefreshSuppliersButtonProps) {
-	const { dispatch } = useRefreshSuppliers();
-
-	const [isPending, startTransition] = useTransition();
-
-	const handleRefresh = () => {
-		const formData = new FormData();
-		formData.append("organizationId", organizationId);
-
-		startTransition(() => {
-			dispatch(formData);
-		});
-	};
+	const { dispatch, isPending } = useRefreshSuppliers();
 
 	return (
-		<span data-pending={isPending ? "true" : undefined} onClick={handleRefresh}>
-			{children}
-		</span>
+		<form action={dispatch}>
+			<input type="hidden" name="organizationId" value={organizationId} />
+			<TooltipProvider>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button type="submit" variant="outline" disabled={isPending}>
+							<RefreshCw className="h-4 w-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Rafraîchir la liste des fournisseurs</p>
+					</TooltipContent>
+				</Tooltip>
+			</TooltipProvider>
+		</form>
 	);
 }
