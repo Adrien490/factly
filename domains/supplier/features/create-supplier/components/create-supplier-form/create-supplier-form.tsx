@@ -9,7 +9,7 @@ import {
 } from "@/shared/components";
 import { FormLabel, Input, Textarea } from "@/shared/components/ui";
 
-import { COUNTRIES } from "@/domains/address/constants";
+import { ADDRESS_TYPES, COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -25,7 +25,6 @@ import {
 	FormLayout,
 	FormSection,
 } from "@/shared/components/forms";
-import { AddressType } from "@prisma/client";
 import {
 	mergeForm,
 	Updater,
@@ -319,13 +318,14 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value={AddressType.BILLING}>
-												Facturation
-											</SelectItem>
-											<SelectItem value={AddressType.SHIPPING}>
-												Livraison
-											</SelectItem>
-											<SelectItem value={AddressType.OTHER}>Autre</SelectItem>
+											{ADDRESS_TYPES.map((addressType) => (
+												<SelectItem
+													key={addressType.value}
+													value={addressType.value}
+												>
+													{addressType.label}
+												</SelectItem>
+											))}
 										</SelectContent>
 									</Select>
 									<FieldInfo field={field} />
