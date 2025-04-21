@@ -1,15 +1,21 @@
-import { headers } from "next/headers";
+import { betterFetch } from "@better-fetch/fetch";
+import { Session } from "inspector";
 import { NextResponse, type NextRequest } from "next/server";
-import { auth } from "./domains/auth";
 
 const protectedRoutes = ["/dashboard"];
 const publicOnlyRoutes = ["/login"];
 const publicApiRoutes = ["/api"];
 
 export async function middleware(request: NextRequest) {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
+	const { data: session } = await betterFetch<Session>(
+		"/api/auth/get-session",
+		{
+			baseURL: request.nextUrl.origin,
+			headers: {
+				cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
+			},
+		}
+	);
 
 	const { nextUrl } = request;
 	const isLoggedIn = !!session;
