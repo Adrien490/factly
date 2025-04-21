@@ -9,7 +9,7 @@ import {
 } from "@/shared/components";
 import { Button, FormLabel, Input } from "@/shared/components/ui";
 
-import { COUNTRIES } from "@/domains/address/constants";
+import { ADDRESS_TYPES, COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -207,13 +207,14 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 									<SelectValue placeholder="Sélectionnez un type" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value={AddressType.BILLING}>
-										Facturation
-									</SelectItem>
-									<SelectItem value={AddressType.SHIPPING}>
-										Livraison
-									</SelectItem>
-									<SelectItem value={AddressType.OTHER}>Autre</SelectItem>
+									{ADDRESS_TYPES.map((addressType) => (
+										<SelectItem
+											key={addressType.value}
+											value={addressType.value}
+										>
+											{addressType.label}
+										</SelectItem>
+									))}
 								</SelectContent>
 							</Select>
 							<FieldInfo field={field} />
