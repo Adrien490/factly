@@ -125,7 +125,7 @@ export function OrganizationList({
 						</Link>
 					);
 				})}
-				{organizations.length > 0 && (
+				{organizations.length === 0 && (
 					<Link
 						href="/dashboard/new"
 						className={`block ${viewType === "grid" ? "h-full" : ""}`}
