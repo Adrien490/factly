@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
 	experimental: {
 		authInterrupts: true,
 		useCache: true,
-		nodeMiddleware: true,
 	},
 	/* config options here */
 	images: {
