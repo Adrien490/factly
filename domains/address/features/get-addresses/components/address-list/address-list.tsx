@@ -110,15 +110,6 @@ export function AddressList({
 					</Card>
 				);
 			})}
-			{addresses.length > 0 && (
-				<Link
-					href={`${baseUrl}/new`}
-					className="border border-dashed rounded-md p-3 flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-				>
-					<PlusIcon className="h-4 w-4 mr-1.5" />
-					<span className="text-sm">Ajouter une adresse</span>
-				</Link>
-			)}
 		</div>
 	);
 }

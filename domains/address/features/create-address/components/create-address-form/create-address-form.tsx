@@ -7,20 +7,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components";
-import { FormLabel, Input } from "@/shared/components/ui";
+import { Button, FormLabel, Input } from "@/shared/components/ui";
 
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
 import { Autocomplete } from "@/shared/components/autocomplete";
-import {
-	FieldInfo,
-	FormErrors,
-	FormFooter,
-	FormLayout,
-	FormSection,
-} from "@/shared/components/forms";
+import { FieldInfo, FormErrors } from "@/shared/components/forms";
 import { ActionStatus } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import {
@@ -29,8 +23,8 @@ import {
 	useForm,
 	useTransform,
 } from "@tanstack/react-form";
-import { MapPin, X } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { X } from "lucide-react";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
 import { toast } from "sonner";
 import { useCreateAddress } from "../../hooks";
@@ -51,9 +45,10 @@ export function CreateAddressForm({
 }: Props) {
 	const response = use(searchAddressPromise);
 	const params = useParams();
+	const pathname = usePathname();
 	const organizationId = params.organizationId as string;
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch, isPending } = useCreateAddress();
+	const { state, dispatch } = useCreateAddress();
 	const router = useRouter();
 
 	console.log("state", state);
@@ -119,7 +114,7 @@ export function CreateAddressForm({
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
 			// Construire l'URL en fonction du contexte
-			let baseUrl = `/dashboard/${organizationId}`;
+			let baseUrl = pathname;
 			if (clientId) {
 				baseUrl += `/clients/${clientId}/addresses/new`;
 			} else if (supplierId) {
@@ -187,300 +182,276 @@ export function CreateAddressForm({
 				)}
 			</form.Field>
 
-			<FormLayout withDividers columns={2} className="mt-6">
-				{/* Section Adresse */}
-				<FormSection
-					title="Informations d'adresse"
-					description="Renseignez les informations de l'adresse"
-					icon={MapPin}
-				>
-					<div className="space-y-4">
-						<form.Field name="addressType">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressType">
-										Type d&apos;adresse
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										name="addressType"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value}
-										defaultValue={AddressType.BILLING}
-									>
-										<SelectTrigger id="addressType">
-											<SelectValue placeholder="Sélectionnez un type" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value={AddressType.BILLING}>
-												Facturation
-											</SelectItem>
-											<SelectItem value={AddressType.SHIPPING}>
-												Livraison
-											</SelectItem>
-											<SelectItem value={AddressType.OTHER}>Autre</SelectItem>
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="isDefault">
-							{(field) => (
-								<div className="space-y-1.5">
-									<div className="flex items-center space-x-2">
-										<input
-											type="checkbox"
-											id="isDefault"
-											name="isDefault"
-											checked={field.state.value || false}
-											onChange={(e) => field.handleChange(e.target.checked)}
-											className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-										/>
-										<FormLabel htmlFor="isDefault" className="cursor-pointer">
-											Définir comme adresse par défaut
-										</FormLabel>
-									</div>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-					</div>
-				</FormSection>
-
-				<FormSection
-					title="Détails de l'adresse"
-					description="Saisissez les détails de l'adresse"
-					icon={MapPin}
-				>
-					<div className="space-y-4">
-						<form.Field
-							name="addressLine1"
-							validators={{
-								onChangeAsyncDebounceMs: 500,
-								onChange: ({ value }) => {
-									if (!value) return "L'adresse est requise";
-									return undefined;
-								},
-								onChangeAsync: async ({ value }) => {
-									if (
-										form.state.isSubmitting ||
-										!value ||
-										value.length < 3 ||
-										!/^[a-zA-Z0-9]/.test(value)
-									) {
-										return;
-									}
-
-									const url = new URLSearchParams();
-									url.set("q", value);
-
-									// Utiliser le code postal s'il est disponible
-									const postalCode = form.getFieldValue("postalCode");
-									if (postalCode) {
-										url.set("postcode", postalCode);
-									}
-
-									// Construire l'URL en fonction du contexte
-									let baseUrl = `/dashboard/${organizationId}`;
-									if (clientId) {
-										baseUrl += `/clients/${clientId}/addresses/new`;
-									} else if (supplierId) {
-										baseUrl += `/suppliers/${supplierId}/addresses/new`;
-									} else {
-										baseUrl += `/addresses/new`;
-									}
-
-									startAddressTransition(() => {
-										router.push(`${baseUrl}?${url.toString()}`, {
-											scroll: false,
-										});
-									});
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressSearchField">
-										Rechercher une adresse
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<div className="relative">
-										<Autocomplete
-											items={response.results}
-											onSelect={(item) =>
-												handleAddressSelect(item as FormattedAddressResult)
-											}
-											placeholder="Rechercher une adresse"
-											value={field.state.value}
-											onChange={(value: string) => field.handleChange(value)}
-											className="w-full"
-											name="addressLine1"
-											getItemLabel={(item) => item.label}
-											getItemDescription={(item) =>
-												item.postcode && `${item.postcode} ${item.city}`
-											}
-											isLoading={isAddressLoading}
-											inputClassName="border-input focus:ring-1 focus:ring-primary pr-20"
-										/>
-										{/* Actions dans le champ */}
-										<div className="absolute right-3 top-0 h-full flex items-center gap-1">
-											{/* Bouton pour effacer la recherche, visible uniquement si une valeur est présente */}
-											{field.state.value && (
-												<button
-													type="button"
-													className="h-5 w-5 rounded-full hover:bg-muted flex items-center justify-center"
-													onClick={handleClearAddressSearch}
-													aria-label="Effacer la recherche d'adresse"
-													title="Effacer la recherche d'adresse"
-												>
-													<X
-														className="h-3 w-3 text-muted-foreground"
-														aria-hidden="true"
-													/>
-												</button>
-											)}
-										</div>
-									</div>
-									{field.state.value && field.state.value.length < 3 && (
-										<p
-											className="text-xs text-muted-foreground"
-											id="addressLine1-info"
-											role="status"
-										>
-											Saisissez au moins 3 caractères pour lancer la recherche
-										</p>
-									)}
-									{field.state.value &&
-										!/^[a-zA-Z0-9]/.test(field.state.value) && (
-											<p
-												className="text-xs text-amber-500"
-												id="addressLine1-warning"
-												role="alert"
-											>
-												La recherche doit commencer par une lettre ou un chiffre
-											</p>
-										)}
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="addressLine2">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressLine2">
-										Complément d&apos;adresse
-									</FormLabel>
-									<Input
-										id="addressLine2"
-										name="addressLine2"
-										placeholder="Appartement, étage, etc."
-										value={field.state.value || ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<div className="grid grid-cols-2 gap-4">
-							<form.Field
-								name="postalCode"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value) return "Le code postal est requis";
-										return undefined;
-									},
+			<div className="space-y-4">
+				<form.Field name="addressType">
+					{(field) => (
+						<div className="space-y-1.5">
+							<FormLabel htmlFor="addressType">
+								Type d&apos;adresse
+								<span className="text-destructive ml-1">*</span>
+							</FormLabel>
+							<Select
+								name="addressType"
+								onValueChange={(value) => {
+									field.handleChange(
+										value as unknown as Updater<typeof field.state.value>
+									);
 								}}
+								value={field.state.value}
+								defaultValue={AddressType.BILLING}
 							>
-								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="postalCode">
-											Code postal
-											<span className="text-destructive ml-1">*</span>
-										</FormLabel>
-										<Input
-											id="postalCode"
-											name="postalCode"
-											placeholder="Code postal"
-											value={field.state.value || ""}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										<FieldInfo field={field} />
-									</div>
-								)}
-							</form.Field>
-
-							<form.Field
-								name="city"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value) return "La ville est requise";
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="city">
-											Ville
-											<span className="text-destructive ml-1">*</span>
-										</FormLabel>
-										<Input
-											id="city"
-											name="city"
-											placeholder="Ville"
-											value={field.state.value || ""}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										<FieldInfo field={field} />
-									</div>
-								)}
-							</form.Field>
+								<SelectTrigger id="addressType" className="w-full">
+									<SelectValue placeholder="Sélectionnez un type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value={AddressType.BILLING}>
+										Facturation
+									</SelectItem>
+									<SelectItem value={AddressType.SHIPPING}>
+										Livraison
+									</SelectItem>
+									<SelectItem value={AddressType.OTHER}>Autre</SelectItem>
+								</SelectContent>
+							</Select>
+							<FieldInfo field={field} />
 						</div>
+					)}
+				</form.Field>
 
-						<form.Field
-							name="country"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "Le pays est requis";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="country">
-										Pays
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										id="country"
-										name="country"
-										placeholder="Pays"
-										value={field.state.value || "France"}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
+				<form.Field name="isDefault">
+					{(field) => (
+						<div className="space-y-1.5">
+							<div className="flex items-center space-x-2">
+								<input
+									type="checkbox"
+									id="isDefault"
+									name="isDefault"
+									checked={field.state.value || false}
+									onChange={(e) => field.handleChange(e.target.checked)}
+									className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+								/>
+								<FormLabel htmlFor="isDefault" className="cursor-pointer">
+									Définir comme adresse par défaut
+								</FormLabel>
+							</div>
+							<FieldInfo field={field} />
+						</div>
+					)}
+				</form.Field>
+			</div>
+
+			<div className="space-y-4">
+				<form.Field
+					name="addressLine1"
+					validators={{
+						onChangeAsyncDebounceMs: 500,
+						onChange: ({ value }) => {
+							if (!value) return "L'adresse est requise";
+							return undefined;
+						},
+						onChangeAsync: async ({ value }) => {
+							if (
+								form.state.isSubmitting ||
+								!value ||
+								value.length < 3 ||
+								!/^[a-zA-Z0-9]/.test(value)
+							) {
+								return;
+							}
+
+							const url = new URLSearchParams();
+							url.set("q", value);
+
+							// Utiliser le code postal s'il est disponible
+							const postalCode = form.getFieldValue("postalCode");
+							if (postalCode) {
+								url.set("postcode", postalCode);
+							}
+
+							// Construire l'URL en fonction du contexte
+
+							startAddressTransition(() => {
+								router.push(`${pathname}?${url.toString()}`, {
+									scroll: false,
+								});
+							});
+						},
+					}}
+				>
+					{(field) => (
+						<div className="space-y-1.5">
+							<FormLabel htmlFor="addressSearchField">
+								Rechercher une adresse
+								<span className="text-destructive ml-1">*</span>
+							</FormLabel>
+							<div className="relative">
+								<Autocomplete
+									items={response.results}
+									onSelect={(item) =>
+										handleAddressSelect(item as FormattedAddressResult)
+									}
+									placeholder="Rechercher une adresse"
+									value={field.state.value}
+									onChange={(value: string) => field.handleChange(value)}
+									className="w-full"
+									name="addressLine1"
+									getItemLabel={(item) => item.label}
+									getItemDescription={(item) =>
+										item.postcode && `${item.postcode} ${item.city}`
+									}
+									isLoading={isAddressLoading}
+									inputClassName="border-input focus:ring-1 focus:ring-primary pr-20"
+								/>
+								{/* Actions dans le champ */}
+								<div className="absolute right-3 top-0 h-full flex items-center gap-1">
+									{/* Bouton pour effacer la recherche, visible uniquement si une valeur est présente */}
+									{field.state.value && (
+										<button
+											type="button"
+											className="h-5 w-5 rounded-full hover:bg-muted flex items-center justify-center"
+											onClick={handleClearAddressSearch}
+											aria-label="Effacer la recherche d'adresse"
+											title="Effacer la recherche d'adresse"
+										>
+											<X
+												className="h-3 w-3 text-muted-foreground"
+												aria-hidden="true"
+											/>
+										</button>
+									)}
 								</div>
+							</div>
+							{field.state.value && field.state.value.length < 3 && (
+								<p
+									className="text-xs text-muted-foreground"
+									id="addressLine1-info"
+									role="status"
+								>
+									Saisissez au moins 3 caractères pour lancer la recherche
+								</p>
 							)}
-						</form.Field>
-					</div>
-				</FormSection>
-			</FormLayout>
+							{field.state.value && !/^[a-zA-Z0-9]/.test(field.state.value) && (
+								<p
+									className="text-xs text-amber-500"
+									id="addressLine1-warning"
+									role="alert"
+								>
+									La recherche doit commencer par une lettre ou un chiffre
+								</p>
+							)}
+							<FieldInfo field={field} />
+						</div>
+					)}
+				</form.Field>
 
-			{/* Boutons d'action */}
-			<FormFooter
-				submitLabel="Créer l'adresse"
-				cancelHref={returnUrl || `/dashboard/${organizationId}`}
-				isPending={isPending}
-			/>
+				<form.Field name="addressLine2">
+					{(field) => (
+						<div className="space-y-1.5">
+							<FormLabel htmlFor="addressLine2">
+								Complément d&apos;adresse
+							</FormLabel>
+							<Input
+								id="addressLine2"
+								name="addressLine2"
+								placeholder="Appartement, étage, etc."
+								value={field.state.value || ""}
+								onChange={(e) => field.handleChange(e.target.value)}
+							/>
+							<FieldInfo field={field} />
+						</div>
+					)}
+				</form.Field>
+
+				<div className="grid grid-cols-2 gap-4">
+					<form.Field
+						name="postalCode"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Le code postal est requis";
+								return undefined;
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1.5">
+								<FormLabel htmlFor="postalCode">
+									Code postal
+									<span className="text-destructive ml-1">*</span>
+								</FormLabel>
+								<Input
+									id="postalCode"
+									name="postalCode"
+									placeholder="Code postal"
+									value={field.state.value || ""}
+									onChange={(e) => field.handleChange(e.target.value)}
+								/>
+								<FieldInfo field={field} />
+							</div>
+						)}
+					</form.Field>
+
+					<form.Field
+						name="city"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "La ville est requise";
+								return undefined;
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1.5">
+								<FormLabel htmlFor="city">
+									Ville
+									<span className="text-destructive ml-1">*</span>
+								</FormLabel>
+								<Input
+									id="city"
+									name="city"
+									placeholder="Ville"
+									value={field.state.value || ""}
+									onChange={(e) => field.handleChange(e.target.value)}
+								/>
+								<FieldInfo field={field} />
+							</div>
+						)}
+					</form.Field>
+				</div>
+
+				<form.Field
+					name="country"
+					validators={{
+						onChange: ({ value }) => {
+							if (!value) return "Le pays est requis";
+							return undefined;
+						},
+					}}
+				>
+					{(field) => (
+						<div className="space-y-1.5">
+							<FormLabel htmlFor="country">
+								Pays
+								<span className="text-destructive ml-1">*</span>
+							</FormLabel>
+							<Input
+								id="country"
+								name="country"
+								placeholder="Pays"
+								value={field.state.value || "France"}
+								onChange={(e) => field.handleChange(e.target.value)}
+							/>
+							<FieldInfo field={field} />
+						</div>
+					)}
+				</form.Field>
+			</div>
+			<form.Subscribe selector={(state) => state.canSubmit}>
+				{(canSubmit) => (
+					<Button type="submit" className="w-full" disabled={!canSubmit}>
+						Créer l&apos;adresse
+					</Button>
+				)}
+			</form.Subscribe>
 		</form>
 	);
 }

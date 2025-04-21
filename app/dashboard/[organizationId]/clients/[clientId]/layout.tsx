@@ -1,8 +1,8 @@
+import { getClient } from "@/domains/client/features/get-client";
 import {
 	ClientHeader,
 	ClientHeaderSkeleton,
-} from "@/domains/client/components/client-header";
-import { getClient } from "@/domains/client/features/get-client";
+} from "@/domains/client/features/get-client/components/client-header";
 import { PageContainer } from "@/shared/components";
 import { ReactNode, Suspense } from "react";
 
@@ -19,7 +19,7 @@ export default async function ClientLayout({ children, params }: Props) {
 	const { organizationId, clientId } = resolvedParams;
 
 	return (
-		<PageContainer className="pt-4">
+		<PageContainer className="pt-4 pb-12">
 			{/* Breadcrumb amélioré */}
 
 			{/* En-tête client */}

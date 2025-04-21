@@ -2,8 +2,8 @@ import NotFound from "@/app/dashboard/[organizationId]/not-found";
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { use } from "react";
-import { CLIENT_STATUSES } from "../../constants";
-import { CLIENT_TYPES } from "../../constants/client-types";
+import { CLIENT_STATUSES } from "../../../../constants";
+import { CLIENT_TYPES } from "../../../../constants/client-types";
 import { ClientHeaderProps } from "./types";
 
 export function ClientHeader({ clientPromise }: ClientHeaderProps) {
@@ -81,14 +81,6 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 							{
 								label: "Modifier",
 								href: `/dashboard/${client.organizationId}/clients/${client.id}/edit`,
-							},
-							{
-								label: "Gestion des adresses",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}/addresses`,
-							},
-							{
-								label: "Gestion des contacts",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}/contacts`,
 							},
 						]}
 					/>

@@ -1,4 +1,8 @@
-import { getAddresses } from "@/domains/address/features";
+import {
+	CreateAddressForm,
+	getAddresses,
+	searchAddress,
+} from "@/domains/address/features";
 import { AddressList } from "@/domains/address/features/get-addresses/components";
 import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list/components/address-list-skeleton/address-list-skeleton";
 import { getClient } from "@/domains/client/features/get-client";
@@ -7,17 +11,18 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui/card";
-import { Separator } from "@/shared/components/ui/separator";
 import {
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
-} from "@/shared/components/ui/tabs";
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/shared/components/ui/dialog";
+import { Separator } from "@/shared/components/ui/separator";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
@@ -31,7 +36,6 @@ import {
 	MapPin,
 	Phone,
 	PlusIcon,
-	Users,
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -228,14 +232,28 @@ export default async function ClientPage({ params }: Props) {
 								<CardTitle className="text-lg">Adresses</CardTitle>
 								<CardDescription>Liste des adresses du client</CardDescription>
 							</div>
-							<Button asChild variant="outline" size="sm">
-								<Link
-									href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
-								>
-									<PlusIcon className="h-4 w-4 mr-1" />
-									Ajouter
-								</Link>
-							</Button>
+							<Dialog>
+								<DialogTrigger asChild>
+									<Button variant="outline">
+										<PlusIcon className="h-4 w-4 mr-2" />
+										Ajouter une adresse
+									</Button>
+								</DialogTrigger>
+								<DialogContent className="">
+									<DialogHeader>
+										<DialogTitle>Ajouter une adresse</DialogTitle>
+										<DialogDescription>
+											Ajouter une adresse pour le client
+										</DialogDescription>
+									</DialogHeader>
+									<CreateAddressForm
+										searchAddressPromise={searchAddress({
+											query: "",
+											limit: 10,
+										})}
+									/>
+								</DialogContent>
+							</Dialog>
 						</CardHeader>
 
 						<CardContent className="p-0 pt-2">
@@ -256,66 +274,6 @@ export default async function ClientPage({ params }: Props) {
 									/>
 								</Suspense>
 							</div>
-						</CardContent>
-
-						<CardFooter className="border-t px-6 py-4">
-							<Button asChild variant="outline" size="sm" className="w-full">
-								<Link
-									href={`/dashboard/${organizationId}/clients/${clientId}/addresses`}
-								>
-									Gérer les adresses
-								</Link>
-							</Button>
-						</CardFooter>
-					</Card>
-
-					{/* Onglets pour l'activité (fonctionnalités futures) */}
-					<Card>
-						<CardHeader>
-							<CardTitle className="text-lg">Activité</CardTitle>
-							<CardDescription>Devis et factures</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<Tabs defaultValue="contacts" className="w-full">
-								<TabsList className="grid w-full grid-cols-4">
-									<TabsTrigger value="contacts">
-										<Users className="h-4 w-4 mr-2" />
-										Contacts
-									</TabsTrigger>
-									<TabsTrigger value="quotes">
-										<FileText className="h-4 w-4 mr-2" />
-										Devis
-									</TabsTrigger>
-									<TabsTrigger value="invoices">
-										<CircleDollarSign className="h-4 w-4 mr-2" />
-										Factures
-									</TabsTrigger>
-								</TabsList>
-
-								<div className="mt-4 border rounded-md p-6">
-									<TabsContent value="contacts" className="mt-0">
-										<div className="text-center text-muted-foreground">
-											<p>
-												La gestion des contacts sera disponible prochainement.
-											</p>
-										</div>
-									</TabsContent>
-
-									<TabsContent value="quotes" className="mt-0">
-										<div className="text-center text-muted-foreground">
-											<p>La gestion des devis sera disponible prochainement.</p>
-										</div>
-									</TabsContent>
-
-									<TabsContent value="invoices" className="mt-0">
-										<div className="text-center text-muted-foreground">
-											<p>
-												La gestion des factures sera disponible prochainement.
-											</p>
-										</div>
-									</TabsContent>
-								</div>
-							</Tabs>
 						</CardContent>
 					</Card>
 				</div>
@@ -369,18 +327,6 @@ export default async function ClientPage({ params }: Props) {
 										Modifier le client
 									</Link>
 								</Button>
-								<Button
-									asChild
-									variant="outline"
-									className="w-full justify-start"
-								>
-									<Link
-										href={`/dashboard/${organizationId}/clients/${clientId}/addresses`}
-									>
-										<MapPin className="h-4 w-4 mr-2" />
-										Gérer les adresses
-									</Link>
-								</Button>
 							</div>
 						</CardContent>
 					</Card>
@@ -392,18 +338,6 @@ export default async function ClientPage({ params }: Props) {
 						</CardHeader>
 
 						<CardContent className="space-y-2">
-							<Button
-								asChild
-								variant="secondary"
-								className="w-full justify-start"
-							>
-								<Link
-									href={`/dashboard/${organizationId}/clients/${clientId}/contacts/new`}
-								>
-									<Users className="h-4 w-4 mr-2" />
-									Ajouter un contact
-								</Link>
-							</Button>
 							<Button
 								asChild
 								variant="secondary"
