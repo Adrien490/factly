@@ -64,7 +64,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	if (clientType) filters.clientType = clientType;
 
 	return (
-		<PageContainer className="group">
+		<PageContainer className="group pb-12">
 			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Clients"
