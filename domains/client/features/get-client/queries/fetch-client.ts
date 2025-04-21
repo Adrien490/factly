@@ -34,7 +34,7 @@ export async function fetchClient(
 		});
 
 		if (!client) {
-			throw new Error("Client not found");
+			return null;
 		}
 
 		return client;

@@ -1,14 +1,13 @@
 import {
-	ClientDataTable,
-	ClientDataTableSkeleton,
-} from "@/domains/client/components";
-import {
 	CLIENT_SORT_FIELDS,
 	getClientNavigation,
 } from "@/domains/client/constants";
 import { RefreshClientsButton } from "@/domains/client/features";
 import { getClients } from "@/domains/client/features/get-clients";
-import { hasOrganizationAccess } from "@/domains/organization/features";
+import {
+	ClientDataTable,
+	ClientDataTableSkeleton,
+} from "@/domains/client/features/get-clients/components";
 import {
 	Button,
 	HorizontalMenu,
@@ -21,7 +20,6 @@ import {
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
 import Link from "next/link";
-import { forbidden } from "next/navigation";
 import { Suspense } from "react";
 
 // Options pour le type de client
@@ -55,10 +53,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	const { organizationId } = resolvedParams;
 	const { perPage, page, sortBy, sortOrder, search, status, clientType } =
 		resolvedSearchParams;
-
-	if (!hasOrganizationAccess(organizationId)) {
-		forbidden();
-	}
 
 	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};

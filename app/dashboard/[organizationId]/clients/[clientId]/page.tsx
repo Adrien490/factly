@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import NotFound from "../../not-found";
 
 type Props = {
 	params: Promise<{
@@ -48,6 +49,10 @@ export default async function ClientPage({ params }: Props) {
 	const { organizationId, clientId } = resolvedParams;
 
 	const client = await getClient({ id: clientId, organizationId });
+
+	if (!client) {
+		return <NotFound />;
+	}
 
 	return (
 		<div className="space-y-6">
@@ -306,15 +311,6 @@ export default async function ClientPage({ params }: Props) {
 										<div className="text-center text-muted-foreground">
 											<p>
 												La gestion des factures sera disponible prochainement.
-											</p>
-										</div>
-									</TabsContent>
-
-									<TabsContent value="activity" className="mt-0">
-										<div className="text-center text-muted-foreground">
-											<p>
-												L&apos;historique d&apos;activité sera disponible
-												prochainement.
 											</p>
 										</div>
 									</TabsContent>

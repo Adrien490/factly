@@ -31,15 +31,13 @@ import {
 } from "@tanstack/react-form";
 import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 import { useParams } from "next/navigation";
-import { use } from "react";
 import { useUpdateSupplier } from "../hooks";
 
 type Props = {
-	supplierPromise: Promise<GetSupplierReturn>;
+	supplier: NonNullable<GetSupplierReturn>;
 };
 
-export function UpdateSupplierForm({ supplierPromise }: Props) {
-	const supplier = use(supplierPromise);
+export function UpdateSupplierForm({ supplier }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const { state, dispatch, isPending } = useUpdateSupplier();

@@ -32,15 +32,13 @@ import {
 } from "@tanstack/react-form";
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { use } from "react";
 import { useUpdateClient } from "../../hooks";
 
 type Props = {
-	clientPromise: Promise<GetClientReturn>;
+	client: NonNullable<GetClientReturn>;
 };
 
-export function UpdateClientForm({ clientPromise }: Props) {
-	const client = use(clientPromise);
+export function UpdateClientForm({ client }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const { state, dispatch, isPending } = useUpdateClient();

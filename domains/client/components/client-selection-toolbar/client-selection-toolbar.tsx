@@ -30,6 +30,7 @@ export function ClientSelectionToolbar() {
 	const organizationId = params.organizationId as string;
 	const selectedCount = getSelectedCount();
 	const hasSelection = selectedCount > 0;
+
 	if (!hasSelection) {
 		return null;
 	}

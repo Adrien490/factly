@@ -28,16 +28,16 @@ export function Toolbar({
 }: ToolbarProps) {
 	return (
 		<div
-			className={`mb-6 flex flex-wrap items-center justify-between gap-4 pb-2 ${className}`}
+			className={`mb-6 flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:justify-between sm:items-center sm:gap-4 pb-2 ${className}`}
 		>
 			{leftContent && (
-				<div className="flex flex-wrap items-center gap-3 flex-1 min-w-0">
+				<div className="w-full flex flex-wrap items-center gap-2 sm:gap-3 flex-1 min-w-0">
 					{leftContent}
 				</div>
 			)}
 
 			{rightContent && (
-				<div className="flex flex-wrap items-center gap-3 shrink-0">
+				<div className="w-full sm:w-auto flex flex-wrap items-center gap-2 sm:gap-3 justify-between sm:justify-end sm:shrink-0">
 					{rightContent}
 				</div>
 			)}

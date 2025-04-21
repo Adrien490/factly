@@ -35,7 +35,7 @@ export async function fetchSupplier(
 		});
 
 		if (!supplier) {
-			throw new Error("Fournisseur non trouvé");
+			return null;
 		}
 
 		return supplier;

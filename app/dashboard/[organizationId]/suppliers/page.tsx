@@ -1,4 +1,3 @@
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	SupplierDataTable,
 	SupplierDataTableSkeleton,
@@ -20,7 +19,6 @@ import {
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
 import Link from "next/link";
-import { forbidden } from "next/navigation";
 import { Suspense } from "react";
 
 type PageProps = {
@@ -48,10 +46,6 @@ export default async function SuppliersPage({
 	const { organizationId } = resolvedParams;
 	const { perPage, page, sortBy, sortOrder, search, ...filters } =
 		resolvedSearchParams;
-
-	if (!hasOrganizationAccess(organizationId)) {
-		forbidden();
-	}
 
 	return (
 		<PageContainer className="group">

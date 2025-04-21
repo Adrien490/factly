@@ -1,6 +1,6 @@
+import NotFound from "@/app/dashboard/[organizationId]/not-found";
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
-import { notFound } from "next/navigation";
 import { use } from "react";
 import { CLIENT_STATUSES } from "../../constants";
 import { CLIENT_TYPES } from "../../constants/client-types";
@@ -10,7 +10,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	const client = use(clientPromise);
 
 	if (!client) {
-		return notFound();
+		return <NotFound />;
 	}
 
 	const statusInfo = CLIENT_STATUSES.find(

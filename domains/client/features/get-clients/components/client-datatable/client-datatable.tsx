@@ -43,11 +43,11 @@ import {
 import Link from "next/link";
 import { use } from "react";
 
+import { ClientSelectionToolbar } from "@/domains/client/components/client-selection-toolbar";
+import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import { CLIENT_STATUSES, CLIENT_TYPES } from "../../constants";
-import { DeleteClientButton } from "../../features/delete-client/components/delete-client-button";
-import { ClientSelectionToolbar } from "../client-selection-toolbar";
+import { DeleteClientButton } from "../../../delete-client";
 import { ClientDataTableProps } from "./types";
 
 export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
@@ -65,11 +65,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 			/>
 		);
 	}
-
-	// Calculer le nombre de colonnes pour le colSpan
-	const columnCount = 7;
-
-	// Le nombre total de colonnes dans le tableau
 
 	return (
 		<SelectionProvider>
@@ -307,10 +302,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 				</TableBody>
 				<TableFooter>
 					<TableRow>
-						<TableCell
-							colSpan={columnCount}
-							className="px-4 py-2 hover:bg-transparent"
-						>
+						<TableCell colSpan={7} className="px-4 py-2 hover:bg-transparent">
 							<Pagination
 								total={pagination.total}
 								pageCount={pagination.pageCount}
