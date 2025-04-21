@@ -3,8 +3,8 @@ import { getSupplierNavigation } from "@/domains/supplier/constants/get-supplier
 import {
 	getSuppliers,
 	SupplierDataTable,
+	SupplierDataTableSkeleton,
 } from "@/domains/supplier/features/get-suppliers";
-import { SupplierDataTableSkeleton } from "@/domains/supplier/features/get-suppliers/components/supplier-datatable";
 import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
 import {
