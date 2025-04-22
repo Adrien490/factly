@@ -1,22 +1,24 @@
 "use client";
 
-import { ActionState, ActionStatus } from "@/shared/types/server-action";
+import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
 import { deleteAddress } from "../actions";
 import { deleteAddressSchema } from "../schemas";
 
 export const useDeleteAddress = () => {
-	const [state, action, isPending] = useActionState<
-		ActionState<null, typeof deleteAddressSchema>,
-		FormData
-	>(deleteAddress, {
-		message: "",
-		status: ActionStatus.INITIAL,
-	});
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			deleteAddress,
+			createToastCallbacks<null, typeof deleteAddressSchema>({
+				loadingMessage: "Suppression de l'adresse en cours...",
+			})
+		),
+		null
+	);
 
 	return {
 		state,
-		action,
+		dispatch,
 		isPending,
 	};
 };

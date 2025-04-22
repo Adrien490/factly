@@ -1,6 +1,17 @@
 import { ADDRESS_TYPES } from "@/domains/address/constants";
 import { CreateAddressForm, searchAddress } from "@/domains/address/features";
+import { DeleteAddressButton } from "@/domains/address/features/delete-address/components/delete-address-button";
 import { getClient } from "@/domains/client/features/get-client";
+import { AlertDialogFooter, AlertDialogHeader } from "@/shared/components";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
@@ -17,13 +28,13 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/shared/components/ui/dialog";
-import { Country } from "@prisma/client";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/shared/components/ui/dropdown-menu";
+import { Country } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
@@ -37,6 +48,7 @@ import {
 	MoreHorizontal,
 	Phone,
 	PlusIcon,
+	Trash,
 } from "lucide-react";
 import Link from "next/link";
 import NotFound from "../../not-found";
@@ -324,9 +336,46 @@ export default async function ClientPage({ params }: Props) {
 															<DropdownMenuItem asChild>
 																Modifier
 															</DropdownMenuItem>
-															<DropdownMenuItem asChild>
-																Supprimer
-															</DropdownMenuItem>
+															<AlertDialog>
+																<AlertDialogTrigger asChild>
+																	<DropdownMenuItem
+																		preventDefault
+																		className="text-destructive focus:text-destructive"
+																	>
+																		<Trash className="text-destructive h-4 w-4 mr-2" />
+																		<span>Supprimer</span>
+																	</DropdownMenuItem>
+																</AlertDialogTrigger>
+																<AlertDialogContent>
+																	<AlertDialogHeader>
+																		<AlertDialogTitle className="text-destructive">
+																			Êtes-vous sûr de vouloir supprimer cette
+																			adresse ?
+																		</AlertDialogTitle>
+																		<AlertDialogDescription>
+																			Cette action est irréversible. Cela
+																			supprimera définitivement l&apos;adresse
+																			{addressLine1 && (
+																				<strong> {addressLine1}</strong>
+																			)}{" "}
+																			et toutes ses données associées.
+																		</AlertDialogDescription>
+																	</AlertDialogHeader>
+																	<AlertDialogFooter>
+																		<AlertDialogCancel>
+																			Annuler
+																		</AlertDialogCancel>
+																		<DeleteAddressButton
+																			organizationId={organizationId}
+																			id={id}
+																		>
+																			<AlertDialogAction>
+																				Supprimer
+																			</AlertDialogAction>
+																		</DeleteAddressButton>
+																	</AlertDialogFooter>
+																</AlertDialogContent>
+															</AlertDialog>
 														</DropdownMenuContent>
 													</DropdownMenu>
 												</div>

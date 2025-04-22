@@ -22,7 +22,7 @@ import { deleteAddressSchema } from "../schemas";
  * - L'adresse doit exister et appartenir à l'organisation
  */
 export async function deleteAddress(
-	_: ActionState<unknown, typeof deleteAddressSchema>,
+	_: ActionState<unknown, typeof deleteAddressSchema> | null,
 	formData: FormData
 ): Promise<ActionState<null, typeof deleteAddressSchema>> {
 	try {
@@ -111,49 +111,6 @@ export async function deleteAddress(
 			);
 		}
 
-		// 7. Vérifier si c'est une adresse par défaut et gérer le remplacement
-		if (existingAddress.isDefault) {
-			let otherAddresses;
-
-			if (existingAddress.clientId) {
-				// Recherche d'une autre adresse du même type pour la définir comme par défaut
-				otherAddresses = await db.address.findMany({
-					where: {
-						clientId: existingAddress.clientId,
-						addressType: existingAddress.addressType, // Filtrer par type d'adresse
-						id: { not: validation.data.id },
-					},
-					take: 1,
-				});
-
-				if (otherAddresses.length > 0) {
-					// Définir la première autre adresse comme adresse par défaut
-					await db.address.update({
-						where: { id: otherAddresses[0].id },
-						data: { isDefault: true },
-					});
-				}
-			} else if (existingAddress.supplierId) {
-				// Recherche d'une autre adresse du même type pour la définir comme par défaut
-				otherAddresses = await db.address.findMany({
-					where: {
-						supplierId: existingAddress.supplierId,
-						addressType: existingAddress.addressType, // Filtrer par type d'adresse
-						id: { not: validation.data.id },
-					},
-					take: 1,
-				});
-
-				if (otherAddresses.length > 0) {
-					// Définir la première autre adresse comme adresse par défaut
-					await db.address.update({
-						where: { id: otherAddresses[0].id },
-						data: { isDefault: true },
-					});
-				}
-			}
-		}
-
 		// 8. Supprimer l'adresse
 		await db.address.delete({
 			where: { id: validation.data.id },
@@ -161,22 +118,28 @@ export async function deleteAddress(
 
 		// 9. Revalidation du cache
 		// Tags généraux d'adresses
-		revalidateTag(`addresses:list`);
-		revalidateTag(`addresses:sort:createdAt:desc`); // Tag par défaut pour le tri
+		revalidateTag(`organization:${validation.data.organizationId}:addresses`);
+		revalidateTag(
+			`organization:${validation.data.organizationId}:addresses:sort:createdAt:desc`
+		); // Tag par défaut pour le tri
 
 		// Tags spécifiques au client ou fournisseur
 		if (existingAddress.clientId) {
-			revalidateTag(`clients:org:${validation.data.organizationId}`);
-			revalidateTag(`client:${existingAddress.clientId}`);
+			revalidateTag(`organization:${validation.data.organizationId}:clients`);
 			revalidateTag(
-				`client:${existingAddress.clientId}:addresses:user:${session.user.id}`
+				`organization:${validation.data.organizationId}:client:${existingAddress.clientId}`
+			);
+			revalidateTag(
+				`organization:${validation.data.organizationId}:client:${existingAddress.clientId}:addresses`
 			);
 		}
 		if (existingAddress.supplierId) {
-			revalidateTag(`suppliers:org:${validation.data.organizationId}`);
-			revalidateTag(`supplier:${existingAddress.supplierId}`);
+			revalidateTag(`organization:${validation.data.organizationId}:suppliers`);
 			revalidateTag(
-				`supplier:${existingAddress.supplierId}:addresses:user:${session.user.id}`
+				`organization:${validation.data.organizationId}:supplier:${existingAddress.supplierId}`
+			);
+			revalidateTag(
+				`organization:${validation.data.organizationId}:supplier:${existingAddress.supplierId}:addresses`
 			);
 		}
 
