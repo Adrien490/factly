@@ -155,14 +155,18 @@ export async function createAddress(
 
 		// Tags spécifiques au client ou fournisseur
 		if (clientId) {
-			revalidateTag(`clients:${validatedOrgId}:user:${session.user.id}`);
-			revalidateTag(`client:${clientId}`);
-			revalidateTag(`client:${clientId}:addresses:user:${session.user.id}`);
+			revalidateTag(`organization:${validatedOrgId}:clients`);
+			revalidateTag(`organization:${validatedOrgId}:client:${clientId}`);
+			revalidateTag(
+				`organization:${validatedOrgId}:client:${clientId}:addresses`
+			);
 		}
 		if (supplierId) {
-			revalidateTag(`suppliers:${validatedOrgId}:user:${session.user.id}`);
-			revalidateTag(`supplier:${supplierId}`);
-			revalidateTag(`supplier:${supplierId}:addresses:user:${session.user.id}`);
+			revalidateTag(`organization:${validatedOrgId}:suppliers`);
+			revalidateTag(`organization:${validatedOrgId}:supplier:${supplierId}`);
+			revalidateTag(
+				`organization:${validatedOrgId}:supplier:${supplierId}:addresses`
+			);
 		}
 
 		// 8. Retour de la réponse de succès
