@@ -255,7 +255,7 @@ export function SupplierDataTable({
 													className={cn("flex w-full items-center")}
 												>
 													<FileText className="h-4 w-4 mr-2" />
-													<span>Fiche client</span>
+													<span>Fiche fournisseur</span>
 													{/* Indicateur de chargement masqué par défaut */}
 													<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
 												</Link>

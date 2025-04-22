@@ -1,9 +1,5 @@
 import { getClient } from "@/domains/client/features/get-client";
-import {
-	UpdateClientForm,
-	UpdateClientFormSkeleton,
-} from "@/domains/client/features/update-client";
-import { Suspense } from "react";
+import { UpdateClientForm } from "@/domains/client/features/update-client";
 import NotFound from "../../../not-found";
 
 type PageProps = {
@@ -23,9 +19,5 @@ export default async function EditClientPage({ params }: PageProps) {
 		return <NotFound />;
 	}
 
-	return (
-		<Suspense fallback={<UpdateClientFormSkeleton />}>
-			<UpdateClientForm client={client} />
-		</Suspense>
-	);
+	return <UpdateClientForm client={client} />;
 }

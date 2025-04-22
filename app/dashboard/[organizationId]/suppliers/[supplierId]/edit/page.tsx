@@ -1,10 +1,5 @@
 import { getSupplier } from "@/domains/supplier/features/get-supplier";
-import {
-	UpdateSupplierForm,
-	UpdateSupplierFormSkeleton,
-} from "@/domains/supplier/features/update-supplier";
-import { PageContainer, PageHeader } from "@/shared/components";
-import { Suspense } from "react";
+import { UpdateSupplierForm } from "@/domains/supplier/features/update-supplier";
 import NotFound from "../../../not-found";
 
 type PageProps = {
@@ -24,17 +19,5 @@ export default async function EditClientPage({ params }: PageProps) {
 		return <NotFound />;
 	}
 
-	return (
-		<PageContainer>
-			{/* En-tête */}
-
-			<PageHeader
-				title={`Modifier le fournisseur`}
-				description="Modifiez les informations du fournisseur ci-dessous"
-			/>
-			<Suspense fallback={<UpdateSupplierFormSkeleton />}>
-				<UpdateSupplierForm supplier={supplier} />
-			</Suspense>
-		</PageContainer>
-	);
+	return <UpdateSupplierForm supplier={supplier} />;
 }

@@ -87,7 +87,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 				)}
 			</form.Field>
 
-			<FormLayout withDividers columns={2} className="mt-6">
+			<FormLayout withDividers columns={2}>
 				{/* Section Information de base */}
 				<FormSection
 					title="Informations de base"
