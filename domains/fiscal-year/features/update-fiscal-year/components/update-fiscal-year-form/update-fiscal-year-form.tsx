@@ -9,10 +9,15 @@ import {
 	FormSection,
 } from "@/shared/components/forms";
 import {
+	Button,
+	Calendar,
 	Checkbox,
 	FormDescription,
 	FormLabel,
 	Input,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 	Select,
 	SelectContent,
 	SelectItem,
@@ -20,9 +25,12 @@ import {
 	SelectValue,
 	Textarea,
 } from "@/shared/components/ui";
+import { cn } from "@/shared/utils";
 import { FiscalYear, FiscalYearStatus } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
-import { Calendar, Clock } from "lucide-react";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useUpdateFiscalYear } from "../../hooks/use-update-fiscal-year";
 
@@ -77,7 +85,7 @@ export function UpdateFiscalYearForm({
 				<FormSection
 					title="Informations générales"
 					description="Modifiez les informations principales de l'année fiscale"
-					icon={Calendar}
+					icon={CalendarIcon}
 				>
 					<div className="space-y-4">
 						<form.Field
@@ -160,22 +168,47 @@ export function UpdateFiscalYearForm({
 											Date de début
 											<span className="text-destructive ml-1">*</span>
 										</FormLabel>
-										<input
-											type="date"
-											id="startDate"
-											disabled={isPending}
-											name="startDate"
-											value={
-												field.state.value instanceof Date
-													? field.state.value.toISOString().split("T")[0]
-													: ""
-											}
-											onChange={(e) => {
-												const date = new Date(e.target.value);
-												field.handleChange(date);
-											}}
-											className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-										/>
+										<Popover>
+											<PopoverTrigger asChild>
+												<Button
+													id="startDate-trigger"
+													variant={"outline"}
+													disabled={isPending}
+													className={cn(
+														"w-full justify-start text-left font-normal",
+														!field.state.value && "text-muted-foreground"
+													)}
+												>
+													{field.state.value ? (
+														format(new Date(field.state.value), "dd/MM/yyyy", {
+															locale: fr,
+														})
+													) : (
+														<span>Sélectionner une date</span>
+													)}
+													<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={
+														field.state.value
+															? new Date(field.state.value)
+															: undefined
+													}
+													onSelect={(date) => {
+														if (date) {
+															field.handleChange(date);
+														}
+													}}
+													initialFocus
+													locale={fr}
+													fromYear={2000}
+													toYear={2050}
+												/>
+											</PopoverContent>
+										</Popover>
 										<FieldInfo field={field} />
 									</div>
 								)}
@@ -196,22 +229,47 @@ export function UpdateFiscalYearForm({
 											Date de fin
 											<span className="text-destructive ml-1">*</span>
 										</FormLabel>
-										<input
-											type="date"
-											id="endDate"
-											disabled={isPending}
-											name="endDate"
-											value={
-												field.state.value instanceof Date
-													? field.state.value.toISOString().split("T")[0]
-													: ""
-											}
-											onChange={(e) => {
-												const date = new Date(e.target.value);
-												field.handleChange(date);
-											}}
-											className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-										/>
+										<Popover>
+											<PopoverTrigger asChild>
+												<Button
+													id="endDate-trigger"
+													variant={"outline"}
+													disabled={isPending}
+													className={cn(
+														"w-full justify-start text-left font-normal",
+														!field.state.value && "text-muted-foreground"
+													)}
+												>
+													{field.state.value ? (
+														format(new Date(field.state.value), "dd/MM/yyyy", {
+															locale: fr,
+														})
+													) : (
+														<span>Sélectionner une date</span>
+													)}
+													<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={
+														field.state.value
+															? new Date(field.state.value)
+															: undefined
+													}
+													onSelect={(date) => {
+														if (date) {
+															field.handleChange(date);
+														}
+													}}
+													initialFocus
+													locale={fr}
+													fromYear={2000}
+													toYear={2050}
+												/>
+											</PopoverContent>
+										</Popover>
 										<FieldInfo field={field} />
 									</div>
 								)}

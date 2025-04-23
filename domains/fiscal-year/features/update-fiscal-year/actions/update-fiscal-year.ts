@@ -186,20 +186,29 @@ export const updateFiscalYear: ServerAction<
 				);
 			}
 
-			// Vérifier les chevauchements avec d'autres années fiscales
-			const hasOverlap = await hasDateOverlap(
-				validation.data.organizationId,
-				validation.data.startDate,
-				validation.data.endDate,
-				validation.data.id
-			);
+			// Si les dates n'ont pas changé par rapport à l'existant, pas besoin de vérifier le chevauchement
+			const datesUnchanged =
+				new Date(validation.data.startDate).getTime() ===
+					new Date(existingFiscalYear.startDate).getTime() &&
+				new Date(validation.data.endDate).getTime() ===
+					new Date(existingFiscalYear.endDate).getTime();
 
-			if (hasOverlap) {
-				return createErrorResponse(
-					ActionStatus.CONFLICT,
-					"Cette période chevauche une autre année fiscale existante. Veuillez ajuster les dates.",
-					rawData
+			// Vérifier les chevauchements avec d'autres années fiscales seulement si les dates ont changé
+			if (!datesUnchanged) {
+				const hasOverlap = await hasDateOverlap(
+					validation.data.organizationId,
+					validation.data.startDate,
+					validation.data.endDate,
+					validation.data.id
 				);
+
+				if (hasOverlap) {
+					return createErrorResponse(
+						ActionStatus.CONFLICT,
+						"Cette période chevauche une autre année fiscale existante. Veuillez ajuster les dates.",
+						rawData
+					);
+				}
 			}
 		}
 
