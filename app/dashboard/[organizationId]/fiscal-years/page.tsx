@@ -14,7 +14,6 @@ import {
 	SearchForm,
 	SortingOptionsDropdown,
 	Toolbar,
-	TooltipProvider,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { FiscalYearStatus } from "@prisma/client";
@@ -23,7 +22,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 type PageProps = {
-	searchParams: {
+	searchParams: Promise<{
 		// Tri
 		sortBy?: string;
 		sortOrder?: SortOrder;
@@ -34,15 +33,18 @@ type PageProps = {
 		// Filtres
 		status?: FiscalYearStatus | FiscalYearStatus[];
 		isCurrent?: "true" | "false";
-	};
-	params: {
+	}>;
+	params: Promise<{
 		organizationId: string;
-	};
+	}>;
 };
 
-export default function FiscalYearsPage({ searchParams, params }: PageProps) {
-	const { organizationId } = params;
-	const { sortBy, sortOrder, search, status } = searchParams;
+export default async function FiscalYearsPage({
+	searchParams,
+	params,
+}: PageProps) {
+	const { organizationId } = await params;
+	const { sortBy, sortOrder, search, status } = await searchParams;
 
 	// Précharger la requête pour les années fiscale
 
@@ -100,21 +102,20 @@ export default function FiscalYearsPage({ searchParams, params }: PageProps) {
 			/>
 
 			{/* Tableau de données avec loading state */}
-			<TooltipProvider>
-				<Suspense fallback={<FiscalYearDataTableSkeleton />}>
-					<FiscalYearDataTable
-						fiscalYearsPromise={getFiscalYears({
-							organizationId,
-							sortBy:
-								(sortBy as "startDate" | "name" | "createdAt") || "startDate",
-							sortOrder: sortOrder || "desc",
-							search: search || undefined,
-							status: status as FiscalYearStatus | undefined,
-						})}
-						organizationId={organizationId}
-					/>
-				</Suspense>
-			</TooltipProvider>
+
+			<Suspense fallback={<FiscalYearDataTableSkeleton />}>
+				<FiscalYearDataTable
+					fiscalYearsPromise={getFiscalYears({
+						organizationId,
+						sortBy:
+							(sortBy as "startDate" | "name" | "createdAt") || "startDate",
+						sortOrder: sortOrder || "desc",
+						search: search || undefined,
+						status: status as FiscalYearStatus | undefined,
+					})}
+					organizationId={organizationId}
+				/>
+			</Suspense>
 		</PageContainer>
 	);
 }
