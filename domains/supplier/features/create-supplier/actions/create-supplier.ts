@@ -4,11 +4,11 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import {
 	AddressType,
@@ -27,10 +27,10 @@ import { createSupplierSchema } from "../schemas";
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
  */
-export async function createSupplier(
-	_: ActionState<Supplier, typeof createSupplierSchema> | null,
-	formData: FormData
-): Promise<ActionState<Supplier, typeof createSupplierSchema>> {
+export const createSupplier: ServerAction<
+	Supplier,
+	typeof createSupplierSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -171,4 +171,4 @@ export async function createSupplier(
 				: "Impossible de créer le fournisseur"
 		);
 	}
-}
+};

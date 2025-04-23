@@ -8,7 +8,7 @@ import {
 	TooltipTrigger,
 } from "@/shared/components/ui";
 import { RefreshCw } from "lucide-react";
-import { useRefreshClients } from "../../hooks";
+import { useRefreshClients } from "../../hooks/use-refresh-clients";
 import { RefreshClientsButtonProps } from "./types";
 
 export function RefreshClientsButton({

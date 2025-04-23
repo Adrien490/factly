@@ -5,20 +5,20 @@ import db from "@/shared/lib/db";
 
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { deleteSupplierSchema } from "../schemas";
 
-export async function deleteSupplier(
-	_: ActionState<null, typeof deleteSupplierSchema> | null,
-	formData: FormData
-): Promise<ActionState<null, typeof deleteSupplierSchema>> {
+export const deleteSupplier: ServerAction<
+	null,
+	typeof deleteSupplierSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -114,4 +114,4 @@ export async function deleteSupplier(
 			"Impossible de supprimer définitivement le fournisseur"
 		);
 	}
-}
+};

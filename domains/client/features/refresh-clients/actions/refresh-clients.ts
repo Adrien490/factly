@@ -3,11 +3,11 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -20,10 +20,10 @@ import { refreshClientsSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  * - La référence du client doit être unique dans l'organisation
  */
-export async function refreshClients(
-	_: ActionState<null, typeof refreshClientsSchema> | null,
-	formData: FormData
-): Promise<ActionState<null, typeof refreshClientsSchema>> {
+export const refreshClients: ServerAction<
+	null,
+	typeof refreshClientsSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -88,4 +88,4 @@ export async function refreshClients(
 			error instanceof Error ? error.message : "Impossible de créer le client"
 		);
 	}
-}
+};

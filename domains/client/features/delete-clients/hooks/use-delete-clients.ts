@@ -4,7 +4,7 @@ import { useSelectionContext } from "@/shared/contexts";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { deleteClients } from "../actions";
+import { deleteClients } from "../actions/delete-clients";
 import { deleteClientsSchema } from "../schemas";
 
 export const useDeleteClients = () => {
@@ -21,7 +21,7 @@ export const useDeleteClients = () => {
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	return {

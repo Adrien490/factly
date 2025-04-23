@@ -5,20 +5,20 @@ import db from "@/shared/lib/db";
 
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { deleteClientSchema } from "../schemas";
 
-export async function deleteClient(
-	_: ActionState<null, typeof deleteClientSchema> | null,
-	formData: FormData
-): Promise<ActionState<null, typeof deleteClientSchema>> {
+export const deleteClient: ServerAction<
+	null,
+	typeof deleteClientSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -113,4 +113,4 @@ export async function deleteClient(
 			"Impossible de supprimer définitivement le client"
 		);
 	}
-}
+};

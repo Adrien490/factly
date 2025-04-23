@@ -12,7 +12,7 @@ export const useDeleteSupplier = () => {
 				loadingMessage: "Suppression du fournisseur en cours...",
 			})
 		),
-		null
+		undefined
 	);
 
 	return {

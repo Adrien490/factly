@@ -1,6 +1,5 @@
 "use client";
 
-import { ActionState, ActionStatus } from "@/shared/types/server-action";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Organization } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -11,10 +10,7 @@ import { createOrganizationSchema } from "../schemas";
 
 export function useCreateOrganization() {
 	const router = useRouter();
-	const [state, dispatch, isPending] = useActionState<
-		ActionState<Organization, typeof createOrganizationSchema>,
-		FormData
-	>(
+	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			createOrganization,
 			createToastCallbacks<Organization, typeof createOrganizationSchema>({
@@ -33,7 +29,7 @@ export function useCreateOrganization() {
 				},
 			})
 		),
-		{ status: ActionStatus.INITIAL, message: "" }
+		undefined
 	);
 
 	return { state, dispatch, isPending };

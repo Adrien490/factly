@@ -4,10 +4,10 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { Organization } from "@prisma/client";
 import { revalidateTag } from "next/cache";
@@ -20,10 +20,10 @@ import { deleteOrganizationSchema } from "../schemas";
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
  */
-export async function deleteOrganization(
-	_: ActionState<Organization, typeof deleteOrganizationSchema>,
-	formData: FormData
-): Promise<ActionState<Organization, typeof deleteOrganizationSchema>> {
+export const deleteOrganization: ServerAction<
+	Organization,
+	typeof deleteOrganizationSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -89,4 +89,4 @@ export async function deleteOrganization(
 				: "Impossible de supprimer l'organisation"
 		);
 	}
-}
+};

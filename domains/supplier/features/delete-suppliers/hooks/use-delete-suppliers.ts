@@ -20,7 +20,7 @@ export const useDeleteSuppliers = () => {
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	return {

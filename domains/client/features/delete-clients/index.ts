@@ -1,4 +1,4 @@
-export * from "./actions";
-export * from "./components";
-export * from "./hooks";
+export * from "./actions/delete-clients";
+export * from "./components/delete-clients-button";
+export * from "./hooks/use-delete-clients";
 export * from "./schemas";

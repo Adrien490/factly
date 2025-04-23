@@ -3,11 +3,11 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { Country, Organization } from "@prisma/client";
 import { revalidateTag } from "next/cache";
@@ -22,10 +22,10 @@ import { updateOrganizationSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  * - Le SIREN/SIRET doit être unique s'il est modifié
  */
-export async function updateOrganization(
-	_: ActionState<Organization, typeof updateOrganizationSchema>,
-	formData: FormData
-): Promise<ActionState<Organization, typeof updateOrganizationSchema>> {
+export const updateOrganization: ServerAction<
+	Organization,
+	typeof updateOrganizationSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -171,4 +171,4 @@ export async function updateOrganization(
 				: "Impossible de mettre à jour l'organisation"
 		);
 	}
-}
+};

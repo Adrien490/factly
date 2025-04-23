@@ -1,4 +1,4 @@
-export { createAddress } from "./actions";
+export { createAddress } from "./actions/create-address";
 export { CreateAddressForm } from "./components/create-address-form";
-export { useCreateAddress } from "./hooks";
+export { useCreateAddress } from "./hooks/use-create-address";
 export { createAddressSchema } from "./schemas";

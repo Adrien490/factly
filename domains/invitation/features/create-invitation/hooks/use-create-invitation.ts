@@ -25,7 +25,7 @@ export function useCreateInvitation() {
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	return {

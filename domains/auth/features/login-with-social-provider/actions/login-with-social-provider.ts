@@ -2,10 +2,10 @@
 
 import { auth } from "@/domains/auth/lib";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types";
 import console from "console";
 import { headers } from "next/headers";
@@ -18,10 +18,10 @@ interface NextRedirectError extends Error {
 	digest?: string;
 }
 
-export async function loginWithSocialProvider(
-	_: unknown,
-	formData: FormData
-): Promise<ActionState<ResponseState, typeof loginWithSocialProviderSchema>> {
+export const loginWithSocialProvider: ServerAction<
+	ResponseState,
+	typeof loginWithSocialProviderSchema
+> = async (_, formData) => {
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),
@@ -120,4 +120,4 @@ export async function loginWithSocialProvider(
 		console.error("❌ Erreur globale:", error);
 		return createErrorResponse(ActionStatus.ERROR, errorMessage);
 	}
-}
+};

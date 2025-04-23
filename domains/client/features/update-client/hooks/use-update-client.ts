@@ -29,7 +29,7 @@ export function useUpdateClient() {
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	return { state, dispatch, isPending };

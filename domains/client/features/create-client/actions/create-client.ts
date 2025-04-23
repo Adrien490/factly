@@ -4,11 +4,11 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import {
 	AddressType,
@@ -28,10 +28,10 @@ import { createClientSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  * - La référence du client doit être unique dans l'organisation
  */
-export async function createClient(
-	_: ActionState<Client, typeof createClientSchema> | null,
-	formData: FormData
-): Promise<ActionState<Client, typeof createClientSchema>> {
+export const createClient: ServerAction<
+	Client,
+	typeof createClientSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -195,4 +195,4 @@ export async function createClient(
 			error instanceof Error ? error.message : "Impossible de créer le client"
 		);
 	}
-}
+};

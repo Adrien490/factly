@@ -1,6 +1,6 @@
 "use client";
 import { useTransition } from "react";
-import { useDeleteClient } from "../hooks";
+import { useDeleteClient } from "../hooks/use-delete-client";
 
 interface DeleteClientButtonProps {
 	organizationId: string;

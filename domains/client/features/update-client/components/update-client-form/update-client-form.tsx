@@ -32,7 +32,7 @@ import {
 } from "@tanstack/react-form";
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useUpdateClient } from "../../hooks";
+import { useUpdateClient } from "../../hooks/use-update-client";
 
 type Props = {
 	client: NonNullable<GetClientReturn>;

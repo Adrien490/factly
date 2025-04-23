@@ -5,20 +5,20 @@ import db from "@/shared/lib/db";
 
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { deleteSuppliersSchema } from "../schemas";
 
-export async function deleteSuppliers(
-	_: ActionState<null, typeof deleteSuppliersSchema> | null,
-	formData: FormData
-): Promise<ActionState<null, typeof deleteSuppliersSchema>> {
+export const deleteSuppliers: ServerAction<
+	null,
+	typeof deleteSuppliersSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -115,4 +115,4 @@ export async function deleteSuppliers(
 			"Impossible de supprimer les fournisseurs sélectionnés"
 		);
 	}
-}
+};

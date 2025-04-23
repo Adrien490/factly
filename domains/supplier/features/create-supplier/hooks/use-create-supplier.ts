@@ -30,7 +30,7 @@ export function useCreateSupplier() {
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	return { state, dispatch, isPending };

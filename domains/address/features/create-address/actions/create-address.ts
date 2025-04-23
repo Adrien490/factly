@@ -4,11 +4,11 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { Address, AddressType, Country } from "@prisma/client";
 import { revalidateTag } from "next/cache";
@@ -21,10 +21,10 @@ import { createAddressSchema } from "../schemas";
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
  */
-export async function createAddress(
-	_: ActionState<Address, typeof createAddressSchema> | null,
-	formData: FormData
-): Promise<ActionState<Address, typeof createAddressSchema>> {
+export const createAddress: ServerAction<
+	Address,
+	typeof createAddressSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -178,4 +178,4 @@ export async function createAddress(
 			error instanceof Error ? error.message : "Impossible de créer l'adresse"
 		);
 	}
-}
+};

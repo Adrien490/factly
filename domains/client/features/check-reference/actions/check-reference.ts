@@ -4,20 +4,20 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { headers } from "next/headers";
 import { checkReferenceSchema } from "../schemas";
 import { CheckReferenceResponse } from "../types";
 
-export async function checkReference(
-	_: ActionState<unknown, typeof checkReferenceSchema> | null,
-	formData: FormData
-): Promise<ActionState<CheckReferenceResponse, typeof checkReferenceSchema>> {
+export const checkReference: ServerAction<
+	CheckReferenceResponse,
+	typeof checkReferenceSchema
+> = async (_, formData) => {
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),
@@ -74,4 +74,4 @@ export async function checkReference(
 			error instanceof Error ? error.message : "Erreur inconnue"
 		);
 	}
-}
+};

@@ -3,7 +3,10 @@ import { useActionState } from "react";
 import { refreshSuppliers } from "../actions";
 
 export const useRefreshSuppliers = () => {
-	const [state, dispatch, isPending] = useActionState(refreshSuppliers, null);
+	const [state, dispatch, isPending] = useActionState(
+		refreshSuppliers,
+		undefined
+	);
 
 	return {
 		state,

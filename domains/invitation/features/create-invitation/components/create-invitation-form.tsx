@@ -16,8 +16,8 @@ import { Invitation, InvitationStatus } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { addDays } from "date-fns";
 import { useActionState, useState } from "react";
-import { createInvitation } from "../../actions";
-import { createInvitationSchema } from "../../schemas";
+import { createInvitation } from "../actions/create-invitation";
+import { createInvitationSchema } from "../schemas";
 
 interface CreateInvitationFormProps {
 	organizationId?: string;
@@ -40,7 +40,7 @@ export function CreateInvitationForm({
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	// TanStack Form setup
@@ -51,9 +51,7 @@ export function CreateInvitationForm({
 			status: InvitationStatus.PENDING,
 			expiresAt: addDays(new Date(), 7),
 		},
-		onSubmit: async () => {
-			// La soumission est gérée par l'action dispatch
-		},
+
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
 			[state]

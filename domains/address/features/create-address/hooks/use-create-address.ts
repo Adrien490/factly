@@ -15,7 +15,7 @@ export function useCreateAddress() {
 				loadingMessage: "Création de l'adresse en cours...",
 			})
 		),
-		null
+		undefined
 	);
 
 	return { state, dispatch, isPending };

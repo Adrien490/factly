@@ -13,7 +13,7 @@ export const useDeleteAddress = () => {
 				loadingMessage: "Suppression de l'adresse en cours...",
 			})
 		),
-		null
+		undefined
 	);
 
 	return {

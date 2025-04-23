@@ -16,7 +16,7 @@ import {
 } from "@/domains/address/features/search-address";
 import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
 import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
-import { useCreateSupplier } from "@/domains/supplier/features/create-supplier/hooks";
+import { useCreateSupplier } from "@/domains/supplier/features/create-supplier/hooks/use-create-supplier";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,

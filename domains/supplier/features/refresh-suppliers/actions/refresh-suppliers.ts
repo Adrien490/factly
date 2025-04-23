@@ -3,11 +3,11 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -19,10 +19,10 @@ import { refreshSuppliersSchema } from "../schemas";
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
  */
-export async function refreshSuppliers(
-	_: ActionState<null, typeof refreshSuppliersSchema> | null,
-	formData: FormData
-): Promise<ActionState<null, typeof refreshSuppliersSchema>> {
+export const refreshSuppliers: ServerAction<
+	null,
+	typeof refreshSuppliersSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -90,4 +90,4 @@ export async function refreshSuppliers(
 				: "Impossible de rafraîchir les fournisseurs"
 		);
 	}
-}
+};

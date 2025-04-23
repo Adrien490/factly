@@ -14,7 +14,7 @@ export function useUpdateSupplier() {
 				loadingMessage: "Mise à jour du fournisseur en cours...",
 			})
 		),
-		null
+		undefined
 	);
 
 	return { state, dispatch, isPending };

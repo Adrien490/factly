@@ -4,11 +4,11 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { Invitation, InvitationStatus } from "@prisma/client";
 import { addDays } from "date-fns";
@@ -23,10 +23,10 @@ import { createInvitationSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  * - L'email ne doit pas déjà avoir une invitation en attente dans l'organisation
  */
-export async function createInvitation(
-	_: ActionState<Invitation, typeof createInvitationSchema> | null,
-	formData: FormData
-): Promise<ActionState<Invitation, typeof createInvitationSchema>> {
+export const createInvitation: ServerAction<
+	Invitation,
+	typeof createInvitationSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -175,4 +175,4 @@ export async function createInvitation(
 				: "Impossible d'envoyer l'invitation"
 		);
 	}
-}
+};

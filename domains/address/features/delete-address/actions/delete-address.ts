@@ -4,11 +4,11 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -21,10 +21,10 @@ import { deleteAddressSchema } from "../schemas";
  * - L'utilisateur doit avoir accès à l'organisation
  * - L'adresse doit exister et appartenir à l'organisation
  */
-export async function deleteAddress(
-	_: ActionState<unknown, typeof deleteAddressSchema> | null,
-	formData: FormData
-): Promise<ActionState<null, typeof deleteAddressSchema>> {
+export const deleteAddress: ServerAction<
+	null,
+	typeof deleteAddressSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -153,4 +153,4 @@ export async function deleteAddress(
 				: "Impossible de supprimer l'adresse"
 		);
 	}
-}
+};

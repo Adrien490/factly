@@ -51,7 +51,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
-import { createClient } from "../../actions";
+import { createClient } from "../../actions/create-client";
 import { createClientSchema } from "../../schemas";
 import { formOpts } from "./constants";
 
@@ -102,7 +102,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				},
 			})
 		),
-		null
+		undefined
 	);
 
 	console.log(state);

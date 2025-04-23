@@ -2,7 +2,8 @@
 
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
-import { deleteClient, deleteClientSchema } from "../actions";
+import { deleteClient } from "../actions/delete-client";
+import { deleteClientSchema } from "../schemas";
 
 export const useDeleteClient = () => {
 	const [state, dispatch, isPending] = useActionState(
@@ -12,7 +13,7 @@ export const useDeleteClient = () => {
 				loadingMessage: "Suppression du client en cours...",
 			})
 		),
-		null
+		undefined
 	);
 
 	return {
