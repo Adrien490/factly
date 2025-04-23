@@ -34,9 +34,6 @@ export const GET_ORGANIZATION_DEFAULT_SELECT = {
 	region: true,
 	country: true,
 
-	// Paramètres TVA
-	vatMethod: true,
-
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
@@ -52,16 +49,6 @@ export const GET_ORGANIZATION_DEFAULT_SELECT = {
 					image: true,
 				},
 			},
-		},
-	},
-
-	// Statistiques importantes
-	_count: {
-		select: {
-			clients: true,
-			invoices: true,
-			quotes: true,
-			fiscalYears: true,
 		},
 	},
 } satisfies Prisma.OrganizationSelect;

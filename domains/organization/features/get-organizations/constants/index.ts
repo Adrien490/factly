@@ -34,9 +34,6 @@ export const GET_ORGANIZATIONS_DEFAULT_SELECT = {
 	region: true,
 	country: true,
 
-	// Paramètres TVA
-	vatMethod: true,
-
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
@@ -54,16 +51,6 @@ export const GET_ORGANIZATIONS_DEFAULT_SELECT = {
 			},
 		},
 	},
-
-	// Statistiques importantes
-	/*_count: {
-		select: {
-			clients: true,
-			invoices: true,
-			quotes: true,
-			fiscalYears: true,
-		},
-	},*/
 } satisfies Prisma.OrganizationSelect;
 
 export const ORGANIZATION_SORTABLE_FIELDS = ["name", "createdAt"] as const;

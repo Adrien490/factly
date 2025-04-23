@@ -72,7 +72,7 @@ model User {
   passkeys      Passkey[] // Relation avec les passkeys
 
   // Nouvelle relation pour les invitations envoyées
-  sentInvitations Invitation[] @relation("SentInvitations")
+  invitations Invitation[] @relation("invitations")
 
   @@map("user")
 }
@@ -121,29 +121,8 @@ model Organization {
   capitalAmount     Float? // Capital social
   intracomVatNumber String? // Numéro de TVA intracommunautaire
 
-  // Paramètres de facturation française
-  invoicePrefix     String? // Préfixe pour les numéros de factures
-  quotePrefix       String? // Préfixe pour les numéros de devis
-  nextInvoiceNumber Int     @default(1) // Prochain numéro de facture
-  nextQuoteNumber   Int     @default(1) // Prochain numéro de devis
-
-  // Informations bancaires (nécessaires pour les virements SEPA et les prélèvements)
-  bankName        String? // Nom de la banque
-  bankAccountIBAN String? // IBAN
-  bankAccountBIC  String? // BIC/SWIFT
-
   // Mentions légales obligatoires pour factures
   invoiceFooter String? // Texte en pied de page des factures
-
-  // Paramètres TVA spécifiques
-  vatMethod               String? @default("DEBIT") // DEBIT ou ENCAISSEMENT
-  vatDeclarationType      String? @default("CA3") // CA3, CA12, etc.
-  vatDeclarationFrequency String? @default("MONTHLY") // MONTHLY, QUARTERLY, ANNUAL
-
-  // Paramètres d'intégration comptable
-  accountingSystemType   String? // SAGE, EBP, CEGID, etc.
-  accountingExportFormat String? // Format d'export comptable préféré
-  defaultJournalCode     String? // Code journal ventes (ex: VE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -155,20 +134,12 @@ model Organization {
   fiscalYears FiscalYear[] // Relation avec les années fiscales
 
   // Relations pour la gestion commerciale
-  products   Product[]
-  categories ProductCategory[]
-  invoices   Invoice[]
-  quotes     Quote[]
-  taxRates   TaxRate[]
-  suppliers  Supplier[]
 
-  // Relation avec eInvoicing
-  eInvoicingConfig ElectronicInvoicingConfig?
+  suppliers Supplier[]
 
   // Relation avec User (créateur)
-  creator   User?       @relation("UserOrganizations", fields: [creatorId], references: [id])
+  creator   User?   @relation("UserOrganizations", fields: [creatorId], references: [id])
   creatorId String?
-  warehouse Warehouse[]
 }
 
 model FiscalYear {
@@ -179,18 +150,6 @@ model FiscalYear {
   endDate     DateTime // Date de fin
   status      FiscalYearStatus @default(ACTIVE)
   isCurrent   Boolean          @default(false) // Indique l'année fiscale courante
-
-  // Documents liés à la clôture
-  balanceSheetUrl    String? // URL du bilan
-  incomeStatementUrl String? // URL du compte de résultat
-  taxDeclarationUrl  String? // URL de la déclaration fiscale
-  auditReportUrl     String? // URL du rapport d'audit
-
-  // Statuts des étapes de clôture
-  journalEntriesClosed Boolean @default(false) // Écritures clôturées
-  inventoryChecked     Boolean @default(false) // Inventaire vérifié
-  accountsReconciled   Boolean @default(false) // Comptes rapprochés
-  taxesCalculated      Boolean @default(false) // Taxes calculées
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -239,7 +198,7 @@ model Invitation {
   organizationId String
 
   // Relation avec l'utilisateur qui a envoyé l'invitation
-  user   User   @relation(name: "SentInvitations", fields: [userId], references: [id])
+  user   User   @relation(name: "invitations", fields: [userId], references: [id])
   userId String
 
   // Contrainte d'unicité pour empêcher les invitations multiples
@@ -278,11 +237,10 @@ model Supplier {
   updatedAt DateTime @updatedAt
 
   // Relations
-  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   addresses      Address[]
   contacts       Contact[]
-  products       ProductSupplier[]
 
   // Pour filtrer les meilleurs fournisseurs
   @@index([name])
@@ -333,31 +291,6 @@ model Address {
   @@index([supplierId])
 }
 
-enum AddressType {
-  BILLING
-  SHIPPING
-  HEADQUARTERS // Siège social
-  WAREHOUSE // Entrepôt
-  PRODUCTION // Site de production
-  COMMERCIAL // Bureau commercial
-}
-
-model ProductSupplier {
-  id String @id @default(cuid())
-
-  // Relations
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId  String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  supplierId String
-
-  // Métadonnées
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([productId, supplierId])
-}
-
 // Modifications du modèle Client existant
 
 model Client {
@@ -386,8 +319,6 @@ model Client {
   organizationId String
   user           User         @relation(fields: [userId], references: [id])
   userId         String
-  quotes         Quote[]
-  invoices       Invoice[]
 
   // Index composé pour recherche par nom + statut
   // Pour les requêtes de triage par date
@@ -397,302 +328,6 @@ model Client {
   @@index([createdAt])
   @@index([updatedAt])
   @@index([organizationId, clientType])
-}
-
-// Modèles pour la gestion commerciale
-
-model Product {
-  id               String  @id @default(cuid())
-  name             String
-  description      String?
-  htmlDescription  String? // Description riche en HTML
-  shortDescription String? // Description courte pour listings
-
-  // Catégorisation
-  categoryId String?
-  category   ProductCategory? @relation(fields: [categoryId], references: [id])
-
-  // Pricing
-  price          Float
-  costPrice      Float? // Prix d'achat
-  compareAtPrice Float? // Prix barré (avant remise)
-
-  // Taxes and accounting
-  taxRateId      String?
-  taxRate        TaxRate? @relation(fields: [taxRateId], references: [id])
-  accountingCode String? // Code comptable
-
-  // Media
-  mainImageUrl String?
-
-  // Inventory
-  manageInventory Boolean     @default(true)
-  inventories     Inventory[]
-
-  // Status
-  status         ProductStatus @default(ACTIVE)
-  // Relations
-  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-
-  // Timestamps
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  QuoteItem       QuoteItem[]
-  InvoiceItem     InvoiceItem[]
-  ProductSupplier ProductSupplier[]
-
-  // Filtrer produits actifs par organisation
-  // Filtrer par catégorie
-  // Filtrer par gamme de prix
-  // Pour triage chronologique
-  // Recherche rapide par SKU
-  @@index([organizationId, status])
-  @@index([organizationId, categoryId])
-  @@index([price])
-  @@index([createdAt])
-}
-
-enum ProductStatus {
-  ACTIVE
-  DRAFT
-  ARCHIVED
-  OUT_OF_STOCK
-  DISCONTINUED
-}
-
-model ProductCategory {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  products    Product[]
-
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-}
-
-model Inventory {
-  id              String    @id @default(cuid())
-  productId       String
-  product         Product   @relation(fields: [productId], references: [id])
-  warehouseId     String
-  warehouse       Warehouse @relation(fields: [warehouseId], references: [id])
-  currentStock    Float // Quantité en stock
-  minimumStock    Float // Seuil d'alerte minimum
-  optimumStock    Float // Niveau optimal
-  unitCost        Float // Coût unitaire moyen
-  lastStockUpdate DateTime  @default(now())
-
-  // Métadonnées
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  stockMovements StockMovement[]
-
-  // Pour requêtes sur produits en rupture ou à réapprovisionner
-  @@unique([productId, warehouseId])
-  @@index([currentStock])
-}
-
-model Warehouse {
-  id             String       @id @default(cuid())
-  name           String
-  address        String?
-  isDefault      Boolean      @default(false)
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  inventory      Inventory[]
-
-  @@index([organizationId])
-}
-
-model StockMovement {
-  id            String       @id @default(cuid())
-  inventoryId   String
-  inventory     Inventory    @relation(fields: [inventoryId], references: [id])
-  quantity      Float // Positive for in, negative for out
-  movementType  MovementType
-  reference     String? // Reference to invoice, quote, etc.
-  referenceType String? // "invoice", "quote", "manual_adjustment", etc.
-  cost          Float?
-  date          DateTime     @default(now())
-  notes         String?
-  performedBy   String? // User ID
-
-  // Recherche chronologique
-  // Mouvements d'un produit par date
-  // Filtrer par type de mouvement
-  @@index([date])
-  @@index([inventoryId, date])
-  @@index([movementType])
-}
-
-model Quote {
-  id                 String     @id @default(cuid())
-  number             String // Numéro de devis
-  title              String?
-  clientId           String
-  client             Client     @relation(fields: [clientId], references: [id])
-  status             SaleStatus @default(DRAFT)
-  date               DateTime   @default(now())
-  expiryDate         DateTime?
-  subtotal           Float
-  taxAmount          Float
-  totalAmount        Float
-  notes              String?
-  termsAndConditions String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  items          QuoteItem[]
-  invoices       Invoice[]
-}
-
-model QuoteItem {
-  id            String        @id @default(cuid())
-  quoteId       String
-  quote         Quote         @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  productId     String?
-  product       Product?      @relation(fields: [productId], references: [id])
-  description   String
-  quantity      Float
-  unitPrice     Float
-  tax           Float
-  discountType  DiscountType?
-  discountValue Float? // Valeur de la remise (pourcentage ou montant fixe)
-  total         Float
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Invoice {
-  id                 String        @id @default(cuid())
-  number             String // Numéro de facture
-  clientId           String
-  client             Client        @relation(fields: [clientId], references: [id])
-  quoteId            String?
-  quote              Quote?        @relation(fields: [quoteId], references: [id])
-  status             InvoiceStatus @default(DRAFT)
-  date               DateTime      @default(now())
-  dueDate            DateTime
-  subtotal           Float
-  taxAmount          Float
-  totalAmount        Float
-  paidAmount         Float         @default(0)
-  notes              String?
-  termsAndConditions String?
-
-  // Champs pour facturation électronique 2025
-  einvoiceStatus           EInvoiceStatus  @default(NOT_SUBMITTED)
-  einvoiceFormat           EInvoiceFormat? // Format utilisé pour la facture électronique
-  einvoiceTransmissionDate DateTime? // Date d'envoi à la plateforme
-  einvoiceReceivedDate     DateTime? // Date de réception par le destinataire
-  einvoiceReference        String? // Référence attribuée par la plateforme
-  einvoiceUrl              String? // URL d'accès à la facture dans le système PPF/PDP
-  einvoicePlatform         String? // Plateforme utilisée (PPF ou nom du PDP)
-  einvoiceError            String? // Message d'erreur si rejet
-  recipientSiret           String? // SIRET du destinataire (obligatoire B2B 2025)
-  isB2G                    Boolean         @default(false) // Facture destinée au secteur public (Chorus Pro)
-  chorusProReference       String? // N° d'engagement Chorus Pro (si B2G)
-  structuredData           Json?           @db.JsonB // Données structurées selon norme EN16931
-
-  // Traçabilité et conformité
-  lifecycleEvents       Json?        @db.JsonB // Historique des événements du cycle de vie
-  archiveMedium         ArchiveType? // Support d'archivage légal de la facture électronique
-  archiveReference      String? // Référence dans le système d'archivage
-  archiveExpirationDate DateTime? // Date de fin d'archivage légal (10 ans par défaut)
-  archiveIntegrityHash  String? // Hash pour garantir l'intégrité du document archivé
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  organization     Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId   String
-  items            InvoiceItem[]
-  payments         Payment[]
-  transmissionLogs EInvoiceTransmission[]
-
-  // Factures par statut et date
-  // Factures d'un client par statut 
-  // Pour alertes d'échéance
-  // Pour recherches par montant
-  @@index([organizationId, status, date])
-  @@index([clientId, status])
-  @@index([dueDate, status])
-  @@index([totalAmount])
-  @@index([einvoiceStatus]) // Index pour rechercher les factures à transmettre
-  @@index([einvoiceReference]) // Index pour recherche rapide par référence
-  @@index([recipientSiret]) // Index pour recherche par SIRET destinataire
-}
-
-model InvoiceItem {
-  id            String        @id @default(cuid())
-  invoiceId     String
-  invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  productId     String?
-  product       Product?      @relation(fields: [productId], references: [id])
-  description   String
-  quantity      Float
-  unitPrice     Float
-  tax           Float
-  discountType  DiscountType?
-  discountValue Float? // Valeur de la remise (pourcentage ou montant fixe)
-  total         Float
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Payment {
-  id            String        @id @default(cuid())
-  invoiceId     String
-  invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  amount        Float
-  paymentDate   DateTime      @default(now())
-  paymentMethod PaymentMethod @default(BANK_TRANSFER)
-  reference     String? // Référence du paiement (numéro de chèque, etc.)
-  notes         String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// Nouveau modèle pour les taux de TVA
-
-model TaxRate {
-  id          String  @id @default(cuid())
-  name        String // Ex: "TVA standard", "TVA réduite" 
-  rate        Float // Ex: 20.0, 10.0, 5.5
-  description String?
-  isDefault   Boolean @default(false)
-
-  // Spécificités françaises
-  accountCode String? // Code comptable (ex: 445711 pour TVA collectée à 20%)
-  euVatType   String? // Type pour déclarations EU: "GOODS", "SERVICES", "NOT_APPLICABLE"
-
-  // Conformité e-invoicing européenne
-  euTaxCategory       String? // Catégorie de taxe selon norme européenne (S=standard, Z=zéro, E=exonéré, etc.)
-  euTaxCategoryCode   String? // Code officiel selon la norme EN16931
-  reverseChargeReason String? // Motif d'autoliquidation si applicable
-  exemptionReason     String? // Motif d'exonération si applicable
-  taxExemptionCode    String? // Code d'exonération selon norme EU
-  // Support des nouvelles règles de TVA B2C transfrontalières (OSS)
-  isOssEligible       Boolean @default(false) // Éligible au One-Stop-Shop
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  products       Product[]
 }
 
 enum Civility {
@@ -705,6 +340,14 @@ enum Civility {
 }
 
 // Enums
+enum AddressType {
+  BILLING
+  SHIPPING
+  HEADQUARTERS // Siège social
+  WAREHOUSE // Entrepôt
+  PRODUCTION // Site de production
+  COMMERCIAL // Bureau commercial
+}
 
 enum InvitationStatus {
   PENDING
@@ -723,39 +366,6 @@ enum ClientStatus {
   ACTIVE
   INACTIVE
   ARCHIVED
-}
-
-enum SaleStatus {
-  DRAFT
-  SENT
-  ACCEPTED
-  REJECTED
-  COMPLETED
-  CANCELLED
-}
-
-enum InvoiceStatus {
-  DRAFT
-  SENT
-  PARTIALLY_PAID
-  PAID
-  OVERDUE
-  CANCELLED
-}
-
-enum PaymentMethod {
-  BANK_TRANSFER
-  CREDIT_CARD
-  CHECK
-  CASH
-  DIRECT_DEBIT
-  PAYPAL
-  OTHER
-}
-
-enum DiscountType {
-  PERCENTAGE
-  FIXED_AMOUNT
 }
 
 enum LegalForm {
@@ -790,127 +400,6 @@ enum SupplierStatus {
   ONBOARDING // En cours d'intégration
   BLOCKED // Bloqué
   ARCHIVED // Archivé
-}
-
-enum MovementType {
-  PURCHASE
-  SALE
-  RETURN
-  ADJUSTMENT
-  TRANSFER
-  LOSS
-}
-
-// Nouveaux enums pour la facturation électronique 2025
-enum EInvoiceStatus {
-  NOT_SUBMITTED // Non soumise au format électronique
-  READY_TO_SEND // Prête à être transmise
-  SUBMITTED // Transmise à la plateforme
-  DELIVERED // Livrée au destinataire
-  ACCEPTED // Acceptée par le destinataire
-  REJECTED // Rejetée par le destinataire ou la plateforme
-  PAID // Payée
-  ARCHIVED // Archivée
-}
-
-enum EInvoiceFormat {
-  FACTURX // Format hybride PDF/XML (Factur-X/ZUGFeRD)
-  UBL // Format UBL (Universal Business Language)
-  CII // Format CII (Cross Industry Invoice)
-  EDIFACT // Format EDIFACT
-  CHORUS_PRO // Format spécifique Chorus Pro
-  PDF_ONLY // Format PDF simple (non structuré)
-  JSON_EXTENDED // Format JSON étendu
-}
-
-enum ArchiveType {
-  INTERNAL_SYSTEM // Système d'archivage interne
-  EXTERNAL_ARCHIVE // Prestataire d'archivage externe
-  BLOCKCHAIN // Archivage blockchain
-  PHYSICAL_COPY // Copie papier (usage limité)
-  CLOUD_STORAGE // Stockage cloud certifié
-}
-
-// Nouveau modèle pour la configuration de facturation électronique
-model ElectronicInvoicingConfig {
-  id String @id @default(cuid())
-
-  // Informations de connexion aux plateformes
-  defaultPlatform String  @default("PPF") // Plateforme par défaut (PPF ou nom du PDP)
-  ppfApiKey       String? // Clé API pour le Portail Public de Facturation
-  pdpApiKey       String? // Clé API pour la Plateforme de Dématérialisation Partenaire
-  pdpName         String? // Nom du PDP utilisé
-
-  // Paramètres par défaut
-  defaultEInvoiceFormat EInvoiceFormat @default(FACTURX) // Format par défaut
-  autoSubmit            Boolean        @default(false) // Envoi automatique des factures
-
-  // Paramètres d'archivage
-  archivingEnabled    Boolean     @default(true)
-  defaultArchiveType  ArchiveType @default(CLOUD_STORAGE)
-  archiveProviderName String?
-  archiveApiKey       String?
-  archiveEndpoint     String?
-
-  // Paramètres de signature électronique
-  signatureEnabled  Boolean @default(false)
-  signatureProvider String?
-  signatureApiKey   String?
-  signatureEndpoint String?
-
-  // Certificats pour signature électronique qualifiée (RGS**/eIDAS)
-  certificateUrl      String?
-  certificatePassword String?
-  certificateExpiry   DateTime?
-
-  // Paramètres avancés
-  sendReminderAfterDays Int     @default(15) // Relance après X jours
-  storeStructuredData   Boolean @default(true) // Stockage des données structurées
-
-  // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String       @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// Nouveau modèle pour le suivi des transmissions des factures électroniques
-model EInvoiceTransmission {
-  id String @id @default(cuid())
-
-  // Référence à la facture
-  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  invoiceId String
-
-  // Informations de transmission
-  transmissionDate  DateTime            @default(now())
-  status            EInvoiceEventStatus @default(SUBMITTED)
-  platform          String // Nom de la plateforme utilisée
-  platformReference String? // Référence unique attribuée par la plateforme
-  responsePayload   Json?               @db.JsonB // Réponse complète de la plateforme
-  errorCode         String? // Code d'erreur le cas échéant
-  errorMessage      String? // Message d'erreur détaillé
-
-  // Métadonnées
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([invoiceId])
-  @@index([status])
-  @@index([transmissionDate])
-  @@index([platformReference])
-}
-
-// Nouveau enum pour le statut des événements de transmission
-enum EInvoiceEventStatus {
-  SUBMITTED // Soumise à la plateforme
-  ACCEPTED // Acceptée par la plateforme
-  REJECTED // Rejetée par la plateforme
-  DELIVERED // Livrée au destinataire
-  READ // Lue par le destinataire
-  ACK_RECEIVED // Accusé de réception reçu
-  TECHNICAL_ERROR // Erreur technique
 }
 
 enum Country {
