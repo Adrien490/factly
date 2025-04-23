@@ -27,61 +27,42 @@ export default function LegalPage() {
 					Dernière mise à jour : {new Date().toLocaleDateString("fr-FR")}
 				</p>
 
-				<h2>1. Éditeur du site</h2>
+				<h2>1. Présentation du projet</h2>
 				<p>
-					Factly SAS
-					<br />
-					Société par actions simplifiée au capital de 10 000 €
-					<br />
-					Siège social : 123 Avenue de la République, 75011 Paris, France
-					<br />
-					SIREN : 123 456 789
-					<br />
-					RCS Paris B 123 456 789
-					<br />
-					N° TVA Intracommunautaire : FR 12 123456789
-					<br />
-					Tél : +33 (0)1 23 45 67 89
-					<br />
-					Email : contact@factly.com
+					Factly est un projet développé dans le cadre d&apos;une formation en
+					alternance/projet d&apos;école. Il s&apos;agit d&apos;une
+					démonstration de compétences techniques et ne constitue pas une offre
+					commerciale.
 				</p>
 
-				<h2>2. Directeur de la publication</h2>
+				<h2>2. Responsable du projet</h2>
 				<p>
-					Le directeur de la publication est Monsieur Jean Dupont, en sa qualité
-					de Président de Factly SAS.
+					Ce projet est réalisé et maintenu par un étudiant dans le cadre de son
+					cursus de formation.
 				</p>
 
 				<h2>3. Hébergement</h2>
-				<p>
-					Le site Factly est hébergé par :
-					<br />
-					OVH SAS
-					<br />
-					2 rue Kellermann, 59100 Roubaix, France
-					<br />
-					Tél : +33 (0)8 99 70 17 61
-				</p>
+				<p>Le site est hébergé à des fins éducatives.</p>
 
 				<h2>4. Propriété intellectuelle</h2>
 				<p>
 					L&apos;ensemble des éléments composant le site Factly (textes,
 					graphismes, logiciels, photographies, images, vidéos, sons, plans,
-					logos, marques, etc.) sont la propriété exclusive de Factly SAS. Ces
-					éléments sont protégés par les lois françaises et internationales
-					relatives à la propriété intellectuelle.
+					logos, etc.) sont protégés par les lois relatives à la propriété
+					intellectuelle.
 				</p>
 				<p>
-					Toute reproduction, représentation, modification, publication,
-					adaptation de tout ou partie des éléments du site, quel que soit le
-					moyen ou le procédé utilisé, est interdite, sauf autorisation écrite
-					préalable de Factly SAS.
+					Cette démonstration est à but non commercial et éducatif uniquement.
 				</p>
 
 				<h2>5. Données personnelles</h2>
 				<p>
-					Les informations concernant la collecte et le traitement des données
-					personnelles sont détaillées dans notre{" "}
+					Ce site de démonstration ne collecte aucune donnée personnelle à des
+					fins commerciales. Toute donnée saisie sur ce site est utilisée
+					uniquement dans le cadre de la démonstration des fonctionnalités.
+				</p>
+				<p>
+					Pour plus d&apos;informations, consultez notre{" "}
 					<Link
 						href="/privacy"
 						className="text-primary/90 hover:text-primary transition-colors"
@@ -93,32 +74,32 @@ export default function LegalPage() {
 
 				<h2>6. Cookies</h2>
 				<p>
-					Le site Factly utilise des cookies pour améliorer l&apos;expérience
-					utilisateur. Pour plus d&apos;informations sur l&apos;utilisation des
-					cookies, veuillez consulter notre Politique de Confidentialité.
+					Le site utilise des cookies à des fins techniques et de démonstration
+					uniquement. Ces cookies sont nécessaires au fonctionnement de
+					l&apos;application et ne servent pas à des fins publicitaires ou
+					commerciales.
 				</p>
 
 				<h2>7. Crédits</h2>
 				<p>
-					Conception et développement : Factly SAS
-					<br />
-					Illustrations : Freepik
+					Conception et développement : Projet étudiant
 					<br />
 					Icônes : Lucide Icons
 					<br />
 					Polices : Inter, Source Serif
 				</p>
 
-				<h2>8. Loi applicable et juridiction</h2>
+				<h2>8. Avertissement</h2>
 				<p>
-					Les présentes mentions légales sont régies par la loi française. En
-					cas de litige, les tribunaux français seront seuls compétents.
+					Factly est un projet de démonstration. Les fonctionnalités présentées
+					sont à titre illustratif et ne constituent pas une offre commerciale.
+					Les données affichées sont fictives.
 				</p>
 
 				<h2>9. Contact</h2>
 				<p>
-					Pour toute question relative à ces mentions légales, vous pouvez nous
-					contacter à l&apos;adresse suivante : legal@factly.com
+					Pour toute question concernant ce projet, vous pouvez envoyer un email
+					à : adrien.poirier49@gmail.com
 				</p>
 			</div>
 		</PageContainer>

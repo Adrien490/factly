@@ -50,12 +50,12 @@ export function HeroContent() {
 				{/* Boutons d'action - design 2025 avec CTA primaire et secondaire */}
 				<div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8 sm:mt-10 w-full">
 					{/* CTA Primaire */}
-					<div className="w-full sm:max-w-md relative overflow-hidden">
+					<div className="w-full sm:max-w-md relative overflow-hidden isolate z-10">
 						<Button
 							size="lg"
 							asChild
 							variant="default"
-							className="w-full h-12 rounded-full"
+							className="w-full h-12 rounded-full relative z-10"
 						>
 							<Link
 								href="/login"
