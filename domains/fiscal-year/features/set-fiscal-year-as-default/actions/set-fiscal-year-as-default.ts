@@ -108,10 +108,25 @@ export const setFiscalYearAsDefault: ServerAction<
 			);
 		}
 
-		// 9. Définir l'année fiscale comme année par défaut (pas besoin de transaction car nous avons vérifié qu'il n'y a pas d'autre année par défaut)
-		await db.fiscalYear.update({
-			where: { id: validation.data.id },
-			data: { isCurrent: true },
+		// 8. Désactiver l'année fiscale courante existante et définir la nouvelle comme défaut
+		// Utiliser une transaction pour garantir l'atomicité de l'opération
+		await db.$transaction(async (tx) => {
+			// Désactiver toutes les autres années fiscales courantes
+			await tx.fiscalYear.updateMany({
+				where: {
+					organizationId: validation.data.organizationId,
+					isCurrent: true,
+				},
+				data: {
+					isCurrent: false,
+				},
+			});
+
+			// Définir la nouvelle année fiscale comme courante
+			await tx.fiscalYear.update({
+				where: { id: validation.data.id },
+				data: { isCurrent: true },
+			});
 		});
 
 		// Revalidation du cache
