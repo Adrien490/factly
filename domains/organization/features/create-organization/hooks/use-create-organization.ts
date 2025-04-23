@@ -5,7 +5,7 @@ import { Organization } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { createOrganization } from "../actions";
+import { createOrganization } from "../actions/create-organization";
 import { createOrganizationSchema } from "../schemas";
 
 export function useCreateOrganization() {
