@@ -31,7 +31,7 @@ import {
 } from "@tanstack/react-form";
 import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useUpdateSupplier } from "../hooks";
+import { useUpdateSupplier } from "../hooks/use-update-supplier";
 
 type Props = {
 	supplier: NonNullable<GetSupplierReturn>;

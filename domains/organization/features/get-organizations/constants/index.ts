@@ -37,20 +37,6 @@ export const GET_ORGANIZATIONS_DEFAULT_SELECT = {
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
-
-	// Relations
-	members: {
-		select: {
-			user: {
-				select: {
-					id: true,
-					name: true,
-					email: true,
-					image: true,
-				},
-			},
-		},
-	},
 } satisfies Prisma.OrganizationSelect;
 
 export const ORGANIZATION_SORTABLE_FIELDS = ["name", "createdAt"] as const;

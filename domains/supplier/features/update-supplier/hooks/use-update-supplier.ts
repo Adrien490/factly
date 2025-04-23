@@ -3,7 +3,7 @@
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Supplier } from "@prisma/client";
 import { useActionState } from "react";
-import { updateSupplier } from "../actions";
+import { updateSupplier } from "../actions/update-supplier";
 import { updateSupplierSchema } from "../schemas";
 
 export function useUpdateSupplier() {

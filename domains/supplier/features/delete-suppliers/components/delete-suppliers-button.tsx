@@ -1,6 +1,7 @@
 "use client";
+
 import { useTransition } from "react";
-import { useDeleteSuppliers } from "../hooks";
+import { useDeleteSuppliers } from "../hooks/use-delete-suppliers";
 
 interface DeleteSuppliersButtonProps {
 	organizationId: string;

@@ -4,7 +4,7 @@ import { useSelectionContext } from "@/shared/contexts";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { deleteSuppliers } from "../actions";
+import { deleteSuppliers } from "../actions/delete-suppliers";
 import { deleteSuppliersSchema } from "../schemas";
 
 export const useDeleteSuppliers = () => {

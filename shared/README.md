@@ -12,7 +12,6 @@ Ce répertoire contient toutes les ressources partagées de l'application, organ
 | `/types`      | Définitions de types TypeScript       |
 | `/constants`  | Constantes et valeurs statiques       |
 | `/styles`     | Styles partagés et thèmes             |
-| `/services`   | Services et intégrations API          |
 | `/lib`        | Bibliothèques et intégrations tierces |
 
 ## Bonnes pratiques

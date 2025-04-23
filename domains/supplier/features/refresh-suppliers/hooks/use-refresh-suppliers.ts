@@ -1,6 +1,6 @@
 "use client";
 import { useActionState } from "react";
-import { refreshSuppliers } from "../actions";
+import { refreshSuppliers } from "../actions/refresh-suppliers";
 
 export const useRefreshSuppliers = () => {
 	const [state, dispatch, isPending] = useActionState(
