@@ -11,8 +11,6 @@ import {
 import {
 	Button,
 	Calendar,
-	Checkbox,
-	FormDescription,
 	FormLabel,
 	Input,
 	Popover,
@@ -80,7 +78,6 @@ export function CreateFiscalYearForm() {
 			startDate: new Date(new Date().getFullYear(), 0, 1), // 1er janvier de l&apos;année courante
 			endDate: new Date(new Date().getFullYear(), 11, 31), // 31 décembre de l&apos;année courante
 			status: "ACTIVE" as FiscalYearStatus,
-			isCurrent: false,
 		},
 
 		transform: useTransform(
@@ -127,16 +124,6 @@ export function CreateFiscalYearForm() {
 								? field.state.value.toISOString()
 								: ""
 						}
-					/>
-				)}
-			</form.Field>
-
-			<form.Field name="isCurrent">
-				{(field) => (
-					<input
-						type="hidden"
-						name="isCurrent"
-						value={field.state.value === true ? "true" : "false"}
 					/>
 				)}
 			</form.Field>
@@ -378,31 +365,6 @@ export function CreateFiscalYearForm() {
 										</SelectContent>
 									</Select>
 									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
-
-						<form.Field name="isCurrent">
-							{(field) => (
-								<div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-									<Checkbox
-										id="isCurrent"
-										name="isCurrent"
-										checked={field.state.value}
-										onCheckedChange={(checked) =>
-											field.handleChange(checked === true)
-										}
-										disabled={isPending}
-									/>
-									<div className="space-y-1 leading-none">
-										<FormLabel htmlFor="isCurrent">
-											Année fiscale courante
-										</FormLabel>
-										<FormDescription>
-											Si cette option est activée, cette année fiscale sera
-											utilisée par défaut pour les nouvelles opérations
-										</FormDescription>
-									</div>
 								</div>
 							)}
 						</form.Field>

@@ -36,9 +36,9 @@ export default function FiscalYearLoading() {
 											<li className="flex items-start gap-3">
 												<Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-28" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-36 mt-1" />
 												</div>
 											</li>
@@ -46,9 +46,9 @@ export default function FiscalYearLoading() {
 											<li className="flex items-start gap-3">
 												<Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-24" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-36 mt-1" />
 												</div>
 											</li>
@@ -56,9 +56,9 @@ export default function FiscalYearLoading() {
 											<li className="flex items-start gap-3">
 												<Clock className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-16" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-24 mt-1" />
 												</div>
 											</li>
@@ -75,9 +75,9 @@ export default function FiscalYearLoading() {
 											<li className="flex items-start gap-3">
 												<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-20" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-32 mt-1" />
 												</div>
 											</li>
@@ -85,9 +85,9 @@ export default function FiscalYearLoading() {
 											<li className="flex items-start gap-3">
 												<Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-32" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-16 mt-1" />
 												</div>
 											</li>

@@ -34,11 +34,13 @@ import {
 	Eye,
 	MoreVerticalIcon,
 	Search,
+	Settings,
 	Trash,
 } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
 import { DeleteFiscalYearButton } from "../../delete-fiscal-year";
+import { SetFiscalYearAsDefaultButton } from "../../set-fiscal-year-as-default";
 import { GetFiscalYearsReturn } from "../types";
 
 export interface FiscalYearDataTableProps {
@@ -176,8 +178,6 @@ export function FiscalYearDataTable({
 											sideOffset={4}
 											className="w-48"
 										>
-											<DropdownMenuSeparator />
-
 											<DropdownMenuItem asChild>
 												<Link
 													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}`}
@@ -187,6 +187,41 @@ export function FiscalYearDataTable({
 													<span>Détails</span>
 												</Link>
 											</DropdownMenuItem>
+											<DropdownMenuSeparator />
+											<AlertDialog>
+												<AlertDialogTrigger asChild>
+													<DropdownMenuItem preventDefault className="">
+														<Settings className="h-4 w-4 mr-2" />
+														<span>Définir comme année par défaut</span>
+													</DropdownMenuItem>
+												</AlertDialogTrigger>
+												<AlertDialogContent>
+													<AlertDialogHeader>
+														<AlertDialogTitle>
+															Êtes-vous sûr de vouloir définir cette année
+															fiscale comme année par défaut ?
+														</AlertDialogTitle>
+														<AlertDialogDescription>
+															Cela définira l&apos;année fiscale
+															{fiscalYear.name && (
+																<strong> {fiscalYear.name}</strong>
+															)}{" "}
+															comme année par défaut.
+														</AlertDialogDescription>
+													</AlertDialogHeader>
+													<AlertDialogFooter>
+														<AlertDialogCancel>Annuler</AlertDialogCancel>
+														<SetFiscalYearAsDefaultButton
+															id={fiscalYear.id}
+															organizationId={organizationId}
+														>
+															<AlertDialogAction>
+																Définir comme année par défaut
+															</AlertDialogAction>
+														</SetFiscalYearAsDefaultButton>
+													</AlertDialogFooter>
+												</AlertDialogContent>
+											</AlertDialog>
 											<DropdownMenuItem asChild>
 												<Link
 													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}/edit`}

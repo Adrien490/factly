@@ -156,7 +156,7 @@ export const createFiscalYear: ServerAction<
 			fiscalYear = await db.fiscalYear.create({
 				data: {
 					...validation.data,
-					isCurrent: false,
+					isCurrent: false, // Forcer la valeur isCurrent à false
 					status: FiscalYearStatus.ACTIVE, // Force le statut initial à ACTIVE
 				},
 			});
@@ -170,6 +170,9 @@ export const createFiscalYear: ServerAction<
 		if (gapCheck.hasGap && gapCheck.message) {
 			successMessage += `. Attention: ${gapCheck.message}`;
 		}
+
+		// Ajout d'un message pour inviter l'utilisateur à définir cette année comme année par défaut
+		successMessage += `. Vous pouvez la définir comme année fiscale par défaut depuis la liste des années fiscales.`;
 
 		return createSuccessResponse(fiscalYear, successMessage);
 	} catch (error) {

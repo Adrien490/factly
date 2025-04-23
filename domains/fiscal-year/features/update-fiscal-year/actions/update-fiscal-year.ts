@@ -4,7 +4,6 @@ import { auth } from "@/domains/auth";
 import { hasAssociatedTransactions } from "@/domains/fiscal-year/queries/has-associated-transactions";
 import { hasDateOverlap } from "@/domains/fiscal-year/queries/has-date-overlap";
 import { isValidStatusTransition } from "@/domains/fiscal-year/utils/is-valid-status-transition";
-import { setFiscalYearAsCurrent } from "@/domains/fiscal-year/utils/set-fiscal-year-as-current";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -202,45 +201,31 @@ export const updateFiscalYear: ServerAction<
 		}
 
 		// 11. Si l'année est marquée comme courante, vérifier qu'elle est ACTIVE
-		if (
-			validation.data.isCurrent &&
-			validation.data.status !== FiscalYearStatus.ACTIVE
-		) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"Une année fiscale courante doit avoir le statut ACTIVE",
-				rawData
-			);
-		}
+		// Nous supprimons cette vérification puisque nous forcerons isCurrent à false
 
-		// 12. Si isCurrent est true, désactiver les autres années fiscales en cours
-		if (validation.data.isCurrent) {
-			await setFiscalYearAsCurrent(
-				validation.data.id,
-				validation.data.organizationId
-			);
-		}
+		// 12. Nous supprimons également cette section pour ne pas traiter isCurrent
 
-		// 13. Mise à jour de l'année fiscale dans la base de données (sans toucher à isCurrent qui a été géré ci-dessus)
-		const { ...fiscalYearDataToUpdate } = validation.data;
-
+		// 13. Mise à jour de l'année fiscale dans la base de données
 		const fiscalYear = await db.fiscalYear.update({
-			where: { id: fiscalYearDataToUpdate.id },
-			data: fiscalYearDataToUpdate,
+			where: { id: validation.data.id },
+			data: {
+				...validation.data,
+				isCurrent: false, // Forcer la valeur à false, car la modification se fait via l'action dédiée
+			},
 		});
 
 		// 14. Révalidation des tags pour mettre à jour les données en cache
 		revalidateTag(
-			`organization:${fiscalYearDataToUpdate.organizationId}:fiscal-year:${fiscalYearDataToUpdate.id}`
+			`organization:${validation.data.organizationId}:fiscal-year:${validation.data.id}`
 		);
 		revalidateTag(
-			`organization:${fiscalYearDataToUpdate.organizationId}:fiscal-years`
+			`organization:${validation.data.organizationId}:fiscal-years`
 		);
 
-		// 15. Retour de la réponse de succès
+		// 15. Retour de la réponse de succès avec message d'information
 		return createSuccessResponse(
 			fiscalYear,
-			`L'année fiscale ${fiscalYear.name} a été modifiée avec succès`,
+			`L'année fiscale ${fiscalYear.name} a été modifiée avec succès. Si nécessaire, vous pouvez la définir comme année fiscale par défaut depuis la liste des années fiscales.`,
 			rawData
 		);
 	} catch (error) {
