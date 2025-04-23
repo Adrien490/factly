@@ -14,6 +14,7 @@ export function Footer({ className }: FooterProps) {
 			<footer
 				className={cn(
 					"relative z-10 pt-20 sm:pt-24 md:pt-28 pb-12 sm:pb-16 overflow-hidden",
+					"mask-t-from-97% mask-t-to-99% sm:mask-t-from-95% sm:mask-t-to-98% md:mask-t-from-90% md:mask-t-to-98% lg:mask-t-from-85% lg:mask-t-to-98%",
 					className
 				)}
 				itemScope
@@ -30,9 +31,6 @@ export function Footer({ className }: FooterProps) {
 						className="absolute top-0 inset-x-0 h-full text-primary/15 stroke-primary/25 fill-none [mask-image:linear-gradient(to_bottom,white_25%,transparent_80%)]"
 					/>
 				</div>
-
-				{/* Bordure supérieure améliorée */}
-				<div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/15 to-transparent"></div>
 
 				<div className="relative z-10">
 					<div className="max-w-7xl mx-auto px-4 sm:px-6">

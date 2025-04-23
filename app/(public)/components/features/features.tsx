@@ -1,5 +1,6 @@
 import { features } from "@/app/(public)/components/features/constants";
 import { PageContainer } from "@/shared/components/page-container";
+import { cn } from "@/shared/utils";
 import { Sparkles } from "lucide-react";
 import { FeatureItem } from "./components";
 
@@ -11,45 +12,25 @@ export function Features() {
 	return (
 		<section
 			id="features"
-			className="py-20 md:py-24 lg:py-28 relative overflow-hidden"
+			className={cn(
+				"py-20 md:py-24 lg:py-28 relative overflow-hidden",
+				"mask-t-from-99% mask-t-to-100% mask-b-from-97% mask-b-to-99% sm:mask-t-from-98% sm:mask-t-to-99% sm:mask-b-from-95% sm:mask-b-to-98% md:mask-t-from-97% md:mask-t-to-99% md:mask-b-from-90% md:mask-b-to-98% lg:mask-t-from-95% lg:mask-t-to-99% lg:mask-b-from-85% lg:mask-b-to-98%"
+			)}
 			itemScope
 			itemType="https://schema.org/ItemList"
 		>
 			<PageContainer>
-				{/* Points lumineux dynamiques en arrière-plan avec animation optimisée */}
-				<div className="absolute inset-0 pointer-events-none">
-					<div
-						className="absolute w-3 h-3 rounded-full bg-primary/30 top-1/4 left-1/5 blur-md animate-pulse"
-						style={{ animationDelay: "0.5s", animationDuration: "3s" }}
-						aria-hidden="true"
-					></div>
-					<div
-						className="absolute w-4 h-4 rounded-full bg-primary/20 bottom-1/3 right-1/4 blur-md animate-pulse"
-						style={{ animationDelay: "1.2s", animationDuration: "5s" }}
-						aria-hidden="true"
-					></div>
-					<div
-						className="absolute w-3 h-3 rounded-full bg-primary/25 top-2/3 left-1/3 blur-md animate-pulse"
-						style={{ animationDelay: "0.8s", animationDuration: "4s" }}
-						aria-hidden="true"
-					></div>
-				</div>
-
-				{/* Masque supérieur pour transition avec la section précédente - harmonisé */}
-				<div
-					className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-background to-transparent z-10 pointer-events-none"
-					aria-hidden="true"
-				/>
-
 				<div className="relative z-10">
 					{/* Badge supérieur - style neomorphique 2025 */}
 					<div className="flex justify-center mb-7">
 						<div
-							className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-primary/5 to-primary/15 border-none shadow-lg shadow-primary/5 backdrop-blur-lg"
+							className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-primary/15 to-primary/30 border-none shadow-lg shadow-primary/10 backdrop-blur-lg relative z-20"
 							aria-hidden="true"
 						>
 							<Sparkles className="h-4 w-4" />
-							<span className="text-sm font-medium">Fonctionnalités clés</span>
+							<span className="text-sm font-medium text-foreground">
+								Fonctionnalités clés
+							</span>
 						</div>
 					</div>
 
@@ -99,12 +80,6 @@ export function Features() {
 						))}
 					</div>
 				</div>
-
-				{/* Masque inférieur pour transition avec la section suivante - optimisé */}
-				<div
-					className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-background to-transparent z-10 pointer-events-none"
-					aria-hidden="true"
-				/>
 			</PageContainer>
 		</section>
 	);
