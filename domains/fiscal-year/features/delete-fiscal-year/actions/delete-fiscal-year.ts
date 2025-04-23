@@ -80,7 +80,8 @@ export const deleteFiscalYear: ServerAction<
 			select: {
 				id: true,
 				status: true,
-				name: true, // Récupération du nom pour le message de confirmation
+				name: true,
+				isCurrent: true, // Récupérer si c'est l'année courante
 			},
 		});
 
@@ -91,7 +92,29 @@ export const deleteFiscalYear: ServerAction<
 			);
 		}
 
-		// 6. Suppression
+		// 6. Vérifier si c'est la dernière année fiscale de l'organisation
+		const fiscalYearsCount = await db.fiscalYear.count({
+			where: {
+				organizationId: validation.data.organizationId,
+			},
+		});
+
+		if (fiscalYearsCount <= 1) {
+			return createErrorResponse(
+				ActionStatus.FORBIDDEN,
+				"Impossible de supprimer la dernière année fiscale de l'organisation. Chaque organisation doit avoir au moins une année fiscale."
+			);
+		}
+
+		// 7. Vérifier si c'est l'année fiscale courante
+		if (existingFiscalYear.isCurrent) {
+			return createErrorResponse(
+				ActionStatus.FORBIDDEN,
+				"Impossible de supprimer l'année fiscale courante. Veuillez d'abord définir une autre année fiscale comme courante."
+			);
+		}
+
+		// 8. Suppression
 		await db.fiscalYear.delete({
 			where: { id: validation.data.id },
 		});

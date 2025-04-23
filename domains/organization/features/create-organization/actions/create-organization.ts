@@ -9,7 +9,7 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
-import { Country, Organization } from "@prisma/client";
+import { Country, FiscalYearStatus, Organization } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createOrganizationSchema } from "../schemas";
@@ -19,6 +19,8 @@ import { createOrganizationSchema } from "../schemas";
  * Validations :
  * - L'utilisateur doit être authentifié
  * - Le SIREN/SIRET doit être unique s'il est fourni
+ *
+ * Crée également automatiquement une première année fiscale pour l'organisation
  */
 export const createOrganization: ServerAction<
 	Organization,
@@ -139,11 +141,33 @@ export const createOrganization: ServerAction<
 			},
 		});
 
+		// 6. Création automatique d'une année fiscale initiale
+		const currentDate = new Date();
+		const currentYear = currentDate.getFullYear();
+
+		// Année fiscale du 1er janvier au 31 décembre de l'année courante
+		const startDate = new Date(currentYear, 0, 1); // 1er janvier de l'année courante
+		const endDate = new Date(currentYear, 11, 31); // 31 décembre de l'année courante
+
+		await db.fiscalYear.create({
+			data: {
+				organizationId: organization.id,
+				name: `Année fiscale ${currentYear}`,
+				description: `Année fiscale initiale pour ${organization.name}`,
+				startDate: startDate,
+				endDate: endDate,
+				status: FiscalYearStatus.ACTIVE,
+				isCurrent: true,
+			},
+		});
+
 		// Revalidation des tags de cache
 		// Tag principal pour toutes les organisations
 		revalidateTag("organizations");
+		// Tag pour les années fiscales de l'organisation
+		revalidateTag(`organization:${organization.id}:fiscal-years`);
 
-		// 6. Retour de la réponse de succès
+		// 7. Retour de la réponse de succès
 		return createSuccessResponse(
 			organization,
 			`L'organisation ${organization.name} a été créée avec succès`
