@@ -19,7 +19,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 	EmptyState,
-	LoadingIndicator,
 	Table,
 	TableBody,
 	TableCell,
@@ -32,13 +31,13 @@ import { cn, formatDate } from "@/shared/utils";
 import {
 	CalendarDays,
 	Edit2,
-	FileText,
 	MoreVerticalIcon,
 	Search,
 	Trash,
 } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
+import { DeleteFiscalYearButton } from "../../delete-fiscal-year";
 import { GetFiscalYearsReturn } from "../types";
 
 export interface FiscalYearDataTableProps {
@@ -176,16 +175,6 @@ export function FiscalYearDataTable({
 											sideOffset={4}
 											className="w-48"
 										>
-											<DropdownMenuItem asChild>
-												<Link
-													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}`}
-													className={cn("flex w-full items-center")}
-												>
-													<FileText className="h-4 w-4 mr-2" />
-													<span>Détails</span>
-													<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
-												</Link>
-											</DropdownMenuItem>
 											<DropdownMenuSeparator />
 											<DropdownMenuItem asChild>
 												<Link
@@ -224,7 +213,12 @@ export function FiscalYearDataTable({
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<AlertDialogAction>Supprimer</AlertDialogAction>
+														<DeleteFiscalYearButton
+															id={fiscalYear.id}
+															organizationId={organizationId}
+														>
+															<AlertDialogAction>Supprimer</AlertDialogAction>
+														</DeleteFiscalYearButton>
 													</AlertDialogFooter>
 												</AlertDialogContent>
 											</AlertDialog>

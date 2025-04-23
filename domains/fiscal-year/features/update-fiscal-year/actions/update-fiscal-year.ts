@@ -1,6 +1,8 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { hasAssociatedTransactions } from "@/domains/fiscal-year/queries/has-associated-transactions";
+import { isValidStatusTransition } from "@/domains/fiscal-year/utils/is-valid-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -16,11 +18,51 @@ import { headers } from "next/headers";
 import { updateFiscalYearSchema } from "../schemas";
 
 /**
+ * Vérifie si une période (startDate - endDate) chevauche des années fiscales existantes
+ */
+async function hasDateOverlap(
+	organizationId: string,
+	startDate: Date,
+	endDate: Date,
+	excludeFiscalYearId: string
+): Promise<boolean> {
+	const overlappingFiscalYears = await db.fiscalYear.findMany({
+		where: {
+			organizationId,
+			id: { not: excludeFiscalYearId }, // Exclure l'année fiscale en cours de modification
+			OR: [
+				// Cas 1: startDate est entre les dates d'une année existante
+				{
+					startDate: { lte: startDate },
+					endDate: { gte: startDate },
+				},
+				// Cas 2: endDate est entre les dates d'une année existante
+				{
+					startDate: { lte: endDate },
+					endDate: { gte: endDate },
+				},
+				// Cas 3: les dates englobent complètement une année existante
+				{
+					startDate: { gte: startDate },
+					endDate: { lte: endDate },
+				},
+			],
+		},
+		select: { id: true, name: true },
+	});
+
+	return overlappingFiscalYears.length > 0;
+}
+
+/**
  * Action serveur pour mettre à jour une année fiscale
  * Validations :
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
  * - Les dates doivent être cohérentes (fin > début)
+ * - Les années fiscales CLOSED ou ARCHIVED ont des restrictions de modification
+ * - Une année marquée comme courante doit avoir le statut ACTIVE
+ * - Les transitions de statut suivent des règles précises
  */
 export const updateFiscalYear: ServerAction<
 	FiscalYear,
@@ -58,7 +100,22 @@ export const updateFiscalYear: ServerAction<
 			);
 		}
 
-		// 4. Préparation et transformation des données brutes
+		// 4. Vérification de l'existence de l'année fiscale
+		const existingFiscalYear = await db.fiscalYear.findUnique({
+			where: {
+				id: fiscalYearId.toString(),
+				organizationId: organizationId.toString(),
+			},
+		});
+
+		if (!existingFiscalYear) {
+			return createErrorResponse(
+				ActionStatus.NOT_FOUND,
+				"L'année fiscale que vous souhaitez modifier n'existe pas"
+			);
+		}
+
+		// 5. Préparation et transformation des données brutes
 		const rawData = {
 			id: fiscalYearId.toString(),
 			organizationId: organizationId.toString(),
@@ -76,7 +133,7 @@ export const updateFiscalYear: ServerAction<
 
 		console.log("[UPDATE_FISCAL_YEAR] Raw data:", rawData);
 
-		// 5. Validation des données avec le schéma Zod
+		// 6. Validation des données avec le schéma Zod
 		const validation = updateFiscalYearSchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(
@@ -90,23 +147,100 @@ export const updateFiscalYear: ServerAction<
 			);
 		}
 
-		// 6. Vérification de l'existence de l'année fiscale
-		const existingFiscalYear = await db.fiscalYear.findUnique({
-			where: {
-				id: validation.data.id,
-				organizationId: validation.data.organizationId,
-			},
-		});
-
-		if (!existingFiscalYear) {
+		// 7. Vérifier les restrictions de modification pour les années CLOSED ou ARCHIVED
+		if (
+			(existingFiscalYear.status === FiscalYearStatus.CLOSED ||
+				existingFiscalYear.status === FiscalYearStatus.ARCHIVED) &&
+			// Si on tente de modifier les dates
+			(validation.data.startDate || validation.data.endDate)
+		) {
 			return createErrorResponse(
-				ActionStatus.NOT_FOUND,
-				"L'année fiscale que vous souhaitez modifier n'existe pas",
+				ActionStatus.FORBIDDEN,
+				"Impossible de modifier les dates d'une année fiscale clôturée ou archivée",
 				rawData
 			);
 		}
 
-		// 7. Si isCurrent est true, désactiver les autres années fiscales en cours
+		// 8. Vérifier si l'année a des transactions associées avant de modifier les dates
+		if (
+			(validation.data.startDate || validation.data.endDate) &&
+			(await hasAssociatedTransactions(existingFiscalYear.id))
+		) {
+			return createErrorResponse(
+				ActionStatus.FORBIDDEN,
+				"Impossible de modifier les dates d'une année fiscale ayant des transactions associées",
+				rawData
+			);
+		}
+
+		// 9. Vérifier les dates si elles sont modifiées
+		if (validation.data.startDate && validation.data.endDate) {
+			// Vérifier que la date de début est antérieure à la date de fin
+			if (
+				new Date(validation.data.startDate) >= new Date(validation.data.endDate)
+			) {
+				return createErrorResponse(
+					ActionStatus.VALIDATION_ERROR,
+					"La date de début doit être antérieure à la date de fin",
+					rawData
+				);
+			}
+
+			// Vérifier les chevauchements avec d'autres années fiscales
+			const hasOverlap = await hasDateOverlap(
+				validation.data.organizationId,
+				validation.data.startDate,
+				validation.data.endDate,
+				validation.data.id
+			);
+
+			if (hasOverlap) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					"Cette période chevauche une autre année fiscale existante. Veuillez ajuster les dates.",
+					rawData
+				);
+			}
+		}
+
+		// 10. Vérifier les transitions de statut
+		if (validation.data.status !== existingFiscalYear.status) {
+			const statusTransitionCheck = isValidStatusTransition(
+				existingFiscalYear.status as FiscalYearStatus,
+				validation.data.status as FiscalYearStatus
+			);
+
+			if (!statusTransitionCheck.isValid) {
+				return createErrorResponse(
+					ActionStatus.FORBIDDEN,
+					statusTransitionCheck.message || "Transition de statut non autorisée",
+					rawData
+				);
+			}
+
+			// Si on passe de ACTIVE à CLOSED, vérifier que toutes les opérations de clôture sont terminées
+			if (
+				existingFiscalYear.status === FiscalYearStatus.ACTIVE &&
+				validation.data.status === FiscalYearStatus.CLOSED
+			) {
+				// Ici, implémentez la vérification que toutes les opérations de clôture sont terminées
+				// Pour cette démo, nous supposons que c'est le cas
+			}
+		}
+
+		// 11. Si l'année est marquée comme courante, vérifier qu'elle est ACTIVE
+		if (
+			validation.data.isCurrent &&
+			validation.data.status !== FiscalYearStatus.ACTIVE
+		) {
+			return createErrorResponse(
+				ActionStatus.VALIDATION_ERROR,
+				"Une année fiscale courante doit avoir le statut ACTIVE",
+				rawData
+			);
+		}
+
+		// 12. Si isCurrent est true, désactiver les autres années fiscales en cours
 		if (validation.data.isCurrent) {
 			await db.fiscalYear.updateMany({
 				where: {
@@ -122,7 +256,7 @@ export const updateFiscalYear: ServerAction<
 			});
 		}
 
-		// 8. Mise à jour de l'année fiscale dans la base de données
+		// 13. Mise à jour de l'année fiscale dans la base de données
 		const { ...fiscalYearData } = validation.data;
 
 		const fiscalYear = await db.fiscalYear.update({
@@ -130,13 +264,13 @@ export const updateFiscalYear: ServerAction<
 			data: fiscalYearData,
 		});
 
-		// 9. Révalidation des tags pour mettre à jour les données en cache
+		// 14. Révalidation des tags pour mettre à jour les données en cache
 		revalidateTag(
 			`organization:${fiscalYearData.organizationId}:fiscal-year:${fiscalYearData.id}`
 		);
 		revalidateTag(`organization:${fiscalYearData.organizationId}:fiscal-years`);
 
-		// 10. Retour de la réponse de succès
+		// 15. Retour de la réponse de succès
 		return createSuccessResponse(
 			fiscalYear,
 			`L'année fiscale ${fiscalYear.name} a été modifiée avec succès`,

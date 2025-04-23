@@ -164,8 +164,6 @@ export const createOrganization: ServerAction<
 		// Revalidation des tags de cache
 		// Tag principal pour toutes les organisations
 		revalidateTag("organizations");
-		// Tag pour les années fiscales de l'organisation
-		revalidateTag(`organization:${organization.id}:fiscal-years`);
 
 		// 7. Retour de la réponse de succès
 		return createSuccessResponse(
