@@ -19,15 +19,6 @@ export default function LoginPage() {
 					<ArrowLeft className="w-4 h-4" />
 					<span>Accueil</span>
 				</Link>
-
-				<Logo
-					variant="minimal"
-					size="sm"
-					shape="circle"
-					hideText={false}
-					text="Factly"
-					textSize="sm"
-				/>
 			</header>
 
 			{/* Carte principale simplifiée avec bordure améliorée */}
@@ -73,14 +64,14 @@ export default function LoginPage() {
 					<p className="text-muted-foreground text-xs text-center">
 						En continuant, vous acceptez nos{" "}
 						<Link
-							href="#"
+							href="/terms"
 							className="text-primary/90 hover:text-primary transition-colors font-medium hover:underline"
 						>
 							Conditions d&apos;Utilisation
 						</Link>{" "}
 						et{" "}
 						<Link
-							href="#"
+							href="/privacy"
 							className="text-primary/90 hover:text-primary transition-colors font-medium hover:underline"
 						>
 							Politique de Confidentialité

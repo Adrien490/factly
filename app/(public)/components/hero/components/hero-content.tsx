@@ -18,11 +18,8 @@ export function HeroContent() {
 						className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sans font-bold tracking-tight leading-[1.1] md:leading-[1.1] text-foreground"
 						aria-label="Factly, gérez votre entreprise simplement."
 					>
-						Factly,{" "}
-						<Highlight className="text-foreground">
-							gérez votre entreprise
-						</Highlight>{" "}
-						simplement.
+						Gérez votre entreprise{" "}
+						<Highlight className="text-foreground">simplement.</Highlight>
 					</h1>
 				</div>
 
@@ -64,7 +61,7 @@ export function HeroContent() {
 								href="/login"
 								aria-label="Commencer à utiliser Factly maintenant"
 							>
-								<span className="absolute inset-0 bg-white/10 rounded-full transform-gpu" />
+								<span className="absolute inset-0 bg-white/10 rounded-full" />
 								Commencer maintenant
 								<ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
 							</Link>

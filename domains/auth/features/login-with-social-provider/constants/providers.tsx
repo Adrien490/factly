@@ -25,6 +25,7 @@ export const providers = [
 			</svg>
 		),
 	},
+	/*
 	{
 		id: "github",
 		name: "GitHub",
@@ -34,4 +35,5 @@ export const providers = [
 			</svg>
 		),
 	},
+	*/
 ];

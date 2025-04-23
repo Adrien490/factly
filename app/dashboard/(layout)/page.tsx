@@ -32,8 +32,6 @@ export default async function DashboardPage({ searchParams }: Props) {
 	const resolvedSearchParams = await searchParams;
 	const { sortBy, sortOrder, search, view } = resolvedSearchParams;
 
-	console.log(view);
-
 	return (
 		<PageContainer className="space-y-6 py-6 group">
 			{/* Barre d'outils principale */}
