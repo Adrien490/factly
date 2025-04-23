@@ -199,14 +199,14 @@ export function FiscalYearDataTable({
 													<AlertDialogHeader>
 														<AlertDialogTitle>
 															Êtes-vous sûr de vouloir définir cette année
-															fiscale comme année par défaut ?
+															fiscale comme année courante ?
 														</AlertDialogTitle>
 														<AlertDialogDescription>
 															Cela définira l&apos;année fiscale
 															{fiscalYear.name && (
 																<strong> {fiscalYear.name}</strong>
 															)}{" "}
-															comme année par défaut.
+															comme année courante.
 														</AlertDialogDescription>
 													</AlertDialogHeader>
 													<AlertDialogFooter>
@@ -216,7 +216,7 @@ export function FiscalYearDataTable({
 															organizationId={organizationId}
 														>
 															<AlertDialogAction>
-																Définir comme année par défaut
+																Définir comme année courante
 															</AlertDialogAction>
 														</SetFiscalYearAsDefaultButton>
 													</AlertDialogFooter>
