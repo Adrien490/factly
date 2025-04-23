@@ -31,6 +31,7 @@ import { cn, formatDate } from "@/shared/utils";
 import {
 	CalendarDays,
 	Edit2,
+	Eye,
 	MoreVerticalIcon,
 	Search,
 	Trash,
@@ -176,6 +177,16 @@ export function FiscalYearDataTable({
 											className="w-48"
 										>
 											<DropdownMenuSeparator />
+
+											<DropdownMenuItem asChild>
+												<Link
+													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}`}
+													className={cn("flex w-full items-center")}
+												>
+													<Eye className="h-4 w-4 mr-2" />
+													<span>Détails</span>
+												</Link>
+											</DropdownMenuItem>
 											<DropdownMenuItem asChild>
 												<Link
 													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}/edit`}

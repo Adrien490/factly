@@ -80,7 +80,35 @@ export function UpdateFiscalYearForm({
 			<input type="hidden" name="organizationId" value={organizationId} />
 			<input type="hidden" name="id" value={fiscalYear.id} />
 
-			<FormLayout withDividers columns={2} className="mt-6">
+			<form.Field name="startDate">
+				{(field) => (
+					<input
+						type="hidden"
+						name="startDate"
+						value={
+							field.state.value instanceof Date
+								? field.state.value.toISOString()
+								: ""
+						}
+					/>
+				)}
+			</form.Field>
+
+			<form.Field name="endDate">
+				{(field) => (
+					<input
+						type="hidden"
+						name="endDate"
+						value={
+							field.state.value instanceof Date
+								? field.state.value.toISOString()
+								: ""
+						}
+					/>
+				)}
+			</form.Field>
+
+			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
 				<FormSection
 					title="Informations générales"
