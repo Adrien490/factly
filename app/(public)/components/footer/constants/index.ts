@@ -3,27 +3,18 @@ export const footerLinks = [
 		title: "Produit",
 		links: [
 			{ label: "Fonctionnalités", href: "/#features" },
-			{ label: "Application", href: "/#application" },
-			{ label: "Tarifs", href: "/pricing" },
 			{ label: "Cas d'usage", href: "/use-cases" },
-			{ label: "Roadmap", href: "/roadmap" },
 		],
 	},
 	{
 		title: "Entreprise",
-		links: [
-			{ label: "À propos", href: "/about" },
-			{ label: "Carrières", href: "/careers" },
-			{ label: "Contact", href: "/contact" },
-		],
+		links: [{ label: "Contact", href: "/contact" }],
 	},
 	{
 		title: "Ressources",
 		links: [
 			{ label: "Documentation", href: "/docs" },
 			{ label: "Guide de démarrage", href: "/getting-started" },
-			{ label: "Centre d'aide", href: "/help" },
-			{ label: "Statut des services", href: "/status" },
 		],
 	},
 	{
@@ -36,13 +27,3 @@ export const footerLinks = [
 		],
 	},
 ];
-
-export const animationSettings = ({
-	prefersReducedMotion,
-}: {
-	prefersReducedMotion: boolean;
-}) => ({
-	initial: prefersReducedMotion ? {} : { opacity: 0, y: 15 },
-	animate: prefersReducedMotion ? {} : { opacity: 1, y: 0 },
-	transition: { duration: prefersReducedMotion ? 0 : 0.4 },
-});
