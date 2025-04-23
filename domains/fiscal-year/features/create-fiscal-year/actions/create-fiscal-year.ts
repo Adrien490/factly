@@ -119,54 +119,53 @@ export const createFiscalYear: ServerAction<
 		const shouldBeCurrent =
 			fiscalYearsCount === 0 ? true : validation.data.isCurrent;
 
-		// 10. Si c'est la première année fiscale ou si elle est marquée comme courante
+		// 10. Création de l'année fiscale (dans une transaction si nécessaire)
+		let fiscalYear;
+
 		if (shouldBeCurrent) {
-			// Si ce n'est pas la première année, vérifier qu'il n'y a pas d'années fiscales actives
-			if (fiscalYearsCount > 0 && validation.data.isCurrent) {
-				const existingActiveYears = await db.fiscalYear.findMany({
-					where: {
-						organizationId: validation.data.organizationId,
-						status: FiscalYearStatus.ACTIVE,
-					},
-					select: {
-						id: true,
-						name: true,
+			// Utilisation d'une transaction pour créer l'année fiscale et la définir comme courante
+			fiscalYear = await db.$transaction(async (tx) => {
+				// Créer d'abord l'année fiscale
+				const newFiscalYear = await tx.fiscalYear.create({
+					data: {
+						...validation.data,
+						isCurrent: false, // Temporairement non-courant
+						status: FiscalYearStatus.ACTIVE, // Force le statut initial à ACTIVE
 					},
 				});
 
-				if (existingActiveYears.length > 0) {
-					return createErrorResponse(
-						ActionStatus.CONFLICT,
-						`Impossible de créer une année fiscale courante car il existe déjà ${existingActiveYears.length} année(s) fiscale(s) active(s). Veuillez d'abord désactiver les années fiscales existantes ou créer cette année sans la marquer comme courante.`
-					);
-				}
-			}
+				// Ensuite, désactiver toutes les années fiscales courantes existantes
+				await tx.fiscalYear.updateMany({
+					where: {
+						organizationId: validation.data.organizationId,
+						isCurrent: true,
+					},
+					data: {
+						isCurrent: false,
+					},
+				});
 
-			// Désactiver les autres années courantes
-			await db.fiscalYear.updateMany({
-				where: {
-					organizationId: validation.data.organizationId,
-					isCurrent: true,
-				},
+				// Enfin, définir la nouvelle année fiscale comme courante
+				return tx.fiscalYear.update({
+					where: { id: newFiscalYear.id },
+					data: { isCurrent: true },
+				});
+			});
+		} else {
+			// Création simple sans modification du statut courant
+			fiscalYear = await db.fiscalYear.create({
 				data: {
+					...validation.data,
 					isCurrent: false,
+					status: FiscalYearStatus.ACTIVE, // Force le statut initial à ACTIVE
 				},
 			});
 		}
 
-		// 11. Création de l'année fiscale
-		const fiscalYear = await db.fiscalYear.create({
-			data: {
-				...validation.data,
-				isCurrent: shouldBeCurrent,
-				status: FiscalYearStatus.ACTIVE, // Force le statut initial à ACTIVE
-			},
-		});
-
-		// 12. Revalidation du cache
+		// 11. Revalidation du cache
 		revalidateTag(`organization:${organizationId}:fiscal-years`);
 
-		// 13. Retour de la réponse avec un warning si nécessaire
+		// 12. Retour de la réponse avec un warning si nécessaire
 		let successMessage = `L'année fiscale "${fiscalYear.name}" a été créée avec succès`;
 		if (gapCheck.hasGap && gapCheck.message) {
 			successMessage += `. Attention: ${gapCheck.message}`;

@@ -4,6 +4,7 @@ import { auth } from "@/domains/auth";
 import { hasAssociatedTransactions } from "@/domains/fiscal-year/queries/has-associated-transactions";
 import { hasDateOverlap } from "@/domains/fiscal-year/queries/has-date-overlap";
 import { isValidStatusTransition } from "@/domains/fiscal-year/utils/is-valid-status-transition";
+import { setFiscalYearAsCurrent } from "@/domains/fiscal-year/utils/set-fiscal-year-as-current";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -214,33 +215,27 @@ export const updateFiscalYear: ServerAction<
 
 		// 12. Si isCurrent est true, désactiver les autres années fiscales en cours
 		if (validation.data.isCurrent) {
-			await db.fiscalYear.updateMany({
-				where: {
-					organizationId: validation.data.organizationId,
-					id: {
-						not: validation.data.id,
-					},
-					isCurrent: true,
-				},
-				data: {
-					isCurrent: false,
-				},
-			});
+			await setFiscalYearAsCurrent(
+				validation.data.id,
+				validation.data.organizationId
+			);
 		}
 
-		// 13. Mise à jour de l'année fiscale dans la base de données
-		const { ...fiscalYearData } = validation.data;
+		// 13. Mise à jour de l'année fiscale dans la base de données (sans toucher à isCurrent qui a été géré ci-dessus)
+		const { ...fiscalYearDataToUpdate } = validation.data;
 
 		const fiscalYear = await db.fiscalYear.update({
-			where: { id: fiscalYearData.id },
-			data: fiscalYearData,
+			where: { id: fiscalYearDataToUpdate.id },
+			data: fiscalYearDataToUpdate,
 		});
 
 		// 14. Révalidation des tags pour mettre à jour les données en cache
 		revalidateTag(
-			`organization:${fiscalYearData.organizationId}:fiscal-year:${fiscalYearData.id}`
+			`organization:${fiscalYearDataToUpdate.organizationId}:fiscal-year:${fiscalYearDataToUpdate.id}`
 		);
-		revalidateTag(`organization:${fiscalYearData.organizationId}:fiscal-years`);
+		revalidateTag(
+			`organization:${fiscalYearDataToUpdate.organizationId}:fiscal-years`
+		);
 
 		// 15. Retour de la réponse de succès
 		return createSuccessResponse(
