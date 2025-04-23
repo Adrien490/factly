@@ -3,11 +3,11 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 import {
-	ActionState,
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { Country, Organization } from "@prisma/client";
 import { revalidateTag } from "next/cache";
@@ -20,10 +20,10 @@ import { createOrganizationSchema } from "../schemas";
  * - L'utilisateur doit être authentifié
  * - Le SIREN/SIRET doit être unique s'il est fourni
  */
-export async function createOrganization(
-	_: ActionState<Organization, typeof createOrganizationSchema> | null,
-	formData: FormData
-): Promise<ActionState<Organization, typeof createOrganizationSchema>> {
+export const createOrganization: ServerAction<
+	Organization,
+	typeof createOrganizationSchema
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -157,4 +157,4 @@ export async function createOrganization(
 				: "Impossible de créer l'organisation"
 		);
 	}
-}
+};
