@@ -108,25 +108,6 @@ export const setFiscalYearAsDefault: ServerAction<
 			);
 		}
 
-		// 8. Vérifier s'il existe déjà une année fiscale définie comme année par défaut
-		const currentDefaultFiscalYear = await db.fiscalYear.findFirst({
-			where: {
-				organizationId: validation.data.organizationId,
-				isCurrent: true,
-			},
-			select: {
-				id: true,
-				name: true,
-			},
-		});
-
-		if (currentDefaultFiscalYear) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				`Impossible de définir cette année fiscale comme année par défaut car "${currentDefaultFiscalYear.name}" est déjà définie comme année par défaut`
-			);
-		}
-
 		// 9. Définir l'année fiscale comme année par défaut (pas besoin de transaction car nous avons vérifié qu'il n'y a pas d'autre année par défaut)
 		await db.fiscalYear.update({
 			where: { id: validation.data.id },
