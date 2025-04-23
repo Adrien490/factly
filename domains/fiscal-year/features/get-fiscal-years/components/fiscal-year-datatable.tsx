@@ -92,7 +92,7 @@ export function FiscalYearDataTable({
 							role="columnheader"
 							className="hidden lg:table-cell"
 						>
-							Année en cours
+							Actif
 						</TableHead>
 						<TableHead key="actions" role="columnheader" className="">
 							<></>
@@ -192,21 +192,21 @@ export function FiscalYearDataTable({
 												<AlertDialogTrigger asChild>
 													<DropdownMenuItem preventDefault className="">
 														<Settings className="h-4 w-4 mr-2" />
-														<span>Définir comme année par défaut</span>
+														<span>Définir comme période courante</span>
 													</DropdownMenuItem>
 												</AlertDialogTrigger>
 												<AlertDialogContent>
 													<AlertDialogHeader>
 														<AlertDialogTitle>
-															Êtes-vous sûr de vouloir définir cette année
-															fiscale comme année courante ?
+															Êtes-vous sûr de vouloir définir cette période
+															fiscale comme période courante ?
 														</AlertDialogTitle>
 														<AlertDialogDescription>
-															Cela définira l&apos;année fiscale
+															Cela définira la période
 															{fiscalYear.name && (
 																<strong> {fiscalYear.name}</strong>
 															)}{" "}
-															comme année courante.
+															comme période courante.
 														</AlertDialogDescription>
 													</AlertDialogHeader>
 													<AlertDialogFooter>
@@ -216,7 +216,7 @@ export function FiscalYearDataTable({
 															organizationId={organizationId}
 														>
 															<AlertDialogAction>
-																Définir comme année courante
+																Définir comme période courante
 															</AlertDialogAction>
 														</SetFiscalYearAsDefaultButton>
 													</AlertDialogFooter>
