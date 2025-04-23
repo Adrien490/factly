@@ -125,7 +125,33 @@ export const updateFiscalYear: ServerAction<
 			);
 		}
 
-		// 8. Vérifier si l'année a des transactions associées avant de modifier les dates
+		// 8. Vérifier si on tente de fermer une année fiscale courante
+		if (
+			existingFiscalYear.isCurrent &&
+			validation.data.status &&
+			(validation.data.status === FiscalYearStatus.CLOSED ||
+				validation.data.status === FiscalYearStatus.ARCHIVED)
+		) {
+			// Vérifier s'il existe une autre année fiscale courante
+			const otherCurrentFiscalYears = await db.fiscalYear.count({
+				where: {
+					organizationId: validation.data.organizationId,
+					id: { not: validation.data.id },
+					isCurrent: true,
+					status: FiscalYearStatus.ACTIVE,
+				},
+			});
+
+			if (otherCurrentFiscalYears === 0) {
+				return createErrorResponse(
+					ActionStatus.FORBIDDEN,
+					"Impossible de fermer cette année fiscale car elle est définie comme année courante. Veuillez d'abord définir une autre année fiscale comme courante.",
+					rawData
+				);
+			}
+		}
+
+		// 9. Vérifier si l'année a des transactions associées avant de modifier les dates
 		if (
 			(validation.data.startDate || validation.data.endDate) &&
 			(await hasAssociatedTransactions(existingFiscalYear.id))
@@ -137,7 +163,7 @@ export const updateFiscalYear: ServerAction<
 			);
 		}
 
-		// 9. Vérifier les dates si elles sont modifiées
+		// 10. Vérifier les dates si elles sont modifiées
 		if (validation.data.startDate && validation.data.endDate) {
 			// Vérifier que la date de début est antérieure à la date de fin
 			if (
@@ -175,7 +201,7 @@ export const updateFiscalYear: ServerAction<
 			}
 		}
 
-		// 10. Vérifier les transitions de statut
+		// 11. Vérifier les transitions de statut
 		if (validation.data.status !== existingFiscalYear.status) {
 			const statusTransitionCheck = isValidStatusTransition(
 				existingFiscalYear.status as FiscalYearStatus,
@@ -200,10 +226,8 @@ export const updateFiscalYear: ServerAction<
 			}
 		}
 
-		// 11. Si l'année est marquée comme courante, vérifier qu'elle est ACTIVE
+		// 12. Si l'année est marquée comme courante, vérifier qu'elle est ACTIVE
 		// Nous supprimons cette vérification puisque nous forcerons isCurrent à false
-
-		// 12. Nous supprimons également cette section pour ne pas traiter isCurrent
 
 		// 13. Mise à jour de l'année fiscale dans la base de données
 		const fiscalYear = await db.fiscalYear.update({
