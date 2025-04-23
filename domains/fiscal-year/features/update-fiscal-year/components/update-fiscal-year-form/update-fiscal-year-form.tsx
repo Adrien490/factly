@@ -108,6 +108,16 @@ export function UpdateFiscalYearForm({
 				)}
 			</form.Field>
 
+			<form.Field name="isCurrent">
+				{(field) => (
+					<input
+						type="hidden"
+						name="isCurrent"
+						value={field.state.value === true ? "true" : "false"}
+					/>
+				)}
+			</form.Field>
+
 			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
 				<FormSection

@@ -14,70 +14,8 @@ import {
 import { FiscalYear, FiscalYearStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
+import { hasDateGap } from "../queries/has-date-gap";
 import { createFiscalYearSchema } from "../schemas";
-
-/**
- * Vérifie s'il y a un "trou" entre cette année fiscale et les années adjacentes
- */
-async function hasDateGap(
-	organizationId: string,
-	startDate: Date,
-	endDate: Date
-): Promise<{ hasGap: boolean; message?: string }> {
-	// Trouver l'année fiscale qui se termine juste avant cette année
-	const previousYear = await db.fiscalYear.findFirst({
-		where: {
-			organizationId,
-			endDate: { lt: startDate },
-		},
-		orderBy: {
-			endDate: "desc",
-		},
-		take: 1,
-		select: { id: true, name: true, endDate: true },
-	});
-
-	// Trouver l'année fiscale qui commence juste après cette année
-	const nextYear = await db.fiscalYear.findFirst({
-		where: {
-			organizationId,
-			startDate: { gt: endDate },
-		},
-		orderBy: {
-			startDate: "asc",
-		},
-		take: 1,
-		select: { id: true, name: true, startDate: true },
-	});
-
-	// Vérifier s'il y a un trou avec l'année précédente
-	const hasPreviousGap = previousYear
-		? new Date(previousYear.endDate).getTime() + 24 * 60 * 60 * 1000 <
-		  new Date(startDate).getTime()
-		: false;
-
-	// Vérifier s'il y a un trou avec l'année suivante
-	const hasNextGap = nextYear
-		? new Date(endDate).getTime() + 24 * 60 * 60 * 1000 <
-		  new Date(nextYear.startDate).getTime()
-		: false;
-
-	if (hasPreviousGap) {
-		return {
-			hasGap: true,
-			message: `Il existe un écart entre cette année fiscale et l'année précédente "${previousYear?.name}". Cela peut créer des discontinuités dans vos données financières.`,
-		};
-	}
-
-	if (hasNextGap) {
-		return {
-			hasGap: true,
-			message: `Il existe un écart entre cette année fiscale et l'année suivante "${nextYear?.name}". Cela peut créer des discontinuités dans vos données financières.`,
-		};
-	}
-
-	return { hasGap: false };
-}
 
 /**
  * Action serveur pour créer une nouvelle année fiscale
@@ -133,6 +71,8 @@ export const createFiscalYear: ServerAction<
 			status: (formData.get("status") as string) || FiscalYearStatus.ACTIVE, // Statut par défaut ACTIVE
 			isCurrent: formData.get("isCurrent") === "true",
 		};
+
+		console.log("rawData", rawData);
 
 		// 5. Validation des données
 		const validation = createFiscalYearSchema.safeParse(rawData);

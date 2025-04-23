@@ -2,6 +2,7 @@
 
 import { auth } from "@/domains/auth";
 import { hasAssociatedTransactions } from "@/domains/fiscal-year/queries/has-associated-transactions";
+import { hasDateOverlap } from "@/domains/fiscal-year/queries/has-date-overlap";
 import { isValidStatusTransition } from "@/domains/fiscal-year/utils/is-valid-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
@@ -16,43 +17,6 @@ import { FiscalYear, FiscalYearStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateFiscalYearSchema } from "../schemas";
-
-/**
- * Vérifie si une période (startDate - endDate) chevauche des années fiscales existantes
- */
-async function hasDateOverlap(
-	organizationId: string,
-	startDate: Date,
-	endDate: Date,
-	excludeFiscalYearId: string
-): Promise<boolean> {
-	const overlappingFiscalYears = await db.fiscalYear.findMany({
-		where: {
-			organizationId,
-			id: { not: excludeFiscalYearId }, // Exclure l'année fiscale en cours de modification
-			OR: [
-				// Cas 1: startDate est entre les dates d'une année existante
-				{
-					startDate: { lte: startDate },
-					endDate: { gte: startDate },
-				},
-				// Cas 2: endDate est entre les dates d'une année existante
-				{
-					startDate: { lte: endDate },
-					endDate: { gte: endDate },
-				},
-				// Cas 3: les dates englobent complètement une année existante
-				{
-					startDate: { gte: startDate },
-					endDate: { lte: endDate },
-				},
-			],
-		},
-		select: { id: true, name: true },
-	});
-
-	return overlappingFiscalYears.length > 0;
-}
 
 /**
  * Action serveur pour mettre à jour une année fiscale
@@ -198,8 +162,7 @@ export const updateFiscalYear: ServerAction<
 				const hasOverlap = await hasDateOverlap(
 					validation.data.organizationId,
 					validation.data.startDate,
-					validation.data.endDate,
-					validation.data.id
+					validation.data.endDate
 				);
 
 				if (hasOverlap) {
