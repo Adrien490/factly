@@ -1,4 +1,4 @@
-import { getClientNavigation } from "@/domains/client/constants";
+import { getFiscalYearNavigation } from "@/domains/fiscal-year";
 import { CreateFiscalYearForm } from "@/domains/fiscal-year/features/create-fiscal-year";
 import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
@@ -16,11 +16,11 @@ export default async function NewFiscalYearPage({ params }: PageProps) {
 		<PageContainer>
 			{/* En-tête */}
 			<PageHeader
-				title="Nouveau client"
-				description="Créez un nouveau client pour votre organisation"
+				title="Nouvelle année fiscale"
+				description="Créez une nouvelle année fiscale pour votre organisation"
 			/>
 
-			<HorizontalMenu items={getClientNavigation(organizationId)} />
+			<HorizontalMenu items={getFiscalYearNavigation(organizationId)} />
 
 			{/* Contenu principal */}
 			<CreateFiscalYearForm />
