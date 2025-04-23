@@ -90,16 +90,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					});
 					form.reset();
 				},
-				action: {
-					label: "Voir le client",
-					onClick: (data) => {
-						if (data?.id) {
-							router.push(
-								`/dashboard/${data.organizationId}/clients/${data.id}`
-							);
-						}
-					},
-				},
 			})
 		),
 		undefined

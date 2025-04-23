@@ -14,7 +14,7 @@
 		"test:ui": "vitest --ui",
 		"test:coverage": "vitest run --coverage",
 		"postinstall": "prisma generate",
-		"prisma:seed": "npx ts-node prisma/seed.ts"
+		"seed:clients": "npx tsx scripts/seed-clients.ts"
 	},
 	"overrides": {
 		"react": "$react",
@@ -84,7 +84,7 @@
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
-		"@faker-js/faker": "^9.3.0",
+		"@faker-js/faker": "^9.7.0",
 		"@tailwindcss/postcss": "^4.0.0",
 		"@testing-library/dom": "^10.4.0",
 		"@testing-library/jest-dom": "^6.6.3",
@@ -100,7 +100,9 @@
 		"postcss": "^8",
 		"prisma": "^6.6.0",
 		"tailwindcss": "^4",
-		"tsx": "^4.19.2",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
+		"tsx": "^4.19.3",
 		"tw-animate-css": "^1.2.5",
 		"typescript": "^5",
 		"vite-tsconfig-paths": "^5.1.4",
