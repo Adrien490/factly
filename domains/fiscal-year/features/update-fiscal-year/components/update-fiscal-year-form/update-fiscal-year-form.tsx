@@ -16,15 +16,10 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
 	Textarea,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
-import { FiscalYear, FiscalYearStatus } from "@prisma/client";
+import { FiscalYear } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -53,7 +48,6 @@ export function UpdateFiscalYearForm({
 			description: state?.inputs?.description ?? (fiscalYear.description || ""),
 			startDate: state?.inputs?.startDate ?? fiscalYear.startDate,
 			endDate: state?.inputs?.endDate ?? fiscalYear.endDate,
-			status: state?.inputs?.status ?? fiscalYear.status,
 		},
 
 		transform: useTransform(
@@ -76,6 +70,8 @@ export function UpdateFiscalYearForm({
 			{/* Champs cachés */}
 			<input type="hidden" name="organizationId" value={organizationId} />
 			<input type="hidden" name="id" value={fiscalYear.id} />
+			{/* Conservation du statut actuel, le changement de statut se fait via une action dédiée */}
+			<input type="hidden" name="status" value={fiscalYear.status} />
 
 			<form.Field name="startDate">
 				{(field) => (
@@ -301,50 +297,34 @@ export function UpdateFiscalYearForm({
 							</form.Field>
 						</div>
 
-						<form.Field
-							name="status"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "Le statut est requis";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="status">
-										Statut
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="status"
-										onValueChange={(value) => {
-											field.handleChange(value as FiscalYearStatus);
+						{/* Note informative sur le statut */}
+						<div className="rounded-md bg-muted p-3 mt-2">
+							<div className="flex">
+								<p className="text-sm text-muted-foreground">
+									<span className="font-medium">Statut actuel:</span>{" "}
+									<span
+										style={{
+											color:
+												FISCAL_YEAR_STATUSES.find(
+													(s) => s.value === fiscalYear.status
+												)?.color || "inherit",
 										}}
-										value={field.state.value}
 									>
-										<SelectTrigger id="status" className="w-full">
-											<SelectValue placeholder="Sélectionnez un statut" />
-										</SelectTrigger>
-										<SelectContent>
-											{FISCAL_YEAR_STATUSES.map((status) => (
-												<SelectItem
-													key={status.value}
-													value={status.value}
-													style={{
-														color: status.color,
-													}}
-												>
-													{status.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
+										{FISCAL_YEAR_STATUSES.find(
+											(s) => s.value === fiscalYear.status
+										)?.label || fiscalYear.status}
+									</span>
+									<br />
+									<span className="text-xs">
+										Pour modifier le statut d&apos;une année fiscale, utilisez
+										les options dédiées depuis la vue principale des années
+										fiscales. Cette séparation permet de garantir
+										l&apos;application correcte des règles de transition entre
+										les différents statuts.
+									</span>
+								</p>
+							</div>
+						</div>
 					</div>
 				</FormSection>
 			</FormLayout>

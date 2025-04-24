@@ -1,6 +1,5 @@
 "use client";
 
-import { FISCAL_YEAR_STATUSES } from "@/domains/fiscal-year/constants/fiscal-year-statuses/constants";
 import {
 	FieldInfo,
 	FormErrors,
@@ -16,15 +15,10 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
 	Textarea,
 } from "@/shared/components/ui";
 import { cn, createToastCallbacks, withCallbacks } from "@/shared/utils";
-import { FiscalYear, FiscalYearStatus } from "@prisma/client";
+import { FiscalYear } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -75,9 +69,8 @@ export function CreateFiscalYearForm() {
 			organizationId,
 			name: `Année fiscale ${new Date().getFullYear()}`,
 			description: "",
-			startDate: new Date(new Date().getFullYear(), 0, 1), // 1er janvier de l&apos;année courante
-			endDate: new Date(new Date().getFullYear(), 11, 31), // 31 décembre de l&apos;année courante
-			status: "ACTIVE" as FiscalYearStatus,
+			startDate: new Date(new Date().getFullYear(), 0, 1), // 1er janvier de l'année courante
+			endDate: new Date(new Date().getFullYear(), 11, 31), // 31 décembre de l'année courante
 		},
 
 		transform: useTransform(
@@ -324,50 +317,16 @@ export function CreateFiscalYearForm() {
 							</form.Field>
 						</div>
 
-						<form.Field
-							name="status"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "Le statut est requis";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="status">
-										Statut
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="status"
-										onValueChange={(value) => {
-											field.handleChange(value as FiscalYearStatus);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger id="status" className="w-full">
-											<SelectValue placeholder="Sélectionnez un statut" />
-										</SelectTrigger>
-										<SelectContent>
-											{FISCAL_YEAR_STATUSES.map((status) => (
-												<SelectItem
-													key={status.value}
-													value={status.value}
-													style={{
-														color: status.color,
-													}}
-												>
-													{status.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
+						{/* Note informative sur le statut */}
+						<div className="pt-2">
+							<p className="text-xs text-muted-foreground">
+								<span className="font-medium">Note:</span> Le statut initial
+								d&apos;une année fiscale est automatiquement défini à
+								&quot;Active&quot;. Pour modifier le statut d&apos;une année
+								fiscale existante, utilisez les options dédiées depuis la vue
+								détail de l&apos;année fiscale.
+							</p>
+						</div>
 					</div>
 				</FormSection>
 			</FormLayout>

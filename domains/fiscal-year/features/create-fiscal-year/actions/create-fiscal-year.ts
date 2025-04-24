@@ -68,7 +68,6 @@ export const createFiscalYear: ServerAction<
 			description: formData.get("description") as string,
 			startDate: formData.get("startDate") as string,
 			endDate: formData.get("endDate") as string,
-			status: (formData.get("status") as string) || FiscalYearStatus.ACTIVE, // Statut par défaut ACTIVE
 			isCurrent: formData.get("isCurrent") === "true",
 		};
 
