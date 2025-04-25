@@ -44,9 +44,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<Mail className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-16" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-48 mt-1" />
 												</div>
 											</li>
@@ -54,9 +54,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<Phone className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-24" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-32 mt-1" />
 												</div>
 											</li>
@@ -64,9 +64,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<Globe className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-20" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-40 mt-1" />
 												</div>
 											</li>
@@ -74,9 +74,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-28" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-36 mt-1" />
 												</div>
 											</li>
@@ -93,9 +93,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-16" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-32 mt-1" />
 												</div>
 											</li>
@@ -103,9 +103,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-16" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-40 mt-1" />
 												</div>
 											</li>
@@ -113,9 +113,9 @@ export default function ClientLoading() {
 											<li className="flex items-start gap-3">
 												<Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div className="w-full">
-													<p className="text-xs text-muted-foreground">
+													<div className="text-xs text-muted-foreground">
 														<Skeleton className="h-3 w-12" />
-													</p>
+													</div>
 													<Skeleton className="h-5 w-36 mt-1" />
 												</div>
 											</li>
