@@ -21,8 +21,7 @@ type Props = {
 
 export default async function InvitationsPage({ searchParams }: Props) {
 	// Récupération des organisations avec les options par défaut
-	const resolvedSearchParams = await searchParams;
-	const { sortBy, sortOrder } = resolvedSearchParams;
+	const { sortBy, sortOrder } = await searchParams;
 
 	return (
 		<PageContainer className="space-y-6 py-6 group">

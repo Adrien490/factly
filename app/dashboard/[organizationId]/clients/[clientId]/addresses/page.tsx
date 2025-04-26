@@ -30,10 +30,8 @@ type Props = {
 	}>;
 };
 export default async function AddressesPage({ searchParams, params }: Props) {
-	const resolvedSearchParams = await searchParams;
-	const resolvedParams = await params;
-	const { organizationId, clientId } = resolvedParams;
-	const { sortOrder, view, search, type } = resolvedSearchParams;
+	const { sortOrder, view, search, type } = await searchParams;
+	const { organizationId, clientId } = await params;
 
 	const filters = {
 		type: type as AddressType,

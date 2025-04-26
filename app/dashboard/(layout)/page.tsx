@@ -29,8 +29,7 @@ type Props = {
 
 export default async function DashboardPage({ searchParams }: Props) {
 	// Récupération des organisations avec les options par défaut
-	const resolvedSearchParams = await searchParams;
-	const { sortBy, sortOrder, search, view } = resolvedSearchParams;
+	const { sortBy, sortOrder, search, view } = await searchParams;
 
 	return (
 		<PageContainer className="space-y-6 py-6 group">

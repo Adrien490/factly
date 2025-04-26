@@ -23,9 +23,7 @@ export default async function NewClientPage({
 	params,
 	searchParams,
 }: PageProps) {
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
-	const resolvedSearchParams = await searchParams;
+	const { organizationId } = await params;
 	const {
 		q = "",
 		postcode,
@@ -35,7 +33,7 @@ export default async function NewClientPage({
 		autocomplete,
 		lat,
 		lon,
-	} = resolvedSearchParams;
+	} = await searchParams;
 
 	// Construire les paramètres de recherche
 	const searchAddressParams = {

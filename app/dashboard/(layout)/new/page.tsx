@@ -16,7 +16,6 @@ type Props = {
 };
 
 export default async function NewOrganizationPage({ searchParams }: Props) {
-	const resolvedSearchParams = await searchParams;
 	const {
 		q = "",
 		postcode,
@@ -26,7 +25,7 @@ export default async function NewOrganizationPage({ searchParams }: Props) {
 		autocomplete,
 		lat,
 		lon,
-	} = resolvedSearchParams;
+	} = await searchParams;
 
 	// Construire les paramètres de recherche
 	const searchAddressParams = {

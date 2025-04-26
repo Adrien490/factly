@@ -41,11 +41,8 @@ export default async function InvitationsPage({
 	searchParams,
 	params,
 }: PageProps) {
-	const resolvedSearchParams = await searchParams;
-	const resolvedParams = await params;
-
-	const { organizationId } = resolvedParams;
-	const { sortBy, sortOrder, status, expiresAt } = resolvedSearchParams;
+	const { sortBy, sortOrder, status, expiresAt } = await searchParams;
+	const { organizationId } = await params;
 
 	console.log(organizationId, sortBy, sortOrder, status, expiresAt);
 

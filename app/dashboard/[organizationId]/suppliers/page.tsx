@@ -41,11 +41,9 @@ export default async function SuppliersPage({
 	searchParams,
 	params,
 }: PageProps) {
-	const resolvedSearchParams = await searchParams;
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
 	const { perPage, page, sortBy, sortOrder, search, ...filters } =
-		resolvedSearchParams;
+		await searchParams;
+	const { organizationId } = await params;
 
 	return (
 		<PageContainer className="group">

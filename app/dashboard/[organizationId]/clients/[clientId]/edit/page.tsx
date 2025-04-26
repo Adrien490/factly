@@ -10,8 +10,7 @@ type PageProps = {
 };
 
 export default async function EditClientPage({ params }: PageProps) {
-	const resolvedParams = await params;
-	const { organizationId, clientId } = resolvedParams;
+	const { organizationId, clientId } = await params;
 
 	const client = await getClient({ id: clientId, organizationId });
 

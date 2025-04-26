@@ -65,8 +65,7 @@ type Props = {
 };
 
 export default async function SupplierPage({ params }: Props) {
-	const resolvedParams = await params;
-	const { organizationId, supplierId } = resolvedParams;
+	const { organizationId, supplierId } = await params;
 
 	const supplier = await getSupplier({ id: supplierId, organizationId });
 

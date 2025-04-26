@@ -23,10 +23,7 @@ export default async function NewSupplierPage({
 	searchParams,
 	params,
 }: PageProps) {
-	const resolvedSearchParams = await searchParams;
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
-	console.log(organizationId);
+	const { organizationId } = await params;
 	const {
 		q = "",
 		postcode,
@@ -36,7 +33,7 @@ export default async function NewSupplierPage({
 		autocomplete,
 		lat,
 		lon,
-	} = resolvedSearchParams;
+	} = await searchParams;
 
 	// Construire les paramètres de recherche
 	const searchAddressParams = {

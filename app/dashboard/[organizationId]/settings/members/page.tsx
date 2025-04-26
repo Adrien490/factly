@@ -14,8 +14,7 @@ type Props = {
 };
 
 export default async function MembersPage({ params }: Props) {
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
+	const { organizationId } = await params;
 	console.log(organizationId);
 	try {
 		return (

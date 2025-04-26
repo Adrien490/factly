@@ -61,8 +61,7 @@ type Props = {
 };
 
 export default async function ClientPage({ params }: Props) {
-	const resolvedParams = await params;
-	const { organizationId, clientId } = resolvedParams;
+	const { organizationId, clientId } = await params;
 
 	const client = await getClient({ id: clientId, organizationId });
 

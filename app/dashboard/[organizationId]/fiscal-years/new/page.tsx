@@ -9,8 +9,7 @@ type PageProps = {
 };
 
 export default async function NewFiscalYearPage({ params }: PageProps) {
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
+	const { organizationId } = await params;
 
 	return (
 		<PageContainer>

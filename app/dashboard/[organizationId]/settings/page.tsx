@@ -8,8 +8,7 @@ type Props = {
 };
 
 export default async function SettingsPage({ params }: Props) {
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
+	const { organizationId } = await params;
 
 	const organization = await getOrganization(organizationId);
 	console.log(organization);

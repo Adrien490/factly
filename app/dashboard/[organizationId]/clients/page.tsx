@@ -1,3 +1,4 @@
+import { ClientFilterSheet } from "@/domains/client/components/client-filter-sheet";
 import {
 	CLIENT_SORT_FIELDS,
 	getClientNavigation,
@@ -53,11 +54,9 @@ type PageProps = {
 };
 
 export default async function ClientsPage({ searchParams, params }: PageProps) {
-	const resolvedSearchParams = await searchParams;
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
 	const { perPage, page, sortBy, sortOrder, search, status, clientType } =
-		resolvedSearchParams;
+		await searchParams;
+	const { organizationId } = await params;
 
 	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};
@@ -104,6 +103,8 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							defaultSortOrder="desc"
 							className="w-[200px] shrink-0"
 						/>
+
+						<ClientFilterSheet />
 
 						<Button className="shrink-0" asChild>
 							<Link href={`/dashboard/${organizationId}/clients/new`}>

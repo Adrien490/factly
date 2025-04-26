@@ -24,8 +24,7 @@ type Props = {
 };
 
 export default async function EditAddressPage({ params, searchParams }: Props) {
-	const resolvedParams = await params;
-	const { addressId, clientId, organizationId } = resolvedParams;
+	const { addressId, clientId, organizationId } = await params;
 
 	// Récupérer l'adresse à éditer
 	const address = await getAddress({
@@ -38,7 +37,6 @@ export default async function EditAddressPage({ params, searchParams }: Props) {
 		return notFound();
 	}
 
-	const resolvedSearchParams = await searchParams;
 	const {
 		q = "",
 		postcode,
@@ -48,7 +46,7 @@ export default async function EditAddressPage({ params, searchParams }: Props) {
 		autocomplete,
 		lat,
 		lon,
-	} = resolvedSearchParams;
+	} = await searchParams;
 
 	// Construire les paramètres de recherche
 	const searchAddressParams = {

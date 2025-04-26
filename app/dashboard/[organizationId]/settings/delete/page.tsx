@@ -11,8 +11,7 @@ interface DeleteOrganizationPageProps {
 export default async function DeleteOrganizationPage({
 	params,
 }: DeleteOrganizationPageProps) {
-	const resolvedParams = await params;
-	const { organizationId } = resolvedParams;
+	const { organizationId } = await params;
 	try {
 		const organization = await getOrganization(organizationId);
 		return (

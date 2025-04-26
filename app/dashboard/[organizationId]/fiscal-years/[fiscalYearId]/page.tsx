@@ -22,8 +22,7 @@ type Props = {
 };
 
 export default async function FiscalYearPage({ params }: Props) {
-	const resolvedParams = await params;
-	const { organizationId, fiscalYearId } = resolvedParams;
+	const { organizationId, fiscalYearId } = await params;
 
 	const fiscalYear = await getFiscalYear({ id: fiscalYearId, organizationId });
 
