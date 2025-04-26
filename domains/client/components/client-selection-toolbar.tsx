@@ -21,7 +21,7 @@ import { useSelectionContext } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DeleteClientsButton } from "../../features/delete-clients";
+import { DeleteClientsButton } from "../features/delete-clients";
 
 export function ClientSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearSelection } =
