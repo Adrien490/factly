@@ -21,7 +21,6 @@ export function RadioGroupItemFilter({
 			value={value}
 			checked={currentValue === value}
 			onClick={() => setFilter(value === currentValue ? null : value)}
-			disabled={isPending}
 			className={cn(className)}
 			data-pending={isPending ? "" : undefined}
 		/>

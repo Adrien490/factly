@@ -18,7 +18,6 @@ export function CheckboxFilter({
 			id={checkboxId}
 			checked={isSelected(value)}
 			onCheckedChange={() => toggleFilter(value)}
-			disabled={isPending}
 			className={className}
 			data-pending={isPending ? "" : undefined}
 		/>
