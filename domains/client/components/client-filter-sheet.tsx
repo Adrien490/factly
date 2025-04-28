@@ -1,10 +1,11 @@
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
+import { RadioGroupItemFilter } from "@/shared/components/radio-group-item-filter";
 import { Button } from "@/shared/components/ui/button";
 import { FormLabel } from "@/shared/components/ui/form";
 import { Label } from "@/shared/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
+import { RadioGroup } from "@/shared/components/ui/radio-group";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Separator } from "@/shared/components/ui/separator";
 import {
@@ -17,11 +18,11 @@ import {
 } from "@/shared/components/ui/sheet";
 import { Filter } from "lucide-react";
 
-/**
- * Composant de filtrage des clients
- * Permet de filtrer par statut et type de client
- */
-export function ClientFilterSheet() {
+interface ClientFilterSheetProps {
+	count: number;
+}
+
+export function ClientFilterSheet({ count }: ClientFilterSheetProps) {
 	// Types de client disponible
 
 	// Récupération des filtres depuis l'URL
@@ -31,7 +32,7 @@ export function ClientFilterSheet() {
 			<SheetTrigger asChild>
 				<Button variant="outline" className="relative">
 					<Filter className="size-4 mr-2" />
-					Filtres
+					Filtres {count > 0 && `(${count})`}
 				</Button>
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:max-w-md">
@@ -52,14 +53,15 @@ export function ClientFilterSheet() {
 								</FormLabel>
 							</div>
 
-							<RadioGroup value={""}>
+							<RadioGroup defaultValue="">
 								<div className="space-y-2">
 									{CLIENT_TYPES.map((type) => (
 										<div
 											key={type.value}
 											className="flex items-center space-x-2"
 										>
-											<RadioGroupItem
+											<RadioGroupItemFilter
+												filterKey="type"
 												value={type.value}
 												id={`type-${type.value}`}
 											/>
