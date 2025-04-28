@@ -1,6 +1,7 @@
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
+import { ClearFiltersButton } from "@/shared/components/clear-filters-button";
 import { Button } from "@/shared/components/ui/button";
 import { FormLabel } from "@/shared/components/ui/form";
 import { Label } from "@/shared/components/ui/label";
@@ -10,6 +11,7 @@ import {
 	Sheet,
 	SheetContent,
 	SheetDescription,
+	SheetFooter,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
@@ -106,6 +108,14 @@ export function ClientFilterSheet({ count }: ClientFilterSheetProps) {
 						</div>
 					</div>
 				</ScrollArea>
+
+				<SheetFooter className="mt-6">
+					<ClearFiltersButton
+						filters={["type", "status"]}
+						label="Réinitialiser les filtres"
+						className="w-full"
+					/>
+				</SheetFooter>
 			</SheetContent>
 		</Sheet>
 	);

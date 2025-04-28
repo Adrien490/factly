@@ -30,3 +30,5 @@ export * from "./user-avatar";
 export * from "./view-toggle";
 
 export * from "./loading-indicator";
+
+export * from "./clear-filters-button";
