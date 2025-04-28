@@ -4,35 +4,13 @@ import { Button } from "@/shared/components/ui/button";
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
-
-interface ClearFiltersButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	/**
-	 * Liste des noms de filtres à supprimer
-	 */
-	filters: string[];
-
-	/**
-	 * Texte du bouton
-	 * @default "Effacer les filtres"
-	 */
-	label?: string;
-
-	/**
-	 * Préfixe pour les clés de filtre dans l'URL
-	 */
-	prefix?: string;
-
-	/**
-	 * Callback appelé après la suppression des filtres
-	 */
-	onClear?: () => void;
-}
+import { ClearFiltersButtonProps } from "./types";
 
 export function ClearFiltersButton({
 	filters,
 	label = "Effacer les filtres",
 	prefix = "",
+	onClear,
 	...buttonProps
 }: ClearFiltersButtonProps) {
 	const router = useRouter();
@@ -67,6 +45,7 @@ export function ClearFiltersButton({
 		// Mettre à jour l'URL
 		startTransition(() => {
 			router.push(`?${params.toString()}`, { scroll: false });
+			if (onClear) onClear();
 		});
 	};
 
