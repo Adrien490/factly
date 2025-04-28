@@ -38,7 +38,7 @@ export const buildFilterConditions = (
 				}
 				break;
 
-			case "clientType":
+			case "type":
 				if (
 					typeof value === "string" &&
 					Object.values(ClientType).includes(value as ClientType)

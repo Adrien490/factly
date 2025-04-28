@@ -12,7 +12,7 @@ import {
 } from "../constants";
 import { getClientsSchema } from "../schemas";
 import { GetClientsReturn } from "../types";
-import { buildWhereClause } from "./build-where-claude";
+import { buildWhereClause } from "./build-where-clause";
 
 /**
  * Fonction interne qui récupère les clients
