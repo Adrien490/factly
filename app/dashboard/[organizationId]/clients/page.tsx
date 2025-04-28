@@ -46,7 +46,7 @@ type PageProps = {
 
 		// Filtres
 		status?: ClientStatus | ClientStatus[];
-		clientType?: ClientType;
+		type?: ClientType;
 	}>;
 	params: Promise<{
 		organizationId: string;
@@ -54,14 +54,14 @@ type PageProps = {
 };
 
 export default async function ClientsPage({ searchParams, params }: PageProps) {
-	const { perPage, page, sortBy, sortOrder, search, status, clientType } =
+	const { perPage, page, sortBy, sortOrder, search, status, type } =
 		await searchParams;
 	const { organizationId } = await params;
 
 	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};
 	if (status) filters.status = status;
-	if (clientType) filters.clientType = clientType;
+	if (type) filters.type = type;
 
 	const count = Object.keys(filters).length;
 

@@ -1,11 +1,9 @@
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
-import { RadioGroupItemFilter } from "@/shared/components/radio-group-item-filter";
 import { Button } from "@/shared/components/ui/button";
 import { FormLabel } from "@/shared/components/ui/form";
 import { Label } from "@/shared/components/ui/label";
-import { RadioGroup } from "@/shared/components/ui/radio-group";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Separator } from "@/shared/components/ui/separator";
 import {
@@ -53,32 +51,27 @@ export function ClientFilterSheet({ count }: ClientFilterSheetProps) {
 								</FormLabel>
 							</div>
 
-							<RadioGroup defaultValue="">
-								<div className="space-y-2">
-									{CLIENT_TYPES.map((type) => (
-										<div
-											key={type.value}
-											className="flex items-center space-x-2"
+							<div className="space-y-2">
+								{CLIENT_TYPES.map((type) => (
+									<div key={type.value} className="flex items-center space-x-2">
+										<CheckboxFilter
+											filterKey="type"
+											value={type.value}
+											id={`type-${type.value}`}
+										/>
+										<Label
+											htmlFor={`type-${type.value}`}
+											className="flex items-center cursor-pointer"
 										>
-											<RadioGroupItemFilter
-												filterKey="type"
-												value={type.value}
-												id={`type-${type.value}`}
+											<span
+												className="w-2 h-2 rounded-full mr-2"
+												style={{ backgroundColor: type.color }}
 											/>
-											<Label
-												htmlFor={`type-${type.value}`}
-												className="flex items-center cursor-pointer"
-											>
-												<span
-													className="w-2 h-2 rounded-full mr-2"
-													style={{ backgroundColor: type.color }}
-												/>
-												{type.label}
-											</Label>
-										</div>
-									))}
-								</div>
-							</RadioGroup>
+											{type.label}
+										</Label>
+									</div>
+								))}
+							</div>
 						</div>
 
 						<Separator />
