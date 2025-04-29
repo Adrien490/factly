@@ -100,7 +100,7 @@ export const deleteMultipleClients: ServerAction<
 		// Revalidation du cache
 		revalidateTag(`organizations:${organizationId}:clients`);
 		validation.data.ids.forEach((clientId) => {
-			revalidateTag(`organizations:${organizationId}:client:${clientId}`);
+			revalidateTag(`organizations:${organizationId}:clients:${clientId}`);
 		});
 		revalidateTag(`organizations:${organizationId}:clients:count`);
 
