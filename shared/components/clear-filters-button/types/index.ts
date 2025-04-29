@@ -8,6 +8,11 @@ export interface ClearFiltersButtonProps
 	filters: string[];
 
 	/**
+	 * Liste des noms de filtres à exclure de la suppression
+	 */
+	excludeFilters?: string[];
+
+	/**
 	 * Texte du bouton
 	 * @default "Effacer les filtres"
 	 */

@@ -11,6 +11,7 @@ export function ClearFiltersButton({
 	label = "Effacer les filtres",
 	prefix = "",
 	onClear,
+	excludeFilters = [],
 	...buttonProps
 }: ClearFiltersButtonProps) {
 	const router = useRouter();
@@ -36,7 +37,9 @@ export function ClearFiltersButton({
 		// Supprimer chaque filtre
 		filters.forEach((filter) => {
 			const paramKey = prefix ? `${prefix}${filter}` : filter;
-			params.delete(paramKey);
+			if (!excludeFilters.includes(filter)) {
+				params.delete(paramKey);
+			}
 		});
 
 		// Réinitialiser également la pagination

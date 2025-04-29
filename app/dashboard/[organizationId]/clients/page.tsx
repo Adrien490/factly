@@ -237,6 +237,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 										filters={["type", "status"]}
 										label="Réinitialiser les filtres"
 										className="w-full"
+										excludeFilters={isArchivedView ? ["status"] : []}
 									/>
 									<Button className="w-full">Fermer</Button>
 								</SheetFooter>
