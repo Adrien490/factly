@@ -39,6 +39,8 @@ interface SupplierRowActionsProps {
 }
 
 export function SupplierRowActions({ supplier }: SupplierRowActionsProps) {
+	const isArchived = supplier.status === SupplierStatus.ARCHIVED;
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -71,88 +73,127 @@ export function SupplierRowActions({ supplier }: SupplierRowActionsProps) {
 						<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
 					</Link>
 				</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem asChild>
-					<Link
-						href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`}
-						className={cn("flex w-full items-center")}
-					>
-						<Edit2 className="h-4 w-4 mr-2" />
-						<span>Modifier</span>
-					</Link>
-				</DropdownMenuItem>
-				<DropdownMenuItem asChild>
-					<Link
-						href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`}
-						className={cn("flex w-full items-center")}
-					>
-						<Users className="h-4 w-4 mr-2" />
-						<span>Gestion des contacts</span>
-					</Link>
-				</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				<DropdownMenuSub>
-					<DropdownMenuSubTrigger>
-						<Tag className="h-4 w-4 mr-2" />
-						<span>Changer le statut</span>
-					</DropdownMenuSubTrigger>
-					<DropdownMenuSubContent>
-						{SUPPLIER_STATUSES.filter(
-							(status) =>
-								status.value !== SupplierStatus.ARCHIVED &&
-								status.value !== supplier.status
-						).map((status) => (
-							<UpdateSupplierStatusButton
-								key={status.value}
-								organizationId={supplier.organizationId}
-								id={supplier.id}
-								status={status.value}
+				{!isArchived && (
+					<>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem asChild>
+							<Link
+								href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`}
+								className={cn("flex w-full items-center")}
 							>
-								<DropdownMenuItem>
-									<div className="flex items-center gap-2">
-										<div
-											className="h-2 w-2 rounded-full"
-											style={{ backgroundColor: status.color }}
-										/>
-										<span>{status.label}</span>
-									</div>
-								</DropdownMenuItem>
-							</UpdateSupplierStatusButton>
-						))}
-					</DropdownMenuSubContent>
-				</DropdownMenuSub>
-				<AlertDialog>
-					<AlertDialogTrigger asChild>
-						<DropdownMenuItem
-							preventDefault
-							className="text-destructive focus:text-destructive"
-						>
-							<Trash className="text-destructive h-4 w-4 mr-2" />
-							<span>Archiver</span>
+								<Edit2 className="h-4 w-4 mr-2" />
+								<span>Modifier</span>
+							</Link>
 						</DropdownMenuItem>
-					</AlertDialogTrigger>
-					<AlertDialogContent>
-						<AlertDialogHeader>
-							<AlertDialogTitle>Archiver le fournisseur</AlertDialogTitle>
-							<AlertDialogDescription>
-								Cette action va archiver le fournisseur
-								{supplier.name && <strong> {supplier.name}</strong>}.
-								<br />
-								Vous pourrez le restaurer ultérieurement.
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel>Annuler</AlertDialogCancel>
-							<UpdateSupplierStatusButton
-								organizationId={supplier.organizationId}
-								id={supplier.id}
-								status={SupplierStatus.ARCHIVED}
+						<DropdownMenuItem asChild>
+							<Link
+								href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`}
+								className={cn("flex w-full items-center")}
 							>
-								<AlertDialogAction>Archiver</AlertDialogAction>
-							</UpdateSupplierStatusButton>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialog>
+								<Users className="h-4 w-4 mr-2" />
+								<span>Gestion des contacts</span>
+							</Link>
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuSub>
+							<DropdownMenuSubTrigger>
+								<Tag className="h-4 w-4 mr-2" />
+								<span>Changer le statut</span>
+							</DropdownMenuSubTrigger>
+							<DropdownMenuSubContent>
+								{SUPPLIER_STATUSES.filter(
+									(status) =>
+										status.value !== SupplierStatus.ARCHIVED &&
+										status.value !== supplier.status
+								).map((status) => (
+									<UpdateSupplierStatusButton
+										key={status.value}
+										organizationId={supplier.organizationId}
+										id={supplier.id}
+										status={status.value}
+									>
+										<DropdownMenuItem>
+											<div className="flex items-center gap-2">
+												<div
+													className="h-2 w-2 rounded-full"
+													style={{ backgroundColor: status.color }}
+												/>
+												<span>{status.label}</span>
+											</div>
+										</DropdownMenuItem>
+									</UpdateSupplierStatusButton>
+								))}
+							</DropdownMenuSubContent>
+						</DropdownMenuSub>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<DropdownMenuItem
+									preventDefault
+									className="text-destructive focus:text-destructive"
+								>
+									<Trash className="text-destructive h-4 w-4 mr-2" />
+									<span>Archiver</span>
+								</DropdownMenuItem>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Archiver le fournisseur</AlertDialogTitle>
+									<AlertDialogDescription>
+										Cette action va archiver le fournisseur
+										{supplier.name && <strong> {supplier.name}</strong>}.
+										<br />
+										Vous pourrez le restaurer ultérieurement.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Annuler</AlertDialogCancel>
+									<UpdateSupplierStatusButton
+										organizationId={supplier.organizationId}
+										id={supplier.id}
+										status={SupplierStatus.ARCHIVED}
+									>
+										<AlertDialogAction>Archiver</AlertDialogAction>
+									</UpdateSupplierStatusButton>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					</>
+				)}
+				{isArchived && (
+					<>
+						<DropdownMenuSeparator />
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<DropdownMenuItem preventDefault>
+									<Tag className="h-4 w-4 mr-2" />
+									<span>Remettre en actif</span>
+								</DropdownMenuItem>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>
+										Remettre le fournisseur en actif
+									</AlertDialogTitle>
+									<AlertDialogDescription>
+										Cette action va remettre le fournisseur
+										{supplier.name && <strong> {supplier.name}</strong>} en
+										statut actif.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Annuler</AlertDialogCancel>
+									<UpdateSupplierStatusButton
+										organizationId={supplier.organizationId}
+										id={supplier.id}
+										status={SupplierStatus.ACTIVE}
+									>
+										<AlertDialogAction>Confirmer</AlertDialogAction>
+									</UpdateSupplierStatusButton>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					</>
+				)}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
