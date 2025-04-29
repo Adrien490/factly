@@ -2,6 +2,7 @@ import {
 	CLIENT_STATUS_TRANSITIONS,
 	CLIENT_STATUSES,
 } from "@/domains/client/constants";
+import { DeleteClientButton } from "@/domains/client/features/delete-client/components/delete-client-button";
 import { UpdateClientStatusButton } from "@/domains/client/features/update-client-status/components/udpate-client-status-button";
 import {
 	AlertDialog,
@@ -32,6 +33,7 @@ import {
 	MoreVerticalIcon,
 	Tag,
 	Trash,
+	Undo,
 	Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -177,8 +179,8 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 						<DropdownMenuSeparator />
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger>
-								<Tag className="h-4 w-4 mr-2" />
-								<span>Réactiver le client</span>
+								<Undo className="h-4 w-4 mr-2" />
+								<span>Restaurer</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuSubContent>
 								{CLIENT_STATUSES.filter(
@@ -199,12 +201,14 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 										<AlertDialogContent>
 											<AlertDialogHeader>
 												<AlertDialogTitle>
-													Remettre le client en {status.label.toLowerCase()}
+													Restaurer le client en {status.label.toLowerCase()}
 												</AlertDialogTitle>
 												<AlertDialogDescription>
-													Cette action va remettre le client
+													Cette action va restaurer le client
 													{client.name && <strong> {client.name}</strong>} en
 													statut {status.label.toLowerCase()}.
+													<br />
+													Cette action est réversible.
 												</AlertDialogDescription>
 											</AlertDialogHeader>
 											<AlertDialogFooter>
@@ -214,7 +218,7 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 													id={client.id}
 													status={status.value}
 												>
-													<AlertDialogAction>Confirmer</AlertDialogAction>
+													<AlertDialogAction>Restaurer</AlertDialogAction>
 												</UpdateClientStatusButton>
 											</AlertDialogFooter>
 										</AlertDialogContent>
@@ -222,6 +226,40 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 								))}
 							</DropdownMenuSubContent>
 						</DropdownMenuSub>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<DropdownMenuItem
+									preventDefault
+									className="text-destructive focus:text-destructive"
+								>
+									<Trash className="text-destructive h-4 w-4 mr-2" />
+									<span>Supprimer définitivement</span>
+								</DropdownMenuItem>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle className="text-destructive">
+										Êtes-vous sûr de vouloir supprimer définitivement ce client
+										?
+									</AlertDialogTitle>
+									<AlertDialogDescription>
+										Cette action va supprimer définitivement le client
+										{client.name && <strong> {client.name}</strong>}.
+										<br />
+										Cette action est irréversible.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Annuler</AlertDialogCancel>
+									<DeleteClientButton
+										organizationId={client.organizationId}
+										id={client.id}
+									>
+										<AlertDialogAction>Supprimer</AlertDialogAction>
+									</DeleteClientButton>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					</>
 				)}
 			</DropdownMenuContent>
