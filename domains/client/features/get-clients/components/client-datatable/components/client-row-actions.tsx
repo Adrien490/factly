@@ -2,6 +2,7 @@ import {
 	CLIENT_STATUS_TRANSITIONS,
 	CLIENT_STATUSES,
 } from "@/domains/client/constants";
+import { ArchiveClientButton } from "@/domains/client/features/archive-client/components/archive-client-button";
 import { DeleteClientButton } from "@/domains/client/features/delete-client/components/delete-client-button";
 import { UpdateClientStatusButton } from "@/domains/client/features/update-client-status/components/udpate-client-status-button";
 import {
@@ -28,6 +29,7 @@ import {
 import { cn } from "@/shared/utils";
 import { ClientStatus } from "@prisma/client";
 import {
+	Archive,
 	Edit2,
 	FileText,
 	MoreVerticalIcon,
@@ -147,7 +149,7 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 									preventDefault
 									className="text-destructive focus:text-destructive"
 								>
-									<Trash className="text-destructive h-4 w-4 mr-2" />
+									<Archive className="text-destructive h-4 w-4 mr-2" />
 									<span>Archiver</span>
 								</DropdownMenuItem>
 							</AlertDialogTrigger>
@@ -163,13 +165,12 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<UpdateClientStatusButton
+									<ArchiveClientButton
 										organizationId={client.organizationId}
 										id={client.id}
-										status={ClientStatus.ARCHIVED}
 									>
 										<AlertDialogAction>Archiver</AlertDialogAction>
-									</UpdateClientStatusButton>
+									</ArchiveClientButton>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
