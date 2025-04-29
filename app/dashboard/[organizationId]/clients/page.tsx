@@ -123,23 +123,28 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 
 						<ClientFilterSheet activeFiltersCount={activeFiltersCount} />
 
-						<Button variant={"outline"} asChild className="shrink-0">
+						<Button
+							variant={isArchivedView ? "default" : "outline"}
+							asChild
+							className="shrink-0 relative w-[200px]"
+						>
 							<Link
 								href={
 									isArchivedView
 										? `/dashboard/${organizationId}/clients`
 										: `/dashboard/${organizationId}/clients?status=${ClientStatus.ARCHIVED}`
 								}
+								className="flex items-center justify-center"
 							>
 								{isArchivedView ? (
 									<>
 										<Undo className="mr-2 h-4 w-4" />
-										Voir les clients actifs
+										<span>Voir les clients actifs</span>
 									</>
 								) : (
 									<>
 										<Archive className="mr-2 h-4 w-4" />
-										Voir les clients archivés
+										<span>Voir les clients archivés</span>
 									</>
 								)}
 							</Link>
