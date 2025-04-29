@@ -9,7 +9,7 @@ import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-cli
 import { UpdateMultipleClientStatusReturn } from "../types";
 
 export const useUpdateMultipleClientStatus = () => {
-	const { clearSelection } = useSelectionContext();
+	const { clearAll, clearItems } = useSelectionContext();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			updateMultipleClientStatus,
@@ -20,8 +20,10 @@ export const useUpdateMultipleClientStatus = () => {
 				loadingMessage: "Mise à jour du statut en cours...",
 				onSuccess: (response) => {
 					toast.success(response?.message);
-					if (response?.data?.shouldClearSelection) {
-						clearSelection();
+					if (response?.data?.shouldClearAll) {
+						clearAll();
+					} else if (response?.data?.restoredClientIds) {
+						clearItems(response?.data?.restoredClientIds);
 					}
 				},
 			})

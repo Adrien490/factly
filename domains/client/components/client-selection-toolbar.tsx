@@ -31,8 +31,7 @@ import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients
 import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
 
 export function ClientSelectionToolbar() {
-	const { getSelectedCount, selectedItems, clearSelection } =
-		useSelectionContext();
+	const { getSelectedCount, selectedItems, clearAll } = useSelectionContext();
 	const params = useParams();
 	const searchParams = useSearchParams();
 	const organizationId = params.organizationId as string;
@@ -58,10 +57,7 @@ export function ClientSelectionToolbar() {
 	};
 
 	return (
-		<SelectionToolbar
-			selectedCount={selectedCount}
-			clearSelection={clearSelection}
-		>
+		<SelectionToolbar selectedCount={selectedCount} clearSelection={clearAll}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button

@@ -8,7 +8,7 @@ import { deleteMultipleClients } from "../actions/delete-multiple-clients";
 import { deleteMultipleClientsSchema } from "../schemas";
 
 export const useDeleteMultipleClients = () => {
-	const { clearSelection } = useSelectionContext();
+	const { clearAll } = useSelectionContext();
 
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
@@ -16,7 +16,7 @@ export const useDeleteMultipleClients = () => {
 			createToastCallbacks<null, typeof deleteMultipleClientsSchema>({
 				loadingMessage: "Suppression des clients en cours...",
 				onSuccess: (data) => {
-					clearSelection();
+					clearAll();
 					toast.success(data?.message);
 				},
 			})

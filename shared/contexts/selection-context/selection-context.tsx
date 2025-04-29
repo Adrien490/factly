@@ -2,7 +2,8 @@
 
 import { useSelection } from "@/shared/hooks/use-selection";
 import { ReactNode, createContext, useContext } from "react";
-import { SelectionContextType } from "./types";
+
+type SelectionContextType = ReturnType<typeof useSelection>;
 
 const SelectionContext = createContext<SelectionContextType | null>(null);
 

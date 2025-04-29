@@ -8,14 +8,14 @@ import { deleteMultipleSuppliers } from "../actions/delete-multiple-suppliers";
 import { deleteMultipleSuppliersSchema } from "../schemas";
 
 export const useDeleteMultipleSuppliers = () => {
-	const { clearSelection } = useSelectionContext();
+	const { clearAll } = useSelectionContext();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			deleteMultipleSuppliers,
 			createToastCallbacks<null, typeof deleteMultipleSuppliersSchema>({
 				loadingMessage: "Suppression des fournisseurs en cours...",
 				onSuccess: (data) => {
-					clearSelection();
+					clearAll();
 					toast.success(data?.message);
 				},
 			})

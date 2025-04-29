@@ -5,7 +5,8 @@ import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-cli
 export type UpdateMultipleClientStatusReturn = {
 	number: number;
 	status: ClientStatus;
-	shouldClearSelection: boolean;
+	shouldClearAll: boolean;
+	restoredClientIds: string[];
 };
 
 export type UpdateMultipleClientStatusSchema = z.infer<

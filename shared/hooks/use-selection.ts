@@ -40,6 +40,11 @@ export function useSelection(selectionKey: string = "selected") {
 		return { params, existingParams, filters };
 	};
 
+	/**
+	 * Met à jour la sélection d'un groupe d'éléments
+	 * @param selection - Les IDs des éléments à sélectionner/désélectionner
+	 * @param checked - true pour sélectionner, false pour désélectionner
+	 */
 	const handleSelectionChange = (selection: string[], checked: boolean) => {
 		const { params } = preserveExistingParams();
 
@@ -61,6 +66,11 @@ export function useSelection(selectionKey: string = "selected") {
 		}
 	};
 
+	/**
+	 * Met à jour la sélection d'un élément unique
+	 * @param itemId - L'ID de l'élément à sélectionner/désélectionner
+	 * @param checked - true pour sélectionner, false pour désélectionner
+	 */
 	const handleItemSelectionChange = (itemId: string, checked: boolean) => {
 		const { params } = preserveExistingParams();
 
@@ -75,16 +85,45 @@ export function useSelection(selectionKey: string = "selected") {
 		updateUrlWithParams(params, newSelection);
 	};
 
-	const clearSelection = () => {
+	/**
+	 * Efface toute la sélection
+	 */
+	const clearAll = () => {
 		const { params } = preserveExistingParams();
 		params.delete(selectionKey);
 		updateUrlWithParams(params, []);
 	};
 
+	/**
+	 * Efface une partie de la sélection
+	 * @param ids - Les IDs des éléments à désélectionner
+	 */
+	const clearItems = (ids: string[]) => {
+		const { params } = preserveExistingParams();
+		const newSelection = optimisticSelection.filter((id) => !ids.includes(id));
+		params.delete(selectionKey);
+		newSelection.forEach((id) => params.append(selectionKey, id));
+		updateUrlWithParams(params, newSelection);
+	};
+
+	/**
+	 * Retourne le nombre d'éléments sélectionnés
+	 * @returns Le nombre d'éléments sélectionnés
+	 */
 	const getSelectedCount = () => optimisticSelection.length;
 
+	/**
+	 * Vérifie si un élément est sélectionné
+	 * @param itemId - L'ID de l'élément à vérifier
+	 * @returns true si l'élément est sélectionné, false sinon
+	 */
 	const isSelected = (itemId: string) => optimisticSelection.includes(itemId);
 
+	/**
+	 * Vérifie si tous les éléments d'une liste sont sélectionnés
+	 * @param items - La liste des IDs à vérifier
+	 * @returns true si tous les éléments sont sélectionnés, false sinon
+	 */
 	const areAllSelected = (items: string[]) =>
 		items.length > 0 &&
 		items.every((item) => optimisticSelection.includes(item));
@@ -94,7 +133,8 @@ export function useSelection(selectionKey: string = "selected") {
 		selectedItems: optimisticSelection,
 		handleSelectionChange,
 		handleItemSelectionChange,
-		clearSelection,
+		clearAll,
+		clearItems,
 		getSelectedCount,
 		isSelected,
 		areAllSelected,

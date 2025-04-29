@@ -30,8 +30,7 @@ import { SUPPLIER_STATUSES } from "../../constants/supplier-statuses/constants";
 import { UpdateMultipleSupplierStatusButton } from "../../features/update-multiple-supplier-status";
 
 export function SupplierSelectionToolbar() {
-	const { getSelectedCount, selectedItems, clearSelection } =
-		useSelectionContext();
+	const { getSelectedCount, selectedItems, clearAll } = useSelectionContext();
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const selectedCount = getSelectedCount();
@@ -42,10 +41,7 @@ export function SupplierSelectionToolbar() {
 	}
 
 	return (
-		<SelectionToolbar
-			selectedCount={selectedCount}
-			clearSelection={clearSelection}
-		>
+		<SelectionToolbar selectedCount={selectedCount} clearSelection={clearAll}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button

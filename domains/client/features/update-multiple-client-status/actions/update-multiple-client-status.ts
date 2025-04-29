@@ -124,6 +124,11 @@ export const updateMultipleClientStatus: ServerAction<
 			(client) => client.status === ClientStatus.ARCHIVED
 		);
 
+		// Récupérer les IDs des clients qui étaient archivés et ont été restaurés
+		const restoredClientIds = existingClients
+			.filter((client) => client.status === ClientStatus.ARCHIVED)
+			.map((client) => client.id);
+
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
 				? `${updatedClients.count} client(s) ont été archivé(s)`
@@ -134,7 +139,7 @@ export const updateMultipleClientStatus: ServerAction<
 				: `Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`;
 
 		// Déterminer si la sélection doit être effacée
-		const shouldClearSelection =
+		const shouldClearAll =
 			validation.data.status === ClientStatus.ARCHIVED ||
 			(allClientsWereArchived &&
 				!Object.values(ClientStatus).includes(
@@ -145,7 +150,8 @@ export const updateMultipleClientStatus: ServerAction<
 			{
 				number: updatedClients.count,
 				status: validation.data.status,
-				shouldClearSelection,
+				shouldClearAll,
+				restoredClientIds,
 			},
 			message
 		);
