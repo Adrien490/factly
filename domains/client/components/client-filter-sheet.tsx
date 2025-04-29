@@ -18,11 +18,7 @@ import {
 } from "@/shared/components/ui/sheet";
 import { Filter } from "lucide-react";
 
-interface ClientFilterSheetProps {
-	count: number;
-}
-
-export function ClientFilterSheet({ count }: ClientFilterSheetProps) {
+export function ClientFilterSheet() {
 	// Types de client disponible
 
 	// Récupération des filtres depuis l'URL
@@ -31,8 +27,7 @@ export function ClientFilterSheet({ count }: ClientFilterSheetProps) {
 		<Sheet>
 			<SheetTrigger asChild>
 				<Button variant="outline" className="relative">
-					<Filter className="size-4 mr-2" />
-					Filtres {count > 0 && `(${count})`}
+					<Filter className="size-4" />
 				</Button>
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:max-w-md">

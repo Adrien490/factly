@@ -70,8 +70,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	}
 	if (type) filters.type = type;
 
-	const count = Object.keys(filters).length;
-
 	return (
 		<PageContainer className="group pb-12">
 			{/* En-tête avec action principale */}
@@ -113,7 +111,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							className="w-[200px] shrink-0"
 						/>
 
-						<ClientFilterSheet count={count} />
+						<ClientFilterSheet />
 
 						<Button className="shrink-0" asChild>
 							<Link href={`/dashboard/${organizationId}/clients/new`}>
