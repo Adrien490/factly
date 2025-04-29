@@ -12,6 +12,7 @@ import {
 } from "@/domains/client/features/get-clients/components";
 import { RefreshClientsButton } from "@/domains/client/features/refresh-clients/components";
 import {
+	Badge,
 	Button,
 	ClearFiltersButton,
 	FormLabel,
@@ -39,7 +40,7 @@ import {
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { Archive, Badge, Filter, Undo } from "lucide-react";
+import { Archive, Filter, Undo } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
