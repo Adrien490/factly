@@ -121,6 +121,10 @@ export const updateMultipleClientStatus: ServerAction<
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
 				? `${updatedClients.count} client(s) ont été archivé(s)`
+				: existingClients.some(
+						(client) => client.status === ClientStatus.ARCHIVED
+				  )
+				? `${updatedClients.count} client(s) ont été restauré(s)`
 				: `Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`;
 
 		return createSuccessResponse(
