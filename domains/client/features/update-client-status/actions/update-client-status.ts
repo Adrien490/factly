@@ -112,10 +112,14 @@ export const updateClientStatus: ServerAction<
 		// Revalidation du cache
 		revalidateTag(`organization:${organizationId}:clients`);
 
-		return createSuccessResponse(
-			updatedClient,
-			"Le statut du client a été mis à jour avec succès"
-		);
+		const message =
+			validation.data.status === ClientStatus.ARCHIVED
+				? "Le client a été archivé avec succès"
+				: existingClient.status === ClientStatus.ARCHIVED
+				? "Le client a été restauré avec succès"
+				: "Le statut du client a été mis à jour avec succès";
+
+		return createSuccessResponse(updatedClient, message);
 	} catch (error) {
 		console.error("[UPDATE_CLIENT_STATUS] Error:", error);
 		return createErrorResponse(

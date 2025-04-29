@@ -118,12 +118,17 @@ export const updateMultipleClientStatus: ServerAction<
 		// Revalidation du cache
 		revalidateTag(`organization:${organizationId}:clients`);
 
+		const message =
+			validation.data.status === ClientStatus.ARCHIVED
+				? `${updatedClients.count} client(s) ont été archivé(s)`
+				: `Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`;
+
 		return createSuccessResponse(
 			{
 				number: updatedClients.count,
 				status: validation.data.status,
 			},
-			`Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`
+			message
 		);
 	} catch (error) {
 		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS] Error:", error);
