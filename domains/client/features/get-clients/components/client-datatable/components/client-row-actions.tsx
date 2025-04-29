@@ -69,7 +69,6 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 					>
 						<FileText className="h-4 w-4 mr-2" />
 						<span>Fiche client</span>
-						{/* Indicateur de chargement masqué par défaut */}
 						<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
 					</Link>
 				</DropdownMenuItem>
@@ -171,36 +170,53 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 				{isArchived && (
 					<>
 						<DropdownMenuSeparator />
-						<AlertDialog>
-							<AlertDialogTrigger asChild>
-								<DropdownMenuItem preventDefault>
-									<Tag className="h-4 w-4 mr-2" />
-									<span>Remettre en actif</span>
-								</DropdownMenuItem>
-							</AlertDialogTrigger>
-							<AlertDialogContent>
-								<AlertDialogHeader>
-									<AlertDialogTitle>
-										Remettre le client en actif
-									</AlertDialogTitle>
-									<AlertDialogDescription>
-										Cette action va remettre le client
-										{client.name && <strong> {client.name}</strong>} en statut
-										actif.
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<UpdateClientStatusButton
-										organizationId={client.organizationId}
-										id={client.id}
-										status={ClientStatus.ACTIVE}
-									>
-										<AlertDialogAction>Confirmer</AlertDialogAction>
-									</UpdateClientStatusButton>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
+						<DropdownMenuSub>
+							<DropdownMenuSubTrigger>
+								<Tag className="h-4 w-4 mr-2" />
+								<span>Remettre en actif</span>
+							</DropdownMenuSubTrigger>
+							<DropdownMenuSubContent>
+								{CLIENT_STATUSES.filter(
+									(status) => status.value !== ClientStatus.ARCHIVED
+								).map((status) => (
+									<AlertDialog key={status.value}>
+										<AlertDialogTrigger asChild>
+											<DropdownMenuItem preventDefault>
+												<div className="flex items-center gap-2">
+													<div
+														className="h-2 w-2 rounded-full"
+														style={{ backgroundColor: status.color }}
+													/>
+													<span>{status.label}</span>
+												</div>
+											</DropdownMenuItem>
+										</AlertDialogTrigger>
+										<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>
+													Remettre le client en {status.label.toLowerCase()}
+												</AlertDialogTitle>
+												<AlertDialogDescription>
+													Cette action va remettre le client
+													{client.name && <strong> {client.name}</strong>} en
+													statut {status.label.toLowerCase()}.
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>Annuler</AlertDialogCancel>
+												<UpdateClientStatusButton
+													organizationId={client.organizationId}
+													id={client.id}
+													status={status.value}
+												>
+													<AlertDialogAction>Confirmer</AlertDialogAction>
+												</UpdateClientStatusButton>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+									</AlertDialog>
+								))}
+							</DropdownMenuSubContent>
+						</DropdownMenuSub>
 					</>
 				)}
 			</DropdownMenuContent>

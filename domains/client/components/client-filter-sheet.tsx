@@ -27,7 +27,8 @@ export function ClientFilterSheet() {
 		<Sheet>
 			<SheetTrigger asChild>
 				<Button variant="outline" className="relative">
-					<Filter className="size-4" />
+					<Filter className="size-4 mr-2" />
+					Filtres
 				</Button>
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:max-w-md">
