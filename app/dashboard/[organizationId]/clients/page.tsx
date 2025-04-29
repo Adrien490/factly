@@ -251,8 +251,23 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							<Link
 								href={
 									isArchivedView
-										? `/dashboard/${organizationId}/clients`
-										: `/dashboard/${organizationId}/clients?status=${ClientStatus.ARCHIVED}`
+										? `/dashboard/${organizationId}/clients?${new URLSearchParams(
+												{
+													perPage: (await searchParams).perPage || "10",
+													sortBy: (await searchParams).sortBy || "createdAt",
+													sortOrder: (await searchParams).sortOrder || "desc",
+													search: (await searchParams).search || "",
+												}
+										  ).toString()}`
+										: `/dashboard/${organizationId}/clients?${new URLSearchParams(
+												{
+													perPage: (await searchParams).perPage || "10",
+													sortBy: (await searchParams).sortBy || "createdAt",
+													sortOrder: (await searchParams).sortOrder || "desc",
+													search: (await searchParams).search || "",
+													status: ClientStatus.ARCHIVED,
+												}
+										  ).toString()}`
 								}
 								className="flex items-center justify-center"
 							>
