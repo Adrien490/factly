@@ -22,6 +22,7 @@ import {
 	ScrollArea,
 	SearchForm,
 	Separator,
+	Sheet,
 	SheetContent,
 	SheetDescription,
 	SheetFooter,
@@ -38,7 +39,7 @@ import {
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { Archive, Badge, Filter, Sheet, Undo } from "lucide-react";
+import { Archive, Badge, Filter, Undo } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -148,7 +149,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 									)}
 								</Button>
 							</SheetTrigger>
-							<SheetContent className="w-[400px] sm:max-w-md">
+							<SheetContent>
 								<SheetHeader>
 									<SheetTitle>Filtrer les clients</SheetTitle>
 									<SheetDescription>
