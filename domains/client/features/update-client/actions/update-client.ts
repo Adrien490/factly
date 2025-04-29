@@ -120,9 +120,9 @@ export const updateClient: ServerAction<
 			data: clientData,
 		});
 		revalidateTag(
-			`organization:${clientData.organizationId}:client:${clientData.id}`
+			`organizations:${clientData.organizationId}:clients:${clientData.id}`
 		);
-		revalidateTag(`organization:${clientData.organizationId}:clients`);
+		revalidateTag(`organizations:${clientData.organizationId}:clients`);
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,

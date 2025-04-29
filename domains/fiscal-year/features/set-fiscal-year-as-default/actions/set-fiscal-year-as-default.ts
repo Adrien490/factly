@@ -130,9 +130,9 @@ export const setFiscalYearAsDefault: ServerAction<
 		});
 
 		// Revalidation du cache
-		revalidateTag(`organization:${rawData.organizationId}:fiscal-years`);
+		revalidateTag(`organizations:${rawData.organizationId}:fiscal-years`);
 		revalidateTag(
-			`organization:${rawData.organizationId}:fiscal-year:${existingFiscalYear.id}`
+			`organizations:${rawData.organizationId}:fiscal-year:${existingFiscalYear.id}`
 		);
 
 		return createSuccessResponse(

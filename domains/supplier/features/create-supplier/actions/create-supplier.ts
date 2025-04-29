@@ -127,7 +127,7 @@ export const createSupplier: ServerAction<
 		const supplier = await db.supplier.create({
 			data: {
 				...supplierData,
-				organization: { connect: { id: validatedOrgId } },
+				organizations: { connect: { id: validatedOrgId } },
 
 				// Créer l'adresse si des informations sont fournies
 				...(addressLine1 &&
@@ -155,8 +155,8 @@ export const createSupplier: ServerAction<
 		});
 
 		// 7. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`organization:${validatedOrgId}:suppliers`);
-		revalidateTag(`organization:${validatedOrgId}:suppliers:count`);
+		revalidateTag(`organizations:${validatedOrgId}:suppliers`);
+		revalidateTag(`organizations:${validatedOrgId}:suppliers:count`);
 		// 8. Retour de la réponse de succès
 		return createSuccessResponse(
 			supplier,

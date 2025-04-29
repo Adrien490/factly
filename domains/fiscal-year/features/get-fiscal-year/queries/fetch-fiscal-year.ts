@@ -14,7 +14,7 @@ export async function fetchFiscalYear(
 	"use cache";
 
 	// Tag de base pour toutes les années fiscales de l'organisation
-	cacheTag(`organization:${params.organizationId}:fiscal-year:${params.id}`);
+	cacheTag(`organizations:${params.organizationId}:fiscal-year:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures

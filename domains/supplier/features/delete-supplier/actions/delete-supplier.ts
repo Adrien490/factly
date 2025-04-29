@@ -97,11 +97,11 @@ export const deleteSupplier: ServerAction<
 		});
 
 		// Revalidation du cache avec les tags appropriés
-		revalidateTag(`organization:${rawData.organizationId}:suppliers`);
+		revalidateTag(`organizations:${rawData.organizationId}:suppliers`);
 		revalidateTag(
-			`organization:${rawData.organizationId}:supplier:${existingSupplier.id}`
+			`organizations:${rawData.organizationId}:supplier:${existingSupplier.id}`
 		);
-		revalidateTag(`organization:${rawData.organizationId}:suppliers:count`);
+		revalidateTag(`organizations:${rawData.organizationId}:suppliers:count`);
 
 		return createSuccessResponse(
 			null,

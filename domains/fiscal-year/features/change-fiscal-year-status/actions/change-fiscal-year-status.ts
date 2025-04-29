@@ -160,8 +160,10 @@ export const changeFiscalYearStatus: ServerAction<
 		});
 
 		// 10. Révalidation du cache
-		revalidateTag(`organization:${organizationId}:fiscal-years`);
-		revalidateTag(`organization:${organizationId}:fiscal-year:${fiscalYearId}`);
+		revalidateTag(`organizations:${organizationId}:fiscal-years`);
+		revalidateTag(
+			`organizations:${organizationId}:fiscal-year:${fiscalYearId}`
+		);
 
 		// 11. Retour de la réponse
 		let successMessage = `Le statut de l'année fiscale "${updatedFiscalYear.name}" a été modifié avec succès`;

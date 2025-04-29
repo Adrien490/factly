@@ -72,8 +72,8 @@ export const deleteOrganization: ServerAction<
 		});
 
 		revalidateTag(`organizations`);
-		revalidateTag(`organization:${organization.id}`);
-		revalidateTag(`organization:${organization.id}:user:${session.user.id}`);
+		revalidateTag(`organizations:${organization.id}`);
+		revalidateTag(`organizations:${organization.id}:user:${session.user.id}`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(

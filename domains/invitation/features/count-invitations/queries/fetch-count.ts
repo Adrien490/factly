@@ -21,7 +21,7 @@ export async function fetchCount(
 		}
 
 		// Tag de base pour toutes les invitations de l'organisation
-		cacheTag(`organization:${params.organizationId}:invitations:count`);
+		cacheTag(`organizations:${params.organizationId}:invitations:count`);
 
 		// Tags pour les filtres dynamiques
 		if (params.filters && Object.keys(params.filters).length > 0) {
@@ -29,13 +29,13 @@ export async function fetchCount(
 				if (Array.isArray(value)) {
 					// Pour les filtres multivaleurs (comme les tableaux)
 					cacheTag(
-						`organization:${
+						`organizations:${
 							params.organizationId
 						}:invitations:filter:${key}:${value.join(",")}:count`
 					);
 				} else {
 					cacheTag(
-						`organization:${params.organizationId}:invitations:filter:${key}:${value}:count`
+						`organizations:${params.organizationId}:invitations:filter:${key}:${value}:count`
 					);
 				}
 			});

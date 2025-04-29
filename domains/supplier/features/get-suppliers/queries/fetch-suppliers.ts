@@ -23,18 +23,18 @@ export async function fetchSuppliers(
 	"use cache";
 
 	// Tag de base pour tous les fournisseurs de l'organisation
-	cacheTag(`organization:${params.organizationId}:suppliers`);
+	cacheTag(`organizations:${params.organizationId}:suppliers`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
 		cacheTag(
-			`organization:${params.organizationId}:suppliers:search:${params.search}`
+			`organizations:${params.organizationId}:suppliers:search:${params.search}`
 		);
 	}
 
 	// Tag pour le tri
 	cacheTag(
-		`organization:${params.organizationId}:suppliers:sort:${params.sortBy}:${params.sortOrder}`
+		`organizations:${params.organizationId}:suppliers:sort:${params.sortBy}:${params.sortOrder}`
 	);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
@@ -49,7 +49,7 @@ export async function fetchSuppliers(
 		MAX_RESULTS_PER_PAGE
 	);
 	cacheTag(
-		`organization:${params.organizationId}:suppliers:page:${page}:perPage:${perPage}`
+		`organizations:${params.organizationId}:suppliers:page:${page}:perPage:${perPage}`
 	);
 
 	// Tags pour les filtres dynamiques
@@ -58,13 +58,13 @@ export async function fetchSuppliers(
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
 				cacheTag(
-					`organization:${
+					`organizations:${
 						params.organizationId
 					}:suppliers:filter:${key}:${value.join(",")}`
 				);
 			} else {
 				cacheTag(
-					`organization:${params.organizationId}:suppliers:filter:${key}:${value}`
+					`organizations:${params.organizationId}:suppliers:filter:${key}:${value}`
 				);
 			}
 		});

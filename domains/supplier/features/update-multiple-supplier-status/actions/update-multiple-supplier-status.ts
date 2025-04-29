@@ -111,8 +111,8 @@ export const updateMultipleSupplierStatus: ServerAction<
 		});
 
 		// 7. Revalidation du cache
-		revalidateTag(`organization:${organizationId}:suppliers`);
-		revalidateTag(`organization:${organizationId}:suppliers:count`);
+		revalidateTag(`organizations:${organizationId}:suppliers`);
+		revalidateTag(`organizations:${organizationId}:suppliers:count`);
 
 		return createSuccessResponse(
 			null,

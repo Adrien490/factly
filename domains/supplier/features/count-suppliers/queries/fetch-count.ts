@@ -14,7 +14,7 @@ export async function fetchCount(
 	"use cache";
 
 	// Tag de base pour tous les fournisseurs de l'organisation
-	cacheTag(`organization:${params.organizationId}:suppliers:count`);
+	cacheTag(`organizations:${params.organizationId}:suppliers:count`);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
@@ -22,13 +22,13 @@ export async function fetchCount(
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
 				cacheTag(
-					`organization:${params.organizationId}:filter:${key}:${value.join(
+					`organizations:${params.organizationId}:filter:${key}:${value.join(
 						","
 					)}:count`
 				);
 			} else {
 				cacheTag(
-					`organization:${params.organizationId}:filter:${key}:${value}:count`
+					`organizations:${params.organizationId}:filter:${key}:${value}:count`
 				);
 			}
 		});

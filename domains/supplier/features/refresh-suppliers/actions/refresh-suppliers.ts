@@ -73,8 +73,8 @@ export const refreshSuppliers: ServerAction<
 		}
 
 		// 5. Revalidation des tags pour les fournisseurs
-		revalidateTag(`organization:${organizationId}:suppliers`);
-		revalidateTag(`organization:${organizationId}:suppliers:count`);
+		revalidateTag(`organizations:${organizationId}:suppliers`);
+		revalidateTag(`organizations:${organizationId}:suppliers:count`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(

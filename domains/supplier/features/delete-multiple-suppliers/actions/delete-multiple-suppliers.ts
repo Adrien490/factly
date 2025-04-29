@@ -98,11 +98,11 @@ export const deleteMultipleSuppliers: ServerAction<
 		});
 
 		// Revalidation du cache
-		revalidateTag(`organization:${organizationId}:suppliers`);
+		revalidateTag(`organizations:${organizationId}:suppliers`);
 		validation.data.ids.forEach((supplierId) => {
-			revalidateTag(`organization:${organizationId}:supplier:${supplierId}`);
+			revalidateTag(`organizations:${organizationId}:supplier:${supplierId}`);
 		});
-		revalidateTag(`organization:${organizationId}:suppliers:count`);
+		revalidateTag(`organizations:${organizationId}:suppliers:count`);
 
 		return createSuccessResponse(
 			null,

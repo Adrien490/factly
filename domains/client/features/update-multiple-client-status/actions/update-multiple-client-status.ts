@@ -121,9 +121,9 @@ export const updateMultipleClientStatus: ServerAction<
 
 		// 8. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organization:${organizationId}:client:${id}`);
+			revalidateTag(`organizations:${organizationId}:clients:${id}`);
 		}
-		revalidateTag(`organization:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:clients`);
 
 		// 9. Message de succès personnalisé
 		const message =

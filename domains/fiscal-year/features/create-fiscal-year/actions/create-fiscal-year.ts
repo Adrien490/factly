@@ -162,7 +162,7 @@ export const createFiscalYear: ServerAction<
 		}
 
 		// 11. Revalidation du cache
-		revalidateTag(`organization:${organizationId}:fiscal-years`);
+		revalidateTag(`organizations:${organizationId}:fiscal-years`);
 
 		// 12. Retour de la réponse avec un warning si nécessaire
 		let successMessage = `L'année fiscale "${fiscalYear.name}" a été créée avec succès`;

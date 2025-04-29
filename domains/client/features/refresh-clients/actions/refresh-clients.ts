@@ -73,8 +73,8 @@ export const refreshClients: ServerAction<
 			);
 		}
 
-		revalidateTag(`organization:${organizationId}:clients`);
-		revalidateTag(`organization:${organizationId}:clients:count`);
+		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:clients:count`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

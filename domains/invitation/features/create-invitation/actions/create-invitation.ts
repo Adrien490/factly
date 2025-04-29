@@ -144,7 +144,7 @@ export const createInvitation: ServerAction<
 				email: validation.data.email,
 				status: validation.data.status,
 				expiresAt: validation.data.expiresAt,
-				organization: {
+				organizations: {
 					connect: { id: validation.data.organizationId },
 				},
 				user: {
@@ -154,9 +154,11 @@ export const createInvitation: ServerAction<
 		});
 
 		// 8. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`organization:${validation.data.organizationId}:invitations`);
 		revalidateTag(
-			`organization:${validation.data.organizationId}:invitations:count`
+			`organizations:${validation.data.organizationId}:invitations`
+		);
+		revalidateTag(
+			`organizations:${validation.data.organizationId}:invitations:count`
 		);
 
 		// TODO: Envoyer l'email d'invitation

@@ -155,17 +155,17 @@ export const createAddress: ServerAction<
 
 		// Tags spécifiques au client ou fournisseur
 		if (clientId) {
-			revalidateTag(`organization:${validatedOrgId}:clients`);
-			revalidateTag(`organization:${validatedOrgId}:client:${clientId}`);
+			revalidateTag(`organizations:${validatedOrgId}:clients`);
+			revalidateTag(`organizations:${validatedOrgId}:client:${clientId}`);
 			revalidateTag(
-				`organization:${validatedOrgId}:client:${clientId}:addresses`
+				`organizations:${validatedOrgId}:client:${clientId}:addresses`
 			);
 		}
 		if (supplierId) {
-			revalidateTag(`organization:${validatedOrgId}:suppliers`);
-			revalidateTag(`organization:${validatedOrgId}:supplier:${supplierId}`);
+			revalidateTag(`organizations:${validatedOrgId}:suppliers`);
+			revalidateTag(`organizations:${validatedOrgId}:supplier:${supplierId}`);
 			revalidateTag(
-				`organization:${validatedOrgId}:supplier:${supplierId}:addresses`
+				`organizations:${validatedOrgId}:supplier:${supplierId}:addresses`
 			);
 		}
 

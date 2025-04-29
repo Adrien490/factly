@@ -73,8 +73,8 @@ export const refreshFiscalYears: ServerAction<
 		}
 
 		// 5. Révalidation des tags pour forcer le rafraîchissement des données
-		revalidateTag(`organization:${organizationId}:fiscal-years`);
-		revalidateTag(`organization:${organizationId}:fiscal-years:count`);
+		revalidateTag(`organizations:${organizationId}:fiscal-years`);
+		revalidateTag(`organizations:${organizationId}:fiscal-years:count`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(

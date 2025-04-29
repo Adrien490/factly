@@ -98,11 +98,11 @@ export const deleteMultipleClients: ServerAction<
 		});
 
 		// Revalidation du cache
-		revalidateTag(`organization:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:clients`);
 		validation.data.ids.forEach((clientId) => {
-			revalidateTag(`organization:${organizationId}:client:${clientId}`);
+			revalidateTag(`organizations:${organizationId}:client:${clientId}`);
 		});
-		revalidateTag(`organization:${organizationId}:clients:count`);
+		revalidateTag(`organizations:${organizationId}:clients:count`);
 
 		return createSuccessResponse(
 			null,

@@ -16,7 +16,7 @@ export async function fetchInvitation(
 	"use cache";
 
 	// Tags de cache
-	cacheTag(`organization:${params.organizationId}:invitation:${params.id}`);
+	cacheTag(`organizations:${params.organizationId}:invitation:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures

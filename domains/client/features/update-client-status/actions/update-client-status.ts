@@ -104,8 +104,8 @@ export const updateClientStatus: ServerAction<
 		});
 
 		// 8. Invalidation du cache
-		revalidateTag(`organization:${organizationId}:client:${id}`);
-		revalidateTag(`organization:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:clients:${id}`);
+		revalidateTag(`organizations:${organizationId}:clients`);
 
 		// 9. Message de succès personnalisé
 		const message =

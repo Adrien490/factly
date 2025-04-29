@@ -119,9 +119,9 @@ export const archiveMultipleClients: ServerAction<
 
 		// 8. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organization:${organizationId}:client:${id}`);
+			revalidateTag(`organizations:${organizationId}:client:${id}`);
 		}
-		revalidateTag(`organization:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:clients`);
 
 		return createSuccessResponse(
 			updatedClients,

@@ -240,10 +240,10 @@ export const updateFiscalYear: ServerAction<
 
 		// 14. Révalidation des tags pour mettre à jour les données en cache
 		revalidateTag(
-			`organization:${validation.data.organizationId}:fiscal-year:${validation.data.id}`
+			`organizations:${validation.data.organizationId}:fiscal-year:${validation.data.id}`
 		);
 		revalidateTag(
-			`organization:${validation.data.organizationId}:fiscal-years`
+			`organizations:${validation.data.organizationId}:fiscal-years`
 		);
 
 		// 15. Retour de la réponse de succès avec message d'information

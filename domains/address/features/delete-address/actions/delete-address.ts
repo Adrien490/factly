@@ -118,28 +118,30 @@ export const deleteAddress: ServerAction<
 
 		// 9. Revalidation du cache
 		// Tags généraux d'adresses
-		revalidateTag(`organization:${validation.data.organizationId}:addresses`);
+		revalidateTag(`organizations:${validation.data.organizationId}:addresses`);
 		revalidateTag(
-			`organization:${validation.data.organizationId}:addresses:sort:createdAt:desc`
+			`organizations:${validation.data.organizationId}:addresses:sort:createdAt:desc`
 		); // Tag par défaut pour le tri
 
 		// Tags spécifiques au client ou fournisseur
 		if (existingAddress.clientId) {
-			revalidateTag(`organization:${validation.data.organizationId}:clients`);
+			revalidateTag(`organizations:${validation.data.organizationId}:clients`);
 			revalidateTag(
-				`organization:${validation.data.organizationId}:client:${existingAddress.clientId}`
+				`organizations:${validation.data.organizationId}:client:${existingAddress.clientId}`
 			);
 			revalidateTag(
-				`organization:${validation.data.organizationId}:client:${existingAddress.clientId}:addresses`
+				`organizations:${validation.data.organizationId}:client:${existingAddress.clientId}:addresses`
 			);
 		}
 		if (existingAddress.supplierId) {
-			revalidateTag(`organization:${validation.data.organizationId}:suppliers`);
 			revalidateTag(
-				`organization:${validation.data.organizationId}:supplier:${existingAddress.supplierId}`
+				`organizations:${validation.data.organizationId}:suppliers`
 			);
 			revalidateTag(
-				`organization:${validation.data.organizationId}:supplier:${existingAddress.supplierId}:addresses`
+				`organizations:${validation.data.organizationId}:supplier:${existingAddress.supplierId}`
+			);
+			revalidateTag(
+				`organizations:${validation.data.organizationId}:supplier:${existingAddress.supplierId}:addresses`
 			);
 		}
 

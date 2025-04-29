@@ -26,16 +26,16 @@ export async function fetchClients(
 	console.log(userId);
 
 	// Tag de base pour tous les clients de l'organisation
-	cacheTag(`organization:${params.organizationId}:clients`);
+	cacheTag(`organizations:${params.organizationId}:clients`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`organization:${params.organizationId}:search:${params.search}`);
+		cacheTag(`organizations:${params.organizationId}:search:${params.search}`);
 	}
 
 	// Tag pour le tri
 	cacheTag(
-		`organization:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
+		`organizations:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
 	);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
@@ -50,7 +50,7 @@ export async function fetchClients(
 		MAX_RESULTS_PER_PAGE
 	);
 	cacheTag(
-		`organization:${params.organizationId}:page:${page}:perPage:${perPage}`
+		`organizations:${params.organizationId}:page:${page}:perPage:${perPage}`
 	);
 
 	// Tags pour les filtres dynamiques
@@ -59,13 +59,13 @@ export async function fetchClients(
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
 				cacheTag(
-					`organization:${params.organizationId}:filter:${key}:${value.join(
+					`organizations:${params.organizationId}:filter:${key}:${value.join(
 						","
 					)}`
 				);
 			} else {
 				cacheTag(
-					`organization:${params.organizationId}:filter:${key}:${value}`
+					`organizations:${params.organizationId}:filter:${key}:${value}`
 				);
 			}
 		});

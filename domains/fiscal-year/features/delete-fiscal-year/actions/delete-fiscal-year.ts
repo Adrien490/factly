@@ -120,11 +120,11 @@ export const deleteFiscalYear: ServerAction<
 		});
 
 		// Revalidation du cache avec les mêmes tags que get-fiscal-years
-		revalidateTag(`organization:${rawData.organizationId}:fiscal-years`);
+		revalidateTag(`organizations:${rawData.organizationId}:fiscal-years`);
 		revalidateTag(
-			`organization:${rawData.organizationId}:fiscal-year:${existingFiscalYear.id}`
+			`organizations:${rawData.organizationId}:fiscal-year:${existingFiscalYear.id}`
 		);
-		revalidateTag(`organization:${rawData.organizationId}:fiscal-years:count`);
+		revalidateTag(`organizations:${rawData.organizationId}:fiscal-years:count`);
 
 		return createSuccessResponse(
 			null,

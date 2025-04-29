@@ -149,7 +149,7 @@ export const createClient: ServerAction<
 			data: {
 				...clientData,
 				user: { connect: { id: userId } },
-				organization: { connect: { id: validatedOrgId } },
+				organizations: { connect: { id: validatedOrgId } },
 
 				// Créer l'adresse de facturation si des informations sont fournies
 				...(addressLine1 &&
@@ -180,8 +180,8 @@ export const createClient: ServerAction<
 
 		// 8. Invalidation du cache pour forcer un rafraîchissement des données
 		// Invalider le tag de base pour tous les clients de l'organisation
-		revalidateTag(`organization:${validatedOrgId}:clients`);
-		revalidateTag(`organization:${validatedOrgId}:clients:count`);
+		revalidateTag(`organizations:${validatedOrgId}:clients`);
+		revalidateTag(`organizations:${validatedOrgId}:clients:count`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

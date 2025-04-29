@@ -99,8 +99,8 @@ export const archiveClient: ServerAction<
 		});
 
 		// 8. Invalidation du cache
-		revalidateTag(`organization:${organizationId}:client:${id}`);
-		revalidateTag(`organization:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:client:${id}`);
+		revalidateTag(`organizations:${organizationId}:clients`);
 
 		return createSuccessResponse(
 			updatedClient,
