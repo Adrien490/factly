@@ -1,17 +1,5 @@
 import { ADDRESS_TYPES } from "@/domains/address/constants";
-import { CreateAddressForm, searchAddress } from "@/domains/address/features";
-import { DeleteAddressButton } from "@/domains/address/features/delete-address/components/delete-address-button";
 import { getClient } from "@/domains/client/features/get-client";
-import { AlertDialogFooter, AlertDialogHeader } from "@/shared/components";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
@@ -20,35 +8,17 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui/card";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/shared/components/ui/dialog";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
 import { Country } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
 	Building2,
 	Calendar,
-	CircleDollarSign,
 	FileText,
 	Globe,
 	Mail,
 	MapPin,
-	MoreHorizontal,
 	Phone,
-	PlusIcon,
-	Trash,
 } from "lucide-react";
 import Link from "next/link";
 import NotFound from "../../not-found";
@@ -243,28 +213,6 @@ export default async function ClientPage({ params }: Props) {
 								<CardTitle className="text-lg">Adresses</CardTitle>
 								<CardDescription>Liste des adresses du client</CardDescription>
 							</div>
-							<Dialog>
-								<DialogTrigger asChild>
-									<Button variant="outline">
-										<PlusIcon className="h-4 w-4 mr-2" />
-										Ajouter une adresse
-									</Button>
-								</DialogTrigger>
-								<DialogContent className="">
-									<DialogHeader>
-										<DialogTitle>Ajouter une adresse</DialogTitle>
-										<DialogDescription>
-											Ajouter une adresse pour le client
-										</DialogDescription>
-									</DialogHeader>
-									<CreateAddressForm
-										searchAddressPromise={searchAddress({
-											query: "",
-											limit: 10,
-										})}
-									/>
-								</DialogContent>
-							</Dialog>
 						</CardHeader>
 
 						<CardContent className="p-0 pt-2">
@@ -326,57 +274,6 @@ export default async function ClientPage({ params }: Props) {
 															{addressTypeLabel}
 														</p>
 													</div>
-
-													<DropdownMenu>
-														<DropdownMenuTrigger asChild>
-															<MoreHorizontal className="h-4 w-4 text-muted-foreground cursor-pointer" />
-														</DropdownMenuTrigger>
-														<DropdownMenuContent align="end">
-															<DropdownMenuItem asChild>
-																Modifier
-															</DropdownMenuItem>
-															<AlertDialog>
-																<AlertDialogTrigger asChild>
-																	<DropdownMenuItem
-																		preventDefault
-																		className="text-destructive focus:text-destructive"
-																	>
-																		<Trash className="text-destructive h-4 w-4 mr-2" />
-																		<span>Supprimer</span>
-																	</DropdownMenuItem>
-																</AlertDialogTrigger>
-																<AlertDialogContent>
-																	<AlertDialogHeader>
-																		<AlertDialogTitle className="text-destructive">
-																			Êtes-vous sûr de vouloir supprimer cette
-																			adresse ?
-																		</AlertDialogTitle>
-																		<AlertDialogDescription>
-																			Cette action est irréversible. Cela
-																			supprimera définitivement l&apos;adresse
-																			{addressLine1 && (
-																				<strong> {addressLine1}</strong>
-																			)}{" "}
-																			et toutes ses données associées.
-																		</AlertDialogDescription>
-																	</AlertDialogHeader>
-																	<AlertDialogFooter>
-																		<AlertDialogCancel>
-																			Annuler
-																		</AlertDialogCancel>
-																		<DeleteAddressButton
-																			organizationId={organizationId}
-																			id={id}
-																		>
-																			<AlertDialogAction>
-																				Supprimer
-																			</AlertDialogAction>
-																		</DeleteAddressButton>
-																	</AlertDialogFooter>
-																</AlertDialogContent>
-															</AlertDialog>
-														</DropdownMenuContent>
-													</DropdownMenu>
 												</div>
 											</Card>
 										);
@@ -439,30 +336,6 @@ export default async function ClientPage({ params }: Props) {
 								>
 									<MapPin className="h-4 w-4 mr-2" />
 									Ajouter une adresse
-								</Link>
-							</Button>
-							<Button
-								asChild
-								variant="secondary"
-								className="w-full justify-start"
-							>
-								<Link
-									href={`/dashboard/${organizationId}/quotes/new?clientId=${clientId}`}
-								>
-									<FileText className="h-4 w-4 mr-2" />
-									Créer un devis
-								</Link>
-							</Button>
-							<Button
-								asChild
-								variant="secondary"
-								className="w-full justify-start"
-							>
-								<Link
-									href={`/dashboard/${organizationId}/invoices/new?clientId=${clientId}`}
-								>
-									<CircleDollarSign className="h-4 w-4 mr-2" />
-									Créer une facture
 								</Link>
 							</Button>
 						</CardContent>

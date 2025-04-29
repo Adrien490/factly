@@ -1,9 +1,8 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import db from "@/shared/lib/db";
-
 import { hasOrganizationAccess } from "@/domains/organization/features";
+import db from "@/shared/lib/db";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -11,13 +10,14 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
+import { ClientStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { deleteClientsSchema } from "../schemas";
+import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-client-status-schema";
 
-export const deleteClients: ServerAction<
+export const updateMultipleClientStatus: ServerAction<
 	null,
-	typeof deleteClientsSchema
+	typeof updateMultipleClientStatusSchema
 > = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
@@ -34,11 +34,7 @@ export const deleteClients: ServerAction<
 		// 2. Récupération des données
 		const organizationId = formData.get("organizationId") as string;
 		const clientIds = formData.getAll("ids") as string[];
-
-		console.log("[DELETE_CLIENTS] Form Data:", {
-			ids: clientIds,
-			organizationId,
-		});
+		const status = formData.get("status") as ClientStatus;
 
 		// Vérification que l'organizationId n'est pas vide
 		if (!organizationId) {
@@ -58,15 +54,16 @@ export const deleteClients: ServerAction<
 		}
 
 		// 4. Validation complète des données
-		const validation = deleteClientsSchema.safeParse({
+		const validation = updateMultipleClientStatusSchema.safeParse({
 			ids: clientIds,
 			organizationId,
+			status,
 		});
 
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids: clientIds, organizationId },
+				{ ids: clientIds, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -79,6 +76,7 @@ export const deleteClients: ServerAction<
 			},
 			select: {
 				id: true,
+				status: true,
 			},
 		});
 
@@ -89,30 +87,41 @@ export const deleteClients: ServerAction<
 			);
 		}
 
-		// 6. Suppression
-		await db.client.deleteMany({
+		// Filtrer les clients qui n'ont pas déjà le statut cible
+		const clientsToUpdate = existingClients.filter(
+			(client) => client.status !== validation.data.status
+		);
+
+		if (clientsToUpdate.length === 0) {
+			return createSuccessResponse(
+				null,
+				"Tous les clients sélectionnés ont déjà ce statut"
+			);
+		}
+
+		// 6. Mise à jour
+		await db.client.updateMany({
 			where: {
-				id: { in: validation.data.ids },
+				id: { in: clientsToUpdate.map((client) => client.id) },
 				organizationId: validation.data.organizationId,
+			},
+			data: {
+				status: validation.data.status,
 			},
 		});
 
 		// Revalidation du cache
 		revalidateTag(`organization:${organizationId}:clients`);
-		validation.data.ids.forEach((clientId) => {
-			revalidateTag(`organization:${organizationId}:client:${clientId}`);
-		});
-		revalidateTag(`organization:${organizationId}:clients:count`);
 
 		return createSuccessResponse(
 			null,
-			`${validation.data.ids.length} client(s) supprimé(s) définitivement`
+			`Le statut de ${clientsToUpdate.length} client(s) a été mis à jour avec succès`
 		);
 	} catch (error) {
-		console.error("[DELETE_MULTIPLE_CLIENTS]", error);
+		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS] Error:", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de supprimer les clients sélectionnés"
+			"Une erreur est survenue lors de la mise à jour du statut"
 		);
 	}
 };

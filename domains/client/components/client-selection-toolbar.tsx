@@ -14,14 +14,20 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 	SelectionToolbar,
 } from "@/shared/components";
 import { useSelectionContext } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import { MoreVerticalIcon, Trash } from "lucide-react";
+import { ClientStatus } from "@prisma/client";
+import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DeleteClientsButton } from "../features/delete-clients";
+import { CLIENT_STATUSES } from "../constants/client-statuses/constants";
+import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
 
 export function ClientSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearSelection } =
@@ -34,6 +40,7 @@ export function ClientSelectionToolbar() {
 	if (!hasSelection) {
 		return null;
 	}
+
 	return (
 		<SelectionToolbar
 			selectedCount={selectedCount}
@@ -59,6 +66,55 @@ export function ClientSelectionToolbar() {
 					sideOffset={4}
 					className="w-48"
 				>
+					<DropdownMenuSub>
+						<DropdownMenuSubTrigger>
+							<Tag className="h-4 w-4 mr-2" />
+							<span>Changer le statut</span>
+						</DropdownMenuSubTrigger>
+						<DropdownMenuSubContent>
+							{CLIENT_STATUSES.filter(
+								(status) => status.value !== ClientStatus.ARCHIVED
+							).map((status) => (
+								<AlertDialog key={status.value}>
+									<AlertDialogTrigger asChild>
+										<DropdownMenuItem preventDefault>
+											<div className="flex items-center gap-2">
+												<div
+													className="h-2 w-2 rounded-full"
+													style={{ backgroundColor: status.color }}
+												/>
+												<span>{status.label}</span>
+											</div>
+										</DropdownMenuItem>
+									</AlertDialogTrigger>
+									<AlertDialogContent>
+										<AlertDialogHeader>
+											<AlertDialogTitle>
+												Changer le statut de {selectedCount} client(s)
+											</AlertDialogTitle>
+											<AlertDialogDescription>
+												Vous êtes sur le point de changer le statut de{" "}
+												{selectedCount} client(s) en &apos;{status.label}&apos;.
+												<br />
+												Cette action est réversible.
+											</AlertDialogDescription>
+										</AlertDialogHeader>
+										<AlertDialogFooter>
+											<AlertDialogCancel>Annuler</AlertDialogCancel>
+											<UpdateMultipleClientStatusButton
+												organizationId={organizationId}
+												ids={selectedItems}
+												status={status.value}
+											>
+												<AlertDialogAction>Confirmer</AlertDialogAction>
+											</UpdateMultipleClientStatusButton>
+										</AlertDialogFooter>
+									</AlertDialogContent>
+								</AlertDialog>
+							))}
+						</DropdownMenuSubContent>
+					</DropdownMenuSub>
+					<DropdownMenuSeparator />
 					<AlertDialog>
 						<AlertDialogTrigger asChild>
 							<DropdownMenuItem
@@ -66,27 +122,29 @@ export function ClientSelectionToolbar() {
 								className="text-destructive focus:text-destructive"
 							>
 								<Trash className="text-destructive h-4 w-4 mr-2" />
-								<span>Supprimer</span>
+								<span>Archiver</span>
 							</DropdownMenuItem>
 						</AlertDialogTrigger>
 						<AlertDialogContent>
 							<AlertDialogHeader>
 								<AlertDialogTitle className="text-destructive">
-									Êtes-vous sûr de vouloir supprimer ces clients ?
+									Êtes-vous sûr de vouloir archiver ces clients ?
 								</AlertDialogTitle>
 								<AlertDialogDescription>
-									Cette action est irréversible. Cela supprimera définitivement
-									les clients
+									Cette action va archiver {selectedCount} client(s).
+									<br />
+									Vous pourrez les restaurer ultérieurement.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>
 								<AlertDialogCancel>Annuler</AlertDialogCancel>
-								<DeleteClientsButton
+								<UpdateMultipleClientStatusButton
 									organizationId={organizationId}
 									ids={selectedItems}
+									status={ClientStatus.ARCHIVED}
 								>
-									<AlertDialogAction>Supprimer</AlertDialogAction>
-								</DeleteClientsButton>
+									<AlertDialogAction>Archiver</AlertDialogAction>
+								</UpdateMultipleClientStatusButton>
 							</AlertDialogFooter>
 						</AlertDialogContent>
 					</AlertDialog>

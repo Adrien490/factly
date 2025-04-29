@@ -1,20 +1,23 @@
 "use client";
 
+import { ClientStatus } from "@prisma/client";
 import { useTransition } from "react";
-import { useDeleteClient } from "../hooks/use-delete-client";
+import { useUpdateClientStatus } from "../hooks/use-update-client-status";
 
-interface DeleteClientButtonProps {
+interface UpdateClientStatusButtonProps {
 	organizationId: string;
 	id: string;
+	status: ClientStatus;
 	children: React.ReactNode;
 }
 
-export function DeleteClientButton({
+export function UpdateClientStatusButton({
 	organizationId,
 	id,
+	status,
 	children,
-}: DeleteClientButtonProps) {
-	const { dispatch } = useDeleteClient();
+}: UpdateClientStatusButtonProps) {
+	const { dispatch } = useUpdateClientStatus();
 
 	const [, startTransition] = useTransition();
 
@@ -22,7 +25,7 @@ export function DeleteClientButton({
 		const formData = new FormData();
 		formData.append("id", id);
 		formData.append("organizationId", organizationId);
-
+		formData.append("status", status);
 		startTransition(() => {
 			dispatch(formData);
 		});
