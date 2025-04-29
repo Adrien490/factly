@@ -5,7 +5,6 @@ import {
 	SupplierDataTable,
 	SupplierDataTableSkeleton,
 } from "@/domains/supplier/features/get-suppliers";
-import type { GetSuppliersParams } from "@/domains/supplier/features/get-suppliers/types";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
 import {
 	Button,
@@ -15,6 +14,10 @@ import {
 	SearchForm,
 	SortingOptionsDropdown,
 	Toolbar,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
@@ -23,14 +26,21 @@ import { Suspense } from "react";
 
 type PageProps = {
 	searchParams: Promise<{
+		// Pagination
 		perPage?: string;
 		page?: string;
+		cursor?: string;
+
+		// Tri
 		sortBy?: string;
 		sortOrder?: SortOrder;
+
+		// Recherche
 		search?: string;
+
+		// Filtres
 		status?: SupplierStatus | SupplierStatus[];
-		supplierType?: SupplierType | SupplierType[];
-		[key: string]: string | string[] | undefined;
+		type?: SupplierType;
 	}>;
 	params: Promise<{
 		organizationId: string;
@@ -41,16 +51,28 @@ export default async function SuppliersPage({
 	searchParams,
 	params,
 }: PageProps) {
-	const { perPage, page, sortBy, sortOrder, search, ...filters } =
+	const { perPage, page, sortBy, sortOrder, search, status, type } =
 		await searchParams;
 	const { organizationId } = await params;
 
+	// Construire l'objet de filtres
+	const filters: Record<string, string | string[]> = {};
+	if (status) {
+		filters.status = status;
+	} else {
+		// Par défaut, exclure les fournisseurs archivés
+		filters.status = Object.values(SupplierStatus).filter(
+			(status) => status !== SupplierStatus.ARCHIVED
+		);
+	}
+	if (type) filters.type = type;
+
 	return (
-		<PageContainer className="group">
+		<PageContainer className="group pb-12">
 			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Fournisseurs"
-				description="Gérez votre base de fournisseurs"
+				description="Gérez votre portefeuille fournisseurs"
 			/>
 
 			<HorizontalMenu items={getSupplierNavigation(organizationId)} />
@@ -58,14 +80,24 @@ export default async function SuppliersPage({
 			{/* Barre d'actions principale */}
 			<Toolbar
 				leftContent={
-					<>
+					<div className="flex items-center gap-3 flex-1">
 						<SearchForm
 							paramName="search"
-							placeholder="Rechercher par nom, email, référence, SIREN..."
+							placeholder="Rechercher..."
 							className="flex-1 shrink-0"
 						/>
-						<RefreshSuppliersButton organizationId={organizationId} />
-					</>
+
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<RefreshSuppliersButton organizationId={organizationId} />
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Rafraîchir la liste des fournisseurs</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</div>
 				}
 				rightContent={
 					<>
@@ -85,6 +117,7 @@ export default async function SuppliersPage({
 				}
 			/>
 
+			{/* Tableau de données */}
 			<Suspense fallback={<SupplierDataTableSkeleton />}>
 				<SupplierDataTable
 					suppliersPromise={getSuppliers({
@@ -94,9 +127,7 @@ export default async function SuppliersPage({
 						sortBy: sortBy as string,
 						sortOrder: sortOrder as SortOrder,
 						search,
-						filters: Object.fromEntries(
-							Object.entries(filters).filter(([, value]) => value !== undefined)
-						) as GetSuppliersParams["filters"],
+						filters,
 					})}
 				/>
 			</Suspense>

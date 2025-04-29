@@ -60,7 +60,14 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 
 	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};
-	if (status) filters.status = status;
+	if (status) {
+		filters.status = status;
+	} else {
+		// Par défaut, exclure les clients archivés
+		filters.status = Object.values(ClientStatus).filter(
+			(status) => status !== ClientStatus.ARCHIVED
+		);
+	}
 	if (type) filters.type = type;
 
 	const count = Object.keys(filters).length;
