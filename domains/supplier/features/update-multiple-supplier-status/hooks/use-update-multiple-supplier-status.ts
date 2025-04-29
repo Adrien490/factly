@@ -14,6 +14,7 @@ export const useUpdateMultipleSupplierStatus = () => {
 				loadingMessage: "Mise à jour du statut en cours...",
 				onSuccess: (data) => {
 					toast.success(data?.message);
+					// Réinitialiser la sélection uniquement pour les actions qui modifient fondamentalement l'état
 				},
 			})
 		),

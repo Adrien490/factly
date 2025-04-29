@@ -17,7 +17,7 @@ import { headers } from "next/headers";
 import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-client-status-schema";
 
 export const updateMultipleClientStatus: ServerAction<
-	null,
+	{ number: number; status: ClientStatus },
 	typeof updateMultipleClientStatusSchema
 > = async (_, formData) => {
 	try {
@@ -105,7 +105,7 @@ export const updateMultipleClientStatus: ServerAction<
 		}
 
 		// 7. Mise à jour
-		await db.client.updateMany({
+		const updatedClients = await db.client.updateMany({
 			where: {
 				id: { in: clientsToUpdate.map((client) => client.id) },
 				organizationId: validation.data.organizationId,
@@ -119,8 +119,11 @@ export const updateMultipleClientStatus: ServerAction<
 		revalidateTag(`organization:${organizationId}:clients`);
 
 		return createSuccessResponse(
-			null,
-			`Le statut de ${clientsToUpdate.length} client(s) a été mis à jour avec succès`
+			{
+				number: updatedClients.count,
+				status: validation.data.status,
+			},
+			`Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`
 		);
 	} catch (error) {
 		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS] Error:", error);
