@@ -258,7 +258,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 								{isArchivedView ? (
 									<>
 										<Undo className="mr-2 h-4 w-4" />
-										<span>Voir les clients actifs</span>
+										<span>Voir tous les clients</span>
 									</>
 								) : (
 									<>
