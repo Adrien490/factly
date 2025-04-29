@@ -112,7 +112,7 @@ export const updateClientStatus: ServerAction<
 			validation.data.status === ClientStatus.ARCHIVED
 				? "Le client a été archivé avec succès"
 				: existingClient.status === ClientStatus.ARCHIVED
-				? "Le client a été restauré avec succès"
+				? `Le client ${updatedClient.name} a été restauré avec succès`
 				: "Le statut du client a été mis à jour avec succès";
 
 		return createSuccessResponse(updatedClient, message);
