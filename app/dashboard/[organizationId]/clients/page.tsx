@@ -70,6 +70,13 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	}
 	if (type) filters.type = type;
 
+	// Calculer le nombre de filtres actifs
+	const activeFiltersCount = Object.keys(filters).filter((key) => {
+		// Ne pas compter le filtre status par défaut (exclusion des archivés)
+		if (key === "status" && !status) return false;
+		return true;
+	}).length;
+
 	return (
 		<PageContainer className="group pb-12">
 			{/* En-tête avec action principale */}
@@ -111,7 +118,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							className="w-[200px] shrink-0"
 						/>
 
-						<ClientFilterSheet />
+						<ClientFilterSheet activeFiltersCount={activeFiltersCount} />
 
 						<Button className="shrink-0" asChild>
 							<Link href={`/dashboard/${organizationId}/clients/new`}>

@@ -1,5 +1,6 @@
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
+import { Badge } from "@/shared/components";
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
 import { ClearFiltersButton } from "@/shared/components/clear-filters-button";
 import { Button } from "@/shared/components/ui/button";
@@ -18,7 +19,13 @@ import {
 } from "@/shared/components/ui/sheet";
 import { Filter } from "lucide-react";
 
-export function ClientFilterSheet() {
+interface ClientFilterSheetProps {
+	activeFiltersCount?: number;
+}
+
+export function ClientFilterSheet({
+	activeFiltersCount = 0,
+}: ClientFilterSheetProps) {
 	// Types de client disponible
 
 	// Récupération des filtres depuis l'URL
@@ -29,6 +36,11 @@ export function ClientFilterSheet() {
 				<Button variant="outline" className="relative">
 					<Filter className="size-4 mr-2" />
 					Filtres
+					{activeFiltersCount > 0 && (
+						<Badge className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-medium text-primary-foreground">
+							{activeFiltersCount}
+						</Badge>
+					)}
 				</Button>
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:max-w-md">
