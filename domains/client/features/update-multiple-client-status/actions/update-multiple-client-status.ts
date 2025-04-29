@@ -10,15 +10,14 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
-} from "@/shared/types/server-action";
-import { ClientStatus } from "@prisma/client";
+} from "@/shared/types";
+import { Client, ClientStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-client-status-schema";
-import { UpdateMultipleClientStatusReturn } from "../types";
 
 export const updateMultipleClientStatus: ServerAction<
-	UpdateMultipleClientStatusReturn,
+	Client[],
 	typeof updateMultipleClientStatusSchema
 > = async (_, formData) => {
 	try {
@@ -35,18 +34,24 @@ export const updateMultipleClientStatus: ServerAction<
 
 		// 2. Récupération des données
 		const organizationId = formData.get("organizationId") as string;
-		const clientIds = formData.getAll("ids") as string[];
+		const ids = formData.getAll("ids") as string[];
 		const status = formData.get("status") as ClientStatus;
 
-		// Vérification que l'organizationId n'est pas vide
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
+		// 3. Validation des données
+		const validation = updateMultipleClientStatusSchema.safeParse({
+			ids,
+			organizationId,
+			status,
+		});
+		if (!validation.success) {
+			return createValidationErrorResponse(
+				validation.error.flatten().fieldErrors,
+				{ ids, organizationId, status },
+				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
+		// 4. Vérification de l'accès à l'organisation
 		const hasAccess = await hasOrganizationAccess(organizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
@@ -55,25 +60,12 @@ export const updateMultipleClientStatus: ServerAction<
 			);
 		}
 
-		// 4. Validation complète des données
-		const validation = updateMultipleClientStatusSchema.safeParse({
-			ids: clientIds,
-			organizationId,
-			status,
-		});
-
-		if (!validation.success) {
-			return createValidationErrorResponse(
-				validation.error.flatten().fieldErrors,
-				{ ids: clientIds, organizationId, status },
-				"Validation échouée. Veuillez vérifier votre sélection."
-			);
-		}
-
 		// 5. Vérification de l'existence des clients
 		const existingClients = await db.client.findMany({
 			where: {
-				id: { in: validation.data.ids },
+				id: {
+					in: validation.data.ids,
+				},
 				organizationId: validation.data.organizationId,
 			},
 			select: {
@@ -85,30 +77,31 @@ export const updateMultipleClientStatus: ServerAction<
 		if (existingClients.length !== validation.data.ids.length) {
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
-				"Certains clients sont introuvables"
+				"Un ou plusieurs clients n'ont pas été trouvés"
 			);
 		}
 
-		// 6. Validation des transitions de statut et filtrage des clients à mettre à jour
-		const clientsToUpdate = existingClients.filter((client) => {
+		// 6. Validation des transitions de statut
+		for (const client of existingClients) {
 			const transitionValidation = validateClientStatusTransition({
 				currentStatus: client.status,
 				newStatus: validation.data.status,
 			});
-			return transitionValidation.isValid;
-		});
 
-		if (clientsToUpdate.length === 0) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"Aucun client ne peut être mis à jour avec ce statut"
-			);
+			if (!transitionValidation.isValid) {
+				return createErrorResponse(
+					ActionStatus.ERROR,
+					transitionValidation.message || "Transition de statut non autorisée"
+				);
+			}
 		}
 
-		// 7. Mise à jour
-		const updatedClients = await db.client.updateMany({
+		// 7. Mise à jour des clients
+		await db.client.updateMany({
 			where: {
-				id: { in: clientsToUpdate.map((client) => client.id) },
+				id: {
+					in: validation.data.ids,
+				},
 				organizationId: validation.data.organizationId,
 			},
 			data: {
@@ -116,47 +109,35 @@ export const updateMultipleClientStatus: ServerAction<
 			},
 		});
 
-		// Revalidation du cache
+		// Récupération des clients mis à jour
+		const updatedClients = await db.client.findMany({
+			where: {
+				id: {
+					in: validation.data.ids,
+				},
+				organizationId: validation.data.organizationId,
+			},
+		});
+
+		// 8. Invalidation du cache
+		for (const id of validation.data.ids) {
+			revalidateTag(`organization:${organizationId}:client:${id}`);
+		}
 		revalidateTag(`organization:${organizationId}:clients`);
 
-		// Vérifier si tous les clients étaient archivés avant la mise à jour
-		const allClientsWereArchived = existingClients.every(
-			(client) => client.status === ClientStatus.ARCHIVED
-		);
-
-		// Récupérer les IDs des clients qui étaient archivés et ont été restaurés
-		const restoredClientIds = existingClients
-			.filter((client) => client.status === ClientStatus.ARCHIVED)
-			.map((client) => client.id);
-
+		// 9. Message de succès personnalisé
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
-				? `${updatedClients.count} client(s) ont été archivé(s)`
+				? "Les clients ont été archivés avec succès"
 				: existingClients.some(
 						(client) => client.status === ClientStatus.ARCHIVED
 				  )
-				? `${updatedClients.count} client(s) ont été restauré(s)`
-				: `Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`;
+				? "Les clients ont été restaurés avec succès"
+				: "Le statut des clients a été mis à jour avec succès";
 
-		// Déterminer si la sélection doit être effacée
-		const shouldClearAll =
-			validation.data.status === ClientStatus.ARCHIVED ||
-			(allClientsWereArchived &&
-				!Object.values(ClientStatus).includes(
-					validation.data.status as ClientStatus
-				));
-
-		return createSuccessResponse(
-			{
-				number: updatedClients.count,
-				status: validation.data.status,
-				shouldClearAll,
-				restoredClientIds,
-			},
-			message
-		);
+		return createSuccessResponse(updatedClients, message);
 	} catch (error) {
-		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS] Error:", error);
+		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
 			"Une erreur est survenue lors de la mise à jour du statut"

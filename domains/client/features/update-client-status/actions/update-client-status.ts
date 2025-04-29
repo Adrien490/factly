@@ -33,19 +33,25 @@ export const updateClientStatus: ServerAction<
 		}
 
 		// 2. Récupération des données
+		const id = formData.get("id") as string;
 		const organizationId = formData.get("organizationId") as string;
-		const clientId = formData.get("id") as string;
 		const status = formData.get("status") as ClientStatus;
 
-		// Vérification que l'organizationId n'est pas vide
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
+		// 3. Validation des données
+		const validation = updateClientStatusSchema.safeParse({
+			id,
+			organizationId,
+			status,
+		});
+		if (!validation.success) {
+			return createValidationErrorResponse(
+				validation.error.flatten().fieldErrors,
+				{ id, organizationId, status },
+				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
+		// 4. Vérification de l'accès à l'organisation
 		const hasAccess = await hasOrganizationAccess(organizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
@@ -54,26 +60,11 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 4. Validation complète des données
-		const validation = updateClientStatusSchema.safeParse({
-			id: clientId,
-			organizationId,
-			status,
-		});
-
-		if (!validation.success) {
-			return createValidationErrorResponse(
-				validation.error.flatten().fieldErrors,
-				{ id: clientId, organizationId, status },
-				"Validation échouée. Veuillez vérifier votre sélection."
-			);
-		}
-
 		// 5. Vérification de l'existence du client
 		const existingClient = await db.client.findUnique({
 			where: {
-				id: validation.data.id,
-				organizationId: validation.data.organizationId,
+				id,
+				organizationId,
 			},
 			select: {
 				id: true,
@@ -82,7 +73,10 @@ export const updateClientStatus: ServerAction<
 		});
 
 		if (!existingClient) {
-			return createErrorResponse(ActionStatus.NOT_FOUND, "Client introuvable");
+			return createErrorResponse(
+				ActionStatus.NOT_FOUND,
+				"Le client n'a pas été trouvé"
+			);
 		}
 
 		// 6. Validation de la transition de statut
@@ -98,30 +92,32 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour
+		// 7. Mise à jour du client
 		const updatedClient = await db.client.update({
 			where: {
-				id: validation.data.id,
-				organizationId: validation.data.organizationId,
+				id,
+				organizationId,
 			},
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// Revalidation du cache
+		// 8. Invalidation du cache
+		revalidateTag(`organization:${organizationId}:client:${id}`);
 		revalidateTag(`organization:${organizationId}:clients`);
 
+		// 9. Message de succès personnalisé
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
 				? "Le client a été archivé avec succès"
 				: existingClient.status === ClientStatus.ARCHIVED
-				? `Le client a été restauré avec succès`
+				? "Le client a été restauré avec succès"
 				: "Le statut du client a été mis à jour avec succès";
 
 		return createSuccessResponse(updatedClient, message);
 	} catch (error) {
-		console.error("[UPDATE_CLIENT_STATUS] Error:", error);
+		console.error("[UPDATE_CLIENT_STATUS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
 			"Une erreur est survenue lors de la mise à jour du statut"
