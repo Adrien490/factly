@@ -25,6 +25,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
+import { Archive, Undo } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -77,6 +78,8 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 		return true;
 	}).length;
 
+	const isArchivedView = status === ClientStatus.ARCHIVED;
+
 	return (
 		<PageContainer className="group pb-12">
 			{/* En-tête avec action principale */}
@@ -119,6 +122,28 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						/>
 
 						<ClientFilterSheet activeFiltersCount={activeFiltersCount} />
+
+						<Button variant={"outline"} asChild className="shrink-0">
+							<Link
+								href={
+									isArchivedView
+										? `/dashboard/${organizationId}/clients`
+										: `/dashboard/${organizationId}/clients?status=${ClientStatus.ARCHIVED}`
+								}
+							>
+								{isArchivedView ? (
+									<>
+										<Undo className="mr-2 h-4 w-4" />
+										Voir les clients actifs
+									</>
+								) : (
+									<>
+										<Archive className="mr-2 h-4 w-4" />
+										Voir les clients archivés
+									</>
+								)}
+							</Link>
+						</Button>
 
 						<Button className="shrink-0" asChild>
 							<Link href={`/dashboard/${organizationId}/clients/new`}>

@@ -17,6 +17,7 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/shared/components/ui/sheet";
+import { ClientStatus } from "@prisma/client";
 import { Filter } from "lucide-react";
 
 interface ClientFilterSheetProps {
@@ -26,9 +27,10 @@ interface ClientFilterSheetProps {
 export function ClientFilterSheet({
 	activeFiltersCount = 0,
 }: ClientFilterSheetProps) {
-	// Types de client disponible
-
-	// Récupération des filtres depuis l'URL
+	// Filtrer les statuts pour exclure ARCHIVED
+	const availableStatuses = CLIENT_STATUSES.filter(
+		(status) => status.value !== ClientStatus.ARCHIVED
+	);
 
 	return (
 		<Sheet>
@@ -90,7 +92,7 @@ export function ClientFilterSheet({
 						<div className="space-y-4">
 							<FormLabel className="text-base font-medium">Statut</FormLabel>
 							<div className="space-y-2">
-								{CLIENT_STATUSES.map((status) => (
+								{availableStatuses.map((status) => (
 									<div
 										key={status.value}
 										className="flex items-center space-x-2"
