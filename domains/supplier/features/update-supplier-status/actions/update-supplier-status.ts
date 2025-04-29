@@ -10,14 +10,14 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
-import { Client, ClientStatus } from "@prisma/client";
+import { Supplier, SupplierStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { updateClientStatusSchema } from "../schemas";
+import { updateSupplierStatusSchema } from "../schemas";
 
-export const updateClientStatus: ServerAction<
-	Client,
-	typeof updateClientStatusSchema
+export const updateSupplierStatus: ServerAction<
+	Supplier,
+	typeof updateSupplierStatusSchema
 > = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
@@ -35,7 +35,7 @@ export const updateClientStatus: ServerAction<
 		const rawData = {
 			id: formData.get("id") as string,
 			organizationId: formData.get("organizationId") as string,
-			status: formData.get("status") as ClientStatus,
+			status: formData.get("status") as SupplierStatus,
 		};
 
 		// 3. Vérification de l'accès à l'organisation
@@ -48,7 +48,7 @@ export const updateClientStatus: ServerAction<
 		}
 
 		// 4. Validation complète des données
-		const validation = updateClientStatusSchema.safeParse(rawData);
+		const validation = updateSupplierStatusSchema.safeParse(rawData);
 
 		if (!validation.success) {
 			return createValidationErrorResponse(
@@ -58,8 +58,8 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence du client
-		const existingClient = await db.client.findFirst({
+		// 5. Vérification de l'existence du fournisseur
+		const existingSupplier = await db.supplier.findFirst({
 			where: {
 				id: validation.data.id,
 				organizationId: validation.data.organizationId,
@@ -71,20 +71,23 @@ export const updateClientStatus: ServerAction<
 			},
 		});
 
-		if (!existingClient) {
-			return createErrorResponse(ActionStatus.NOT_FOUND, "Client introuvable");
+		if (!existingSupplier) {
+			return createErrorResponse(
+				ActionStatus.NOT_FOUND,
+				"Fournisseur introuvable"
+			);
 		}
 
 		// Vérification si le statut est le même
-		if (existingClient.status === validation.data.status) {
+		if (existingSupplier.status === validation.data.status) {
 			return createErrorResponse(
 				ActionStatus.ERROR,
-				"Le client a déjà ce statut"
+				"Le fournisseur a déjà ce statut"
 			);
 		}
 
 		// 6. Mise à jour du statut
-		const updatedClient = await db.client.update({
+		const updatedSupplier = await db.supplier.update({
 			where: { id: validation.data.id },
 			data: {
 				status: validation.data.status,
@@ -92,21 +95,21 @@ export const updateClientStatus: ServerAction<
 		});
 
 		// 7. Revalidation du cache
-		revalidateTag(`organization:${rawData.organizationId}:clients`);
+		revalidateTag(`organization:${rawData.organizationId}:suppliers`);
 		revalidateTag(
-			`organization:${rawData.organizationId}:client:${existingClient.id}`
+			`organization:${rawData.organizationId}:supplier:${existingSupplier.id}`
 		);
-		revalidateTag(`organization:${rawData.organizationId}:clients:count`);
+		revalidateTag(`organization:${rawData.organizationId}:suppliers:count`);
 
 		return createSuccessResponse(
-			updatedClient,
-			`Statut du client "${existingClient.name}" mis à jour`
+			updatedSupplier,
+			`Statut du fournisseur "${existingSupplier.name}" mis à jour`
 		);
 	} catch (error) {
-		console.error("[UPDATE_CLIENT_STATUS]", error);
+		console.error("[UPDATE_SUPPLIER_STATUS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de mettre à jour le statut du client"
+			"Impossible de mettre à jour le statut du fournisseur"
 		);
 	}
 };

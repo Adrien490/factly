@@ -1,9 +1,8 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import db from "@/shared/lib/db";
-
 import { hasOrganizationAccess } from "@/domains/organization/features";
+import db from "@/shared/lib/db";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -11,13 +10,14 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
+import { SupplierStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { deleteSuppliersSchema } from "../schemas";
+import { updateMultipleSupplierStatusSchema } from "../schemas/update-multiple-supplier-status-schema";
 
-export const deleteSuppliers: ServerAction<
+export const updateMultipleSupplierStatus: ServerAction<
 	null,
-	typeof deleteSuppliersSchema
+	typeof updateMultipleSupplierStatusSchema
 > = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
@@ -34,11 +34,7 @@ export const deleteSuppliers: ServerAction<
 		// 2. Récupération des données
 		const organizationId = formData.get("organizationId") as string;
 		const supplierIds = formData.getAll("ids") as string[];
-
-		console.log("[DELETE_SUPPLIERS] Form Data:", {
-			ids: supplierIds,
-			organizationId,
-		});
+		const status = formData.get("status") as SupplierStatus;
 
 		// Vérification que l'organizationId n'est pas vide
 		if (!organizationId) {
@@ -58,15 +54,16 @@ export const deleteSuppliers: ServerAction<
 		}
 
 		// 4. Validation complète des données
-		const validation = deleteSuppliersSchema.safeParse({
+		const validation = updateMultipleSupplierStatusSchema.safeParse({
 			ids: supplierIds,
 			organizationId,
+			status,
 		});
 
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids: supplierIds, organizationId },
+				{ ids: supplierIds, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -79,6 +76,7 @@ export const deleteSuppliers: ServerAction<
 			},
 			select: {
 				id: true,
+				status: true,
 			},
 		});
 
@@ -89,30 +87,42 @@ export const deleteSuppliers: ServerAction<
 			);
 		}
 
-		// 6. Suppression
-		await db.supplier.deleteMany({
+		// Filtrer les fournisseurs qui n'ont pas déjà le statut cible
+		const suppliersToUpdate = existingSuppliers.filter(
+			(supplier) => supplier.status !== validation.data.status
+		);
+
+		if (suppliersToUpdate.length === 0) {
+			return createSuccessResponse(
+				null,
+				"Tous les fournisseurs sélectionnés ont déjà ce statut"
+			);
+		}
+
+		// 6. Mise à jour
+		await db.supplier.updateMany({
 			where: {
-				id: { in: validation.data.ids },
+				id: { in: suppliersToUpdate.map((supplier) => supplier.id) },
 				organizationId: validation.data.organizationId,
+			},
+			data: {
+				status: validation.data.status,
 			},
 		});
 
-		// Revalidation du cache
+		// 7. Revalidation du cache
 		revalidateTag(`organization:${organizationId}:suppliers`);
-		validation.data.ids.forEach((supplierId) => {
-			revalidateTag(`organization:${organizationId}:supplier:${supplierId}`);
-		});
 		revalidateTag(`organization:${organizationId}:suppliers:count`);
 
 		return createSuccessResponse(
 			null,
-			`${validation.data.ids.length} fournisseur(s) supprimé(s) définitivement`
+			`Le statut de ${suppliersToUpdate.length} fournisseur(s) a été mis à jour avec succès`
 		);
 	} catch (error) {
-		console.error("[DELETE_MULTIPLE_SUPPLIERS]", error);
+		console.error("[UPDATE_MULTIPLE_SUPPLIER_STATUS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de supprimer les fournisseurs sélectionnés"
+			"Impossible de mettre à jour le statut des fournisseurs"
 		);
 	}
 };

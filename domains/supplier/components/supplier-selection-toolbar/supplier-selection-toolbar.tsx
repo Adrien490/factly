@@ -14,14 +14,20 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 	SelectionToolbar,
 } from "@/shared/components";
 import { useSelectionContext } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import { MoreVerticalIcon, Trash } from "lucide-react";
+import { SupplierStatus } from "@prisma/client";
+import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { DeleteSuppliersButton } from "../../features/delete-suppliers";
+import { SUPPLIER_STATUSES } from "../../constants/supplier-statuses/constants";
+import { UpdateMultipleSupplierStatusButton } from "../../features/update-multiple-supplier-status";
 
 export function SupplierSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearSelection } =
@@ -30,9 +36,11 @@ export function SupplierSelectionToolbar() {
 	const organizationId = params.organizationId as string;
 	const selectedCount = getSelectedCount();
 	const hasSelection = selectedCount > 0;
+
 	if (!hasSelection) {
 		return null;
 	}
+
 	return (
 		<SelectionToolbar
 			selectedCount={selectedCount}
@@ -58,6 +66,56 @@ export function SupplierSelectionToolbar() {
 					sideOffset={4}
 					className="w-48"
 				>
+					<DropdownMenuSub>
+						<DropdownMenuSubTrigger>
+							<Tag className="h-4 w-4 mr-2" />
+							<span>Changer le statut</span>
+						</DropdownMenuSubTrigger>
+						<DropdownMenuSubContent>
+							{SUPPLIER_STATUSES.filter(
+								(status) => status.value !== SupplierStatus.ARCHIVED
+							).map((status) => (
+								<AlertDialog key={status.value}>
+									<AlertDialogTrigger asChild>
+										<DropdownMenuItem preventDefault>
+											<div className="flex items-center gap-2">
+												<div
+													className="h-2 w-2 rounded-full"
+													style={{ backgroundColor: status.color }}
+												/>
+												<span>{status.label}</span>
+											</div>
+										</DropdownMenuItem>
+									</AlertDialogTrigger>
+									<AlertDialogContent>
+										<AlertDialogHeader>
+											<AlertDialogTitle>
+												Changer le statut de {selectedCount} fournisseur(s)
+											</AlertDialogTitle>
+											<AlertDialogDescription>
+												Vous êtes sur le point de changer le statut de{" "}
+												{selectedCount} fournisseur(s) en &apos;{status.label}
+												&apos;.
+												<br />
+												Cette action est réversible.
+											</AlertDialogDescription>
+										</AlertDialogHeader>
+										<AlertDialogFooter>
+											<AlertDialogCancel>Annuler</AlertDialogCancel>
+											<UpdateMultipleSupplierStatusButton
+												organizationId={organizationId}
+												ids={selectedItems}
+												status={status.value}
+											>
+												<AlertDialogAction>Confirmer</AlertDialogAction>
+											</UpdateMultipleSupplierStatusButton>
+										</AlertDialogFooter>
+									</AlertDialogContent>
+								</AlertDialog>
+							))}
+						</DropdownMenuSubContent>
+					</DropdownMenuSub>
+					<DropdownMenuSeparator />
 					<AlertDialog>
 						<AlertDialogTrigger asChild>
 							<DropdownMenuItem
@@ -65,27 +123,29 @@ export function SupplierSelectionToolbar() {
 								className="text-destructive focus:text-destructive"
 							>
 								<Trash className="text-destructive h-4 w-4 mr-2" />
-								<span>Supprimer</span>
+								<span>Archiver</span>
 							</DropdownMenuItem>
 						</AlertDialogTrigger>
 						<AlertDialogContent>
 							<AlertDialogHeader>
 								<AlertDialogTitle className="text-destructive">
-									Êtes-vous sûr de vouloir supprimer ces fournisseurs ?
+									Êtes-vous sûr de vouloir archiver ces fournisseurs ?
 								</AlertDialogTitle>
 								<AlertDialogDescription>
-									Cette action est irréversible. Cela supprimera définitivement
-									les fournisseurs
+									Cette action va archiver {selectedCount} fournisseur(s).
+									<br />
+									Vous pourrez les restaurer ultérieurement.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>
 								<AlertDialogCancel>Annuler</AlertDialogCancel>
-								<DeleteSuppliersButton
+								<UpdateMultipleSupplierStatusButton
 									organizationId={organizationId}
 									ids={selectedItems}
+									status={SupplierStatus.ARCHIVED}
 								>
-									<AlertDialogAction>Supprimer</AlertDialogAction>
-								</DeleteSuppliersButton>
+									<AlertDialogAction>Archiver</AlertDialogAction>
+								</UpdateMultipleSupplierStatusButton>
 							</AlertDialogFooter>
 						</AlertDialogContent>
 					</AlertDialog>
