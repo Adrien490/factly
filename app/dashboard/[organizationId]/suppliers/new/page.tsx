@@ -1,6 +1,6 @@
 import { searchAddress } from "@/domains/address/features/search-address";
-import { getSupplierNavigation } from "@/domains/supplier/constants/get-supplier-navigation";
 import { CreateSupplierForm } from "@/domains/supplier/features/create-supplier";
+import { getSupplierNavigation } from "@/domains/supplier/utils/get-supplier-navigation";
 import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
 type PageProps = {

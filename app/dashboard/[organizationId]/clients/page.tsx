@@ -2,9 +2,9 @@ import {
 	CLIENT_SORT_FIELDS,
 	CLIENT_STATUSES,
 	CLIENT_TYPES,
-	getClientNavigation,
 } from "@/domains/client/constants";
 import { getClients } from "@/domains/client/features/get-clients";
+import { getClientNavigation } from "@/domains/client/utils";
 
 import {
 	ClientDataTable,

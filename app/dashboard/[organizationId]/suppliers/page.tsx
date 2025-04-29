@@ -1,11 +1,11 @@
 import { SUPPLIER_SORT_FIELDS } from "@/domains/supplier/constants";
-import { getSupplierNavigation } from "@/domains/supplier/constants/get-supplier-navigation";
 import {
 	getSuppliers,
 	SupplierDataTable,
 	SupplierDataTableSkeleton,
 } from "@/domains/supplier/features/get-suppliers";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers";
+import { getSupplierNavigation } from "@/domains/supplier/utils/get-supplier-navigation";
 import {
 	Button,
 	HorizontalMenu,

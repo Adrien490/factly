@@ -31,6 +31,7 @@ import {
 	Edit2,
 	FileText,
 	MoreVerticalIcon,
+	Pin,
 	Tag,
 	Trash,
 	Undo,
@@ -94,8 +95,8 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 								href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses`}
 								className={cn("flex w-full items-center")}
 							>
-								<Edit2 className="h-4 w-4 mr-2" />
-								<span>Gestion des adresses</span>
+								<Pin className="h-4 w-4 mr-2" />
+								<span>Gérer les adresses</span>
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
@@ -104,7 +105,7 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 								className={cn("flex w-full items-center")}
 							>
 								<Users className="h-4 w-4 mr-2" />
-								<span>Gestion des contacts</span>
+								<span>Gérer les contacts</span>
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
