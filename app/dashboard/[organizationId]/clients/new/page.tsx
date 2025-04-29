@@ -1,6 +1,6 @@
 import { searchAddress } from "@/domains/address/features/search-address";
-import { getClientNavigation } from "@/domains/client/constants";
 import { CreateClientForm } from "@/domains/client/features/create-client";
+import { getClientNavigation } from "@/domains/client/utils";
 import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
 type PageProps = {
