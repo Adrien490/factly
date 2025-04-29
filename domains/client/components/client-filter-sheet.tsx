@@ -115,9 +115,7 @@ export function ClientFilterSheet({ count }: ClientFilterSheetProps) {
 						label="Réinitialiser les filtres"
 						className="w-full"
 					/>
-					<Button variant="outline" className="w-full">
-						Fermer
-					</Button>
+					<Button className="w-full">Fermer</Button>
 				</SheetFooter>
 			</SheetContent>
 		</Sheet>
