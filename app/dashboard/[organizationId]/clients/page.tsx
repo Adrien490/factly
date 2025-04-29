@@ -88,6 +88,8 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	const activeFiltersCount = Object.keys(filters).filter((key) => {
 		// Ne pas compter le filtre status par défaut (exclusion des archivés)
 		if (key === "status" && !status) return false;
+		// Ne pas compter le statut "archived" s'il est présent
+		if (key === "status" && status === ClientStatus.ARCHIVED) return false;
 		return true;
 	}).length;
 
