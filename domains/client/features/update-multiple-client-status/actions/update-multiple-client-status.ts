@@ -132,7 +132,7 @@ export const updateMultipleClientStatus: ServerAction<
 				: existingClients.some(
 						(client) => client.status === ClientStatus.ARCHIVED
 				  )
-				? "Les clients ont été restaurés avec succès"
+				? `${existingClients.length} clients ont été restaurés avec succès`
 				: "Le statut des clients a été mis à jour avec succès";
 
 		return createSuccessResponse(updatedClients, message);
