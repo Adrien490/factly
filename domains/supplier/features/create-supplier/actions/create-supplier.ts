@@ -127,7 +127,7 @@ export const createSupplier: ServerAction<
 		const supplier = await db.supplier.create({
 			data: {
 				...supplierData,
-				organizations: { connect: { id: validatedOrgId } },
+				organization: { connect: { id: validatedOrgId } },
 
 				// Créer l'adresse si des informations sont fournies
 				...(addressLine1 &&

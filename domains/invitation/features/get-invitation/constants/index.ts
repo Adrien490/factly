@@ -14,7 +14,7 @@ export const GET_INVITATION_DEFAULT_SELECT = {
 	updatedAt: true,
 
 	// Relations
-	organizations: {
+	organization: {
 		select: {
 			id: true,
 			name: true,

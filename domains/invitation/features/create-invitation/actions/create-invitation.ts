@@ -144,7 +144,7 @@ export const createInvitation: ServerAction<
 				email: validation.data.email,
 				status: validation.data.status,
 				expiresAt: validation.data.expiresAt,
-				organizations: {
+				organization: {
 					connect: { id: validation.data.organizationId },
 				},
 				user: {
