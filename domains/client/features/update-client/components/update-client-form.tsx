@@ -99,7 +99,15 @@ export function UpdateClientForm({ client }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<input type="hidden" name="organizationId" value={organizationId} />
+			<form.Field name="organizationId">
+				{(field) => (
+					<input
+						type="hidden"
+						name="organizationId"
+						value={field.state.value ?? ""}
+					/>
+				)}
+			</form.Field>
 			<form.Field name="id">
 				{(field) => (
 					<input type="hidden" name="id" value={field.state.value ?? ""} />
@@ -210,7 +218,7 @@ export function UpdateClientForm({ client }: Props) {
 										}}
 										value={field.state.value}
 									>
-										<SelectTrigger id="clientType">
+										<SelectTrigger id="clientType" className="w-full">
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
@@ -374,10 +382,7 @@ export function UpdateClientForm({ client }: Props) {
 										name="status"
 										value={field.state.value}
 									>
-										<SelectTrigger
-											id="status"
-											className="border-input focus:ring-1 focus:ring-primary"
-										>
+										<SelectTrigger id="status" className="w-full">
 											<SelectValue placeholder="Sélectionnez un statut" />
 										</SelectTrigger>
 										<SelectContent>
