@@ -26,7 +26,7 @@ import { cn } from "@/shared/utils";
 import { ClientStatus } from "@prisma/client";
 import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
-import { CLIENT_STATUSES } from "../constants/client-statuses/constants";
+import { CLIENT_STATUSES } from "../constants";
 import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
 
 export function ClientSelectionToolbar() {
@@ -40,6 +40,19 @@ export function ClientSelectionToolbar() {
 	if (!hasSelection) {
 		return null;
 	}
+
+	// Pour la sélection multiple, nous autorisons tous les statuts sauf ARCHIVED
+	// car nous ne pouvons pas vérifier le statut actuel de chaque client
+	const availableStatuses = CLIENT_STATUSES.filter(
+		(status) => status.value !== ClientStatus.ARCHIVED
+	);
+
+	// Fonction pour vérifier si un statut est disponible pour au moins un client
+	const isStatusAvailable = (status: ClientStatus) => {
+		// Pour la sélection multiple, on considère qu'un statut est disponible
+		// s'il est différent de ARCHIVED
+		return status !== ClientStatus.ARCHIVED;
+	};
 
 	return (
 		<SelectionToolbar
@@ -72,46 +85,47 @@ export function ClientSelectionToolbar() {
 							<span>Changer le statut</span>
 						</DropdownMenuSubTrigger>
 						<DropdownMenuSubContent>
-							{CLIENT_STATUSES.filter(
-								(status) => status.value !== ClientStatus.ARCHIVED
-							).map((status) => (
-								<AlertDialog key={status.value}>
-									<AlertDialogTrigger asChild>
-										<DropdownMenuItem preventDefault>
-											<div className="flex items-center gap-2">
-												<div
-													className="h-2 w-2 rounded-full"
-													style={{ backgroundColor: status.color }}
-												/>
-												<span>{status.label}</span>
-											</div>
-										</DropdownMenuItem>
-									</AlertDialogTrigger>
-									<AlertDialogContent>
-										<AlertDialogHeader>
-											<AlertDialogTitle>
-												Changer le statut de {selectedCount} client(s)
-											</AlertDialogTitle>
-											<AlertDialogDescription>
-												Vous êtes sur le point de changer le statut de{" "}
-												{selectedCount} client(s) en &apos;{status.label}&apos;.
-												<br />
-												Cette action est réversible.
-											</AlertDialogDescription>
-										</AlertDialogHeader>
-										<AlertDialogFooter>
-											<AlertDialogCancel>Annuler</AlertDialogCancel>
-											<UpdateMultipleClientStatusButton
-												organizationId={organizationId}
-												ids={selectedItems}
-												status={status.value}
-											>
-												<AlertDialogAction>Confirmer</AlertDialogAction>
-											</UpdateMultipleClientStatusButton>
-										</AlertDialogFooter>
-									</AlertDialogContent>
-								</AlertDialog>
-							))}
+							{availableStatuses
+								.filter((status) => isStatusAvailable(status.value))
+								.map((status) => (
+									<AlertDialog key={status.value}>
+										<AlertDialogTrigger asChild>
+											<DropdownMenuItem preventDefault>
+												<div className="flex items-center gap-2">
+													<div
+														className="h-2 w-2 rounded-full"
+														style={{ backgroundColor: status.color }}
+													/>
+													<span>{status.label}</span>
+												</div>
+											</DropdownMenuItem>
+										</AlertDialogTrigger>
+										<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>
+													Changer le statut de {selectedCount} client(s)
+												</AlertDialogTitle>
+												<AlertDialogDescription>
+													Vous êtes sur le point de changer le statut de{" "}
+													{selectedCount} client(s) en &apos;{status.label}
+													&apos;.
+													<br />
+													Cette action est réversible.
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>Annuler</AlertDialogCancel>
+												<UpdateMultipleClientStatusButton
+													organizationId={organizationId}
+													ids={selectedItems}
+													status={status.value}
+												>
+													<AlertDialogAction>Confirmer</AlertDialogAction>
+												</UpdateMultipleClientStatusButton>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+									</AlertDialog>
+								))}
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>
 					<DropdownMenuSeparator />

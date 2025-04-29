@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -31,15 +32,21 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 2. Vérification de base des données requises
-		const rawData = {
-			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
-			status: formData.get("status") as ClientStatus,
-		};
+		// 2. Récupération des données
+		const organizationId = formData.get("organizationId") as string;
+		const clientId = formData.get("id") as string;
+		const status = formData.get("status") as ClientStatus;
+
+		// Vérification que l'organizationId n'est pas vide
+		if (!organizationId) {
+			return createErrorResponse(
+				ActionStatus.ERROR,
+				"L'ID de l'organisation est manquant"
+			);
+		}
 
 		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
+		const hasAccess = await hasOrganizationAccess(organizationId);
 		if (!hasAccess) {
 			return createErrorResponse(
 				ActionStatus.FORBIDDEN,
@@ -48,18 +55,22 @@ export const updateClientStatus: ServerAction<
 		}
 
 		// 4. Validation complète des données
-		const validation = updateClientStatusSchema.safeParse(rawData);
+		const validation = updateClientStatusSchema.safeParse({
+			id: clientId,
+			organizationId,
+			status,
+		});
 
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
-				"Validation échouée. Veuillez vérifier votre saisie."
+				{ id: clientId, organizationId, status },
+				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
 
 		// 5. Vérification de l'existence du client
-		const existingClient = await db.client.findFirst({
+		const existingClient = await db.client.findUnique({
 			where: {
 				id: validation.data.id,
 				organizationId: validation.data.organizationId,
@@ -67,7 +78,6 @@ export const updateClientStatus: ServerAction<
 			select: {
 				id: true,
 				status: true,
-				name: true,
 			},
 		});
 
@@ -75,38 +85,42 @@ export const updateClientStatus: ServerAction<
 			return createErrorResponse(ActionStatus.NOT_FOUND, "Client introuvable");
 		}
 
-		// Vérification si le statut est le même
-		if (existingClient.status === validation.data.status) {
+		// 6. Validation de la transition de statut
+		const transitionValidation = validateClientStatusTransition({
+			currentStatus: existingClient.status,
+			newStatus: validation.data.status,
+		});
+
+		if (!transitionValidation.isValid) {
 			return createErrorResponse(
 				ActionStatus.ERROR,
-				"Le client a déjà ce statut"
+				transitionValidation.message || "Transition de statut non autorisée"
 			);
 		}
 
-		// 6. Mise à jour du statut
+		// 7. Mise à jour
 		const updatedClient = await db.client.update({
-			where: { id: validation.data.id },
+			where: {
+				id: validation.data.id,
+				organizationId: validation.data.organizationId,
+			},
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// 7. Revalidation du cache
-		revalidateTag(`organization:${rawData.organizationId}:clients`);
-		revalidateTag(
-			`organization:${rawData.organizationId}:client:${existingClient.id}`
-		);
-		revalidateTag(`organization:${rawData.organizationId}:clients:count`);
+		// Revalidation du cache
+		revalidateTag(`organization:${organizationId}:clients`);
 
 		return createSuccessResponse(
 			updatedClient,
-			`Statut du client "${existingClient.name}" mis à jour`
+			"Le statut du client a été mis à jour avec succès"
 		);
 	} catch (error) {
-		console.error("[UPDATE_CLIENT_STATUS]", error);
+		console.error("[UPDATE_CLIENT_STATUS] Error:", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de mettre à jour le statut du client"
+			"Une erreur est survenue lors de la mise à jour du statut"
 		);
 	}
 };

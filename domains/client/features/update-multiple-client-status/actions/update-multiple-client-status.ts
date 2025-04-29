@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -87,19 +88,23 @@ export const updateMultipleClientStatus: ServerAction<
 			);
 		}
 
-		// Filtrer les clients qui n'ont pas déjà le statut cible
-		const clientsToUpdate = existingClients.filter(
-			(client) => client.status !== validation.data.status
-		);
+		// 6. Validation des transitions de statut et filtrage des clients à mettre à jour
+		const clientsToUpdate = existingClients.filter((client) => {
+			const transitionValidation = validateClientStatusTransition({
+				currentStatus: client.status,
+				newStatus: validation.data.status,
+			});
+			return transitionValidation.isValid;
+		});
 
 		if (clientsToUpdate.length === 0) {
-			return createSuccessResponse(
-				null,
-				"Tous les clients sélectionnés ont déjà ce statut"
+			return createErrorResponse(
+				ActionStatus.ERROR,
+				"Aucun client ne peut être mis à jour avec ce statut"
 			);
 		}
 
-		// 6. Mise à jour
+		// 7. Mise à jour
 		await db.client.updateMany({
 			where: {
 				id: { in: clientsToUpdate.map((client) => client.id) },

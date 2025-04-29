@@ -1,4 +1,7 @@
-import { CLIENT_STATUSES } from "@/domains/client/constants";
+import {
+	CLIENT_STATUS_TRANSITIONS,
+	CLIENT_STATUSES,
+} from "@/domains/client/constants";
 import { UpdateClientStatusButton } from "@/domains/client/features/update-client-status/components/udpate-client-status-button";
 import {
 	AlertDialog,
@@ -112,7 +115,9 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 								{CLIENT_STATUSES.filter(
 									(status) =>
 										status.value !== ClientStatus.ARCHIVED &&
-										status.value !== client.status
+										CLIENT_STATUS_TRANSITIONS[client.status].includes(
+											status.value
+										)
 								).map((status) => (
 									<UpdateClientStatusButton
 										key={status.value}
@@ -173,7 +178,7 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger>
 								<Tag className="h-4 w-4 mr-2" />
-								<span>Remettre en actif</span>
+								<span>Réactiver le client</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuSubContent>
 								{CLIENT_STATUSES.filter(
