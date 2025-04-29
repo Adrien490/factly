@@ -15,9 +15,10 @@ import { ClientStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-client-status-schema";
+import { UpdateMultipleClientStatusReturn } from "../types";
 
 export const updateMultipleClientStatus: ServerAction<
-	{ number: number; status: ClientStatus },
+	UpdateMultipleClientStatusReturn,
 	typeof updateMultipleClientStatusSchema
 > = async (_, formData) => {
 	try {
@@ -118,6 +119,11 @@ export const updateMultipleClientStatus: ServerAction<
 		// Revalidation du cache
 		revalidateTag(`organization:${organizationId}:clients`);
 
+		// Vérifier si tous les clients étaient archivés avant la mise à jour
+		const allClientsWereArchived = existingClients.every(
+			(client) => client.status === ClientStatus.ARCHIVED
+		);
+
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
 				? `${updatedClients.count} client(s) ont été archivé(s)`
@@ -127,10 +133,19 @@ export const updateMultipleClientStatus: ServerAction<
 				? `${updatedClients.count} client(s) ont été restauré(s)`
 				: `Le statut de ${updatedClients.count} client(s) a été mis à jour avec succès`;
 
+		// Déterminer si la sélection doit être effacée
+		const shouldClearSelection =
+			validation.data.status === ClientStatus.ARCHIVED ||
+			(allClientsWereArchived &&
+				!Object.values(ClientStatus).includes(
+					validation.data.status as ClientStatus
+				));
+
 		return createSuccessResponse(
 			{
 				number: updatedClients.count,
 				status: validation.data.status,
+				shouldClearSelection,
 			},
 			message
 		);
