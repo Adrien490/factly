@@ -118,7 +118,7 @@ export default async function SuppliersPage({
 							<Link
 								href={
 									isArchivedView
-										? `/dashboard/${organizationId}/clients?${new URLSearchParams(
+										? `/dashboard/${organizationId}/suppliers?${new URLSearchParams(
 												{
 													perPage: (await searchParams).perPage || "10",
 													sortBy: (await searchParams).sortBy || "createdAt",
@@ -126,7 +126,7 @@ export default async function SuppliersPage({
 													search: (await searchParams).search || "",
 												}
 										  ).toString()}`
-										: `/dashboard/${organizationId}/clients?${new URLSearchParams(
+										: `/dashboard/${organizationId}/suppliers?${new URLSearchParams(
 												{
 													perPage: (await searchParams).perPage || "10",
 													sortBy: (await searchParams).sortBy || "createdAt",
