@@ -113,7 +113,7 @@ export default async function SuppliersPage({
 						<Button
 							variant={isArchivedView ? "default" : "outline"}
 							asChild
-							className="shrink-0 relative w-[220px]"
+							className="shrink-0 relative w-[245px]"
 						>
 							<Link
 								href={
