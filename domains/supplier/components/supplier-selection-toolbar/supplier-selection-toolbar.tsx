@@ -27,7 +27,6 @@ import { SupplierStatus } from "@prisma/client";
 import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
 import { SUPPLIER_STATUSES } from "../../constants/supplier-statuses/constants";
-import { ArchiveMultipleSuppliersButton } from "../../features/archive-multiple-suppliers/components/archive-multiple-suppliers-button";
 import { UpdateMultipleSupplierStatusButton } from "../../features/update-multiple-supplier-status";
 
 export function SupplierSelectionToolbar() {
@@ -136,12 +135,13 @@ export function SupplierSelectionToolbar() {
 							</AlertDialogHeader>
 							<AlertDialogFooter>
 								<AlertDialogCancel>Annuler</AlertDialogCancel>
-								<ArchiveMultipleSuppliersButton
+								<UpdateMultipleSupplierStatusButton
 									organizationId={organizationId}
 									ids={selectedItems}
+									status={SupplierStatus.ARCHIVED}
 								>
 									<AlertDialogAction>Archiver</AlertDialogAction>
-								</ArchiveMultipleSuppliersButton>
+								</UpdateMultipleSupplierStatusButton>
 							</AlertDialogFooter>
 						</AlertDialogContent>
 					</AlertDialog>

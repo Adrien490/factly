@@ -2,7 +2,6 @@ import {
 	CLIENT_STATUS_TRANSITIONS,
 	CLIENT_STATUSES,
 } from "@/domains/client/constants";
-import { ArchiveClientButton } from "@/domains/client/features/archive-client/components/archive-client-button";
 import { DeleteClientButton } from "@/domains/client/features/delete-client/components/delete-client-button";
 import { UpdateClientStatusButton } from "@/domains/client/features/update-client-status/components/udpate-client-status-button";
 import {
@@ -165,12 +164,13 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<ArchiveClientButton
+									<UpdateClientStatusButton
 										organizationId={client.organizationId}
 										id={client.id}
+										status={ClientStatus.ARCHIVED}
 									>
 										<AlertDialogAction>Archiver</AlertDialogAction>
-									</ArchiveClientButton>
+									</UpdateClientStatusButton>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
