@@ -17,7 +17,7 @@ export async function fetchSupplier(
 	"use cache";
 
 	// Tags de cache
-	cacheTag(`organizations:${params.organizationId}:supplier:${params.id}`);
+	cacheTag(`organizations:${params.organizationId}:suppliers:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures

@@ -2,7 +2,8 @@
 
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useActionState } from "react";
-import { deleteSupplier, deleteSupplierSchema } from "../actions";
+import { deleteSupplier } from "../actions/delete-supplier";
+import { deleteSupplierSchema } from "../schemas";
 
 export const useDeleteSupplier = () => {
 	const [state, dispatch, isPending] = useActionState(

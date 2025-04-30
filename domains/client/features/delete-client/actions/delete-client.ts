@@ -98,7 +98,7 @@ export const deleteClient: ServerAction<
 		// Revalidation du cache avec les mêmes tags que get-clients
 		revalidateTag(`organizations:${rawData.organizationId}:clients`);
 		revalidateTag(
-			`organizations:${rawData.organizationId}:client:${existingClient.id}`
+			`organizations:${rawData.organizationId}:clients:${existingClient.id}`
 		);
 		revalidateTag(`organizations:${rawData.organizationId}:clients:count`);
 

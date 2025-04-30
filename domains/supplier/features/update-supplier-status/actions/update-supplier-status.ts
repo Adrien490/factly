@@ -97,9 +97,8 @@ export const updateSupplierStatus: ServerAction<
 		// 7. Revalidation du cache
 		revalidateTag(`organizations:${rawData.organizationId}:suppliers`);
 		revalidateTag(
-			`organizations:${rawData.organizationId}:supplier:${existingSupplier.id}`
+			`organizations:${rawData.organizationId}:suppliers:${existingSupplier.id}`
 		);
-		revalidateTag(`organizations:${rawData.organizationId}:suppliers:count`);
 
 		return createSuccessResponse(
 			updatedSupplier,

@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -11,14 +10,14 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types";
-import { Client, ClientStatus } from "@prisma/client";
+import { Supplier, SupplierStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { archiveClientSchema } from "../schemas";
+import { archiveSupplierSchema } from "../schemas/archive-supplier-schema";
 
-export const archiveClient: ServerAction<
-	Client,
-	typeof archiveClientSchema
+export const archiveSupplier: ServerAction<
+	Supplier,
+	typeof archiveSupplierSchema
 > = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
@@ -37,7 +36,7 @@ export const archiveClient: ServerAction<
 		const organizationId = formData.get("organizationId") as string;
 
 		// 3. Validation des données
-		const validation = archiveClientSchema.safeParse({ id, organizationId });
+		const validation = archiveSupplierSchema.safeParse({ id, organizationId });
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
@@ -55,8 +54,8 @@ export const archiveClient: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence du client
-		const existingClient = await db.client.findUnique({
+		// 5. Vérification de l'existence du fournisseur
+		const existingSupplier = await db.supplier.findUnique({
 			where: {
 				id,
 				organizationId,
@@ -67,50 +66,45 @@ export const archiveClient: ServerAction<
 			},
 		});
 
-		if (!existingClient) {
+		if (!existingSupplier) {
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
-				"Le client n'a pas été trouvé"
+				"Le fournisseur n'a pas été trouvé"
 			);
 		}
 
-		// 6. Validation de la transition de statut
-		const transitionValidation = validateClientStatusTransition({
-			currentStatus: existingClient.status,
-			newStatus: ClientStatus.ARCHIVED,
-		});
-
-		if (!transitionValidation.isValid) {
+		// 6. Vérification si le fournisseur est déjà archivé
+		if (existingSupplier.status === SupplierStatus.ARCHIVED) {
 			return createErrorResponse(
 				ActionStatus.ERROR,
-				transitionValidation.message || "Transition de statut non autorisée"
+				"Le fournisseur est déjà archivé"
 			);
 		}
 
-		// 7. Mise à jour du client
-		const updatedClient = await db.client.update({
+		// 7. Mise à jour du fournisseur
+		const updatedSupplier = await db.supplier.update({
 			where: {
 				id,
 				organizationId,
 			},
 			data: {
-				status: ClientStatus.ARCHIVED,
+				status: SupplierStatus.ARCHIVED,
 			},
 		});
 
 		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:clients:${id}`);
-		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:suppliers:${id}`);
+		revalidateTag(`organizations:${organizationId}:suppliers`);
 
 		return createSuccessResponse(
-			updatedClient,
-			"Le client a été archivé avec succès"
+			updatedSupplier,
+			"Le fournisseur a été archivé avec succès"
 		);
 	} catch (error) {
-		console.error("[ARCHIVE_CLIENT]", error);
+		console.error("[ARCHIVE_SUPPLIER]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Une erreur est survenue lors de l'archivage du client"
+			"Une erreur est survenue lors de l'archivage du fournisseur"
 		);
 	}
 };

@@ -117,7 +117,7 @@ export const updateSupplier: ServerAction<
 
 		// 8. Invalidation du cache pour forcer un rafraîchissement des données
 		revalidateTag(
-			`organizations:${supplierData.organizationId}:supplier:${supplierData.id}`
+			`organizations:${supplierData.organizationId}:suppliers:${supplierData.id}`
 		);
 		revalidateTag(`organizations:${supplierData.organizationId}:suppliers`);
 

@@ -1,4 +1,5 @@
 import { SUPPLIER_STATUSES } from "@/domains/supplier/constants";
+import { ArchiveSupplierButton } from "@/domains/supplier/features/archive-supplier/components/archive-supplier-button";
 import { UpdateSupplierStatusButton } from "@/domains/supplier/features/update-supplier-status/components/update-supplier-status-button";
 import {
 	AlertDialog,
@@ -147,13 +148,12 @@ export function SupplierRowActions({ supplier }: SupplierRowActionsProps) {
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<UpdateSupplierStatusButton
+									<ArchiveSupplierButton
 										organizationId={supplier.organizationId}
 										id={supplier.id}
-										status={SupplierStatus.ARCHIVED}
 									>
 										<AlertDialogAction>Archiver</AlertDialogAction>
-									</UpdateSupplierStatusButton>
+									</ArchiveSupplierButton>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>

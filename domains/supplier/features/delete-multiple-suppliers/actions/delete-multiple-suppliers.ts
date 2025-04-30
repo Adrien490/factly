@@ -100,7 +100,7 @@ export const deleteMultipleSuppliers: ServerAction<
 		// Revalidation du cache
 		revalidateTag(`organizations:${organizationId}:suppliers`);
 		validation.data.ids.forEach((supplierId) => {
-			revalidateTag(`organizations:${organizationId}:supplier:${supplierId}`);
+			revalidateTag(`organizations:${organizationId}:suppliers:${supplierId}`);
 		});
 		revalidateTag(`organizations:${organizationId}:suppliers:count`);
 
