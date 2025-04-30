@@ -21,6 +21,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
+import { Archive, Undo } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -67,6 +68,8 @@ export default async function SuppliersPage({
 	}
 	if (type) filters.type = type;
 
+	const isArchivedView = status === SupplierStatus.ARCHIVED;
+
 	return (
 		<PageContainer className="group pb-12">
 			{/* En-tête avec action principale */}
@@ -107,7 +110,47 @@ export default async function SuppliersPage({
 							defaultSortOrder="desc"
 							className="w-[200px] shrink-0"
 						/>
-
+						<Button
+							variant={isArchivedView ? "default" : "outline"}
+							asChild
+							className="shrink-0 relative w-[200px]"
+						>
+							<Link
+								href={
+									isArchivedView
+										? `/dashboard/${organizationId}/clients?${new URLSearchParams(
+												{
+													perPage: (await searchParams).perPage || "10",
+													sortBy: (await searchParams).sortBy || "createdAt",
+													sortOrder: (await searchParams).sortOrder || "desc",
+													search: (await searchParams).search || "",
+												}
+										  ).toString()}`
+										: `/dashboard/${organizationId}/clients?${new URLSearchParams(
+												{
+													perPage: (await searchParams).perPage || "10",
+													sortBy: (await searchParams).sortBy || "createdAt",
+													sortOrder: (await searchParams).sortOrder || "desc",
+													search: (await searchParams).search || "",
+													status: SupplierStatus.ARCHIVED,
+												}
+										  ).toString()}`
+								}
+								className="flex items-center justify-center"
+							>
+								{isArchivedView ? (
+									<>
+										<Undo className="mr-2 h-4 w-4" />
+										<span>Voir tous les fournisseurs</span>
+									</>
+								) : (
+									<>
+										<Archive className="mr-2 h-4 w-4" />
+										<span>Voir les fournisseurs archivés</span>
+									</>
+								)}
+							</Link>
+						</Button>
 						<Button className="shrink-0" asChild>
 							<Link href={`/dashboard/${organizationId}/suppliers/new`}>
 								Nouveau fournisseur
