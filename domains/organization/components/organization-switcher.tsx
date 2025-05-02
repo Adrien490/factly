@@ -23,18 +23,19 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { use } from "react";
 import { GetOrganizationsReturn } from "../features/get-organizations";
 
 interface OrganizationSwitcherProps {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
-	organizationId: string;
 }
 
 export function OrganizationSwitcher({
 	organizationsPromise,
-	organizationId,
 }: OrganizationSwitcherProps) {
+	const params = useParams();
+	const organizationId = params.organizationId as string;
 	const organizations = use(organizationsPromise);
 	const { isMobile } = useSidebar();
 
