@@ -1,5 +1,3 @@
-"use client";
-
 import { GetOrganizationsReturn } from "@/domains/organization/features/get-organizations";
 import {
 	DropdownMenu,
@@ -13,7 +11,6 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	useSidebar,
 } from "@/shared/components/ui/sidebar";
 import { cn } from "@/shared/utils";
 import {
@@ -24,19 +21,17 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { use } from "react";
 
 interface OrganizationSwitcherProps {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
+	organizationId: string;
 }
 
 export function OrganizationSwitcher({
 	organizationsPromise,
+	organizationId,
 }: OrganizationSwitcherProps) {
-	const params = useParams();
-	const organizationId = params.organizationId as string;
-	const { isMobile } = useSidebar();
 	const organizations = use(organizationsPromise);
 	const currentOrganization = organizations.find(
 		(organization) => organization.id === organizationId
@@ -82,7 +77,7 @@ export function OrganizationSwitcher({
 					<DropdownMenuContent
 						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 						align="start"
-						side={isMobile ? "bottom" : "right"}
+						side="bottom"
 						sideOffset={4}
 					>
 						<DropdownMenuLabel className="text-xs text-muted-foreground">
