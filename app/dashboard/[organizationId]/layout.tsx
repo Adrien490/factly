@@ -62,6 +62,7 @@ export default async function OrganizationLayout({
 						<SidebarMenuItem>
 							<Suspense fallback={<OrganizationSwitcherSkeleton />}>
 								<OrganizationSwitcher
+									organizationId={organizationId}
 									organizationsPromise={getOrganizations({
 										sortBy: "name",
 										sortOrder: "asc",

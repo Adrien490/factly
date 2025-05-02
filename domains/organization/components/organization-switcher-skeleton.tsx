@@ -12,7 +12,7 @@ export function OrganizationSwitcherSkeleton() {
 		<SidebarMenuButton
 			size={isCollapsed ? "default" : "lg"}
 			className={cn(
-				"relative overflow-hidden",
+				"relative overflow-hidden my-2",
 				!isCollapsed &&
 					"data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 			)}
