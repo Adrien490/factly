@@ -88,24 +88,27 @@ export function OrganizationSwitcher({
 									"gap-2 p-2",
 									organization.id === organizationId && "font-medium"
 								)}
+								asChild
 							>
-								<div className="flex size-6 items-center justify-center rounded-sm border">
-									{organization.logoUrl ? (
-										<Image
-											src={organization.logoUrl}
-											alt={organization.name}
-											width={24}
-											height={24}
-											className="object-cover w-full h-full"
-										/>
-									) : (
-										<div className="size-2 rounded-full bg-primary/10" />
+								<Link href={`/dashboard/${organization.id}`}>
+									<div className="flex size-6 items-center justify-center rounded-sm border">
+										{organization.logoUrl ? (
+											<Image
+												src={organization.logoUrl}
+												alt={organization.name}
+												width={24}
+												height={24}
+												className="object-cover w-full h-full"
+											/>
+										) : (
+											<div className="size-2 rounded-full bg-primary/10" />
+										)}
+									</div>
+									<span className="flex-1 truncate">{organization.name}</span>
+									{organization.id === organizationId && (
+										<Check className="ml-2 size-4 shrink-0" />
 									)}
-								</div>
-								<span className="flex-1 truncate">{organization.name}</span>
-								{organization.id === organizationId && (
-									<Check className="ml-2 size-4 shrink-0" />
-								)}
+								</Link>
 							</DropdownMenuItem>
 						))}
 
