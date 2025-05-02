@@ -1,6 +1,6 @@
 import { CalendarClock, LayoutDashboard, Truck, Users } from "lucide-react";
 
-export const navItems = (organizationId: string) => [
+export const getSidebarNav = (organizationId: string) => [
 	{
 		title: "Tableau de bord",
 		url: `/dashboard/${organizationId}`,

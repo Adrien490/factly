@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, LucideIcon } from "lucide-react";
 
 import { LoadingIndicator } from "@/shared/components/loading-indicator";
 import {
@@ -19,10 +19,22 @@ import {
 	SidebarMenuSubItem,
 	useSidebar,
 } from "@/shared/components/ui/sidebar";
-import { cn } from "@/shared/utils";
+import { cn, getSidebarNav } from "@/shared/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { navItems } from "../../constants";
+
+export interface NavMainProps {
+	items: {
+		title: string;
+		url: string;
+		icon?: LucideIcon;
+		isActive?: boolean;
+		items?: {
+			title: string;
+			url: string;
+		}[];
+	}[];
+}
 
 export function NavMain() {
 	const pathname = usePathname();
@@ -31,11 +43,13 @@ export function NavMain() {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 
+	const items = getSidebarNav(organizationId);
+
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Menu principal</SidebarGroupLabel>
 			<SidebarMenu>
-				{navItems(organizationId).map((item) => {
+				{items.map((item) => {
 					const hasSubItems = item.items && item.items.length > 0;
 					// Le menu principal est actif si le pathname correspond exactement à son URL
 					const isMainItemActive = pathname === item.url;

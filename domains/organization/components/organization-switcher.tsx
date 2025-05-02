@@ -21,17 +21,18 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { GetOrganizationsReturn } from "../../features/get-organizations";
+import { use, useTransition } from "react";
+import { GetOrganizationsReturn } from "../features/get-organizations";
 
 interface OrganizationSwitcherProps {
-	organizations: GetOrganizationsReturn;
+	organizationsPromise: Promise<GetOrganizationsReturn>;
 }
 
 export function OrganizationSwitcher({
-	organizations,
+	organizationsPromise,
 }: OrganizationSwitcherProps) {
 	const params = useParams();
+	const organizations = use(organizationsPromise);
 	const organizationId = params.organizationId;
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();

@@ -1,16 +1,23 @@
 import { auth } from "@/domains/auth";
 import {
-	OrganizationSidebar,
-	OrganizationSidebarSkeleton,
+	OrganizationSwitcher,
+	OrganizationSwitcherSkeleton,
 } from "@/domains/organization/components";
+import { NavMain } from "@/domains/organization/components/nav-main";
 import {
 	getOrganizations,
 	hasOrganizationAccess,
 } from "@/domains/organization/features";
 import {
 	Separator,
+	Sidebar,
+	SidebarContent,
+	SidebarHeader,
 	SidebarInset,
+	SidebarMenu,
+	SidebarMenuItem,
 	SidebarProvider,
+	SidebarRail,
 	SidebarTrigger,
 	UserAvatar,
 	UserAvatarSkeleton,
@@ -39,7 +46,6 @@ export default async function OrganizationLayout({
 		forbidden();
 	}
 
-	console.log(organizationId);
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
@@ -50,14 +56,28 @@ export default async function OrganizationLayout({
 
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
-			<Suspense fallback={<OrganizationSidebarSkeleton />}>
-				<OrganizationSidebar
-					organizationsPromise={getOrganizations({
-						sortBy: "name",
-						sortOrder: "asc",
-					})}
-				/>
-			</Suspense>
+			<Sidebar collapsible="icon">
+				<SidebarHeader className="border-b border-border/30">
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<Suspense fallback={<OrganizationSwitcherSkeleton />}>
+								<OrganizationSwitcher
+									organizationsPromise={getOrganizations({
+										sortBy: "name",
+										sortOrder: "asc",
+									})}
+								/>
+							</Suspense>
+						</SidebarMenuItem>
+					</SidebarMenu>
+				</SidebarHeader>
+
+				<SidebarContent className="pt-2">
+					<NavMain />
+				</SidebarContent>
+				<SidebarRail className="bg-muted/10" />
+			</Sidebar>
+
 			<SidebarInset>
 				<header className="flex px-2 lg:px-4 h-16 shrink-0 items-center gap-2 bg-background">
 					<div className="flex items-center gap-2 px-3">
