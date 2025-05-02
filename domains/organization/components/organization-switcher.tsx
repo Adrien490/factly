@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -12,7 +10,6 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	useSidebar,
 } from "@/shared/components/ui/sidebar";
 import { cn } from "@/shared/utils";
 import {
@@ -23,21 +20,19 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { use } from "react";
 import { GetOrganizationsReturn } from "../features/get-organizations";
 
 interface OrganizationSwitcherProps {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
+	organizationId: string;
 }
 
 export function OrganizationSwitcher({
 	organizationsPromise,
+	organizationId,
 }: OrganizationSwitcherProps) {
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const organizations = use(organizationsPromise);
-	const { isMobile } = useSidebar();
 
 	const currentOrganization = organizations.find(
 		(organization) => organization.id === organizationId
@@ -79,7 +74,6 @@ export function OrganizationSwitcher({
 					<DropdownMenuContent
 						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 						align="start"
-						side={isMobile ? "bottom" : "right"}
 						sideOffset={4}
 					>
 						<DropdownMenuLabel className="text-xs text-muted-foreground">
@@ -94,6 +88,7 @@ export function OrganizationSwitcher({
 									"gap-2 p-2",
 									organization.id === organizationId && "font-medium"
 								)}
+								asChild
 							>
 								<Link href={`/dashboard/${organization.id}`}>
 									<div className="flex size-6 items-center justify-center rounded-sm border">
