@@ -1,5 +1,6 @@
 "use client";
 
+import { GetOrganizationsReturn } from "@/domains/organization/features/get-organizations";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,7 +26,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { use } from "react";
-import { GetOrganizationsReturn } from "../features/get-organizations";
 
 interface OrganizationSwitcherProps {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
