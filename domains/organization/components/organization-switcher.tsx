@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,6 +12,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/shared/components/ui/sidebar";
 import { cn } from "@/shared/utils";
 import {
@@ -20,23 +23,28 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { use } from "react";
 import { GetOrganizationsReturn } from "../features/get-organizations";
 
 interface OrganizationSwitcherProps {
 	organizationsPromise: Promise<GetOrganizationsReturn>;
-	organizationId: string;
 }
 
 export function OrganizationSwitcher({
 	organizationsPromise,
-	organizationId,
 }: OrganizationSwitcherProps) {
+	const params = useParams();
+	const organizationId = params.organizationId as string;
+	const { isMobile } = useSidebar();
 	const organizations = use(organizationsPromise);
-
 	const currentOrganization = organizations.find(
 		(organization) => organization.id === organizationId
 	);
+
+	if (!currentOrganization) {
+		return null;
+	}
 
 	return (
 		<SidebarMenu>
@@ -48,7 +56,7 @@ export function OrganizationSwitcher({
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary">
-								{currentOrganization?.logoUrl ? (
+								{currentOrganization.logoUrl ? (
 									<Image
 										src={currentOrganization.logoUrl}
 										alt={currentOrganization.name}
@@ -62,7 +70,7 @@ export function OrganizationSwitcher({
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-semibold">
-									{currentOrganization?.name || "Sélectionner une organisation"}
+									{currentOrganization.name}
 								</span>
 								<span className="truncate text-xs text-muted-foreground">
 									Changer d&apos;organisation
@@ -74,6 +82,7 @@ export function OrganizationSwitcher({
 					<DropdownMenuContent
 						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 						align="start"
+						side={isMobile ? "bottom" : "right"}
 						sideOffset={4}
 					>
 						<DropdownMenuLabel className="text-xs text-muted-foreground">

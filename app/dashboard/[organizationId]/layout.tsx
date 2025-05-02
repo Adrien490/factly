@@ -24,7 +24,7 @@ import {
 } from "@/shared/components";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
 
@@ -46,23 +46,19 @@ export default async function OrganizationLayout({
 		forbidden();
 	}
 
-	const cookieStore = await cookies();
-	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
-
 	// Formater la date d'aujourd'hui en français
 	const dateToday = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
 	// Première lettre en majuscule
 	const formattedDate = dateToday.charAt(0).toUpperCase() + dateToday.slice(1);
 
 	return (
-		<SidebarProvider defaultOpen={defaultOpen}>
+		<SidebarProvider>
 			<Sidebar collapsible="icon">
 				<SidebarHeader className="border-b border-border/30">
 					<SidebarMenu>
 						<SidebarMenuItem>
 							<Suspense fallback={<OrganizationSwitcherSkeleton />}>
 								<OrganizationSwitcher
-									organizationId={organizationId}
 									organizationsPromise={getOrganizations({
 										sortBy: "name",
 										sortOrder: "asc",
