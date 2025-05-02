@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,6 +12,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/shared/components/ui/sidebar";
 import { cn } from "@/shared/utils";
 import {
@@ -33,6 +36,7 @@ export function OrganizationSwitcher({
 	organizationId,
 }: OrganizationSwitcherProps) {
 	const organizations = use(organizationsPromise);
+	const { isMobile } = useSidebar();
 
 	const currentOrganization = organizations.find(
 		(organization) => organization.id === organizationId
@@ -74,6 +78,7 @@ export function OrganizationSwitcher({
 					<DropdownMenuContent
 						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 						align="start"
+						side={isMobile ? "bottom" : "right"}
 						sideOffset={4}
 					>
 						<DropdownMenuLabel className="text-xs text-muted-foreground">
@@ -88,27 +93,24 @@ export function OrganizationSwitcher({
 									"gap-2 p-2",
 									organization.id === organizationId && "font-medium"
 								)}
-								asChild
 							>
-								<Link href={`/dashboard/${organization.id}`}>
-									<div className="flex size-6 items-center justify-center rounded-sm border">
-										{organization.logoUrl ? (
-											<Image
-												src={organization.logoUrl}
-												alt={organization.name}
-												width={24}
-												height={24}
-												className="object-cover w-full h-full"
-											/>
-										) : (
-											<div className="size-2 rounded-full bg-primary/10" />
-										)}
-									</div>
-									<span className="flex-1 truncate">{organization.name}</span>
-									{organization.id === organizationId && (
-										<Check className="ml-2 size-4 shrink-0" />
+								<div className="flex size-6 items-center justify-center rounded-sm border">
+									{organization.logoUrl ? (
+										<Image
+											src={organization.logoUrl}
+											alt={organization.name}
+											width={24}
+											height={24}
+											className="object-cover w-full h-full"
+										/>
+									) : (
+										<div className="size-2 rounded-full bg-primary/10" />
 									)}
-								</Link>
+								</div>
+								<span className="flex-1 truncate">{organization.name}</span>
+								{organization.id === organizationId && (
+									<Check className="ml-2 size-4 shrink-0" />
+								)}
 							</DropdownMenuItem>
 						))}
 
