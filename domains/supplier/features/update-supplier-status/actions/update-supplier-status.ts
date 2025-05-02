@@ -100,10 +100,14 @@ export const updateSupplierStatus: ServerAction<
 			`organizations:${rawData.organizationId}:suppliers:${existingSupplier.id}`
 		);
 
-		return createSuccessResponse(
-			updatedSupplier,
-			`Statut du fournisseur "${existingSupplier.name}" mis à jour`
-		);
+		const message =
+			validation.data.status === SupplierStatus.ARCHIVED
+				? `Le fournisseur "${existingSupplier.name}" a été archivé avec succès`
+				: existingSupplier.status === SupplierStatus.ARCHIVED
+				? `Le fournisseur "${existingSupplier.name}" a été restauré avec succès`
+				: `Le statut du fournisseur "${existingSupplier.name}" a été mis à jour avec succès`;
+
+		return createSuccessResponse(updatedSupplier, message);
 	} catch (error) {
 		console.error("[UPDATE_SUPPLIER_STATUS]", error);
 		return createErrorResponse(

@@ -128,12 +128,12 @@ export const updateMultipleClientStatus: ServerAction<
 		// 9. Message de succès personnalisé
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
-				? "Les clients ont été archivés avec succès"
+				? `${existingClients.length} client(s) ont été archivé(s) avec succès`
 				: existingClients.some(
 						(client) => client.status === ClientStatus.ARCHIVED
 				  )
-				? `${existingClients.length} clients ont été restaurés avec succès`
-				: "Le statut des clients a été mis à jour avec succès";
+				? `${existingClients.length} client(s) ont été restauré(s) avec succès`
+				: `${existingClients.length} client(s) ont été mis à jour avec succès`;
 
 		return createSuccessResponse(updatedClients, message);
 	} catch (error) {
