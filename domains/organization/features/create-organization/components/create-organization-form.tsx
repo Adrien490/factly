@@ -1,15 +1,6 @@
 "use client";
 
-import {
-	Button,
-	FormLabel,
-	Input,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components";
+import { Button, FormLabel } from "@/shared/components";
 
 import { COUNTRIES } from "@/domains/address/constants";
 import {
@@ -24,18 +15,14 @@ import {
 	FormFooter,
 	FormLayout,
 	FormSection,
+	useAppForm,
 } from "@/shared/components/forms";
 import { GridLoader } from "@/shared/components/loaders";
 import { MiniDotsLoader } from "@/shared/components/loaders/mini-dots-loader";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { LegalForm } from "@prisma/client";
-import {
-	mergeForm,
-	Updater,
-	useForm,
-	useTransform,
-} from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Building2, Globe, MapPin, Receipt, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -56,7 +43,7 @@ export function CreateOrganizationForm({
 	const router = useRouter();
 
 	// TanStack Form setup
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			id: state?.data?.id ?? "",
 			name: state?.data?.name ?? "",
@@ -126,8 +113,6 @@ export function CreateOrganizationForm({
 		});
 	};
 
-	console.log(state);
-
 	return (
 		<form
 			action={dispatch}
@@ -140,47 +125,31 @@ export function CreateOrganizationForm({
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<input type="hidden" name="id" value={""} />
+			<form.Field name="id">
+				{(field) => (
+					<input type="hidden" name="id" value={field.state.value ?? ""} />
+				)}
+			</form.Field>
+
 			<form.Field name="logoUrl">
 				{(field) => (
 					<input type="hidden" name="logoUrl" value={field.state.value ?? ""} />
 				)}
 			</form.Field>
 
-			<form.Field name="country">
+			<form.AppField name="country">
 				{(field) => (
-					<div className="space-y-1.5">
-						<FormLabel htmlFor="country" className="flex items-center">
-							Pays
-						</FormLabel>
-						<Select
-							disabled={isPending}
-							name="country"
-							onValueChange={(value) => {
-								field.handleChange(value);
-							}}
-							value={field.state.value || "FRANCE"}
-							defaultValue="FRANCE"
-						>
-							<SelectTrigger id="country" className="w-full">
-								<SelectValue placeholder="Sélectionnez un pays" />
-							</SelectTrigger>
-							<SelectContent>
-								{COUNTRIES.map((country) => (
-									<SelectItem
-										key={country.value}
-										value={country.value}
-										title={`${country.label} (${country.iso})`}
-									>
-										{country.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-						<FieldInfo field={field} />
-					</div>
+					<field.SelectField
+						label="Pays"
+						disabled={isPending}
+						placeholder="Sélectionnez un pays"
+						options={COUNTRIES.map((country) => ({
+							label: country.label,
+							value: country.value,
+						}))}
+					/>
 				)}
-			</form.Field>
+			</form.AppField>
 
 			<FormLayout columns={2} className="mt-6">
 				{/* Section Logo */}
@@ -271,7 +240,7 @@ export function CreateOrganizationForm({
 					icon={Building2}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="name"
 							validators={{
 								onChange: ({ value }) => {
@@ -282,26 +251,15 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="name" className="flex items-center">
-										Nom commercial
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="name"
-										name="name"
-										placeholder="Nom utilisé au quotidien"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Nom commercial"
+									disabled={isPending}
+									placeholder="Nom utilisé au quotidien"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="legalName"
 							validators={{
 								onChange: ({ value }) => {
@@ -311,26 +269,15 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="legalName" className="flex items-center">
-										Dénomination sociale
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="legalName"
-										name="legalName"
-										placeholder="Nom juridique officiel"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Dénomination sociale"
+									disabled={isPending}
+									placeholder="Dénomination sociale"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="legalForm"
 							validators={{
 								onChange: ({ value }) => {
@@ -340,41 +287,63 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="legalForm" className="flex items-center">
-										Forme juridique
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="legalForm"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as Updater<LegalForm | undefined>
-											);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger
-											id="legalForm"
-											className="border-input focus:ring-1 focus:ring-primary"
-										>
-											<SelectValue placeholder="Sélectionnez une forme juridique" />
-										</SelectTrigger>
-										<SelectContent>
-											{LEGAL_FORM_OPTIONS.map((option) => (
-												<SelectItem key={option.value} value={option.value}>
-													{option.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Forme juridique"
+									disabled={isPending}
+									placeholder="Sélectionnez une forme juridique"
+									options={LEGAL_FORM_OPTIONS.map((option) => ({
+										label: option.label,
+										value: option.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
+							name="legalForm"
+							validators={{
+								onChange: ({ value }) => {
+									if (!value) return "La forme juridique est requise";
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.SelectField
+									label="Forme juridique"
+									disabled={isPending}
+									placeholder="Sélectionnez une forme juridique"
+									options={LEGAL_FORM_OPTIONS.map((option) => ({
+										label: option.label,
+										value: option.value,
+									}))}
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="legalForm"
+							validators={{
+								onChange: ({ value }) => {
+									if (!value) return "La forme juridique est requise";
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.SelectField
+									label="Forme juridique"
+									disabled={isPending}
+									placeholder="Sélectionnez une forme juridique"
+									options={LEGAL_FORM_OPTIONS.map((option) => ({
+										label: option.label,
+										value: option.value,
+									}))}
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
 							name="email"
 							validators={{
 								onChange: ({ value }) => {
@@ -387,25 +356,13 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="email" className="flex items-center">
-										Email de contact
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="email"
-										name="email"
-										type="email"
-										placeholder="contact@exemple.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="Ex: contact@example.com"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -416,7 +373,7 @@ export function CreateOrganizationForm({
 					icon={Receipt}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="siren"
 							validators={{
 								onChange: ({ value }) => {
@@ -429,28 +386,15 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siren" className="flex items-center">
-										SIREN
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="siren"
-										name="siren"
-										placeholder="9 chiffres (ex: 123456789)"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<p className="text-xs text-muted-foreground">
-										Identifiant d&apos;entreprise à 9 chiffres
-									</p>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="SIREN"
+									disabled={isPending}
+									placeholder="9 chiffres (ex: 123456789)"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="siret"
 							validators={{
 								onChange: ({ value }) => {
@@ -463,28 +407,15 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siret" className="flex items-center">
-										SIRET
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="siret"
-										name="siret"
-										placeholder="14 chiffres (ex: 12345678900001)"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<p className="text-xs text-muted-foreground">
-										Identifiant d&apos;établissement à 14 chiffres
-									</p>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="SIRET"
+									disabled={isPending}
+									placeholder="14 chiffres (ex: 12345678900001)"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="vatNumber"
 							validators={{
 								onChange: ({ value }) => {
@@ -496,26 +427,13 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="vatNumber" className="flex items-center">
-										N° TVA
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="vatNumber"
-										name="vatNumber"
-										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<p className="text-xs text-muted-foreground">
-										Numéro de TVA intracommunautaire
-									</p>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Numéro de TVA"
+									disabled={isPending}
+									placeholder="Numéro de TVA (ex: FR1234567890)"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -629,72 +547,36 @@ export function CreateOrganizationForm({
 							)}
 						</form.Field>
 
-						<form.Field name="addressLine2">
+						<form.AppField name="addressLine2">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel
-										htmlFor="addressLine2"
-										className="flex items-center"
-									>
-										Complément d&apos;adresse
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="addressLine2"
-										name="addressLine2"
-										placeholder="Bâtiment, étage, etc."
-										value={field.state.value || ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Adresse ligne 2"
+									disabled={isPending}
+									placeholder="Adresse ligne 2"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
 						<div className="grid grid-cols-2 gap-4">
-							<form.Field name="postalCode">
+							<form.AppField name="postalCode">
 								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel
-											htmlFor="postalCode"
-											className="flex items-center"
-										>
-											Code postal
-										</FormLabel>
-										<Input
-											disabled={isPending}
-											id="postalCode"
-											name="postalCode"
-											placeholder="Ex: 75000"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-											className="border-input focus:ring-1 focus:ring-primary"
-										/>
-										<FieldInfo field={field} />
-									</div>
+									<field.InputField
+										label="Code postal"
+										disabled={isPending}
+										placeholder="Code postal"
+									/>
 								)}
-							</form.Field>
+							</form.AppField>
 
-							<form.Field name="city">
+							<form.AppField name="city">
 								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="city" className="flex items-center">
-											Ville
-										</FormLabel>
-										<Input
-											disabled={isPending}
-											id="city"
-											name="city"
-											placeholder="Ex: Paris"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-											className="border-input focus:ring-1 focus:ring-primary"
-										/>
-										<FieldInfo field={field} />
-									</div>
+									<field.InputField
+										label="Ville"
+										disabled={isPending}
+										placeholder="Ville"
+									/>
 								)}
-							</form.Field>
+							</form.AppField>
 						</div>
 					</div>
 				</FormSection>
@@ -706,27 +588,17 @@ export function CreateOrganizationForm({
 					icon={Globe}
 				>
 					<div className="space-y-4">
-						<form.Field name="phone">
+						<form.AppField name="phone">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="phone" className="flex items-center">
-										Téléphone
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="phone"
-										name="phone"
-										placeholder="Ex: +33 1 23 45 67 89"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="website"
 							validators={{
 								onChange: ({ value }) => {
@@ -743,23 +615,13 @@ export function CreateOrganizationForm({
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="website" className="flex items-center">
-										Site web
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="website"
-										name="website"
-										placeholder="Ex: https://www.example.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Site web"
+									disabled={isPending}
+									placeholder="Ex: https://www.example.com"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 			</FormLayout>
