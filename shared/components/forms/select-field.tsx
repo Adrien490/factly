@@ -47,7 +47,7 @@ export const SelectField = <T extends string>({
 				>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
-				<SelectContent>
+				<SelectContent className="max-h-[300px] overflow-y-auto">
 					{options.map((option) => (
 						<SelectItem key={option.value} value={option.value}>
 							{option.label}
