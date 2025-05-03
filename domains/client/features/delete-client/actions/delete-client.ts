@@ -11,12 +11,13 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
+import { Client } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { deleteClientSchema } from "../schemas";
 
 export const deleteClient: ServerAction<
-	null,
+	Client,
 	typeof deleteClientSchema
 > = async (_, formData) => {
 	try {
@@ -79,11 +80,6 @@ export const deleteClient: ServerAction<
 				id: validation.data.id,
 				organizationId: validation.data.organizationId,
 			},
-			select: {
-				id: true,
-				status: true,
-				name: true, // Récupération du nom pour le message de confirmation
-			},
 		});
 
 		if (!existingClient) {
@@ -103,7 +99,7 @@ export const deleteClient: ServerAction<
 		revalidateTag(`organizations:${rawData.organizationId}:clients:count`);
 
 		return createSuccessResponse(
-			null,
+			existingClient,
 			`Client "${existingClient.name}" supprimé définitivement`
 		);
 	} catch (error) {
