@@ -8,8 +8,8 @@ import {
 	SelectValue,
 } from "@/shared/components/ui/select";
 import { FieldInfo } from "..";
+import { useFieldContext } from "../../lib/form-context";
 import { FormLabel } from "../ui";
-import { useFieldContext } from "./form-context";
 
 interface SelectFieldProps<T extends string> {
 	disabled?: boolean;

@@ -1,7 +1,7 @@
 import { Input } from "@/shared/components/ui/input";
 import { FieldInfo } from "..";
+import { useFieldContext } from "../../lib/form-context";
 import { FormLabel } from "../ui";
-import { useFieldContext } from "./form-context";
 
 interface InputFieldProps {
 	disabled?: boolean;

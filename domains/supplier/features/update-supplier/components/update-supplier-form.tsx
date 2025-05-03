@@ -1,21 +1,11 @@
 "use client";
 
 import {
-	FormLabel,
-	Input,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-	Textarea,
-} from "@/shared/components";
-import {
-	FieldInfo,
 	FormErrors,
 	FormFooter,
 	FormLayout,
 	FormSection,
+	useAppForm,
 } from "@/shared/components/forms";
 
 import {
@@ -23,12 +13,7 @@ import {
 	SUPPLIER_TYPES,
 } from "@/domains/supplier/constants";
 import { GetSupplierReturn } from "@/domains/supplier/features/get-supplier";
-import {
-	mergeForm,
-	Updater,
-	useForm,
-	useTransform,
-} from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useUpdateSupplier } from "../hooks/use-update-supplier";
@@ -43,7 +28,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 	const { state, dispatch, isPending } = useUpdateSupplier();
 
 	// TanStack Form setup
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			id: state?.inputs?.id ?? supplier.id,
 			organizationId: state?.inputs?.organizationId ?? supplier.organizationId,
@@ -66,8 +51,6 @@ export function UpdateSupplierForm({ supplier }: Props) {
 		),
 	});
 
-	console.log("State:", state);
-
 	return (
 		<form
 			action={dispatch}
@@ -81,11 +64,11 @@ export function UpdateSupplierForm({ supplier }: Props) {
 
 			{/* Champs cachés */}
 			<input type="hidden" name="organizationId" value={organizationId} />
-			<form.Field name="id">
+			<form.AppField name="id">
 				{(field) => (
 					<input type="hidden" name="id" value={field.state.value ?? ""} />
 				)}
-			</form.Field>
+			</form.AppField>
 
 			<FormLayout withDividers columns={2}>
 				{/* Section Information de base */}
@@ -95,7 +78,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 					icon={Building}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="name"
 							validators={{
 								onChange: ({ value }) => {
@@ -105,42 +88,25 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="name">
-										Nom du fournisseur
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="name"
-										name="name"
-										placeholder="Nom du fournisseur"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Nom"
+									disabled={isPending}
+									placeholder="Nom"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="legalName">
+						<form.AppField name="legalName">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="legalName">Raison sociale</FormLabel>
-									<Input
-										disabled={isPending}
-										id="legalName"
-										name="legalName"
-										placeholder="Raison sociale"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Raison sociale"
+									disabled={isPending}
+									placeholder="Raison sociale"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="supplierType"
 							validators={{
 								onChange: ({ value }) => {
@@ -150,69 +116,29 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="supplierType">
-										Type de fournisseur
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="supplierType"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value ?? undefined}
-									>
-										<SelectTrigger id="supplierType">
-											<SelectValue placeholder="Sélectionnez un type" />
-										</SelectTrigger>
-										<SelectContent>
-											{SUPPLIER_TYPES.map((type) => (
-												<SelectItem key={type.value} value={type.value}>
-													{type.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									options={SUPPLIER_TYPES.map((type) => ({
+										label: type.label,
+										value: type.value,
+									}))}
+									label="Type de fournisseur"
+									disabled={isPending}
+									placeholder="Sélectionnez un type de fournisseur"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="status">
+						<form.AppField name="status">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="status">
-										Statut
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="status"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value ?? undefined}
-									>
-										<SelectTrigger id="status">
-											<SelectValue placeholder="Sélectionnez un statut" />
-										</SelectTrigger>
-										<SelectContent>
-											{SUPPLIER_STATUSES.map((status) => (
-												<SelectItem key={status.value} value={status.value}>
-													{status.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									options={SUPPLIER_STATUSES.map((status) => ({
+										label: status.label,
+										value: status.value,
+									}))}
+									label="Statut"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -223,57 +149,35 @@ export function UpdateSupplierForm({ supplier }: Props) {
 					icon={ClipboardEdit}
 				>
 					<div className="space-y-4">
-						<form.Field name="email">
+						<form.AppField name="email">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="email">Email</FormLabel>
-									<Input
-										disabled={isPending}
-										id="email"
-										name="email"
-										type="email"
-										placeholder="Email du fournisseur"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="Email"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="phone">
+						<form.AppField name="phone">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="phone">Téléphone</FormLabel>
-									<Input
-										disabled={isPending}
-										id="phone"
-										name="phone"
-										placeholder="Numéro de téléphone"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Téléphone"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="website">
+						<form.AppField name="website">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="website">Site web</FormLabel>
-									<Input
-										disabled={isPending}
-										id="website"
-										name="website"
-										placeholder="Site web"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Site web"
+									disabled={isPending}
+									placeholder="Site web"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -284,55 +188,35 @@ export function UpdateSupplierForm({ supplier }: Props) {
 					icon={Receipt}
 				>
 					<div className="space-y-4">
-						<form.Field name="siren">
+						<form.AppField name="siren">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siren">SIREN</FormLabel>
-									<Input
-										id="siren"
-										name="siren"
-										placeholder="SIREN"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="SIREN"
+									disabled={isPending}
+									placeholder="SIREN"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="siret">
+						<form.AppField name="siret">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siret">SIRET</FormLabel>
-									<Input
-										disabled={isPending}
-										id="siret"
-										name="siret"
-										placeholder="SIRET"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="SIRET"
+									disabled={isPending}
+									placeholder="SIRET"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="vatNumber">
+						<form.AppField name="vatNumber">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="vatNumber">Numéro de TVA</FormLabel>
-									<Input
-										disabled={isPending}
-										id="vatNumber"
-										name="vatNumber"
-										placeholder="Numéro de TVA"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Numéro de TVA"
+									disabled={isPending}
+									placeholder="Numéro de TVA"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -343,23 +227,15 @@ export function UpdateSupplierForm({ supplier }: Props) {
 					icon={Tag}
 				>
 					<div className="space-y-4">
-						<form.Field name="notes">
+						<form.AppField name="notes">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="notes">Notes</FormLabel>
-									<Textarea
-										disabled={isPending}
-										id="notes"
-										name="notes"
-										placeholder="Notes sur le fournisseur"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="min-h-32"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.TextareaField
+									label="Notes"
+									disabled={isPending}
+									placeholder="Notes"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 			</FormLayout>

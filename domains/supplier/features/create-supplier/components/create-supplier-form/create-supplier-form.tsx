@@ -1,13 +1,6 @@
 "use client";
 
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components";
-import { FormLabel, Input, Textarea } from "@/shared/components/ui";
+import { FormLabel } from "@/shared/components/ui";
 
 import { ADDRESS_TYPES, COUNTRIES } from "@/domains/address/constants";
 import {
@@ -24,13 +17,9 @@ import {
 	FormFooter,
 	FormLayout,
 	FormSection,
+	useAppForm,
 } from "@/shared/components/forms";
-import {
-	mergeForm,
-	Updater,
-	useForm,
-	useTransform,
-} from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Building, Globe, MapPin, Receipt, User, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useTransition } from "react";
@@ -49,7 +38,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	const router = useRouter();
 
 	// TanStack Form setup
-	const form = useForm({
+	const form = useAppForm({
 		...formOpts(organizationId),
 
 		transform: useTransform(
@@ -131,7 +120,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 
 			{/* Champs cachés */}
 			<input type="hidden" name="organizationId" value={organizationId} />
-			<form.Field name="latitude">
+			<form.AppField name="latitude">
 				{(field) => (
 					<input
 						type="hidden"
@@ -139,8 +128,8 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 						value={field.state.value ?? ""}
 					/>
 				)}
-			</form.Field>
-			<form.Field name="longitude">
+			</form.AppField>
+			<form.AppField name="longitude">
 				{(field) => (
 					<input
 						type="hidden"
@@ -148,8 +137,8 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 						value={field.state.value ?? ""}
 					/>
 				)}
-			</form.Field>
-			<form.Field name="addressType">
+			</form.AppField>
+			<form.AppField name="addressType">
 				{(field) => (
 					<input
 						type="hidden"
@@ -157,7 +146,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 						value={field.state.value ?? ""}
 					/>
 				)}
-			</form.Field>
+			</form.AppField>
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
@@ -167,7 +156,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					icon={Building}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="name"
 							validators={{
 								onChange: ({ value }) => {
@@ -178,115 +167,51 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="name" className="flex items-center">
-										Nom
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="name"
-										name="name"
-										placeholder="Nom du fournisseur ou de l'entreprise"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Nom du fournisseur"
+									disabled={isPending}
+									placeholder="Nom du fournisseur"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="legalName">
+						<form.AppField name="legalName">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="legalName">Raison sociale</FormLabel>
-									<Input
-										disabled={isPending}
-										id="legalName"
-										name="legalName"
-										placeholder="Raison sociale ou nom légal"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Raison sociale"
+									disabled={isPending}
+									placeholder="Raison sociale ou nom légal"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="supplierType">
+						<form.AppField name="supplierType">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="supplierType">
-										Type de fournisseur
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="supplierType"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger id="supplierType" className="w-full">
-											<SelectValue placeholder="Sélectionnez un type" />
-										</SelectTrigger>
-										<SelectContent>
-											{SUPPLIER_TYPES.map((type) => (
-												<SelectItem
-													key={type.value}
-													value={type.value}
-													title={type.description}
-												>
-													{type.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Type de fournisseur"
+									disabled={isPending}
+									placeholder="Sélectionnez un type de fournisseur"
+									options={SUPPLIER_TYPES.map((type) => ({
+										label: type.label,
+										value: type.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="status">
+						<form.AppField name="status">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="status">
-										Statut
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="status"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger id="status" className="w-full">
-											<SelectValue placeholder="Sélectionnez un statut" />
-										</SelectTrigger>
-										<SelectContent>
-											{SUPPLIER_STATUSES.map((status) => (
-												<SelectItem
-													key={status.value}
-													value={status.value}
-													title={status.description}
-												>
-													{status.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Statut"
+									disabled={isPending}
+									placeholder="Sélectionnez un statut"
+									options={SUPPLIER_STATUSES.map((status) => ({
+										label: status.label,
+										value: status.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -297,43 +222,21 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					icon={MapPin}
 				>
 					<div className="space-y-4">
-						<form.Field name="addressType">
+						<form.AppField name="addressType">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressType">
-										Type d&apos;adresse
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="addressType"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger id="addressType" className="w-full">
-											<SelectValue placeholder="Sélectionnez un type" />
-										</SelectTrigger>
-										<SelectContent>
-											{ADDRESS_TYPES.map((addressType) => (
-												<SelectItem
-													key={addressType.value}
-													value={addressType.value}
-												>
-													{addressType.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Type d'adresse"
+									disabled={isPending}
+									placeholder="Sélectionnez un type d'adresse"
+									options={ADDRESS_TYPES.map((type) => ({
+										label: type.label,
+										value: type.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="addressLine1"
 							validators={{
 								onChangeAsyncDebounceMs: 500,
@@ -403,95 +306,53 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									<FieldInfo field={field} />
 								</div>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="addressLine2">
+						<form.AppField name="addressLine2">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressLine2">Adresse ligne 2</FormLabel>
-									<Input
-										disabled={isPending}
-										id="addressLine2"
-										name="addressLine2"
-										placeholder="Complément d'adresse"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Adresse ligne 2"
+									disabled={isPending}
+									placeholder="Complément d'adresse"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-							<form.Field name="postalCode">
+							<form.AppField name="postalCode">
 								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="postalCode">Code postal</FormLabel>
-										<Input
-											disabled={isPending}
-											id="postalCode"
-											name="postalCode"
-											placeholder="Code postal"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										<FieldInfo field={field} />
-									</div>
+									<field.InputField
+										label="Code postal"
+										disabled={isPending}
+										placeholder="Code postal"
+									/>
 								)}
-							</form.Field>
+							</form.AppField>
 
-							<form.Field name="city">
+							<form.AppField name="city">
 								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="city">Ville</FormLabel>
-										<Input
-											disabled={isPending}
-											id="city"
-											name="city"
-											placeholder="Ville"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										<FieldInfo field={field} />
-									</div>
+									<field.InputField
+										label="Ville"
+										disabled={isPending}
+										placeholder="Ville"
+									/>
 								)}
-							</form.Field>
+							</form.AppField>
 						</div>
 
-						<form.Field name="country">
+						<form.AppField name="country">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="country">Pays</FormLabel>
-									<Select
-										disabled={isPending}
-										name="country"
-										onValueChange={(value) => {
-											field.handleChange(
-												value as unknown as Updater<typeof field.state.value>
-											);
-										}}
-										value={field.state.value || "FRANCE"}
-										defaultValue="FRANCE"
-									>
-										<SelectTrigger id="country" className="w-full">
-											<SelectValue placeholder="Sélectionnez un pays" />
-										</SelectTrigger>
-										<SelectContent>
-											{COUNTRIES.map((country) => (
-												<SelectItem
-													key={country.value}
-													value={country.value}
-													title={`${country.label} (${country.iso})`}
-												>
-													{country.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Pays"
+									disabled={isPending}
+									placeholder="Sélectionnez un pays"
+									options={COUNTRIES.map((country) => ({
+										label: country.label,
+										value: country.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -502,7 +363,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					icon={User}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="email"
 							validators={{
 								onChange: ({ value }) => {
@@ -514,40 +375,25 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="email">Email</FormLabel>
-									<Input
-										disabled={isPending}
-										id="email"
-										name="email"
-										type="email"
-										placeholder="email@exemple.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="Email"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="phone">
+						<form.AppField name="phone">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="phone">Téléphone</FormLabel>
-									<Input
-										disabled={isPending}
-										id="phone"
-										name="phone"
-										placeholder="0123456789"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Téléphone"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="website"
 							validators={{
 								onChange: ({ value }) => {
@@ -564,20 +410,13 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="website">Site web</FormLabel>
-									<Input
-										disabled={isPending}
-										id="website"
-										name="website"
-										placeholder="https://www.exemple.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Site web"
+									disabled={isPending}
+									placeholder="Site web"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -588,55 +427,35 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					icon={Receipt}
 				>
 					<div className="space-y-4">
-						<form.Field name="siren">
+						<form.AppField name="siren">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siren">SIREN</FormLabel>
-									<Input
-										id="siren"
-										name="siren"
-										placeholder="123456789"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="SIREN"
+									disabled={isPending}
+									placeholder="SIREN"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="siret">
+						<form.AppField name="siret">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="siret">SIRET</FormLabel>
-									<Input
-										disabled={isPending}
-										id="siret"
-										name="siret"
-										placeholder="12345678900001"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="SIRET"
+									disabled={isPending}
+									placeholder="SIRET"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="vatNumber">
+						<form.AppField name="vatNumber">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="vatNumber">Numéro de TVA</FormLabel>
-									<Input
-										disabled={isPending}
-										id="vatNumber"
-										name="vatNumber"
-										placeholder="FR12345678900"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Numéro de TVA"
+									disabled={isPending}
+									placeholder="Numéro de TVA"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -648,23 +467,15 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					className="col-span-full"
 				>
 					<div className="space-y-4">
-						<form.Field name="notes">
+						<form.AppField name="notes">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="notes">Notes</FormLabel>
-									<Textarea
-										disabled={isPending}
-										id="notes"
-										name="notes"
-										placeholder="Informations complémentaires sur le fournisseur"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="min-h-[120px]"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.TextareaField
+									label="Notes"
+									disabled={isPending}
+									placeholder="Notes"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 			</FormLayout>

@@ -1,7 +1,7 @@
 "use client";
 
+import { fieldContext, formContext } from "@/shared/lib/form-context";
 import { createFormHook } from "@tanstack/react-form";
-import { fieldContext, formContext } from "./form-context";
 import { InputField } from "./input-field";
 import { SelectField } from "./select-field";
 import { TextareaField } from "./textarea-field";

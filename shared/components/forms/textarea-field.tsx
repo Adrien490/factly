@@ -2,8 +2,8 @@
 
 import { Textarea } from "@/shared/components/ui/textarea";
 import { FieldInfo } from "..";
+import { useFieldContext } from "../../lib/form-context";
 import { FormLabel } from "../ui";
-import { useFieldContext } from "./form-context";
 
 interface TextareaFieldProps {
 	disabled?: boolean;
