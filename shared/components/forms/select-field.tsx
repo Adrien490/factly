@@ -26,7 +26,7 @@ export const SelectField = <T extends string>({
 	required,
 	options,
 }: SelectFieldProps<T>) => {
-	const field = useFieldContext<T>();
+	const field = useFieldContext<string>();
 
 	return (
 		<div className="space-y-1.5">
@@ -35,11 +35,16 @@ export const SelectField = <T extends string>({
 				{required && <span className="text-destructive ml-1">*</span>}
 			</FormLabel>
 			<Select
+				name={field.name}
 				disabled={disabled}
 				value={field.state.value}
 				onValueChange={(value) => field.handleChange(value as T)}
 			>
-				<SelectTrigger id={field.name} className="w-full">
+				<SelectTrigger
+					id={field.name}
+					className="w-full"
+					onBlur={field.handleBlur}
+				>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>
