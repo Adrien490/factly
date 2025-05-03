@@ -1,7 +1,6 @@
 import { Button } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
-import { MiniDotsLoader } from "../../loaders";
 
 interface FormFooterProps {
 	isPending?: boolean;
@@ -61,7 +60,6 @@ export function FormFooter({
 					className="w-full sm:w-auto shadow-sm transition-all"
 					size="default"
 				>
-					{isPending && <MiniDotsLoader size="sm" color="default" />}
 					{submitLabel}
 				</Button>
 			</div>
