@@ -22,7 +22,7 @@ import {
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
-import { Client, ClientType } from "@prisma/client";
+import { AddressType, Client, ClientStatus, ClientType } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import {
 	Building,
@@ -37,9 +37,8 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
-import { createClient } from "../../actions/create-client";
-import { createClientSchema } from "../../schemas";
-import { formOpts } from "./constants";
+import { createClient } from "../actions/create-client";
+import { createClientSchema } from "../schemas";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -81,11 +80,32 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		undefined
 	);
 
-	console.log(state);
-
 	// TanStack Form setup
 	const form = useAppForm({
-		...formOpts(organizationId),
+		defaultValues: {
+			organizationId,
+			name: "",
+			reference: "",
+			email: "",
+			phone: "",
+			website: "",
+			clientType: ClientType.INDIVIDUAL as ClientType,
+			status: ClientStatus.LEAD as ClientStatus,
+			notes: "",
+			siren: "",
+			siret: "",
+			vatNumber: "",
+			// Adresse principale
+			addressType: AddressType.BILLING as AddressType,
+			addressLine1: "",
+			addressLine2: "",
+			postalCode: "",
+			city: "",
+			country: "France",
+			// Coordonnées géographiques
+			latitude: null as number | null,
+			longitude: null as number | null,
+		},
 
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),

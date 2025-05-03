@@ -19,11 +19,11 @@ import {
 	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
+import { AddressType, SupplierStatus, SupplierType } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Building, Globe, MapPin, Receipt, User, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useTransition } from "react";
-import { formOpts } from "./constants";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -39,7 +39,28 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 
 	// TanStack Form setup
 	const form = useAppForm({
-		...formOpts(organizationId),
+		defaultValues: {
+			organizationId,
+			name: "",
+			legalName: "",
+			email: "",
+			phone: "",
+			website: "",
+			siren: "",
+			siret: "",
+			vatNumber: "",
+			supplierType: SupplierType.MANUFACTURER,
+			status: SupplierStatus.ACTIVE,
+			notes: "",
+			addressType: AddressType.BILLING,
+			addressLine1: "",
+			addressLine2: "",
+			postalCode: "",
+			city: "",
+			country: "France",
+			latitude: null as number | null,
+			longitude: null as number | null,
+		},
 
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
