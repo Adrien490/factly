@@ -1,16 +1,6 @@
 "use client";
 
-import {
-	Button,
-	FormLabel,
-	Input,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-	Textarea,
-} from "@/shared/components/ui";
+import { Button, FormLabel, Input } from "@/shared/components/ui";
 
 import {
 	FormattedAddressResult,
@@ -22,22 +12,18 @@ import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
 	FormErrors,
-	FormFooter,
 	FormLayout,
 	FormSection,
+	useAppForm,
 } from "@/shared/components/forms";
+import { FormFooter } from "@/shared/components/forms/form-footer";
 import {
 	createToastCallbacks,
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
-import { Client, ClientStatus, ClientType } from "@prisma/client";
-import {
-	mergeForm,
-	Updater,
-	useForm,
-	useTransform,
-} from "@tanstack/react-form";
+import { Client, ClientType } from "@prisma/client";
+import { mergeForm, useTransform } from "@tanstack/react-form";
 import {
 	Building,
 	Clock,
@@ -98,7 +84,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	console.log(state);
 
 	// TanStack Form setup
-	const form = useForm({
+	const form = useAppForm({
 		...formOpts(organizationId),
 
 		transform: useTransform(
@@ -176,8 +162,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			console.error("Erreur lors de la génération de référence", error);
 		}
 	};
-
-	console.log(state);
 
 	return (
 		<form
@@ -277,7 +261,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.Field>
 
-						<form.Field
+						<form.AppField
 							name="name"
 							validators={{
 								onChange: ({ value }) => {
@@ -288,55 +272,27 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="name" className="flex items-center">
-										Nom
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										id="name"
-										disabled={isPending}
-										name="name"
-										placeholder="Nom du client ou de l'entreprise"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									disabled={isPending}
+									label="Nom"
+									placeholder="Nom du client ou de l'entreprise"
+									required
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="clientType">
+						<form.AppField name="clientType">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="clientType">
-										Type de client
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="clientType"
-										onValueChange={(value) => {
-											field.handleChange(value as Updater<ClientType>);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger id="clientType" className="w-full">
-											<SelectValue placeholder="Sélectionnez un type" />
-										</SelectTrigger>
-										<SelectContent>
-											{CLIENT_TYPES.map((type) => (
-												<SelectItem key={type.value} value={type.value}>
-													{type.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									disabled={isPending}
+									label="Type de client"
+									options={CLIENT_TYPES.map((type) => ({
+										value: type.value,
+										label: type.label,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -449,63 +405,36 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.Field>
 
-						<form.Field name="addressLine2">
+						<form.AppField name="addressLine2">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="addressLine2">
-										Adresse ligne 2 (optionnelle)
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="addressLine2"
-										name="addressLine2"
-										placeholder="Complément d'adresse, étage, etc."
-										value={field.state.value || ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									disabled={isPending}
+									label="Adresse ligne 2 (optionnelle)"
+									placeholder="Complément d'adresse, étage, etc."
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
 						<div className="grid grid-cols-2 gap-4">
-							<form.Field name="postalCode">
+							<form.AppField name="postalCode">
 								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="postalCode">Code postal</FormLabel>
-										<Input
-											disabled={isPending}
-											id="postalCode"
-											name="postalCode"
-											placeholder="Ex: 75001"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										{field.state.meta.errors.length > 0 && (
-											<p className="text-xs text-destructive mt-1.5">
-												{String(field.state.meta.errors[0])}
-											</p>
-										)}
-									</div>
+									<field.InputField
+										label="Code postal"
+										placeholder="Ex: 75001"
+										disabled={isPending}
+									/>
 								)}
-							</form.Field>
+							</form.AppField>
 
-							<form.Field name="city">
+							<form.AppField name="city">
 								{(field) => (
-									<div className="space-y-1.5">
-										<FormLabel htmlFor="city">Ville</FormLabel>
-										<Input
-											disabled={isPending}
-											id="city"
-											name="city"
-											placeholder="Ex: Paris"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										<FieldInfo field={field} />
-									</div>
+									<field.InputField
+										disabled={isPending}
+										label="Ville"
+										placeholder="Ex: Paris"
+									/>
 								)}
-							</form.Field>
+							</form.AppField>
 						</div>
 					</div>
 				</FormSection>
@@ -522,107 +451,61 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								<>
 									{clientType === ClientType.COMPANY ? (
 										<>
-											<form.Field name="siren">
-												{(sirenField) => (
-													<div className="space-y-1.5">
-														<FormLabel
-															htmlFor="siren"
-															className="flex items-center"
-														>
-															SIREN
-														</FormLabel>
-														<Input
-															disabled={isPending}
-															id="siren"
-															name="siren"
-															placeholder="9 chiffres (ex: 123456789)"
-															value={sirenField.state.value}
-															onChange={(e) =>
-																sirenField.handleChange(e.target.value)
-															}
-														/>
-														<p className="text-xs text-muted-foreground">
-															Identifiant d&apos;entreprise à 9 chiffres
-														</p>
-														<FieldInfo field={sirenField} />
-													</div>
+											<form.AppField name="siren">
+												{(field) => (
+													<field.InputField
+														disabled={isPending}
+														label="SIREN"
+														placeholder="9 chiffres (ex: 123456789)"
+													/>
 												)}
-											</form.Field>
+											</form.AppField>
 
-											<form.Field name="siret">
-												{(siretField) => (
-													<div className="space-y-1.5">
-														<FormLabel
-															htmlFor="siret"
-															className="flex items-center"
-														>
-															SIRET
-														</FormLabel>
-														<Input
-															disabled={isPending}
-															id="siret"
-															name="siret"
-															placeholder="14 chiffres (ex: 12345678900001)"
-															value={siretField.state.value}
-															onChange={(e) =>
-																siretField.handleChange(e.target.value)
-															}
-														/>
-														<p className="text-xs text-muted-foreground">
-															Identifiant d&apos;établissement à 14 chiffres
-														</p>
-														<FieldInfo field={siretField} />
-													</div>
+											<form.AppField name="siret">
+												{(field) => (
+													<field.InputField
+														disabled={isPending}
+														label="SIRET"
+														placeholder="14 chiffres (ex: 12345678900001)"
+													/>
 												)}
-											</form.Field>
+											</form.AppField>
 										</>
 									) : (
 										<>
-											<form.Field name="siret">
+											<form.AppField name="siret">
 												{(field) => (
-													<input
-														type="hidden"
-														name="siret"
-														value={field.state.value ?? ""}
+													<field.InputField
+														disabled={isPending}
+														label="SIRET"
+														placeholder="14 chiffres (ex: 12345678900001)"
 													/>
 												)}
-											</form.Field>
-											<form.Field name="siren">
+											</form.AppField>
+											<form.AppField name="siren">
 												{(field) => (
-													<input
-														type="hidden"
-														name="siren"
-														value={field.state.value ?? ""}
+													<field.InputField
+														disabled={isPending}
+														label="SIREN"
+														placeholder="9 chiffres (ex: 123456789)"
 													/>
 												)}
-											</form.Field>
+											</form.AppField>
 										</>
 									)}
 								</>
 							)}
 						</form.Subscribe>
 
-						<form.Field name="vatNumber">
+						<form.AppField name="vatNumber">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="vatNumber" className="flex items-center">
-										N° TVA
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="vatNumber"
-										name="vatNumber"
-										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<p className="text-xs text-muted-foreground">
-										Numéro de TVA intracommunautaire
-									</p>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									disabled={isPending}
+									label="N° TVA"
+									placeholder="Format FR + 11 caractères (ex: FR12345678900)"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -633,7 +516,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					icon={Tag}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="status"
 							validators={{
 								onChange: ({ value }) => {
@@ -643,34 +526,17 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="status">
-										Statut
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										onValueChange={(value) => {
-											field.handleChange(value as Updater<ClientStatus>);
-										}}
-										name="status"
-										value={field.state.value}
-									>
-										<SelectTrigger id="status" className="w-full">
-											<SelectValue placeholder="Sélectionnez un statut" />
-										</SelectTrigger>
-										<SelectContent>
-											{CLIENT_STATUSES.map((status) => (
-												<SelectItem key={status.value} value={status.value}>
-													{status.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Statut"
+									disabled={isPending}
+									options={CLIENT_STATUSES.map((status) => ({
+										value: status.value,
+										label: status.label,
+									}))}
+									placeholder="Sélectionnez un statut"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -681,7 +547,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					icon={User}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="email"
 							validators={{
 								onChange: ({ value }) => {
@@ -693,44 +559,25 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="email" className="flex items-center">
-										Email
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="email"
-										name="email"
-										type="email"
-										placeholder="contact@example.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="Ex: contact@example.com"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="phone">
+						<form.AppField name="phone">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="phone" className="flex items-center">
-										Téléphone
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="phone"
-										name="phone"
-										placeholder="Ex: +33 1 23 45 67 89"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="website"
 							validators={{
 								onChange: ({ value }) => {
@@ -747,20 +594,13 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="website">Site web</FormLabel>
-									<Input
-										disabled={isPending}
-										id="website"
-										name="website"
-										placeholder="Ex: https://www.example.com"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Site web"
+									disabled={isPending}
+									placeholder="Ex: https://www.example.com"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -770,23 +610,15 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					icon={Clock}
 				>
 					<div className="space-y-4">
-						<form.Field name="notes">
+						<form.AppField name="notes">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="notes">Notes</FormLabel>
-									<Textarea
-										disabled={isPending}
-										id="notes"
-										name="notes"
-										rows={4}
-										placeholder="Notes et informations complémentaires"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.TextareaField
+									disabled={isPending}
+									label="Notes"
+									placeholder="Notes et informations complémentaires"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 			</FormLayout>
