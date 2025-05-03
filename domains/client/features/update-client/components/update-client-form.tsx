@@ -1,35 +1,23 @@
 "use client";
 
-import {
-	Button,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components";
+import { Button } from "@/shared/components";
 import {
 	FieldInfo,
 	FormErrors,
 	FormFooter,
 	FormLayout,
 	FormSection,
+	useAppForm,
 } from "@/shared/components/forms";
 import { FormLabel } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import { Textarea } from "@/shared/components/ui/textarea";
 
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { GetClientReturn } from "@/domains/client/features/get-client";
 import { generateReference } from "@/shared/utils/generate-reference";
-import { ClientStatus, ClientType } from "@prisma/client";
-import {
-	mergeForm,
-	Updater,
-	useForm,
-	useTransform,
-} from "@tanstack/react-form";
+import { ClientType } from "@prisma/client";
+import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useUpdateClient } from "../hooks/use-update-client";
@@ -44,7 +32,7 @@ export function UpdateClientForm({ client }: Props) {
 	const { state, dispatch, isPending } = useUpdateClient();
 
 	// TanStack Form setup
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			id: state?.inputs?.id ?? client.id,
 			organizationId,
@@ -173,7 +161,7 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.Field>
 
-						<form.Field
+						<form.AppField
 							name="name"
 							validators={{
 								onChange: ({ value }) => {
@@ -184,55 +172,27 @@ export function UpdateClientForm({ client }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="name" className="flex items-center">
-										Nom
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="name"
-										name="name"
-										placeholder="Nom du client ou de l'entreprise"
-										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										className="border-input focus:ring-1 focus:ring-primary"
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Nom"
+									disabled={isPending}
+									placeholder="Nom du client ou de l'entreprise"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="clientType">
+						<form.AppField name="clientType">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="clientType">
-										Type de client
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										name="clientType"
-										onValueChange={(value) => {
-											field.handleChange(value as Updater<ClientType>);
-										}}
-										value={field.state.value}
-									>
-										<SelectTrigger id="clientType" className="w-full">
-											<SelectValue placeholder="Sélectionnez un type" />
-										</SelectTrigger>
-										<SelectContent>
-											{CLIENT_TYPES.map((type) => (
-												<SelectItem key={type.value} value={type.value}>
-													{type.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Type de client"
+									disabled={isPending}
+									placeholder="Sélectionnez un type"
+									options={CLIENT_TYPES.map((type) => ({
+										label: type.label,
+										value: type.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -248,59 +208,25 @@ export function UpdateClientForm({ client }: Props) {
 								<>
 									{clientType === ClientType.COMPANY ? (
 										<>
-											<form.Field name="siren">
-												{(sirenField) => (
-													<div className="space-y-1.5">
-														<FormLabel
-															htmlFor="siren"
-															className="flex items-center"
-														>
-															SIREN
-														</FormLabel>
-														<Input
-															disabled={isPending}
-															id="siren"
-															name="siren"
-															placeholder="9 chiffres (ex: 123456789)"
-															value={sirenField.state.value ?? ""}
-															onChange={(e) =>
-																sirenField.handleChange(e.target.value)
-															}
-														/>
-														<p className="text-xs text-muted-foreground">
-															Identifiant d&apos;entreprise à 9 chiffres
-														</p>
-														<FieldInfo field={sirenField} />
-													</div>
+											<form.AppField name="siren">
+												{(field) => (
+													<field.InputField
+														label="SIREN"
+														disabled={isPending}
+														placeholder="9 chiffres (ex: 123456789)"
+													/>
 												)}
-											</form.Field>
+											</form.AppField>
 
-											<form.Field name="siret">
-												{(siretField) => (
-													<div className="space-y-1.5">
-														<FormLabel
-															htmlFor="siret"
-															className="flex items-center"
-														>
-															SIRET
-														</FormLabel>
-														<Input
-															disabled={isPending}
-															id="siret"
-															name="siret"
-															placeholder="14 chiffres (ex: 12345678900001)"
-															value={siretField.state.value ?? ""}
-															onChange={(e) =>
-																siretField.handleChange(e.target.value)
-															}
-														/>
-														<p className="text-xs text-muted-foreground">
-															Identifiant d&apos;établissement à 14 chiffres
-														</p>
-														<FieldInfo field={siretField} />
-													</div>
+											<form.AppField name="siret">
+												{(field) => (
+													<field.InputField
+														label="SIRET"
+														disabled={isPending}
+														placeholder="14 chiffres (ex: 12345678900001)"
+													/>
 												)}
-											</form.Field>
+											</form.AppField>
 										</>
 									) : (
 										<>
@@ -328,27 +254,15 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.Subscribe>
 
-						<form.Field name="vatNumber">
+						<form.AppField name="vatNumber">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="vatNumber" className="flex items-center">
-										N° TVA
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="vatNumber"
-										name="vatNumber"
-										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<p className="text-xs text-muted-foreground">
-										Numéro de TVA intracommunautaire
-									</p>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Numéro de TVA"
+									disabled={isPending}
+									placeholder="Numéro de TVA (ex: FR1234567890)"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -359,7 +273,7 @@ export function UpdateClientForm({ client }: Props) {
 					icon={Tag}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="status"
 							validators={{
 								onChange: ({ value }) => {
@@ -369,34 +283,17 @@ export function UpdateClientForm({ client }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="status">
-										Statut
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<Select
-										disabled={isPending}
-										onValueChange={(value) => {
-											field.handleChange(value as Updater<ClientStatus>);
-										}}
-										name="status"
-										value={field.state.value}
-									>
-										<SelectTrigger id="status" className="w-full">
-											<SelectValue placeholder="Sélectionnez un statut" />
-										</SelectTrigger>
-										<SelectContent>
-											{CLIENT_STATUSES.map((status) => (
-												<SelectItem key={status.value} value={status.value}>
-													{status.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FieldInfo field={field} />
-								</div>
+								<field.SelectField
+									label="Statut"
+									disabled={isPending}
+									placeholder="Sélectionnez un statut"
+									options={CLIENT_STATUSES.map((status) => ({
+										label: status.label,
+										value: status.value,
+									}))}
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -407,7 +304,7 @@ export function UpdateClientForm({ client }: Props) {
 					icon={User}
 				>
 					<div className="space-y-4">
-						<form.Field
+						<form.AppField
 							name="email"
 							validators={{
 								onChange: ({ value }) => {
@@ -419,25 +316,15 @@ export function UpdateClientForm({ client }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="email" className="flex items-center">
-										Email
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="email"
-										name="email"
-										type="email"
-										placeholder="contact@example.com"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="contact@example.com"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field name="phone">
+						<form.AppField name="phone">
 							{(field) => (
 								<div className="space-y-1.5">
 									<FormLabel htmlFor="phone" className="flex items-center">
@@ -454,9 +341,9 @@ export function UpdateClientForm({ client }: Props) {
 									<FieldInfo field={field} />
 								</div>
 							)}
-						</form.Field>
+						</form.AppField>
 
-						<form.Field
+						<form.AppField
 							name="website"
 							validators={{
 								onChange: ({ value }) => {
@@ -473,20 +360,13 @@ export function UpdateClientForm({ client }: Props) {
 							}}
 						>
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="website">Site web</FormLabel>
-									<Input
-										disabled={isPending}
-										id="website"
-										name="website"
-										placeholder="Ex: https://www.example.com"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.InputField
+									label="Site web"
+									disabled={isPending}
+									placeholder="https://www.example.com"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 
@@ -496,23 +376,15 @@ export function UpdateClientForm({ client }: Props) {
 					icon={Clock}
 				>
 					<div className="space-y-4">
-						<form.Field name="notes">
+						<form.AppField name="notes">
 							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="notes">Notes</FormLabel>
-									<Textarea
-										disabled={isPending}
-										id="notes"
-										name="notes"
-										rows={4}
-										placeholder="Notes et informations complémentaires"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
+								<field.TextareaField
+									label="Notes"
+									disabled={isPending}
+									placeholder="Notes et informations complémentaires"
+								/>
 							)}
-						</form.Field>
+						</form.AppField>
 					</div>
 				</FormSection>
 			</FormLayout>
