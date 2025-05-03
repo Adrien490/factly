@@ -300,50 +300,6 @@ export function CreateOrganizationForm({
 						</form.AppField>
 
 						<form.AppField
-							name="legalForm"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "La forme juridique est requise";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.SelectField
-									label="Forme juridique"
-									disabled={isPending}
-									placeholder="Sélectionnez une forme juridique"
-									options={LEGAL_FORM_OPTIONS.map((option) => ({
-										label: option.label,
-										value: option.value,
-									}))}
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="legalForm"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "La forme juridique est requise";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.SelectField
-									label="Forme juridique"
-									disabled={isPending}
-									placeholder="Sélectionnez une forme juridique"
-									options={LEGAL_FORM_OPTIONS.map((option) => ({
-										label: option.label,
-										value: option.value,
-									}))}
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
 							name="email"
 							validators={{
 								onChange: ({ value }) => {
