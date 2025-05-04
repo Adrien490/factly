@@ -75,7 +75,7 @@ export async function getAddresses(
 		}
 
 		// Appel à la fonction avec cache
-		return await fetchAddresses(validatedParams, session.user.id);
+		return await fetchAddresses(validatedParams);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error("Invalid parameters");

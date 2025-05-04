@@ -15,27 +15,34 @@ import { buildFilterConditions } from "./build-filter-conditions";
  * Version sans pagination pour récupérer toutes les adresses d'un client ou fournisseur
  */
 export async function fetchAddresses(
-	params: z.infer<typeof getAddressesSchema>,
-	userId: string
+	params: z.infer<typeof getAddressesSchema>
 ): Promise<GetAddressesReturn> {
 	"use cache";
 
 	// Tag de base
 	if (params.clientId) {
-		cacheTag(`client:${params.clientId}:addresses:user:${userId}`);
+		cacheTag(
+			`organizations:${params.organizationId}:clients:${params.clientId}:addresses`
+		);
 	}
 
 	if (params.supplierId) {
-		cacheTag(`supplier:${params.supplierId}:addresses:user:${userId}`);
+		cacheTag(
+			`organizations:${params.organizationId}:suppliers:${params.supplierId}:addresses`
+		);
 	}
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`addresses:search:${params.search}`);
+		cacheTag(
+			`organizations:${params.organizationId}:addresses:search:${params.search}`
+		);
 	}
 
 	// Tag pour le tri
-	cacheTag(`addresses:sort:${params.sortBy}:${params.sortOrder}`);
+	cacheTag(
+		`organizations:${params.organizationId}:addresses:sort:${params.sortBy}:${params.sortOrder}`
+	);
 
 	// Durée de vie du cache
 	cacheLife({
