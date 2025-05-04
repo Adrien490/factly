@@ -21,8 +21,10 @@ import {
 	SUPPLIER_TYPES,
 } from "@/domains/supplier/constants";
 import { SelectionProvider } from "@/shared/contexts";
+import { SupplierStatus } from "@prisma/client";
 import { GetSuppliersReturn } from "../../types";
-import { SupplierRowActions } from "./components/supplier-row-actions";
+import { ArchivedSupplierActions } from "./components/archived-supplier-actions";
+import { SupplierActions } from "./components/supplier-actions";
 
 export interface SupplierDataTableProps {
 	suppliersPromise: Promise<GetSuppliersReturn>;
@@ -106,6 +108,8 @@ export function SupplierDataTable({
 						const statusOption = SUPPLIER_STATUSES.find(
 							(option) => option.value === supplier.status
 						);
+
+						const isArchived = supplier.status === SupplierStatus.ARCHIVED;
 
 						return (
 							<TableRow key={supplier.id} role="row" tabIndex={0}>
@@ -201,7 +205,11 @@ export function SupplierDataTable({
 									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="flex justify-end">
-									<SupplierRowActions supplier={supplier} />
+									{isArchived ? (
+										<ArchivedSupplierActions supplier={supplier} />
+									) : (
+										<SupplierActions supplier={supplier} />
+									)}
 								</TableCell>
 							</TableRow>
 						);
