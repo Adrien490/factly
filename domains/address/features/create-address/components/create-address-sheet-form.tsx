@@ -1,6 +1,6 @@
 "use client";
 
-import { ADDRESS_TYPES, COUNTRIES } from "@/domains/address/constants";
+import { AddressTypeOption, COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -21,21 +21,19 @@ import { Address, AddressType, Country } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { title } from "process";
 import { ReactNode, use, useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { createAddress } from "../actions/create-address";
 import { createAddressSchema } from "../schemas";
 
 interface CreateAddressSheetFormProps {
-	/**
-	 * Élément déclencheur du Sheet, si non fourni un bouton par défaut sera utilisé
-	 */
+	addressTypes: AddressTypeOption[];
 	children?: ReactNode;
 	searchAddressPromise: Promise<SearchAddressReturn>;
 }
 
 export function CreateAddressSheetForm({
+	addressTypes,
 	children,
 	searchAddressPromise,
 }: CreateAddressSheetFormProps) {
@@ -150,9 +148,9 @@ export function CreateAddressSheetForm({
 			<SheetTrigger asChild>
 				{children || <Button className="shrink-0">Nouvelle adresse</Button>}
 			</SheetTrigger>
-			<SheetContent>
+			<SheetContent className="">
 				<SheetHeader>
-					<SheetTitle>{title}</SheetTitle>
+					<SheetTitle>Nouvelle adresse</SheetTitle>
 				</SheetHeader>
 
 				<form
@@ -233,7 +231,7 @@ export function CreateAddressSheetForm({
 										label="Type d'adresse"
 										required
 										disabled={isPending}
-										options={ADDRESS_TYPES.map((type) => ({
+										options={addressTypes.map((type) => ({
 											value: type.value,
 											label: type.label,
 										}))}
@@ -436,15 +434,13 @@ export function CreateAddressSheetForm({
 					{/* Bouton de soumission */}
 					<form.Subscribe selector={(state) => state.canSubmit}>
 						{(canSubmit) => (
-							<div className="flex justify-end mt-6 py-4 border-t border-border">
-								<Button
-									type="submit"
-									className="w-full"
-									disabled={!canSubmit || isPending}
-								>
-									Créer l&apos;adresse
-								</Button>
-							</div>
+							<Button
+								type="submit"
+								className="w-full mt-4"
+								disabled={!canSubmit || isPending}
+							>
+								Créer l&apos;adresse
+							</Button>
 						)}
 					</form.Subscribe>
 				</form>

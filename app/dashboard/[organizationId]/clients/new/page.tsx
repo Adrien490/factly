@@ -35,18 +35,6 @@ export default async function NewClientPage({
 		lon,
 	} = await searchParams;
 
-	// Construire les paramètres de recherche
-	const searchAddressParams = {
-		query: q,
-		...(postcode && { postcode }),
-		...(citycode && { citycode }),
-		...(type && { type }),
-		...(limit && { limit: parseInt(limit, 10) }),
-		...(autocomplete === "0" && { autocomplete: false }),
-		...(lat && { lat: parseFloat(lat) }),
-		...(lon && { lon: parseFloat(lon) }),
-	};
-
 	return (
 		<PageContainer>
 			{/* En-tête */}
@@ -59,7 +47,16 @@ export default async function NewClientPage({
 
 			{/* Contenu principal */}
 			<CreateClientForm
-				searchAddressPromise={searchAddress(searchAddressParams)}
+				searchAddressPromise={searchAddress({
+					query: q,
+					...(postcode && { postcode }),
+					...(citycode && { citycode }),
+					...(type && { type }),
+					...(limit && { limit: parseInt(limit, 10) }),
+					...(autocomplete === "0" && { autocomplete: false }),
+					...(lat && { lat: parseFloat(lat) }),
+					...(lon && { lon: parseFloat(lon) }),
+				})}
 			/>
 		</PageContainer>
 	);

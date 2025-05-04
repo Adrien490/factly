@@ -17,16 +17,31 @@ type Props = {
 		clientId: string;
 	}>;
 	searchParams: Promise<{
-		perPage?: string;
-		page?: string;
+		postcode?: string;
+		citycode?: string;
+		limit?: string;
+		autocomplete?: string;
+		lat?: string;
+		lon?: string;
 		sortBy?: string;
 		sortOrder?: SortOrder;
+		q?: string;
 		search?: string;
-		type?: string;
+		type?: "housenumber" | "street" | "locality" | "municipality";
 	}>;
 };
 export default async function AddressesPage({ searchParams, params }: Props) {
-	const { sortOrder, search, type } = await searchParams;
+	const {
+		q = "",
+		postcode,
+		citycode,
+		limit,
+		type,
+		search,
+		autocomplete,
+		lat,
+		lon,
+	} = await searchParams;
 	const { clientId } = await params;
 
 	const filters = {
@@ -57,12 +72,27 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 							label="Type"
 							options={ADDRESS_TYPES}
 						/>
-						<CreateAddressSheetForm
-							searchAddressPromise={searchAddress({
-								query: "",
-								limit: 10,
-							})}
-						/>
+						<Suspense fallback={<></>}>
+							<CreateAddressSheetForm
+								addressTypes={ADDRESS_TYPES.filter(
+									(type) =>
+										type.value !== AddressType.COMMERCIAL &&
+										type.value !== AddressType.WAREHOUSE &&
+										type.value !== AddressType.PRODUCTION &&
+										type.value !== AddressType.HEADQUARTERS
+								)}
+								searchAddressPromise={searchAddress({
+									query: q,
+									...(postcode && { postcode }),
+									...(citycode && { citycode }),
+									...(type && { type }),
+									...(limit && { limit: parseInt(limit, 10) }),
+									...(autocomplete === "0" && { autocomplete: false }),
+									...(lat && { lat: parseFloat(lat) }),
+									...(lon && { lon: parseFloat(lon) }),
+								})}
+							/>
+						</Suspense>
 					</>
 				}
 			/>
@@ -73,7 +103,7 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						search,
 						clientId,
 						sortBy: "createdAt",
-						sortOrder: (sortOrder as SortOrder) || "desc",
+						sortOrder: "desc",
 						filters: Object.entries(filters).reduce((acc, [key, value]) => {
 							if (value) {
 								// Préserver les tableaux et les strings
