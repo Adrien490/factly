@@ -22,8 +22,8 @@ const CLIENT_TYPE_DESCRIPTIONS: Record<ClientType, string> = {
 };
 
 const CLIENT_TYPE_COLORS: Record<ClientType, string> = {
-	[ClientType.INDIVIDUAL]: "#0ea5e9", // Bleu ciel
-	[ClientType.COMPANY]: "#0891b2", // Bleu-vert (cyan)
+	[ClientType.INDIVIDUAL]: "#6366f1", // Indigo
+	[ClientType.COMPANY]: "#f59e0b", // Ambre
 };
 
 /**
