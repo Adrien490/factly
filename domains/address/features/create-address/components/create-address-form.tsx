@@ -1,13 +1,6 @@
 "use client";
 
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shared/components";
-import { Button, FormLabel, Input } from "@/shared/components/ui";
+import { Button, FormLabel } from "@/shared/components/ui";
 
 import { ADDRESS_TYPES, COUNTRIES } from "@/domains/address/constants";
 import {
@@ -15,15 +8,10 @@ import {
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
 import { Autocomplete } from "@/shared/components/autocomplete";
-import { FieldInfo, FormErrors } from "@/shared/components/forms";
+import { FieldInfo, FormErrors, useAppForm } from "@/shared/components/forms";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Address, AddressType, Country } from "@prisma/client";
-import {
-	mergeForm,
-	Updater,
-	useForm,
-	useTransform,
-} from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
@@ -44,6 +32,8 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 	const supplierId = params.supplierId as string;
 
 	const [isAddressLoading, startAddressTransition] = useTransition();
+	const router = useRouter();
+
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			createAddress,
@@ -57,24 +47,20 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 		),
 		undefined
 	);
-	const router = useRouter();
-
-	console.log("state", state);
 
 	// TanStack Form setup
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			addressType: AddressType.BILLING,
+			addressType: AddressType.BILLING as AddressType,
 			addressLine1: "",
 			addressLine2: "",
 			postalCode: "",
 			city: "",
-			country: Country.FRANCE,
+			country: Country.FRANCE as Country,
 			isDefault: false,
 			latitude: null as number | null,
 			longitude: null as number | null,
-
 			clientId: clientId || undefined,
 			supplierId: supplierId || undefined,
 		},
@@ -135,23 +121,16 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 		const url = new URLSearchParams();
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
-			// Construire l'URL en fonction du contexte
-			let baseUrl = pathname;
-			if (clientId) {
-				baseUrl += `/clients/${clientId}/addresses/new`;
-			} else if (supplierId) {
-				baseUrl += `/suppliers/${supplierId}/addresses/new`;
-			} else {
-				baseUrl += `/addresses/new`;
-			}
-			router.push(`${baseUrl}?${url.toString()}`);
+			router.push(`${pathname}?${url.toString()}`, {
+				scroll: false,
+			});
 		});
 	};
 
 	return (
 		<form
 			action={dispatch}
-			className="space-y-6"
+			className="mt-2"
 			onSubmit={() => form.handleSubmit()}
 		>
 			{/* Erreurs globales du formulaire */}
@@ -160,10 +139,28 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<input type="hidden" name="organizationId" value={organizationId} />
-			{clientId && <input type="hidden" name="clientId" value={clientId} />}
+			<form.AppField name="organizationId">
+				{(field) => (
+					<input
+						type="hidden"
+						name="organizationId"
+						value={field.state.value}
+					/>
+				)}
+			</form.AppField>
+			{clientId && (
+				<form.AppField name="clientId">
+					{(field) => (
+						<input type="hidden" name="clientId" value={field.state.value} />
+					)}
+				</form.AppField>
+			)}
 			{supplierId && (
-				<input type="hidden" name="supplierId" value={supplierId} />
+				<form.AppField name="supplierId">
+					{(field) => (
+						<input type="hidden" name="supplierId" value={field.state.value} />
+					)}
+				</form.AppField>
 			)}
 			<form.Field name="latitude">
 				{(field) => (
@@ -184,193 +181,160 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 				)}
 			</form.Field>
 
-			<div className="space-y-4">
-				<form.Field name="addressType">
-					{(field) => (
-						<div className="space-y-1.5">
-							<FormLabel htmlFor="addressType">
-								Type d&apos;adresse
-								<span className="text-destructive ml-1">*</span>
-							</FormLabel>
-							<Select
+			<div className="space-y-5 overflow-y-auto max-h-[calc(100vh-16rem)]">
+				{/* Type d'adresse et option par défaut */}
+				<div className="space-y-4">
+					<form.AppField
+						name="addressType"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Le type d'adresse est requis";
+								return undefined;
+							},
+						}}
+					>
+						{(field) => (
+							<field.SelectField
+								label="Type d'adresse"
+								required
 								disabled={isPending}
-								name="addressType"
-								onValueChange={(value) => {
-									field.handleChange(
-										value as unknown as Updater<typeof field.state.value>
-									);
-								}}
-								value={field.state.value}
-								defaultValue={AddressType.BILLING}
-							>
-								<SelectTrigger id="addressType" className="w-full">
-									<SelectValue placeholder="Sélectionnez un type" />
-								</SelectTrigger>
-								<SelectContent>
-									{ADDRESS_TYPES.map((addressType) => (
-										<SelectItem
-											key={addressType.value}
-											value={addressType.value}
-										>
-											{addressType.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FieldInfo field={field} />
-						</div>
-					)}
-				</form.Field>
-
-				<form.Field name="isDefault">
-					{(field) => (
-						<div className="space-y-1.5">
-							<div className="flex items-center space-x-2">
-								<input
-									disabled={isPending}
-									type="checkbox"
-									id="isDefault"
-									name="isDefault"
-									checked={field.state.value || false}
-									onChange={(e) => field.handleChange(e.target.checked)}
-									className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-								/>
-								<FormLabel htmlFor="isDefault" className="cursor-pointer">
-									Définir comme adresse par défaut
-								</FormLabel>
-							</div>
-							<FieldInfo field={field} />
-						</div>
-					)}
-				</form.Field>
-			</div>
-
-			<div className="space-y-4">
-				<form.Field
-					name="addressLine1"
-					validators={{
-						onChangeAsyncDebounceMs: 500,
-						onChange: ({ value }) => {
-							if (!value) return "L'adresse est requise";
-							return undefined;
-						},
-						onChangeAsync: async ({ value }) => {
-							if (
-								form.state.isSubmitting ||
-								!value ||
-								value.length < 3 ||
-								!/^[a-zA-Z0-9]/.test(value)
-							) {
-								return;
-							}
-
-							const url = new URLSearchParams();
-							url.set("q", value);
-
-							// Utiliser le code postal s'il est disponible
-							const postalCode = form.getFieldValue("postalCode");
-							if (postalCode) {
-								url.set("postcode", postalCode);
-							}
-
-							// Construire l'URL en fonction du contexte
-
-							startAddressTransition(() => {
-								router.push(`${pathname}?${url.toString()}`, {
-									scroll: false,
-								});
-							});
-						},
-					}}
-				>
-					{(field) => (
-						<div className="space-y-1.5">
-							<FormLabel htmlFor="addressSearchField">
-								Rechercher une adresse
-								<span className="text-destructive ml-1">*</span>
-							</FormLabel>
-							<div className="relative">
-								<Autocomplete
-									disabled={isPending}
-									items={response.results}
-									onSelect={(item) =>
-										handleAddressSelect(item as FormattedAddressResult)
-									}
-									placeholder="Rechercher une adresse"
-									value={field.state.value}
-									onChange={(value: string) => field.handleChange(value)}
-									className="w-full"
-									name="addressLine1"
-									getItemLabel={(item) => item.label}
-									getItemDescription={(item) =>
-										item.postcode && `${item.postcode} ${item.city}`
-									}
-									isLoading={isAddressLoading}
-									inputClassName="border-input focus:ring-1 focus:ring-primary pr-20"
-								/>
-								{/* Actions dans le champ */}
-								<div className="absolute right-3 top-0 h-full flex items-center gap-1">
-									{/* Bouton pour effacer la recherche, visible uniquement si une valeur est présente */}
-									{field.state.value && (
-										<button
-											type="button"
-											className="h-5 w-5 rounded-full hover:bg-muted flex items-center justify-center"
-											onClick={handleClearAddressSearch}
-											aria-label="Effacer la recherche d'adresse"
-											title="Effacer la recherche d'adresse"
-										>
-											<X
-												className="h-3 w-3 text-muted-foreground"
-												aria-hidden="true"
-											/>
-										</button>
-									)}
-								</div>
-							</div>
-							{field.state.value && field.state.value.length < 3 && (
-								<p
-									className="text-xs text-muted-foreground"
-									id="addressLine1-info"
-									role="status"
-								>
-									Saisissez au moins 3 caractères pour lancer la recherche
-								</p>
-							)}
-							{field.state.value && !/^[a-zA-Z0-9]/.test(field.state.value) && (
-								<p
-									className="text-xs text-amber-500"
-									id="addressLine1-warning"
-									role="alert"
-								>
-									La recherche doit commencer par une lettre ou un chiffre
-								</p>
-							)}
-							<FieldInfo field={field} />
-						</div>
-					)}
-				</form.Field>
-
-				<form.Field name="addressLine2">
-					{(field) => (
-						<div className="space-y-1.5">
-							<FormLabel htmlFor="addressLine2">
-								Complément d&apos;adresse
-							</FormLabel>
-							<Input
-								disabled={isPending}
-								id="addressLine2"
-								name="addressLine2"
-								placeholder="Appartement, étage, etc."
-								value={field.state.value || ""}
-								onChange={(e) => field.handleChange(e.target.value)}
+								options={ADDRESS_TYPES.map((type) => ({
+									value: type.value,
+									label: type.label,
+								}))}
 							/>
-							<FieldInfo field={field} />
-						</div>
-					)}
-				</form.Field>
+						)}
+					</form.AppField>
 
-				<div className="grid grid-cols-2 gap-4">
+					<form.AppField name="isDefault">
+						{(field) => (
+							<field.CheckboxField
+								label="Définir comme adresse par défaut"
+								disabled={isPending}
+							/>
+						)}
+					</form.AppField>
+				</div>
+
+				{/* Recherche d'adresse */}
+				<div className="space-y-4">
 					<form.Field
+						name="addressLine1"
+						validators={{
+							onChangeAsyncDebounceMs: 500,
+							onChange: ({ value }) => {
+								if (!value) return "L'adresse est requise";
+								return undefined;
+							},
+							onChangeAsync: async ({ value }) => {
+								if (
+									form.state.isSubmitting ||
+									!value ||
+									value.length < 3 ||
+									!/^[a-zA-Z0-9]/.test(value)
+								) {
+									return;
+								}
+
+								const url = new URLSearchParams();
+								url.set("q", value);
+
+								// Utiliser le code postal s'il est disponible
+								const postalCode = form.getFieldValue("postalCode");
+								if (postalCode) {
+									url.set("postcode", postalCode);
+								}
+
+								startAddressTransition(() => {
+									router.push(`${pathname}?${url.toString()}`, {
+										scroll: false,
+									});
+								});
+							},
+						}}
+					>
+						{(field) => (
+							<div className="space-y-1.5">
+								<FormLabel htmlFor="addressSearchField">
+									Rechercher une adresse
+									<span className="text-destructive ml-1">*</span>
+								</FormLabel>
+								<div className="relative">
+									<Autocomplete
+										disabled={isPending}
+										items={response.results}
+										onSelect={(item) =>
+											handleAddressSelect(item as FormattedAddressResult)
+										}
+										placeholder="Rechercher une adresse"
+										value={field.state.value}
+										onChange={(value: string) => field.handleChange(value)}
+										className="w-full"
+										name="addressLine1"
+										getItemLabel={(item) => item.label}
+										getItemDescription={(item) =>
+											item.postcode && `${item.postcode} ${item.city}`
+										}
+										isLoading={isAddressLoading}
+										inputClassName="border-input focus:ring-1 focus:ring-primary pr-20"
+									/>
+									{/* Actions dans le champ */}
+									<div className="absolute right-3 top-0 h-full flex items-center gap-1">
+										{/* Bouton pour effacer la recherche, visible uniquement si une valeur est présente */}
+										{field.state.value && (
+											<button
+												type="button"
+												className="h-5 w-5 rounded-full hover:bg-muted flex items-center justify-center"
+												onClick={handleClearAddressSearch}
+												aria-label="Effacer la recherche d'adresse"
+												title="Effacer la recherche d'adresse"
+											>
+												<X
+													className="h-3 w-3 text-muted-foreground"
+													aria-hidden="true"
+												/>
+											</button>
+										)}
+									</div>
+								</div>
+								{field.state.value && field.state.value.length < 3 && (
+									<p
+										className="text-xs text-muted-foreground"
+										id="addressLine1-info"
+										role="status"
+									>
+										Saisissez au moins 3 caractères pour lancer la recherche
+									</p>
+								)}
+								{field.state.value &&
+									!/^[a-zA-Z0-9]/.test(field.state.value) && (
+										<p
+											className="text-xs text-amber-500"
+											id="addressLine1-warning"
+											role="alert"
+										>
+											La recherche doit commencer par une lettre ou un chiffre
+										</p>
+									)}
+								<FieldInfo field={field} />
+							</div>
+						)}
+					</form.Field>
+
+					<form.AppField name="addressLine2">
+						{(field) => (
+							<field.InputField
+								label="Complément d'adresse"
+								placeholder="Appartement, étage, etc."
+								disabled={isPending}
+							/>
+						)}
+					</form.AppField>
+				</div>
+
+				{/* Code postal et ville */}
+				<div className="grid grid-cols-2 gap-4">
+					<form.AppField
 						name="postalCode"
 						validators={{
 							onChange: ({ value }) => {
@@ -380,25 +344,16 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 						}}
 					>
 						{(field) => (
-							<div className="space-y-1.5">
-								<FormLabel htmlFor="postalCode">
-									Code postal
-									<span className="text-destructive ml-1">*</span>
-								</FormLabel>
-								<Input
-									disabled={isPending}
-									id="postalCode"
-									name="postalCode"
-									placeholder="Code postal"
-									value={field.state.value || ""}
-									onChange={(e) => field.handleChange(e.target.value)}
-								/>
-								<FieldInfo field={field} />
-							</div>
+							<field.InputField
+								label="Code postal"
+								placeholder="Code postal"
+								required
+								disabled={isPending}
+							/>
 						)}
-					</form.Field>
+					</form.AppField>
 
-					<form.Field
+					<form.AppField
 						name="city"
 						validators={{
 							onChange: ({ value }) => {
@@ -408,26 +363,18 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 						}}
 					>
 						{(field) => (
-							<div className="space-y-1.5">
-								<FormLabel htmlFor="city">
-									Ville
-									<span className="text-destructive ml-1">*</span>
-								</FormLabel>
-								<Input
-									disabled={isPending}
-									id="city"
-									name="city"
-									placeholder="Ville"
-									value={field.state.value || ""}
-									onChange={(e) => field.handleChange(e.target.value)}
-								/>
-								<FieldInfo field={field} />
-							</div>
+							<field.InputField
+								label="Ville"
+								placeholder="Ville"
+								required
+								disabled={isPending}
+							/>
 						)}
-					</form.Field>
+					</form.AppField>
 				</div>
 
-				<form.Field
+				{/* Pays */}
+				<form.AppField
 					name="country"
 					validators={{
 						onChange: ({ value }) => {
@@ -437,44 +384,31 @@ export function CreateAddressForm({ searchAddressPromise }: Props) {
 					}}
 				>
 					{(field) => (
-						<div className="space-y-1.5">
-							<FormLabel htmlFor="country">
-								Pays
-								<span className="text-destructive ml-1">*</span>
-							</FormLabel>
-							<Select
-								disabled={isPending}
-								name="country"
-								value={field.state.value}
-								onValueChange={(value) =>
-									field.handleChange(value as Updater<typeof field.state.value>)
-								}
-							>
-								<SelectTrigger id="country" className="w-full">
-									<SelectValue placeholder="Sélectionnez un pays" />
-								</SelectTrigger>
-								<SelectContent>
-									{COUNTRIES.map((country) => (
-										<SelectItem key={country.value} value={country.value}>
-											{country.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FieldInfo field={field} />
-						</div>
+						<field.SelectField
+							label="Pays"
+							required
+							disabled={isPending}
+							options={COUNTRIES.map((country) => ({
+								value: country.value,
+								label: country.label,
+							}))}
+						/>
 					)}
-				</form.Field>
+				</form.AppField>
 			</div>
+
+			{/* Bouton de soumission */}
 			<form.Subscribe selector={(state) => state.canSubmit}>
 				{(canSubmit) => (
-					<Button
-						type="submit"
-						className="w-full"
-						disabled={!canSubmit || isPending}
-					>
-						Créer l&apos;adresse
-					</Button>
+					<div className="flex justify-end mt-6 py-4 border-t border-border">
+						<Button
+							type="submit"
+							className="w-full"
+							disabled={!canSubmit || isPending}
+						>
+							Créer l&apos;adresse
+						</Button>
+					</div>
 				)}
 			</form.Subscribe>
 		</form>

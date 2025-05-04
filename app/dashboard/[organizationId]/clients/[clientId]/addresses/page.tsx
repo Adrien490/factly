@@ -1,9 +1,12 @@
 import { ADDRESS_TYPES } from "@/domains/address/constants/address-types";
-import { getAddresses } from "@/domains/address/features";
+import {
+	CreateAddressSheetForm,
+	getAddresses,
+	searchAddress,
+} from "@/domains/address/features";
 import { AddressList } from "@/domains/address/features/get-addresses/components";
 import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list/components/address-list-skeleton/address-list-skeleton";
 import {
-	Button,
 	FilterSelect,
 	SearchForm,
 	Toolbar,
@@ -11,7 +14,6 @@ import {
 } from "@/shared/components";
 import { SortOrder, ViewType } from "@/shared/types";
 import { AddressType } from "@prisma/client";
-import Link from "next/link";
 import { Suspense } from "react";
 
 type Props = {
@@ -31,7 +33,7 @@ type Props = {
 };
 export default async function AddressesPage({ searchParams, params }: Props) {
 	const { sortOrder, view, search, type } = await searchParams;
-	const { organizationId, clientId } = await params;
+	const { clientId } = await params;
 
 	const filters = {
 		type: type as AddressType,
@@ -62,14 +64,12 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 							label="Type"
 							options={ADDRESS_TYPES}
 						/>
-
-						<Button className="shrink-0" asChild>
-							<Link
-								href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
-							>
-								Nouvelle adresse
-							</Link>
-						</Button>
+						<CreateAddressSheetForm
+							searchAddressPromise={searchAddress({
+								query: "",
+								limit: 10,
+							})}
+						/>
 					</>
 				}
 			/>
