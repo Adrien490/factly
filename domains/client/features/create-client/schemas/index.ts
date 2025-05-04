@@ -8,7 +8,6 @@ import { z } from "zod";
 export const createClientSchema = z.object({
 	// Identifiants
 	organizationId: z.string().min(1, "L'organisation est requise"),
-	userId: z.string().min(1, "L'utilisateur est requis"),
 
 	// Informations de base
 	reference: z
