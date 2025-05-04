@@ -5,14 +5,9 @@ import {
 	searchAddress,
 } from "@/domains/address/features";
 import { AddressList } from "@/domains/address/features/get-addresses/components";
-import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list/components/address-list-skeleton/address-list-skeleton";
-import {
-	FilterSelect,
-	SearchForm,
-	Toolbar,
-	ViewToggle,
-} from "@/shared/components";
-import { SortOrder, ViewType } from "@/shared/types";
+import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list-skeleton";
+import { FilterSelect, SearchForm, Toolbar } from "@/shared/components";
+import { SortOrder } from "@/shared/types";
 import { AddressType } from "@prisma/client";
 import { Suspense } from "react";
 
@@ -28,11 +23,10 @@ type Props = {
 		sortOrder?: SortOrder;
 		search?: string;
 		type?: string;
-		view?: string;
 	}>;
 };
 export default async function AddressesPage({ searchParams, params }: Props) {
-	const { sortOrder, view, search, type } = await searchParams;
+	const { sortOrder, search, type } = await searchParams;
 	const { clientId } = await params;
 
 	const filters = {
@@ -54,7 +48,6 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 				}
 				rightContent={
 					<>
-						<ViewToggle />
 						<span className="text-xs font-medium text-muted-foreground px-1">
 							Filtrer par:
 						</span>
@@ -76,7 +69,6 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 
 			<Suspense fallback={<AddressListSkeleton />}>
 				<AddressList
-					viewType={view as ViewType}
 					addressesPromise={getAddresses({
 						search,
 						clientId,

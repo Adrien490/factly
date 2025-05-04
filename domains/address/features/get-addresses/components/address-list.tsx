@@ -7,21 +7,18 @@ import {
 	DropdownMenuTrigger,
 	EmptyState,
 } from "@/shared/components";
-import { cn } from "@/shared/utils";
 import { Country } from "@prisma/client";
 import { MapPin, MoreHorizontal } from "lucide-react";
 import { use } from "react";
-import { AddressListProps } from "./types";
+import { GetAddressesReturn } from "../types";
 
-// Fonction utilitaire pour traduire les types d'adresse en françai
+interface AddressListProps {
+	addressesPromise: Promise<GetAddressesReturn>;
+	clientId?: string;
+	supplierId?: string;
+}
 
-export function AddressList({
-	viewType = "grid",
-	addressesPromise,
-	clientId,
-	supplierId,
-}: AddressListProps) {
-	console.log(clientId, supplierId);
+export function AddressList({ addressesPromise }: AddressListProps) {
 	// Utilisation du hook use pour résoudre la Promise
 	const addresses = use(addressesPromise);
 
@@ -32,13 +29,7 @@ export function AddressList({
 	}
 
 	return (
-		<div
-			className={cn(
-				viewType === "grid"
-					? "grid grid-cols-1 md:grid-cols-2 gap-3"
-					: "space-y-2"
-			)}
-		>
+		<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
 			{addresses.map((address) => {
 				const {
 					id,
