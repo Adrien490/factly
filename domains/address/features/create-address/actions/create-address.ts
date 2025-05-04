@@ -156,16 +156,16 @@ export const createAddress: ServerAction<
 		// Tags spécifiques au client ou fournisseur
 		if (clientId) {
 			revalidateTag(`organizations:${validatedOrgId}:clients`);
-			revalidateTag(`organizations:${validatedOrgId}:client:${clientId}`);
+			revalidateTag(`organizations:${validatedOrgId}:clients:${clientId}`);
 			revalidateTag(
 				`organizations:${validatedOrgId}:client:${clientId}:addresses`
 			);
 		}
 		if (supplierId) {
 			revalidateTag(`organizations:${validatedOrgId}:suppliers`);
-			revalidateTag(`organizations:${validatedOrgId}:supplier:${supplierId}`);
+			revalidateTag(`organizations:${validatedOrgId}:suppliers:${supplierId}`);
 			revalidateTag(
-				`organizations:${validatedOrgId}:supplier:${supplierId}:addresses`
+				`organizations:${validatedOrgId}:suppliers:${supplierId}:addresses`
 			);
 		}
 

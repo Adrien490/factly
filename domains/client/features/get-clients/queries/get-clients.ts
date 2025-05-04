@@ -43,10 +43,7 @@ export async function getClients(
 
 		const validatedParams = validation.data;
 
-		console.log(validatedParams);
-
-		// Appel à la fonction
-		return await fetchClients(validatedParams, session.user.id);
+		return await fetchClients(validatedParams);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error("Invalid parameters");

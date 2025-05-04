@@ -70,7 +70,7 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						<FilterSelect
 							filterKey="type"
 							label="Type"
-							options={ADDRESS_TYPES}
+							options={CLIENT_ADDRESS_TYPES}
 						/>
 						<Suspense fallback={<></>}>
 							<CreateAddressSheetForm

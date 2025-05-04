@@ -18,12 +18,9 @@ import { buildWhereClause } from "./build-where-clause";
  * Fonction interne qui récupère les clients
  */
 export async function fetchClients(
-	params: z.infer<typeof getClientsSchema>,
-	userId: string
+	params: z.infer<typeof getClientsSchema>
 ): Promise<GetClientsReturn> {
 	"use cache";
-
-	console.log(userId);
 
 	// Tag de base pour tous les clients de l'organisation
 	cacheTag(`organizations:${params.organizationId}:clients`);
