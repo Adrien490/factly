@@ -18,8 +18,10 @@ import { use } from "react";
 import { ClientSelectionToolbar } from "@/domains/client/components/client-selection-toolbar";
 import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
 import { SelectionProvider } from "@/shared/contexts";
+import { ClientStatus } from "@prisma/client";
 import { GetClientsReturn } from "../../types";
-import { ClientRowActions } from "./components/client-row-actions";
+import { ArchivedClientActions } from "./components/archived-client-actions";
+import { ClientActions } from "./components/client-actions";
 
 export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;
@@ -95,6 +97,8 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 						const clientTypeOption = CLIENT_TYPES.find(
 							(option) => option.value === client.clientType
 						);
+						const isArchived = client.status === ClientStatus.ARCHIVED;
+
 						return (
 							<TableRow key={client.id} role="row" tabIndex={0}>
 								<TableCell role="gridcell">
@@ -193,7 +197,11 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									</div>
 								</TableCell>
 								<TableCell role="gridcell" className="flex justify-end">
-									<ClientRowActions client={client} />
+									{isArchived ? (
+										<ArchivedClientActions client={client} />
+									) : (
+										<ClientActions client={client} />
+									)}
 								</TableCell>
 							</TableRow>
 						);
