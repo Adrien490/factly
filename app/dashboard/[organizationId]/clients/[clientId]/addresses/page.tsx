@@ -42,7 +42,7 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 		lat,
 		lon,
 	} = await searchParams;
-	const { clientId } = await params;
+	const { clientId, organizationId } = await params;
 
 	const filters = {
 		type: type as AddressType,
@@ -104,6 +104,7 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 						clientId,
 						sortBy: "createdAt",
 						sortOrder: "desc",
+						organizationId,
 						filters: Object.entries(filters).reduce((acc, [key, value]) => {
 							if (value) {
 								// Préserver les tableaux et les strings
