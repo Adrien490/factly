@@ -82,6 +82,8 @@ export const createAddress: ServerAction<
 			supplierId: (formData.get("supplierId") as string) || null,
 		};
 
+		console.log("[CREATE_ADDRESS] Raw data:", rawData);
+
 		// 5. Validation des données avec le schéma Zod
 		const validation = createAddressSchema.safeParse(rawData);
 		if (!validation.success) {
@@ -158,7 +160,7 @@ export const createAddress: ServerAction<
 			revalidateTag(`organizations:${validatedOrgId}:clients`);
 			revalidateTag(`organizations:${validatedOrgId}:clients:${clientId}`);
 			revalidateTag(
-				`organizations:${validatedOrgId}:client:${clientId}:addresses`
+				`organizations:${validatedOrgId}:clients:${clientId}:addresses`
 			);
 		}
 		if (supplierId) {
