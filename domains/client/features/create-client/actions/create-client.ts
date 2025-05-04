@@ -138,7 +138,6 @@ export const createClient: ServerAction<
 			postalCode,
 			city,
 			country,
-			userId,
 			latitude,
 			longitude,
 			...clientData
@@ -148,7 +147,6 @@ export const createClient: ServerAction<
 		const client = await db.client.create({
 			data: {
 				...clientData,
-				user: { connect: { id: userId } },
 				organization: { connect: { id: validatedOrgId } },
 
 				// Créer l'adresse de facturation si des informations sont fournies

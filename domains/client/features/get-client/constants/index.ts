@@ -16,7 +16,6 @@ export const GET_CLIENT_DEFAULT_SELECT = {
 	siret: true,
 	vatNumber: true,
 	notes: true,
-	userId: true,
 	createdAt: true,
 	updatedAt: true,
 	addresses: true,

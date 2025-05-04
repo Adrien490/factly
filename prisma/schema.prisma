@@ -66,7 +66,6 @@ model User {
   // Relations
   organizations Organization[] @relation("UserOrganizations")
   members       Member[]
-  clients       Client[]
   sessions      Session[]
   accounts      Account[]
   passkeys      Passkey[] // Relation avec les passkeys
@@ -158,9 +157,8 @@ model FiscalYear {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-  @@index([organizationId])
-  @@index([startDate, endDate])
-  @@index([status])
+  @@index([startDate, endDate]) // Important
+  @@index([status, organizationId]) // Reqûetes combo
 }
 
 // Enum pour le statut de l'année fiscale
@@ -204,11 +202,9 @@ model Invitation {
   // Contrainte d'unicité pour empêcher les invitations multiples
   @@unique([email, organizationId, status])
   // Index pour les recherches courantes
-  @@index([email])
-  @@index([organizationId])
-  @@index([status])
-  @@index([expiresAt]) // Pour nettoyer les invitations expirées
-  @@index([userId]) // Index pour la relation invitedBy
+  @@index([email, organizationId, status]) // via @@unique
+  @@index([expiresAt]) // Pour les requêtes de nettoyage
+  @@index([status, email]) // Pour requêtes par statut
 }
 
 model Supplier {
@@ -242,11 +238,9 @@ model Supplier {
   addresses      Address[]
   contacts       Contact[]
 
-  // Pour filtrer les meilleurs fournisseurs
   @@index([name])
   @@index([status, organizationId])
   @@index([supplierType, organizationId])
-  @@index([createdAt])
 }
 
 model Contact {
@@ -317,17 +311,14 @@ model Client {
   contacts       Contact[]
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
-  user           User         @relation(fields: [userId], references: [id])
-  userId         String
 
   // Index composé pour recherche par nom + statut
   // Pour les requêtes de triage par date
   // Pour les requêtes de modification récente
   // Pour filtrer par type dans une organisation
-  @@index([name, status])
-  @@index([createdAt])
-  @@index([updatedAt])
-  @@index([organizationId, clientType])
+  @@index([name, status]) // Courant
+  @@index([organizationId, clientType]) // Courant
+  @@index([reference]) // via @@unique
 }
 
 enum Civility {

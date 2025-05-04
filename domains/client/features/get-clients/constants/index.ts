@@ -25,7 +25,6 @@ export const GET_CLIENTS_DEFAULT_SELECT = {
 	vatNumber: true,
 
 	// Métadonnées
-	userId: true,
 	createdAt: true,
 	updatedAt: true,
 
