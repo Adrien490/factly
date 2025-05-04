@@ -137,20 +137,6 @@ export function CreateOrganizationForm({
 				)}
 			</form.Field>
 
-			<form.AppField name="country">
-				{(field) => (
-					<field.SelectField
-						label="Pays"
-						disabled={isPending}
-						placeholder="Sélectionnez un pays"
-						options={COUNTRIES.map((country) => ({
-							label: country.label,
-							value: country.value,
-						}))}
-					/>
-				)}
-			</form.AppField>
-
 			<FormLayout columns={2} className="mt-6">
 				{/* Section Logo */}
 				<FormSection
@@ -400,6 +386,20 @@ export function CreateOrganizationForm({
 					icon={MapPin}
 				>
 					<div className="space-y-4">
+						<form.AppField name="country">
+							{(field) => (
+								<field.SelectField
+									label="Pays"
+									disabled={isPending}
+									placeholder="Sélectionnez un pays"
+									options={COUNTRIES.map((country) => ({
+										label: country.label,
+										value: country.value,
+									}))}
+								/>
+							)}
+						</form.AppField>
+
 						<form.Field
 							name="addressLine1"
 							validators={{
