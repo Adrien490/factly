@@ -2,11 +2,12 @@
 
 import { FormLabel } from "@/shared/components/ui";
 
-import { ADDRESS_TYPES, COUNTRIES } from "@/domains/address/constants";
+import { COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
+import { SUPPLIER_ADDRESS_TYPES } from "@/domains/supplier/constants";
 import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
 import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
@@ -274,13 +275,27 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 					icon={MapPin}
 				>
 					<div className="space-y-4">
+						<form.AppField name="country">
+							{(field) => (
+								<field.SelectField
+									label="Pays"
+									disabled={isPending}
+									placeholder="Sélectionnez un pays"
+									options={COUNTRIES.map((country) => ({
+										label: country.label,
+										value: country.value,
+									}))}
+								/>
+							)}
+						</form.AppField>
+
 						<form.AppField name="addressType">
 							{(field) => (
 								<field.SelectField
 									label="Type d'adresse"
 									disabled={isPending}
 									placeholder="Sélectionnez un type d'adresse"
-									options={ADDRESS_TYPES.map((type) => ({
+									options={SUPPLIER_ADDRESS_TYPES.map((type) => ({
 										label: type.label,
 										value: type.value,
 									}))}
@@ -391,20 +406,6 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 						</div>
-
-						<form.AppField name="country">
-							{(field) => (
-								<field.SelectField
-									label="Pays"
-									disabled={isPending}
-									placeholder="Sélectionnez un pays"
-									options={COUNTRIES.map((country) => ({
-										label: country.label,
-										value: country.value,
-									}))}
-								/>
-							)}
-						</form.AppField>
 					</div>
 				</FormSection>
 
