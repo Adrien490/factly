@@ -74,7 +74,7 @@ export function ArchivedClientActions({ client }: ArchivedClientActionsProps) {
 									organizationId={client.organizationId}
 									id={client.id}
 								>
-									<div className="flex items-center gap-2 px-2 py-1.5">
+									<div className="flex items-center gap-2 px-2 py-1.5 cursor-pointer w-full">
 										<div
 											className="h-2 w-2 rounded-full"
 											style={{ backgroundColor: status.color }}
