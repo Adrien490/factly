@@ -29,6 +29,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { CLIENT_STATUSES } from "../constants";
 import { ArchiveMultipleClientsButton } from "../features/archive-multiple-clients";
 import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients/components/delete-multiple-clients-button";
+import { RestoreMultipleClientsButton } from "../features/restore-multiple-clients";
 import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
 export function ClientSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearAll } = useSelectionContext();
@@ -116,13 +117,13 @@ export function ClientSelectionToolbar() {
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<UpdateMultipleClientStatusButton
+														<RestoreMultipleClientsButton
 															organizationId={organizationId}
 															ids={selectedItems}
 															status={status.value}
 														>
 															<AlertDialogAction>Confirmer</AlertDialogAction>
-														</UpdateMultipleClientStatusButton>
+														</RestoreMultipleClientsButton>
 													</AlertDialogFooter>
 												</AlertDialogContent>
 											</AlertDialog>

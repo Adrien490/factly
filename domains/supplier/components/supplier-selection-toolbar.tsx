@@ -26,9 +26,11 @@ import { cn } from "@/shared/utils";
 import { SupplierStatus } from "@prisma/client";
 import { MoreVerticalIcon, Tag, Trash, Undo } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { SUPPLIER_STATUSES } from "../../constants";
-import { DeleteMultipleSuppliersButton } from "../../features/delete-multiple-suppliers/components/delete-multiple-suppliers-button";
-import { UpdateMultipleSupplierStatusButton } from "../../features/update-multiple-supplier-status";
+import { SUPPLIER_STATUSES } from "../constants";
+import { ArchiveMultipleSuppliersButton } from "../features/archive-multiple-suppliers";
+import { DeleteMultipleSuppliersButton } from "../features/delete-multiple-suppliers/components/delete-multiple-suppliers-button";
+import { RestoreMultipleSuppliersButton } from "../features/restore-multiple-suppliers";
+import { UpdateMultipleSupplierStatusButton } from "../features/update-multiple-supplier-status";
 
 export function SupplierSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearAll } = useSelectionContext();
@@ -155,13 +157,12 @@ export function SupplierSelectionToolbar() {
 									</AlertDialogHeader>
 									<AlertDialogFooter>
 										<AlertDialogCancel>Annuler</AlertDialogCancel>
-										<UpdateMultipleSupplierStatusButton
+										<ArchiveMultipleSuppliersButton
 											organizationId={organizationId}
 											ids={selectedItems}
-											status={SupplierStatus.ARCHIVED}
 										>
 											<AlertDialogAction>Archiver</AlertDialogAction>
-										</UpdateMultipleSupplierStatusButton>
+										</ArchiveMultipleSuppliersButton>
 									</AlertDialogFooter>
 								</AlertDialogContent>
 							</AlertDialog>
@@ -206,13 +207,13 @@ export function SupplierSelectionToolbar() {
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<UpdateMultipleSupplierStatusButton
+														<RestoreMultipleSuppliersButton
 															organizationId={organizationId}
 															ids={selectedItems}
 															status={status.value}
 														>
 															<AlertDialogAction>Restaurer</AlertDialogAction>
-														</UpdateMultipleSupplierStatusButton>
+														</RestoreMultipleSuppliersButton>
 													</AlertDialogFooter>
 												</AlertDialogContent>
 											</AlertDialog>

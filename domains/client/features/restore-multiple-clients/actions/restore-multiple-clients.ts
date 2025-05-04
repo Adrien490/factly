@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -10,15 +9,15 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
-} from "@/shared/types";
+} from "@/shared/types/server-action";
 import { Client, ClientStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-client-status-schema";
+import { restoreMultipleClientsSchema } from "../schemas/restore-multiple-clients-schema";
 
-export const updateMultipleClientStatus: ServerAction<
+export const restoreMultipleClients: ServerAction<
 	Client[],
-	typeof updateMultipleClientStatusSchema
+	typeof restoreMultipleClientsSchema
 > = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
@@ -38,7 +37,7 @@ export const updateMultipleClientStatus: ServerAction<
 		const status = formData.get("status") as ClientStatus;
 
 		// 3. Validation des données
-		const validation = updateMultipleClientStatusSchema.safeParse({
+		const validation = restoreMultipleClientsSchema.safeParse({
 			ids,
 			organizationId,
 			status,
@@ -81,26 +80,23 @@ export const updateMultipleClientStatus: ServerAction<
 			);
 		}
 
-		// 6. Validation des transitions de statut
-		for (const client of existingClients) {
-			const transitionValidation = validateClientStatusTransition({
-				currentStatus: client.status,
-				newStatus: validation.data.status,
-			});
+		// 6. Filtrer les clients qui sont actuellement archivés
+		const clientsToRestore = existingClients.filter(
+			(client) => client.status === ClientStatus.ARCHIVED
+		);
 
-			if (!transitionValidation.isValid) {
-				return createErrorResponse(
-					ActionStatus.ERROR,
-					transitionValidation.message || "Transition de statut non autorisée"
-				);
-			}
+		if (clientsToRestore.length === 0) {
+			return createErrorResponse(
+				ActionStatus.ERROR,
+				"Aucun des clients sélectionnés n'est archivé"
+			);
 		}
 
-		// 7. Mise à jour des clients
+		// 7. Mise à jour des clients avec le statut spécifié
 		await db.client.updateMany({
 			where: {
 				id: {
-					in: validation.data.ids,
+					in: clientsToRestore.map((client) => client.id),
 				},
 				organizationId: validation.data.organizationId,
 			},
@@ -113,7 +109,7 @@ export const updateMultipleClientStatus: ServerAction<
 		const updatedClients = await db.client.findMany({
 			where: {
 				id: {
-					in: validation.data.ids,
+					in: clientsToRestore.map((client) => client.id),
 				},
 				organizationId: validation.data.organizationId,
 			},
@@ -126,14 +122,25 @@ export const updateMultipleClientStatus: ServerAction<
 		revalidateTag(`organizations:${organizationId}:clients`);
 
 		// 9. Message de succès personnalisé
-		const message = `${existingClients.length} client(s) ont été mis à jour avec succès`;
+		const statusText =
+			validation.data.status === ClientStatus.ACTIVE
+				? "actif"
+				: validation.data.status === ClientStatus.LEAD
+				? "prospect"
+				: validation.data.status === ClientStatus.INACTIVE
+				? "inactif"
+				: "autre statut";
 
-		return createSuccessResponse(updatedClients, message);
+		const message = `${clientsToRestore.length} client(s) ont été restauré(s) en ${statusText} avec succès`;
+
+		return createSuccessResponse(updatedClients, message, {
+			restoredClientIds: clientsToRestore.map((client) => client.id),
+		});
 	} catch (error) {
-		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS]", error);
+		console.error("[RESTORE_MULTIPLE_CLIENTS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Une erreur est survenue lors de la mise à jour du statut"
+			"Une erreur est survenue lors de la restauration des clients"
 		);
 	}
 };

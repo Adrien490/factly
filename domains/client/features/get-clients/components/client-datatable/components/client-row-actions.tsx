@@ -4,6 +4,7 @@ import {
 } from "@/domains/client/constants";
 import { ArchiveClientButton } from "@/domains/client/features/archive-client";
 import { DeleteClientButton } from "@/domains/client/features/delete-client/components/delete-client-button";
+import { RestoreClientButton } from "@/domains/client/features/restore-client";
 import { UpdateClientStatusButton } from "@/domains/client/features/update-client-status/components/udpate-client-status-button";
 import {
 	AlertDialog,
@@ -215,13 +216,13 @@ export function ClientRowActions({ client }: ClientRowActionsProps) {
 											</AlertDialogHeader>
 											<AlertDialogFooter>
 												<AlertDialogCancel>Annuler</AlertDialogCancel>
-												<UpdateClientStatusButton
+												<RestoreClientButton
 													organizationId={client.organizationId}
 													id={client.id}
 													status={status.value}
 												>
 													<AlertDialogAction>Restaurer</AlertDialogAction>
-												</UpdateClientStatusButton>
+												</RestoreClientButton>
 											</AlertDialogFooter>
 										</AlertDialogContent>
 									</AlertDialog>

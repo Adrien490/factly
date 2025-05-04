@@ -114,10 +114,7 @@ export const updateMultipleSupplierStatus: ServerAction<
 		revalidateTag(`organizations:${organizationId}:suppliers`);
 		revalidateTag(`organizations:${organizationId}:suppliers:count`);
 
-		const message =
-			validation.data.status === SupplierStatus.ARCHIVED
-				? `${suppliersToUpdate.length} fournisseur(s) ont été archivé(s) avec succès`
-				: `${suppliersToUpdate.length} fournisseur(s) ont été restauré(s) avec succès`;
+		const message = `${suppliersToUpdate.length} fournisseur(s) ont été mis à jour avec succès`;
 
 		return createSuccessResponse(null, message);
 	} catch (error) {

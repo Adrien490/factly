@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -10,15 +9,15 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
-} from "@/shared/types";
-import { Client, ClientStatus } from "@prisma/client";
+} from "@/shared/types/server-action";
+import { Supplier, SupplierStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { updateMultipleClientStatusSchema } from "../schemas/update-multiple-client-status-schema";
+import { archiveMultipleSuppliersSchema } from "../schemas/archive-multiple-suppliers-schema";
 
-export const updateMultipleClientStatus: ServerAction<
-	Client[],
-	typeof updateMultipleClientStatusSchema
+export const archiveMultipleSuppliers: ServerAction<
+	Supplier[],
+	typeof archiveMultipleSuppliersSchema
 > = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
@@ -35,18 +34,16 @@ export const updateMultipleClientStatus: ServerAction<
 		// 2. Récupération des données
 		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
-		const status = formData.get("status") as ClientStatus;
 
 		// 3. Validation des données
-		const validation = updateMultipleClientStatusSchema.safeParse({
+		const validation = archiveMultipleSuppliersSchema.safeParse({
 			ids,
 			organizationId,
-			status,
 		});
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids, organizationId, status },
+				{ ids, organizationId },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -60,8 +57,8 @@ export const updateMultipleClientStatus: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence des clients
-		const existingClients = await db.client.findMany({
+		// 5. Vérification de l'existence des fournisseurs
+		const existingSuppliers = await db.supplier.findMany({
 			where: {
 				id: {
 					in: validation.data.ids,
@@ -74,46 +71,43 @@ export const updateMultipleClientStatus: ServerAction<
 			},
 		});
 
-		if (existingClients.length !== validation.data.ids.length) {
+		if (existingSuppliers.length !== validation.data.ids.length) {
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
-				"Un ou plusieurs clients n'ont pas été trouvés"
+				"Un ou plusieurs fournisseurs n'ont pas été trouvés"
 			);
 		}
 
-		// 6. Validation des transitions de statut
-		for (const client of existingClients) {
-			const transitionValidation = validateClientStatusTransition({
-				currentStatus: client.status,
-				newStatus: validation.data.status,
-			});
+		// 6. Filtrer les fournisseurs qui ne sont pas déjà archivés
+		const suppliersToArchive = existingSuppliers.filter(
+			(supplier) => supplier.status !== SupplierStatus.ARCHIVED
+		);
 
-			if (!transitionValidation.isValid) {
-				return createErrorResponse(
-					ActionStatus.ERROR,
-					transitionValidation.message || "Transition de statut non autorisée"
-				);
-			}
+		if (suppliersToArchive.length === 0) {
+			return createErrorResponse(
+				ActionStatus.ERROR,
+				"Tous les fournisseurs sélectionnés sont déjà archivés"
+			);
 		}
 
-		// 7. Mise à jour des clients
-		await db.client.updateMany({
+		// 7. Mise à jour des fournisseurs
+		await db.supplier.updateMany({
 			where: {
 				id: {
-					in: validation.data.ids,
+					in: suppliersToArchive.map((supplier) => supplier.id),
 				},
 				organizationId: validation.data.organizationId,
 			},
 			data: {
-				status: validation.data.status,
+				status: SupplierStatus.ARCHIVED,
 			},
 		});
 
-		// Récupération des clients mis à jour
-		const updatedClients = await db.client.findMany({
+		// Récupération des fournisseurs mis à jour
+		const updatedSuppliers = await db.supplier.findMany({
 			where: {
 				id: {
-					in: validation.data.ids,
+					in: suppliersToArchive.map((supplier) => supplier.id),
 				},
 				organizationId: validation.data.organizationId,
 			},
@@ -121,19 +115,19 @@ export const updateMultipleClientStatus: ServerAction<
 
 		// 8. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:clients:${id}`);
+			revalidateTag(`organizations:${organizationId}:suppliers:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`organizations:${organizationId}:suppliers`);
 
 		// 9. Message de succès personnalisé
-		const message = `${existingClients.length} client(s) ont été mis à jour avec succès`;
+		const message = `${suppliersToArchive.length} fournisseur(s) ont été archivé(s) avec succès`;
 
-		return createSuccessResponse(updatedClients, message);
+		return createSuccessResponse(updatedSuppliers, message);
 	} catch (error) {
-		console.error("[UPDATE_MULTIPLE_CLIENT_STATUS]", error);
+		console.error("[ARCHIVE_MULTIPLE_SUPPLIERS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Une erreur est survenue lors de la mise à jour du statut"
+			"Une erreur est survenue lors de l'archivage des fournisseurs"
 		);
 	}
 };
