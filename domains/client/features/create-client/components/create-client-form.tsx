@@ -549,7 +549,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								<field.SelectField
 									label="Statut"
 									disabled={isPending}
-									options={CLIENT_STATUSES.map((status) => ({
+									options={CLIENT_STATUSES.filter(
+										(status) => status.value !== ClientStatus.ARCHIVED
+									).map((status) => ({
 										value: status.value,
 										label: status.label,
 									}))}
