@@ -9,7 +9,6 @@ import {
 } from "@/domains/address/features/search-address";
 import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
 import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
-import { useCreateSupplier } from "@/domains/supplier/features/create-supplier/hooks/use-create-supplier";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
@@ -19,11 +18,20 @@ import {
 	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
-import { AddressType, SupplierStatus, SupplierType } from "@prisma/client";
+import { createToastCallbacks, withCallbacks } from "@/shared/utils";
+import {
+	AddressType,
+	Supplier,
+	SupplierStatus,
+	SupplierType,
+} from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Building, Globe, MapPin, Receipt, User, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { use, useTransition } from "react";
+import { use, useActionState, useTransition } from "react";
+import { toast } from "sonner";
+import { createSupplier } from "../actions/create-supplier";
+import { createSupplierSchema } from "../schemas";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -34,7 +42,30 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { state, dispatch, isPending } = useCreateSupplier();
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			createSupplier,
+			createToastCallbacks<Supplier, typeof createSupplierSchema>({
+				loadingMessage: "Création du fournisseur en cours...",
+				onSuccess: (result) => {
+					form.reset();
+					toast.success(result.message, {
+						action: {
+							label: "Voir le fournisseur",
+							onClick: () => {
+								if (result.data?.id) {
+									router.push(
+										`/dashboard/${result.data.organizationId}/suppliers/${result.data.id}`
+									);
+								}
+							},
+						},
+					});
+				},
+			})
+		),
+		undefined
+	);
 	const router = useRouter();
 
 	// TanStack Form setup
