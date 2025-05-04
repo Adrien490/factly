@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -81,6 +82,19 @@ export const archiveClient: ServerAction<
 			return createErrorResponse(
 				ActionStatus.ERROR,
 				"Ce client est déjà archivé"
+			);
+		}
+
+		// 6.1 Validation de la transition de statut
+		const { isValid, message } = validateClientStatusTransition({
+			currentStatus: existingClient.status,
+			newStatus: ClientStatus.ARCHIVED,
+		});
+
+		if (!isValid) {
+			return createErrorResponse(
+				ActionStatus.VALIDATION_ERROR,
+				message || "La transition vers le statut ARCHIVED n'est pas autorisée"
 			);
 		}
 

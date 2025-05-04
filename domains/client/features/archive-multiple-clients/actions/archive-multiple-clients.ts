@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
@@ -87,6 +88,24 @@ export const archiveMultipleClients: ServerAction<
 			return createErrorResponse(
 				ActionStatus.ERROR,
 				"Tous les clients sélectionnés sont déjà archivés"
+			);
+		}
+
+		// 6.1 Vérifier les transitions de statut pour chaque client
+		const invalidTransitions = clientsToArchive
+			.map((client) => {
+				const { isValid, message } = validateClientStatusTransition({
+					currentStatus: client.status,
+					newStatus: ClientStatus.ARCHIVED,
+				});
+				return { clientId: client.id, isValid, message };
+			})
+			.filter((result) => !result.isValid);
+
+		if (invalidTransitions.length > 0) {
+			return createErrorResponse(
+				ActionStatus.VALIDATION_ERROR,
+				`La transition vers ARCHIVED n'est pas autorisée pour ${invalidTransitions.length} client(s)`
 			);
 		}
 
