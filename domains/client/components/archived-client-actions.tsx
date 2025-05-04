@@ -17,7 +17,7 @@ import { cn } from "@/shared/utils";
 import { ClientStatus } from "@prisma/client";
 import { MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
-import { GetClientsReturn } from "../../../types";
+import { GetClientsReturn } from "../features/get-clients/types";
 
 interface ArchivedClientActionsProps {
 	client: GetClientsReturn["clients"][number];

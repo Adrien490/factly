@@ -19,9 +19,9 @@ import { ClientSelectionToolbar } from "@/domains/client/components/client-selec
 import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
 import { SelectionProvider } from "@/shared/contexts";
 import { ClientStatus } from "@prisma/client";
-import { GetClientsReturn } from "../../types";
-import { ArchivedClientActions } from "./components/archived-client-actions";
-import { ClientActions } from "./components/client-actions";
+import { ArchivedClientActions } from "../../../components/archived-client-actions";
+import { ClientActions } from "../../../components/client-actions";
+import { GetClientsReturn } from "../types";
 
 export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;

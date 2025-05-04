@@ -22,9 +22,9 @@ import {
 } from "@/domains/supplier/constants";
 import { SelectionProvider } from "@/shared/contexts";
 import { SupplierStatus } from "@prisma/client";
-import { GetSuppliersReturn } from "../../types";
-import { ArchivedSupplierActions } from "./components/archived-supplier-actions";
-import { SupplierActions } from "./components/supplier-actions";
+import { ArchivedSupplierActions } from "../../../components/archived-supplier-actions";
+import { SupplierActions } from "../../../components/supplier-actions";
+import { GetSuppliersReturn } from "../types";
 
 export interface SupplierDataTableProps {
 	suppliersPromise: Promise<GetSuppliersReturn>;
