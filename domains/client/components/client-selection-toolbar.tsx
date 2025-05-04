@@ -27,9 +27,9 @@ import { ClientStatus } from "@prisma/client";
 import { MoreVerticalIcon, Tag, Trash, Undo } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { CLIENT_STATUSES } from "../constants";
+import { ArchiveMultipleClientsButton } from "../features/archive-multiple-clients";
 import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients/components/delete-multiple-clients-button";
 import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
-
 export function ClientSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearAll } = useSelectionContext();
 	const params = useParams();
@@ -153,13 +153,12 @@ export function ClientSelectionToolbar() {
 									</AlertDialogHeader>
 									<AlertDialogFooter>
 										<AlertDialogCancel>Annuler</AlertDialogCancel>
-										<UpdateMultipleClientStatusButton
+										<ArchiveMultipleClientsButton
 											organizationId={organizationId}
 											ids={selectedItems}
-											status={ClientStatus.ARCHIVED}
 										>
 											<AlertDialogAction>Archiver</AlertDialogAction>
-										</UpdateMultipleClientStatusButton>
+										</ArchiveMultipleClientsButton>
 									</AlertDialogFooter>
 								</AlertDialogContent>
 							</AlertDialog>
