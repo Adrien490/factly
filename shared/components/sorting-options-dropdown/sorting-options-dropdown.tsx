@@ -62,7 +62,6 @@ export function SortingOptionsDropdown({
 				className="w-56"
 			>
 				<DropdownMenuLabel>Trier par</DropdownMenuLabel>
-				<DropdownMenuSeparator />
 
 				<DropdownMenuSeparator />
 

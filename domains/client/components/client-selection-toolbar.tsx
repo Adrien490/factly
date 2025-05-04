@@ -31,6 +31,7 @@ import { ArchiveMultipleClientsButton } from "../features/archive-multiple-clien
 import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients/components/delete-multiple-clients-button";
 import { RestoreMultipleClientsButton } from "../features/restore-multiple-clients";
 import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
+
 export function ClientSelectionToolbar() {
 	const { getSelectedCount, selectedItems, clearAll } = useSelectionContext();
 	const params = useParams();
