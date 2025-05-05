@@ -24,21 +24,21 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface Props {
-	params: {
+	params: Promise<{
 		organizationId: string;
 		path: string[];
-	};
-	searchParams: {
+	}>;
+	searchParams: Promise<{
 		search?: string;
-	};
+	}>;
 }
 
 export default async function ProductsCategoriesPathPage({
 	params,
 	searchParams,
 }: Props) {
-	const { organizationId, path } = params;
-	const { search } = searchParams;
+	const { organizationId, path } = await params;
+	const { search } = await searchParams;
 
 	// Récupérer le dernier slug dans le chemin pour trouver la catégorie actuelle
 	const currentSlug = path[path.length - 1];
