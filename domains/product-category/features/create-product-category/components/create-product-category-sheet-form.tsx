@@ -1,12 +1,12 @@
 "use client";
 
-import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
 	FormLabel,
 	Sheet,
 	SheetContent,
+	SheetFooter,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
@@ -109,16 +109,17 @@ export function CreateProductCategorySheetForm({
 			<SheetTrigger asChild>
 				{children || <Button className="shrink-0">Nouvelle catégorie</Button>}
 			</SheetTrigger>
-			<SheetContent className="">
-				<SheetHeader>
-					<SheetTitle>Nouvelle catégorie de produit</SheetTitle>
-				</SheetHeader>
 
+			<SheetContent>
 				<form
 					action={dispatch}
-					className="mt-6"
+					className="flex flex-col h-full"
 					onSubmit={() => form.handleSubmit()}
 				>
+					<SheetHeader className="mb-5">
+						<SheetTitle>Nouvelle catégorie de produit</SheetTitle>
+					</SheetHeader>
+
 					{/* Erreurs globales du formulaire */}
 					<form.Subscribe selector={(state) => state.errors}>
 						{(errors) => <FormErrors errors={errors} />}
@@ -135,24 +136,91 @@ export function CreateProductCategorySheetForm({
 						)}
 					</form.AppField>
 
+					<form.AppField name="slug">
+						{(field) => (
+							<input type="hidden" name="slug" value={field.state.value} />
+						)}
+					</form.AppField>
+
 					<form.AppField name="imageUrl">
 						{(field) => (
 							<input type="hidden" name="imageUrl" value={field.state.value} />
 						)}
 					</form.AppField>
 
-					<div className="space-y-5 overflow-y-auto max-h-[calc(100vh-16rem)]">
-						{/* Image de la catégorie */}
-						<div className="space-y-4">
-							<div className="text-sm font-medium text-muted-foreground">
-								Identité visuelle
-							</div>
+					<form.AppField name="status">
+						{() => (
+							<input
+								type="hidden"
+								name="status"
+								value={ProductCategoryStatus.ACTIVE}
+							/>
+						)}
+					</form.AppField>
 
+					{/* Contenu du formulaire avec défilement */}
+					<div className="flex-1 overflow-y-auto pr-1 space-y-6">
+						{/* Informations de base */}
+						<div className="space-y-4 mx-auto w-full">
+							{/* Nom */}
+							<form.AppField
+								name="name"
+								validators={{
+									onChange: ({ value }) => {
+										if (!value) return "Le nom est requis";
+										// Générer automatiquement le slug à partir du nom
+										form.setFieldValue("slug", handleGenerateSlug(value));
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Nom de la catégorie"
+										placeholder="Ex: Électronique, Vêtements, etc."
+										required
+										disabled={isPending}
+									/>
+								)}
+							</form.AppField>
+
+							{/* Catégorie parente */}
+							<form.AppField name="parentId">
+								{(field) => (
+									<field.SelectField
+										label="Catégorie parente"
+										placeholder="Sélectionnez une catégorie parente"
+										disabled={isPending}
+										options={[
+											{ value: "none", label: "Aucune (catégorie principale)" },
+											...categories.map((category) => ({
+												value: category.id,
+												label: category.name,
+											})),
+										]}
+									/>
+								)}
+							</form.AppField>
+
+							{/* Description */}
+							<form.AppField name="description">
+								{(field) => (
+									<field.TextareaField
+										label="Description"
+										placeholder="Description de la catégorie..."
+										disabled={isPending}
+									/>
+								)}
+							</form.AppField>
+						</div>
+
+						{/* Image de la catégorie */}
+						<div className="space-y-4 mx-auto w-full">
 							<form.AppField name="imageUrl">
 								{(field) => (
-									<div className="space-y-3">
+									<div className="space-y-3 w-full">
 										<div className="flex items-center justify-between">
-											<FormLabel>Image de la catégorie</FormLabel>
+											<FormLabel>Image</FormLabel>
 											{field.state.value && (
 												<Button
 													disabled={isPending}
@@ -169,7 +237,7 @@ export function CreateProductCategorySheetForm({
 										</div>
 
 										{field.state.value ? (
-											<div className="flex items-center justify-center">
+											<div className="flex items-center justify-center w-full">
 												<div className="relative h-32 w-32 rounded-md overflow-hidden">
 													<Image
 														src={field.state.value}
@@ -182,7 +250,7 @@ export function CreateProductCategorySheetForm({
 												</div>
 											</div>
 										) : (
-											<div className="relative">
+											<div className="relative w-full">
 												<UploadDropzone
 													endpoint="categoryImage"
 													onChange={async (files) => {
@@ -216,107 +284,22 @@ export function CreateProductCategorySheetForm({
 								)}
 							</form.AppField>
 						</div>
-
-						{/* Informations principales */}
-						<div className="space-y-4">
-							{/* Nom */}
-							<form.AppField
-								name="name"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value) return "Le nom est requis";
-										// Générer automatiquement le slug à partir du nom
-										form.setFieldValue("slug", handleGenerateSlug(value));
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Nom de la catégorie"
-										placeholder="Ex: Électronique, Vêtements, etc."
-										required
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
-
-							{/* Champ slug caché */}
-							<form.AppField name="slug">
-								{(field) => (
-									<input type="hidden" name="slug" value={field.state.value} />
-								)}
-							</form.AppField>
-
-							{/* Description */}
-							<form.AppField name="description">
-								{(field) => (
-									<field.TextareaField
-										label="Description"
-										placeholder="Description de la catégorie..."
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
-						</div>
-
-						{/* Hiérarchie */}
-						<div className="space-y-4">
-							<div className="text-sm font-medium text-muted-foreground">
-								Structure hiérarchique
-							</div>
-
-							{/* Catégorie parente */}
-							<form.AppField name="parentId">
-								{(field) => (
-									<field.SelectField
-										label="Catégorie parente"
-										placeholder="Sélectionnez une catégorie parente"
-										disabled={isPending}
-										options={[
-											{ value: "none", label: "Aucune (catégorie principale)" },
-											...categories.map((category) => ({
-												value: category.id,
-												label: category.name,
-											})),
-										]}
-									/>
-								)}
-							</form.AppField>
-						</div>
-
-						{/* Statut */}
-						<div className="space-y-4">
-							<div className="text-sm font-medium text-muted-foreground">
-								Paramètres de visibilité
-							</div>
-
-							{/* Statut de la catégorie */}
-							<form.AppField name="status">
-								{(field) => (
-									<field.SelectField
-										label="Statut"
-										placeholder="Sélectionnez un statut"
-										disabled={isPending}
-										options={PRODUCT_CATEGORY_STATUSES}
-									/>
-								)}
-							</form.AppField>
-						</div>
 					</div>
 
-					{/* Bouton de soumission */}
-					<form.Subscribe selector={(state) => state.canSubmit}>
-						{(canSubmit) => (
-							<Button
-								type="submit"
-								className="w-full mt-6"
-								disabled={!canSubmit || isPending}
-							>
-								Créer la catégorie
-							</Button>
-						)}
-					</form.Subscribe>
+					{/* Footer avec bouton de soumission */}
+					<SheetFooter className="mt-6 flex-shrink-0 px-0 w-full">
+						<form.Subscribe selector={(state) => state.canSubmit}>
+							{(canSubmit) => (
+								<Button
+									type="submit"
+									className="w-full"
+									disabled={!canSubmit || isPending}
+								>
+									{isPending ? "Création en cours..." : "Créer la catégorie"}
+								</Button>
+							)}
+						</form.Subscribe>
+					</SheetFooter>
 				</form>
 			</SheetContent>
 		</Sheet>
