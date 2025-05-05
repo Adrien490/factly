@@ -126,25 +126,25 @@ export function SupplierHeader({ supplierPromise }: SupplierHeaderProps) {
 					<HorizontalMenu
 						items={[
 							{
-								label: "Fiche fournisseur",
-								href: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}`,
+								title: "Fiche fournisseur",
+								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}`,
 							},
 							{
-								label: "Modifier",
-								href: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`,
+								title: "Modifier",
+								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`,
 							},
 							{
-								label: "Contacts",
-								href: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`,
+								title: "Contacts",
+								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`,
 							},
 							/*
 							{
-								label: "Produits",
-								href: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/products`,
+								title: "Produits",
+								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/products`,
 							},
 							{
-								label: "Commandes",
-								href: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/orders`,
+								title: "Commandes",
+								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/orders`,
 							},
               */
 						]}

@@ -59,47 +59,40 @@ export default async function FiscalYearsPage({
 			<HorizontalMenu items={getFiscalYearNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
-			<Toolbar
-				leftContent={
-					<div className="flex items-center gap-3 flex-1">
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher..."
-							className="flex-1 shrink-0"
-						/>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher..."
+					className="flex-1 shrink-0"
+				/>
 
-						<RefreshFiscalYearsButton organizationId={organizationId} />
-					</div>
-				}
-				rightContent={
-					<>
-						<SortingOptionsDropdown
-							sortFields={[
-								{
-									value: "startDate",
-									label: "Date de début",
-									icon: <Calendar />,
-								},
-								{ value: "name", label: "Nom", icon: <FileX2 /> },
-								{
-									value: "createdAt",
-									label: "Date de création",
-									icon: <Calendar />,
-								},
-							]}
-							defaultSortBy="startDate"
-							defaultSortOrder="desc"
-							className="w-[200px] shrink-0"
-						/>
+				<RefreshFiscalYearsButton organizationId={organizationId} />
 
-						<Button className="shrink-0" asChild>
-							<Link href={`/dashboard/${organizationId}/fiscal-years/new`}>
-								Nouvelle année fiscale
-							</Link>
-						</Button>
-					</>
-				}
-			/>
+				<SortingOptionsDropdown
+					sortFields={[
+						{
+							value: "startDate",
+							label: "Date de début",
+							icon: <Calendar />,
+						},
+						{ value: "name", label: "Nom", icon: <FileX2 /> },
+						{
+							value: "createdAt",
+							label: "Date de création",
+							icon: <Calendar />,
+						},
+					]}
+					defaultSortBy="startDate"
+					defaultSortOrder="desc"
+					className="w-[200px] shrink-0"
+				/>
+
+				<Button className="shrink-0" asChild>
+					<Link href={`/dashboard/${organizationId}/fiscal-years/new`}>
+						Nouvelle année fiscale
+					</Link>
+				</Button>
+			</Toolbar>
 
 			{/* Tableau de données avec loading state */}
 

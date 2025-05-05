@@ -8,4 +8,3 @@ export * from "./features/refresh-product-categories";
 export * from "./constants/product-category-statuses";
 
 // Export des utilitaires
-export * from "./utils";

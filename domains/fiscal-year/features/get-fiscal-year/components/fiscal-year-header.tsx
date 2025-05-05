@@ -57,12 +57,12 @@ export function FiscalYearHeader({ fiscalYearPromise }: FiscalYearHeaderProps) {
 					<HorizontalMenu
 						items={[
 							{
-								label: "Détails",
-								href: `/dashboard/${fiscalYear.organizationId}/fiscal-years/${fiscalYear.id}`,
+								title: "Détails",
+								url: `/dashboard/${fiscalYear.organizationId}/fiscal-years/${fiscalYear.id}`,
 							},
 							{
-								label: "Modifier",
-								href: `/dashboard/${fiscalYear.organizationId}/fiscal-years/${fiscalYear.id}/edit`,
+								title: "Modifier",
+								url: `/dashboard/${fiscalYear.organizationId}/fiscal-years/${fiscalYear.id}/edit`,
 							},
 						]}
 					/>

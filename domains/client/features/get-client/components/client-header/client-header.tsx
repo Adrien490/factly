@@ -78,20 +78,20 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 					<HorizontalMenu
 						items={[
 							{
-								label: "Fiche client",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}`,
+								title: "Fiche client",
+								url: `/dashboard/${client.organizationId}/clients/${client.id}`,
 							},
 							{
-								label: "Modifier",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}/edit`,
+								title: "Modifier",
+								url: `/dashboard/${client.organizationId}/clients/${client.id}/edit`,
 							},
 							{
-								label: "Gestion des adresses",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}/addresses`,
+								title: "Gestion des adresses",
+								url: `/dashboard/${client.organizationId}/clients/${client.id}/addresses`,
 							},
 							{
-								label: "Gestion des contacts",
-								href: `/dashboard/${client.organizationId}/clients/${client.id}/contacts`,
+								title: "Gestion des contacts",
+								url: `/dashboard/${client.organizationId}/clients/${client.id}/contacts`,
 							},
 						]}
 					/>

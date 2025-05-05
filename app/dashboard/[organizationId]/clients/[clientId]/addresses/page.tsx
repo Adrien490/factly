@@ -51,51 +51,40 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 	return (
 		<div className="space-y-6">
 			{/* Barre de recherche et filtres */}
-			<Toolbar
-				leftContent={
-					<>
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher une adresse..."
-							className="flex-1 shrink-0"
-						/>
-					</>
-				}
-				rightContent={
-					<>
-						<span className="text-xs font-medium text-muted-foreground px-1">
-							Filtrer par:
-						</span>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher une adresse..."
+					className="flex-1 shrink-0"
+				/>
 
-						<FilterSelect
-							filterKey="type"
-							label="Type"
-							options={ADDRESS_TYPES}
-						/>
-						<Suspense fallback={<></>}>
-							<CreateAddressSheetForm
-								addressTypes={ADDRESS_TYPES.filter(
-									(type) =>
-										type.value !== AddressType.COMMERCIAL &&
-										type.value !== AddressType.WAREHOUSE &&
-										type.value !== AddressType.PRODUCTION &&
-										type.value !== AddressType.HEADQUARTERS
-								)}
-								searchAddressPromise={searchAddress({
-									query: q,
-									...(postcode && { postcode }),
-									...(citycode && { citycode }),
-									...(type && { type }),
-									...(limit && { limit: parseInt(limit, 10) }),
-									...(autocomplete === "0" && { autocomplete: false }),
-									...(lat && { lat: parseFloat(lat) }),
-									...(lon && { lon: parseFloat(lon) }),
-								})}
-							/>
-						</Suspense>
-					</>
-				}
-			/>
+				<span className="text-xs font-medium text-muted-foreground px-1">
+					Filtrer par:
+				</span>
+
+				<FilterSelect filterKey="type" label="Type" options={ADDRESS_TYPES} />
+				<Suspense fallback={<></>}>
+					<CreateAddressSheetForm
+						addressTypes={ADDRESS_TYPES.filter(
+							(type) =>
+								type.value !== AddressType.COMMERCIAL &&
+								type.value !== AddressType.WAREHOUSE &&
+								type.value !== AddressType.PRODUCTION &&
+								type.value !== AddressType.HEADQUARTERS
+						)}
+						searchAddressPromise={searchAddress({
+							query: q,
+							...(postcode && { postcode }),
+							...(citycode && { citycode }),
+							...(type && { type }),
+							...(limit && { limit: parseInt(limit, 10) }),
+							...(autocomplete === "0" && { autocomplete: false }),
+							...(lat && { lat: parseFloat(lat) }),
+							...(lon && { lon: parseFloat(lon) }),
+						})}
+					/>
+				</Suspense>
+			</Toolbar>
 
 			<Suspense fallback={<AddressListSkeleton />}>
 				<AddressList

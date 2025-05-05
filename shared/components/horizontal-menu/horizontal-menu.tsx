@@ -10,7 +10,7 @@ export function HorizontalMenu({ items, className }: HorizontalMenuProps) {
 	const pathname = usePathname();
 
 	// Check if menu should be rendered
-	if (!items.length || (!items[0].href && !items[0].items?.length)) {
+	if (!items.length || (!items[0].url && !items[0].items?.length)) {
 		return null;
 	}
 
@@ -27,12 +27,12 @@ export function HorizontalMenu({ items, className }: HorizontalMenuProps) {
 		>
 			<div className="flex overflow-x-auto sm:overflow-visible no-scrollbar gap-5">
 				{items.map((item, index) => {
-					const active = isItemActive(item.href);
+					const active = isItemActive(item.url);
 
 					return (
 						<div key={index} className="relative flex flex-col items-center">
 							<Link
-								href={item.href || "#"}
+								href={item.url || "#"}
 								className={cn(
 									"flex items-center text-sm transition-all duration-200 gap-2 py-2",
 									active
@@ -46,7 +46,7 @@ export function HorizontalMenu({ items, className }: HorizontalMenuProps) {
 										{item.icon}
 									</span>
 								)}
-								<span className="line-clamp-1">{item.label}</span>
+								<span className="line-clamp-1">{item.title}</span>
 							</Link>
 
 							{active && (

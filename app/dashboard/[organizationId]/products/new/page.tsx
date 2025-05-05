@@ -1,16 +1,20 @@
 import { getProductNavigation } from "@/domains/product/utils";
 import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
-interface ProductsPageProps {
+interface NewProductPageProps {
 	params: Promise<{
 		organizationId: string;
 	}>;
 }
-export default async function ProductsPage({ params }: ProductsPageProps) {
+
+export default async function NewProductPage({ params }: NewProductPageProps) {
 	const { organizationId } = await params;
 	return (
 		<PageContainer>
-			<PageHeader title="Produits" description="Gérez vos produits" />
+			<PageHeader
+				title="Nouveau produit"
+				description="Créez un nouveau produit"
+			/>
 
 			<HorizontalMenu items={getProductNavigation(organizationId)} />
 		</PageContainer>

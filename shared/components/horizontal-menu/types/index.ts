@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 
 export interface MenuItem {
-	label: string;
-	href?: string;
+	title: string;
+	url?: string;
 	icon?: ReactNode;
 	items?: MenuItem[];
 }

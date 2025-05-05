@@ -1,3 +1,6 @@
+import { getClientNavigation } from "@/domains/client/utils";
+import { getProductNavigation } from "@/domains/product/utils";
+import { getSupplierNavigation } from "@/domains/supplier/utils";
 import {
 	CalendarClock,
 	LayoutDashboard,
@@ -16,53 +19,18 @@ export const getSidebarNav = (organizationId: string) => [
 		title: "Clients",
 		icon: Users,
 		url: `/dashboard/${organizationId}/clients`,
-		items: [
-			{
-				title: "Liste des clients",
-				url: `/dashboard/${organizationId}/clients`,
-			},
-			{
-				title: "Ajouter un client",
-				url: `/dashboard/${organizationId}/clients/new`,
-			},
-		],
+		items: getClientNavigation(organizationId),
 	},
 	{
 		title: "Fournisseurs",
 		icon: Truck,
 		url: `/dashboard/${organizationId}/suppliers`,
-		items: [
-			{
-				title: "Liste des fournisseurs",
-				url: `/dashboard/${organizationId}/suppliers`,
-			},
-			{
-				title: "Ajouter un fournisseur",
-				url: `/dashboard/${organizationId}/suppliers/new`,
-			},
-		],
+		items: getSupplierNavigation(organizationId),
 	},
 	{
 		title: "Catalogue",
 		icon: Package,
-		items: [
-			/*{
-				title: "Produits",
-				url: `/dashboard/${organizationId}/products`,
-			},*/
-			/*{
-				title: "Ajouter un produit",
-				url: `/dashboard/${organizationId}/products/new`,
-			},*/
-			{
-				title: "Catégories",
-				url: `/dashboard/${organizationId}/categories`,
-			},
-			/*{
-				title: "Taux de TVA",
-				url: `/dashboard/${organizationId}/products/tax-rates`,
-			},*/
-		],
+		items: getProductNavigation(organizationId),
 	},
 	/*{
 		title: "Devis",

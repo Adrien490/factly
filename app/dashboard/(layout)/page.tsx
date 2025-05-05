@@ -34,46 +34,37 @@ export default async function DashboardPage({ searchParams }: Props) {
 	return (
 		<PageContainer className="space-y-6 py-6 group">
 			{/* Barre d'outils principale */}
-			<Toolbar
-				leftContent={
-					<>
-						{/* Recherche à gauche prenant toute la place disponible */}
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher une organisation..."
-							className="w-full flex-1"
-						/>
-					</>
-				}
-				rightContent={
-					<>
-						{/* Sélecteur de tri */}
-						<SortingOptionsDropdown
-							sortFields={[
-								{
-									label: "Nom",
-									value: "name",
-									icon: <Users className="h-4 w-4" />,
-								},
-								{
-									label: "Date de création",
-									value: "createdAt",
-									icon: <Calendar className="h-4 w-4" />,
-								},
-							]}
-							defaultSortBy="name"
-							defaultSortOrder="asc"
-						/>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher une organisation..."
+					className="w-full flex-1"
+				/>
 
-						{/* Sélecteur de vue */}
-						<ViewToggle />
+				<SortingOptionsDropdown
+					sortFields={[
+						{
+							label: "Nom",
+							value: "name",
+							icon: <Users className="h-4 w-4" />,
+						},
+						{
+							label: "Date de création",
+							value: "createdAt",
+							icon: <Calendar className="h-4 w-4" />,
+						},
+					]}
+					defaultSortBy="name"
+					defaultSortOrder="asc"
+				/>
 
-						<Link href="/dashboard/new">
-							<Button className="h-9">Nouvelle organisation</Button>
-						</Link>
-					</>
-				}
-			/>
+				{/* Sélecteur de vue */}
+				<ViewToggle />
+
+				<Link href="/dashboard/new">
+					<Button className="h-9">Nouvelle organisation</Button>
+				</Link>
+			</Toolbar>
 
 			{/* Liste des organisations */}
 			<Suspense fallback={<OrganizationListSkeleton />}>
