@@ -93,73 +93,70 @@ export default async function SuppliersPage({
 			<HorizontalMenu items={getSupplierNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
-			<Toolbar
-				leftContent={
-					<div className="flex items-center gap-3 flex-1">
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher..."
-							className="flex-1 shrink-0"
-						/>
+			<Toolbar>
+				<div className="flex items-center gap-3 flex-1">
+					<SearchForm
+						paramName="search"
+						placeholder="Rechercher..."
+						className="flex-1 shrink-0"
+					/>
 
-						<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<RefreshSuppliersButton organizationId={organizationId} />
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>Rafraîchir la liste des fournisseurs</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
-					</div>
-				}
-				rightContent={
-					<>
-						<SortingOptionsDropdown
-							sortFields={[
-								{
-									label: "Nom",
-									value: "name",
-									icon: <Store className="h-4 w-4" />,
-								},
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<RefreshSuppliersButton organizationId={organizationId} />
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Rafraîchir la liste des fournisseurs</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+				</div>
 
-								{
-									label: "Type de fournisseur",
-									value: "supplierType",
-									icon: <Truck className="h-4 w-4" />,
-								},
-								{
-									label: "Statut",
-									value: "status",
-									icon: <Briefcase className="h-4 w-4" />,
-								},
-								{
-									label: "Date de création",
-									value: "createdAt",
-									icon: <Calendar className="h-4 w-4" />,
-								},
-							]}
-							defaultSortBy="createdAt"
-							defaultSortOrder="desc"
-							className="w-[200px] shrink-0"
-						/>
+				<div className="w-full sm:w-auto flex flex-wrap items-center gap-2 sm:gap-3 justify-between sm:justify-end sm:shrink-0">
+					<SortingOptionsDropdown
+						sortFields={[
+							{
+								label: "Nom",
+								value: "name",
+								icon: <Store className="h-4 w-4" />,
+							},
 
-						<SupplierFilterSheet
-							activeFiltersCount={activeFiltersCount}
-							isArchivedView={isArchivedView}
-						/>
+							{
+								label: "Type de fournisseur",
+								value: "supplierType",
+								icon: <Truck className="h-4 w-4" />,
+							},
+							{
+								label: "Statut",
+								value: "status",
+								icon: <Briefcase className="h-4 w-4" />,
+							},
+							{
+								label: "Date de création",
+								value: "createdAt",
+								icon: <Calendar className="h-4 w-4" />,
+							},
+						]}
+						defaultSortBy="createdAt"
+						defaultSortOrder="desc"
+						className="w-[200px] shrink-0"
+					/>
 
-						<SupplierToggleArchivedButton />
+					<SupplierFilterSheet
+						activeFiltersCount={activeFiltersCount}
+						isArchivedView={isArchivedView}
+					/>
 
-						<Button className="shrink-0" asChild>
-							<Link href={`/dashboard/${organizationId}/suppliers/new`}>
-								Nouveau fournisseur
-							</Link>
-						</Button>
-					</>
-				}
-			/>
+					<SupplierToggleArchivedButton />
+
+					<Button className="shrink-0" asChild>
+						<Link href={`/dashboard/${organizationId}/suppliers/new`}>
+							Nouveau fournisseur
+						</Link>
+					</Button>
+				</div>
+			</Toolbar>
 
 			{/* Tableau de données */}
 			<Suspense fallback={<SupplierDataTableSkeleton />}>

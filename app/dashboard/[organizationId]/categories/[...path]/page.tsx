@@ -123,44 +123,37 @@ export default async function ProductsCategoriesPathPage({
 				</BreadcrumbList>
 			</Breadcrumb>
 
-			<Toolbar
-				leftContent={
-					<div className="flex items-center gap-3 flex-1">
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher une sous-catégorie..."
-							className="flex-1 shrink-0"
-						/>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher une sous-catégorie..."
+					className="flex-1 shrink-0"
+				/>
 
-						<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<RefreshProductCategoriesButton />
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>Rafraîchir la liste des catégories</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
-					</div>
-				}
-				rightContent={
-					<>
-						<Suspense fallback={<></>}>
-							<CreateProductCategorySheetForm
-								categoriesPromise={getProductCategories({
-									organizationId,
-									filters: {},
-									search: "",
-									sortBy: "name",
-									sortOrder: "asc",
-									parentId: currentCategory.id,
-								})}
-							/>
-						</Suspense>
-					</>
-				}
-			/>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<RefreshProductCategoriesButton />
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Rafraîchir la liste des catégories</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+
+				<Suspense fallback={<></>}>
+					<CreateProductCategorySheetForm
+						categoriesPromise={getProductCategories({
+							organizationId,
+							filters: {},
+							search: "",
+							sortBy: "name",
+							sortOrder: "asc",
+							parentId: currentCategory.id,
+						})}
+					/>
+				</Suspense>
+			</Toolbar>
 
 			{/* Tableau de données */}
 			<div className="mt-6">

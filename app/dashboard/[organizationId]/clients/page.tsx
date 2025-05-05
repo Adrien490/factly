@@ -94,67 +94,60 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 			<HorizontalMenu items={getClientNavigation(organizationId)} />
 
 			{/* Barre d'actions principale */}
-			<Toolbar
-				leftContent={
-					<div className="flex items-center gap-3 flex-1">
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher..."
-							className="flex-1 shrink-0"
-						/>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher..."
+					className="flex-1 shrink-0"
+				/>
 
-						<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<RefreshClientsButton />
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>Rafraîchir la liste des clients</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
-					</div>
-				}
-				rightContent={
-					<>
-						<SortingOptionsDropdown
-							sortFields={[
-								{
-									label: "Nom",
-									value: "name",
-									icon: <Users className="h-4 w-4" />,
-								},
-								{
-									label: "Référence",
-									value: "reference",
-									icon: <Tag className="h-4 w-4" />,
-								},
-								{
-									label: "Date de création",
-									value: "createdAt",
-									icon: <Calendar className="h-4 w-4" />,
-								},
-							]}
-							defaultSortBy="createdAt"
-							defaultSortOrder="desc"
-							className="w-[200px] shrink-0"
-						/>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<RefreshClientsButton />
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Rafraîchir la liste des clients</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 
-						<ClientFilterSheet
-							activeFiltersCount={activeFiltersCount}
-							isArchivedView={isArchivedView}
-						/>
+				<SortingOptionsDropdown
+					sortFields={[
+						{
+							label: "Nom",
+							value: "name",
+							icon: <Users className="h-4 w-4" />,
+						},
+						{
+							label: "Référence",
+							value: "reference",
+							icon: <Tag className="h-4 w-4" />,
+						},
+						{
+							label: "Date de création",
+							value: "createdAt",
+							icon: <Calendar className="h-4 w-4" />,
+						},
+					]}
+					defaultSortBy="createdAt"
+					defaultSortOrder="desc"
+					className="w-[200px] shrink-0"
+				/>
 
-						<ClientToggleArchivedButton />
+				<ClientFilterSheet
+					activeFiltersCount={activeFiltersCount}
+					isArchivedView={isArchivedView}
+				/>
 
-						<Button className="shrink-0" asChild>
-							<Link href={`/dashboard/${organizationId}/clients/new`}>
-								Nouveau client
-							</Link>
-						</Button>
-					</>
-				}
-			/>
+				<ClientToggleArchivedButton />
+
+				<Button className="shrink-0" asChild>
+					<Link href={`/dashboard/${organizationId}/clients/new`}>
+						Nouveau client
+					</Link>
+				</Button>
+			</Toolbar>
 
 			{/* Tableau de données */}
 			<Suspense fallback={<ClientDataTableSkeleton />}>

@@ -63,61 +63,54 @@ export default async function ProductsCategoriesRootPage({
 				</BreadcrumbList>
 			</Breadcrumb>
 
-			<Toolbar
-				leftContent={
-					<div className="flex items-center gap-3 flex-1">
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher une catégorie..."
-							className="flex-1 shrink-0"
-						/>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher une catégorie..."
+					className="flex-1 shrink-0"
+				/>
 
-						<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<RefreshProductCategoriesButton />
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>Rafraîchir la liste des catégories</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
-					</div>
-				}
-				rightContent={
-					<>
-						<SortingOptionsDropdown
-							sortFields={[
-								{
-									label: "Nom",
-									value: "name",
-									icon: <Users className="h-4 w-4" />,
-								},
-								{
-									label: "Date de création",
-									value: "createdAt",
-									icon: <Calendar className="h-4 w-4" />,
-								},
-							]}
-							defaultSortBy="name"
-							defaultSortOrder="asc"
-							className="w-[200px] shrink-0"
-						/>
-						<Suspense fallback={<></>}>
-							<CreateProductCategorySheetForm
-								categoriesPromise={getProductCategories({
-									organizationId,
-									filters: {},
-									search: "",
-									sortBy: "name",
-									sortOrder: "asc",
-									parentId: null,
-								})}
-							/>
-						</Suspense>
-					</>
-				}
-			/>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<RefreshProductCategoriesButton />
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Rafraîchir la liste des catégories</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+
+				<SortingOptionsDropdown
+					sortFields={[
+						{
+							label: "Nom",
+							value: "name",
+							icon: <Users className="h-4 w-4" />,
+						},
+						{
+							label: "Date de création",
+							value: "createdAt",
+							icon: <Calendar className="h-4 w-4" />,
+						},
+					]}
+					defaultSortBy="name"
+					defaultSortOrder="asc"
+					className="w-[200px] shrink-0"
+				/>
+				<Suspense fallback={<></>}>
+					<CreateProductCategorySheetForm
+						categoriesPromise={getProductCategories({
+							organizationId,
+							filters: {},
+							search: "",
+							sortBy: "name",
+							sortOrder: "asc",
+							parentId: null,
+						})}
+					/>
+				</Suspense>
+			</Toolbar>
 
 			{/* Tableau de données */}
 			<div className="mt-6">

@@ -55,22 +55,15 @@ export default async function InvitationsPage({
 			/>
 
 			{/* Barre d'actions principale */}
-			<Toolbar
-				leftContent={
-					<>
-						<SearchForm
-							paramName="search"
-							placeholder="Rechercher..."
-							className="w-[275px] shrink-0 sm:w-[200px] lg:w-[275px]"
-						/>
-					</>
-				}
-				rightContent={
-					<>
-						<CreateInvitationForm organizationId={organizationId} />
-					</>
-				}
-			/>
+			<Toolbar>
+				<SearchForm
+					paramName="search"
+					placeholder="Rechercher..."
+					className="w-[275px] shrink-0 sm:w-[200px] lg:w-[275px]"
+				/>
+
+				<CreateInvitationForm organizationId={organizationId} />
+			</Toolbar>
 
 			{/* Tableau de données */}
 			<Suspense fallback={<InvitationDataTableSkeleton columnCount={4} />}>
