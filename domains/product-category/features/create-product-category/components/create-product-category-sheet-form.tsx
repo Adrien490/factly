@@ -1,5 +1,6 @@
 "use client";
 
+import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
@@ -297,17 +298,7 @@ export function CreateProductCategorySheetForm({
 										label="Statut"
 										placeholder="Sélectionnez un statut"
 										disabled={isPending}
-										options={[
-											{ value: ProductCategoryStatus.ACTIVE, label: "Active" },
-											{
-												value: ProductCategoryStatus.INACTIVE,
-												label: "Inactive",
-											},
-											{
-												value: ProductCategoryStatus.ARCHIVED,
-												label: "Archivée",
-											},
-										]}
+										options={PRODUCT_CATEGORY_STATUSES}
 									/>
 								)}
 							</form.AppField>

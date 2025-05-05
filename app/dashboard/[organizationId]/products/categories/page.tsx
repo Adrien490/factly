@@ -1,6 +1,8 @@
+import { getProductCategoryNavigation } from "@/domains/product-category";
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import {
+	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -19,7 +21,12 @@ export default async function ProductsCategoriesPage({ params }: Props) {
 
 	return (
 		<PageContainer>
-			<PageHeader title="Catégories" />
+			<PageHeader
+				title="Catégories"
+				description="Gérer vos catégories de produits"
+			/>
+
+			<HorizontalMenu items={getProductCategoryNavigation(organizationId)} />
 
 			<Toolbar
 				leftContent={
