@@ -4,6 +4,30 @@ export const MAX_RESULTS_PER_PAGE = 100;
 export const DEFAULT_PER_PAGE = 10;
 
 /**
+ * Sélection récursive pour inclure les parents des catégories
+ * Limité à 3 niveaux pour éviter des requêtes trop profondes
+ */
+export const PARENT_SELECT_RECURSIVE = {
+	id: true,
+	name: true,
+	slug: true,
+	parent: {
+		select: {
+			id: true,
+			name: true,
+			slug: true,
+			parent: {
+				select: {
+					id: true,
+					name: true,
+					slug: true,
+				},
+			},
+		},
+	},
+} as const;
+
+/**
  * Sélection par défaut des champs pour les catégories de produits
  * Optimisée pour correspondre exactement au schéma Prisma et aux besoins de l'interface
  */
@@ -23,12 +47,8 @@ export const GET_PRODUCT_CATEGORIES_DEFAULT_SELECT = {
 	createdAt: true,
 	updatedAt: true,
 
-	// Relation parent simplifiée
+	// Relation parent avec sélection récursive pour avoir l'arborescence complète
 	parent: {
-		select: {
-			id: true,
-			name: true,
-			slug: true,
-		},
+		select: PARENT_SELECT_RECURSIVE,
 	},
 } as const satisfies Prisma.ProductCategorySelect;

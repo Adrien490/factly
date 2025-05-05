@@ -18,6 +18,10 @@ import { Folder } from "lucide-react";
 import { use } from "react";
 
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
+import {
+	getCategoryAncestors,
+	getCategoryUrl,
+} from "@/domains/product-category/utils";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
@@ -93,6 +97,16 @@ export function ProductCategoryDataTable({
 							(option) => option.value === category.status
 						);
 
+						// Récupérer tous les ancêtres (parents) de la catégorie
+						const ancestors = getCategoryAncestors(category);
+
+						// Construction de l'URL complète de la catégorie avec tous ses parents
+						const categoryUrl = getCategoryUrl(
+							organizationId,
+							category.slug,
+							ancestors
+						);
+
 						return (
 							<TableRow key={category.id} role="row" tabIndex={0}>
 								<TableCell role="gridcell" className="w-[50px]">
@@ -105,7 +119,7 @@ export function ProductCategoryDataTable({
 										</div>
 										<div className="min-w-0">
 											<Link
-												href={`/dashboard/${organizationId}/categories/${category.slug}`}
+												href={categoryUrl}
 												className="hover:underline flex items-center truncate max-w-[220px]"
 											>
 												<span className="truncate">{category.name}</span>

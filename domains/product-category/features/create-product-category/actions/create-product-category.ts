@@ -11,7 +11,7 @@ import {
 	ServerAction,
 } from "@/shared/types/server-action";
 import { generateSlug } from "@/shared/utils";
-import { ProductCategory, ProductCategoryStatus } from "@prisma/client";
+import { ProductCategory } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createProductCategorySchema } from "../schemas";
@@ -71,9 +71,6 @@ export const createProductCategory: ServerAction<
 				(formData.get("parentId") as string) === "" || !formData.get("parentId")
 					? null
 					: (formData.get("parentId") as string),
-			status:
-				(formData.get("status") as ProductCategoryStatus) ||
-				ProductCategoryStatus.ACTIVE,
 		};
 
 		console.log("[CREATE_PRODUCT_CATEGORY] Raw data:", rawData);
@@ -134,7 +131,6 @@ export const createProductCategory: ServerAction<
 			name: categoryData.name,
 			slug: slug,
 			description: categoryData.description,
-			status: categoryData.status,
 			organization: { connect: { id: validatedOrgId } },
 		};
 

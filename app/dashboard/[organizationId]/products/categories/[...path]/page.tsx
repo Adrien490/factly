@@ -3,6 +3,10 @@ import { getProductCategories } from "@/domains/product-category/features/get-pr
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import {
+	getCategoryAncestors,
+	getCategoryUrl,
+} from "@/domains/product-category/utils";
+import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
@@ -21,7 +25,7 @@ import {
 import db from "@/shared/lib/db";
 import { ChevronRight, FolderOpenDot } from "lucide-react";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 
 interface Props {
 	params: Promise<{
@@ -45,7 +49,7 @@ export default async function ProductsCategoriesPathPage({
 	// Récupérer le dernier slug dans le chemin pour trouver la catégorie actuelle
 	const currentSlug = path[path.length - 1];
 
-	// Récupérer les informations de la catégorie courante
+	// Récupérer les informations de la catégorie courante avec toute sa hiérarchie de parents
 	const currentCategory = await db.productCategory.findFirst({
 		where: {
 			slug: currentSlug,
@@ -60,6 +64,20 @@ export default async function ProductsCategoriesPathPage({
 					id: true,
 					name: true,
 					slug: true,
+					parent: {
+						select: {
+							id: true,
+							name: true,
+							slug: true,
+							parent: {
+								select: {
+									id: true,
+									name: true,
+									slug: true,
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -70,17 +88,8 @@ export default async function ProductsCategoriesPathPage({
 		notFound();
 	}
 
-	// Construire le fil d'Ariane (breadcrumb)
-	// Pour une implémentation complète, on pourrait récupérer toute l'arborescence des parents
-	const breadcrumbItems = [];
-
-	// Ajouter le parent s'il existe
-	if (currentCategory.parent) {
-		breadcrumbItems.push({
-			name: currentCategory.parent.name,
-			href: `/dashboard/${organizationId}/categories/${currentCategory.parent.slug}`,
-		});
-	}
+	// Récupérer tous les ancêtres (parents) de la catégorie courante
+	const ancestors = getCategoryAncestors(currentCategory);
 
 	return (
 		<PageContainer>
@@ -94,7 +103,7 @@ export default async function ProductsCategoriesPathPage({
 				<BreadcrumbList>
 					<BreadcrumbItem>
 						<BreadcrumbLink
-							href={`/dashboard/${organizationId}/categories`}
+							href={`/dashboard/${organizationId}/products/categories`}
 							className="flex items-center gap-1.5"
 						>
 							<FolderOpenDot className="h-4 w-4" />
@@ -102,19 +111,36 @@ export default async function ProductsCategoriesPathPage({
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 
-					{breadcrumbItems.length > 0 && (
+					{ancestors.length > 0 && (
 						<>
 							<BreadcrumbSeparator>
 								<ChevronRight className="h-4 w-4" />
 							</BreadcrumbSeparator>
-							{breadcrumbItems.map((item) => (
-								<BreadcrumbItem key={item.href}>
-									<BreadcrumbLink href={item.href}>{item.name}</BreadcrumbLink>
-								</BreadcrumbItem>
-							))}
-							<BreadcrumbSeparator>
-								<ChevronRight className="h-4 w-4" />
-							</BreadcrumbSeparator>
+							{/* Afficher les ancêtres en ordre inverse (du plus éloigné au plus proche) */}
+							{[...ancestors].reverse().map((ancestor, index, array) => {
+								// Pour chaque ancêtre, on construit le chemin avec ses propres ancêtres
+								const ancestorAncestors = array
+									.slice(0, array.length - index - 1)
+									.reverse();
+								const href = getCategoryUrl(
+									organizationId,
+									ancestor.slug,
+									ancestorAncestors
+								);
+
+								return (
+									<React.Fragment key={ancestor.id}>
+										<BreadcrumbItem>
+											<BreadcrumbLink href={href}>
+												{ancestor.name}
+											</BreadcrumbLink>
+										</BreadcrumbItem>
+										<BreadcrumbSeparator>
+											<ChevronRight className="h-4 w-4" />
+										</BreadcrumbSeparator>
+									</React.Fragment>
+								);
+							})}
 						</>
 					)}
 
@@ -144,6 +170,9 @@ export default async function ProductsCategoriesPathPage({
 
 				<Suspense fallback={<></>}>
 					<CreateProductCategorySheetForm
+						defaultValues={{
+							parentId: currentCategory.id,
+						}}
 						categoriesPromise={getProductCategories({
 							organizationId,
 							filters: {},
@@ -151,7 +180,7 @@ export default async function ProductsCategoriesPathPage({
 							rootOnly: false,
 							sortBy: "name",
 							sortOrder: "asc",
-							parentId: currentCategory.id,
+							parentId: null,
 							page: page ? parseInt(page) : 1,
 							perPage: perPage ? parseInt(perPage) : 50,
 						})}

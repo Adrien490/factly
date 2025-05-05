@@ -12,22 +12,30 @@ import {
 	SheetTrigger,
 } from "@/shared/components/ui";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
-import { ProductCategory, ProductCategoryStatus } from "@prisma/client";
+import { ProductCategory } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useParams, useRouter } from "next/navigation";
-import { ReactNode, use, useActionState, useState } from "react";
+import { ReactNode, use, useActionState, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { createProductCategory } from "../actions/create-product-category";
 import { createProductCategorySchema } from "../schemas";
 
+interface CreateProductCategoryDefaultValues {
+	name?: string;
+	description?: string;
+	parentId?: string | null;
+}
+
 interface CreateProductCategorySheetFormProps {
 	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	children?: ReactNode;
+	defaultValues?: CreateProductCategoryDefaultValues;
 }
 
 export function CreateProductCategorySheetForm({
 	categoriesPromise,
 	children,
+	defaultValues = {},
 }: CreateProductCategorySheetFormProps) {
 	const response = use(categoriesPromise);
 	const { categories } = response;
@@ -35,6 +43,15 @@ export function CreateProductCategorySheetForm({
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const router = useRouter();
+
+	// Trouver la catégorie parente si un parentId est fourni
+	const parentCategory = useMemo(() => {
+		if (!defaultValues.parentId) return null;
+		return categories.find((cat) => cat.id === defaultValues.parentId) || null;
+	}, [categories, defaultValues.parentId]);
+
+	// Vérifier si le parentId doit être affiché ou non
+	const showParentIdField = defaultValues.parentId !== undefined;
 
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
@@ -68,15 +85,18 @@ export function CreateProductCategorySheetForm({
 		undefined
 	);
 
-	// TanStack Form setup
+	// TanStack Form setup avec les valeurs par défaut
 	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			name: "",
-			description: "",
-			parentId: "",
-			status: ProductCategoryStatus.ACTIVE,
-			imageUrl: "",
+			name: defaultValues.name || "",
+			description: defaultValues.description || "",
+			parentId:
+				defaultValues.parentId !== undefined
+					? defaultValues.parentId === null
+						? "none"
+						: defaultValues.parentId
+					: "",
 		},
 
 		transform: useTransform(
@@ -99,6 +119,11 @@ export function CreateProductCategorySheetForm({
 				>
 					<SheetHeader className="mb-5">
 						<SheetTitle>Nouvelle catégorie de produit</SheetTitle>
+						{parentCategory && (
+							<p className="text-sm text-muted-foreground">
+								Sous-catégorie de : {parentCategory.name}
+							</p>
+						)}
 					</SheetHeader>
 
 					{/* Erreurs globales du formulaire */}
@@ -113,22 +138,6 @@ export function CreateProductCategorySheetForm({
 								type="hidden"
 								name="organizationId"
 								value={field.state.value}
-							/>
-						)}
-					</form.AppField>
-
-					<form.AppField name="imageUrl">
-						{(field) => (
-							<input type="hidden" name="imageUrl" value={field.state.value} />
-						)}
-					</form.AppField>
-
-					<form.AppField name="status">
-						{() => (
-							<input
-								type="hidden"
-								name="status"
-								value={ProductCategoryStatus.ACTIVE}
 							/>
 						)}
 					</form.AppField>
@@ -157,23 +166,39 @@ export function CreateProductCategorySheetForm({
 								)}
 							</form.AppField>
 
-							{/* Catégorie parente */}
-							<form.AppField name="parentId">
-								{(field) => (
-									<field.SelectField
-										label="Catégorie parente"
-										placeholder="Sélectionnez une catégorie parente"
-										disabled={isPending}
-										options={[
-											{ value: "none", label: "Aucune (catégorie principale)" },
-											...categories.map((category) => ({
-												value: category.id,
-												label: category.name,
-											})),
-										]}
-									/>
-								)}
-							</form.AppField>
+							{/* Catégorie parente - affiché seulement si pas de parentId imposé */}
+							{showParentIdField ? (
+								<form.AppField name="parentId">
+									{(field) => (
+										<field.SelectField
+											label="Catégorie parente"
+											placeholder="Sélectionnez une catégorie parente"
+											disabled={isPending}
+											options={[
+												{
+													value: "none",
+													label: "Aucune (catégorie principale)",
+												},
+												...categories.map((category) => ({
+													value: category.id,
+													label: category.name,
+												})),
+											]}
+										/>
+									)}
+								</form.AppField>
+							) : (
+								// Si parentId est imposé, afficher un champ désactivé
+								<form.AppField name="parentId">
+									{(field) => (
+										<input
+											type="hidden"
+											name="parentId"
+											value={field.state.value}
+										/>
+									)}
+								</form.AppField>
+							)}
 
 							{/* Description */}
 							<form.AppField name="description">

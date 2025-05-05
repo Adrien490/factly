@@ -1,4 +1,3 @@
-import { ProductCategoryStatus } from "@prisma/client";
 import { z } from "zod";
 
 /**
@@ -11,14 +10,8 @@ export const createProductCategorySchema = z.object({
 
 	// Informations de base
 	name: z.string().min(1, "Le nom est requis"),
-	slug: z.string().optional(),
 	description: z.string().optional(),
 
 	// Hiérarchie
 	parentId: z.string().optional().nullable(),
-
-	// Paramètres
-	status: z
-		.nativeEnum(ProductCategoryStatus)
-		.default(ProductCategoryStatus.ACTIVE),
 });
