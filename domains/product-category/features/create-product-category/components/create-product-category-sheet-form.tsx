@@ -73,7 +73,6 @@ export function CreateProductCategorySheetForm({
 		defaultValues: {
 			organizationId,
 			name: "",
-			slug: "",
 			description: "",
 			parentId: "",
 			status: ProductCategoryStatus.ACTIVE,
@@ -85,19 +84,6 @@ export function CreateProductCategorySheetForm({
 			[state]
 		),
 	});
-
-	// Fonction pour générer le slug à partir du nom
-	const handleGenerateSlug = (name: string) => {
-		if (name) {
-			return name
-				.toLowerCase()
-				.trim()
-				.replace(/[^\w\s-]/g, "") // Supprime les caractères spéciaux
-				.replace(/\s+/g, "-") // Remplace les espaces par des tirets
-				.replace(/-+/g, "-"); // Évite les tirets consécutifs
-		}
-		return "";
-	};
 
 	return (
 		<Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -131,12 +117,6 @@ export function CreateProductCategorySheetForm({
 						)}
 					</form.AppField>
 
-					<form.AppField name="slug">
-						{(field) => (
-							<input type="hidden" name="slug" value={field.state.value} />
-						)}
-					</form.AppField>
-
 					<form.AppField name="imageUrl">
 						{(field) => (
 							<input type="hidden" name="imageUrl" value={field.state.value} />
@@ -163,8 +143,6 @@ export function CreateProductCategorySheetForm({
 								validators={{
 									onChange: ({ value }) => {
 										if (!value) return "Le nom est requis";
-										// Générer automatiquement le slug à partir du nom
-										form.setFieldValue("slug", handleGenerateSlug(value));
 										return undefined;
 									},
 								}}

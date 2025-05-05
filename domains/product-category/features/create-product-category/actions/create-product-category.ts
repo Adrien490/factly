@@ -10,6 +10,7 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
+import { generateSlug } from "@/shared/utils";
 import { ProductCategory, ProductCategoryStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -57,14 +58,17 @@ export const createProductCategory: ServerAction<
 		}
 
 		// 4. Préparation et transformation des données brutes
+		const name = formData.get("name") as string;
+		// Génération automatique du slug à partir du nom
+		const slug = generateSlug(name);
+
 		const rawData = {
 			organizationId: organizationId.toString(),
-			name: formData.get("name") as string,
-			slug: formData.get("slug") as string,
+			name,
+			slug,
 			description: formData.get("description") as string,
 			parentId:
-				(formData.get("parentId") as string) === "none" ||
-				!formData.get("parentId")
+				(formData.get("parentId") as string) === "" || !formData.get("parentId")
 					? null
 					: (formData.get("parentId") as string),
 			status:
@@ -91,7 +95,7 @@ export const createProductCategory: ServerAction<
 		// 6. Vérification de l'unicité du slug dans l'organisation
 		const existingCategory = await db.productCategory.findFirst({
 			where: {
-				slug: validation.data.slug,
+				slug: slug,
 				organizationId: validation.data.organizationId,
 			},
 			select: { id: true },
@@ -100,7 +104,7 @@ export const createProductCategory: ServerAction<
 		if (existingCategory) {
 			return createErrorResponse(
 				ActionStatus.CONFLICT,
-				"Une catégorie avec ce slug existe déjà dans l'organisation"
+				"Une catégorie avec ce nom existe déjà dans l'organisation"
 			);
 		}
 
@@ -128,7 +132,7 @@ export const createProductCategory: ServerAction<
 		// Créer la catégorie avec les relations appropriées
 		const createData = {
 			name: categoryData.name,
-			slug: categoryData.slug,
+			slug: slug,
 			description: categoryData.description,
 			status: categoryData.status,
 			organization: { connect: { id: validatedOrgId } },

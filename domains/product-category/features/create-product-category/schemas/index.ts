@@ -11,13 +11,7 @@ export const createProductCategorySchema = z.object({
 
 	// Informations de base
 	name: z.string().min(1, "Le nom est requis"),
-	slug: z
-		.string()
-		.min(1, "Le slug est requis")
-		.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-			message:
-				"Le slug doit contenir uniquement des lettres minuscules, des chiffres et des tirets",
-		}),
+	slug: z.string().optional(),
 	description: z.string().optional(),
 
 	// Hiérarchie

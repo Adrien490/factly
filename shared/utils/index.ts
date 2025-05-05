@@ -10,6 +10,23 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+/**
+ * Génère un slug à partir d'un texte
+ * @param text Texte à transformer en slug
+ * @returns Le slug généré en minuscules avec des tirets
+ */
+export function generateSlug(text: string): string {
+	if (!text) return "";
+
+	return text
+		.toLowerCase()
+		.trim()
+		.replace(/[^\w\s-]/g, "") // Supprime les caractères spéciaux
+		.replace(/\s+/g, "-") // Remplace les espaces par des tirets
+		.replace(/-+/g, "-") // Évite les tirets consécutifs
+		.replace(/^-+|-+$/g, ""); // Supprime les tirets au début et à la fin
+}
+
 export function getUserInitials(
 	nom: string | null | undefined,
 	email: string | null | undefined

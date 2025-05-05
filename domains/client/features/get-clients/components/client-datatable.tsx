@@ -12,7 +12,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components";
-import { CircleDot, MapPin, Receipt, Search, Tag } from "lucide-react";
+import { CircleDot, MapPin, Receipt, Tag } from "lucide-react";
 import { use } from "react";
 
 import { ClientSelectionToolbar } from "@/domains/client/components/client-selection-toolbar";
@@ -35,7 +35,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 	if (clients.length === 0) {
 		return (
 			<EmptyState
-				icon={<Search className="w-10 h-10" />}
 				title="Aucun client trouvé"
 				description="Aucun client n'a été trouvé. Vous pouvez en créer un nouveau."
 				className="group-has-[[data-pending]]:animate-pulse py-12"

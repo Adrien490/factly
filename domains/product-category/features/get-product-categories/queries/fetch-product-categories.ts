@@ -63,11 +63,6 @@ export async function fetchProductCategories(
 		// Construire la clause WHERE
 		const where = buildWhereClause(params);
 
-		// Appliquer le filtre parentId si spécifié
-		if (params.parentId !== undefined) {
-			where.parentId = params.parentId;
-		}
-
 		// Appliquer l'ordre de tri avec des valeurs par défaut
 		const sortOrder = params.sortOrder || "asc";
 		const sortBy = params.sortBy || "name";

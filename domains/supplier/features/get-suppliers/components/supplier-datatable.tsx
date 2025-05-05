@@ -12,7 +12,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components";
-import { CircleDot, MapPin, Receipt, Search } from "lucide-react";
+import { CircleDot, MapPin, Receipt } from "lucide-react";
 import { use } from "react";
 
 import { SupplierSelectionToolbar } from "@/domains/supplier/components";
@@ -40,7 +40,6 @@ export function SupplierDataTable({
 	if (suppliers.length === 0) {
 		return (
 			<EmptyState
-				icon={<Search className="w-10 h-10" />}
 				title="Aucune donnée trouvée"
 				description="Aucune donnée ne correspond à vos critères de recherche."
 				className="group-has-[[data-pending]]:animate-pulse py-12"

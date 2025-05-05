@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, ProductCategoryStatus } from "@prisma/client";
 
 /**
  * Construit les conditions de filtrage pour les catégories de produits
@@ -18,15 +18,29 @@ export const buildFilterConditions = (
 		if (!value) return;
 
 		switch (key) {
-			case "isRoot":
-				// Filtre pour les catégories racines (sans parent)
-				if (value === true) {
-					conditions.push({ parentId: null });
-				} else if (value === false) {
-					conditions.push({ NOT: { parentId: null } });
+			case "status":
+				if (
+					typeof value === "string" &&
+					Object.values(ProductCategoryStatus).includes(
+						value as ProductCategoryStatus
+					)
+				) {
+					conditions.push({ status: value as ProductCategoryStatus });
+				} else if (Array.isArray(value) && value.length > 0) {
+					// Gestion de la sélection multiple pour les statuts
+					const validStatuses = value.filter(
+						(v): v is ProductCategoryStatus =>
+							typeof v === "string" &&
+							Object.values(ProductCategoryStatus).includes(
+								v as ProductCategoryStatus
+							)
+					);
+
+					if (validStatuses.length > 0) {
+						conditions.push({ status: { in: validStatuses } });
+					}
 				}
 				break;
-
 			case "hasChildren":
 				// Filtre pour les catégories ayant des enfants
 				if (value === true) {

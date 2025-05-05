@@ -14,7 +14,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components";
-import { Folder, Search } from "lucide-react";
+import { Folder } from "lucide-react";
 import { use } from "react";
 
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
@@ -39,7 +39,6 @@ export function ProductCategoryDataTable({
 	if (categories.length === 0) {
 		return (
 			<EmptyState
-				icon={<Search className="w-10 h-10" />}
 				title="Aucune catégorie trouvée"
 				description="Aucune catégorie n'a été trouvée. Vous pouvez en créer une nouvelle."
 				className="group-has-[[data-pending]]:animate-pulse py-12"

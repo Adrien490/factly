@@ -28,11 +28,13 @@ interface Props {
 		organizationId: string;
 	}>;
 	searchParams: Promise<{
+		q?: string;
 		search?: string;
 		sortBy?: string;
 		sortOrder?: string;
 		page?: string;
 		perPage?: string;
+		status?: string;
 	}>;
 }
 
@@ -41,7 +43,8 @@ export default async function ProductsCategoriesRootPage({
 	searchParams,
 }: Props) {
 	const { organizationId } = await params;
-	const { search, sortBy, sortOrder, page, perPage } = await searchParams;
+	const { q, search, sortBy, sortOrder, page, perPage, status } =
+		await searchParams;
 
 	// Afficher uniquement les catégories racines (sans parent)
 	return (
@@ -105,10 +108,10 @@ export default async function ProductsCategoriesRootPage({
 					<CreateProductCategorySheetForm
 						categoriesPromise={getProductCategories({
 							organizationId,
-							filters: {},
-							search,
-							sortBy: sortBy as "name" | "createdAt",
-							sortOrder: sortOrder as "asc" | "desc",
+							filters: { status: status || "ACTIVE" },
+							search: q || "",
+							sortBy: "name",
+							sortOrder: "asc",
 							parentId: null,
 							rootOnly: false,
 							page: page ? parseInt(page) : 1,
@@ -125,7 +128,7 @@ export default async function ProductsCategoriesRootPage({
 						organizationId={organizationId}
 						categoriesPromise={getProductCategories({
 							organizationId,
-							filters: {},
+							filters: { status: status || "ACTIVE" },
 							search,
 							sortBy: sortBy as "name" | "createdAt",
 							sortOrder: sortOrder as "asc" | "desc",
