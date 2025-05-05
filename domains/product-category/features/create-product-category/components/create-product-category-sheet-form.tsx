@@ -168,27 +168,45 @@ export function CreateProductCategorySheetForm({
 
 							{/* Catégorie parente - affiché seulement si pas de parentId imposé */}
 							{showParentIdField ? (
-								<form.AppField name="parentId">
-									{(field) => (
-										<field.SelectField
-											label="Catégorie parente"
-											placeholder="Sélectionnez une catégorie parente"
-											disabled={isPending}
-											options={[
-												{
-													value: "none",
-													label: "Aucune (catégorie principale)",
-												},
-												...categories.map((category) => ({
-													value: category.id,
-													label: category.name,
-												})),
-											]}
-										/>
+								<>
+									{parentCategory ? (
+										<div className="space-y-2">
+											<label className="text-sm font-medium">
+												Catégorie parente
+											</label>
+											<div className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
+												{parentCategory.name}
+											</div>
+											<input
+												type="hidden"
+												name="parentId"
+												value={defaultValues.parentId || ""}
+											/>
+										</div>
+									) : (
+										<form.AppField name="parentId">
+											{(field) => (
+												<field.SelectField
+													label="Catégorie parente"
+													placeholder="Sélectionnez une catégorie parente"
+													disabled={isPending}
+													options={[
+														{
+															value: "none",
+															label: "Aucune (catégorie principale)",
+														},
+														...categories.map((category) => ({
+															value: category.id,
+															label: category.name,
+														})),
+													]}
+												/>
+											)}
+										</form.AppField>
 									)}
-								</form.AppField>
+								</>
 							) : (
-								// Si parentId est imposé, afficher un champ désactivé
+								// Si parentId n'est pas défini dans defaultValues, cacher le champ
 								<form.AppField name="parentId">
 									{(field) => (
 										<input

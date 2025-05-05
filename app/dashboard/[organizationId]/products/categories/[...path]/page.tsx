@@ -1,6 +1,7 @@
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
+import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import {
 	getCategoryAncestors,
@@ -197,7 +198,7 @@ export default async function ProductsCategoriesPathPage({
 
 			{/* Tableau de données */}
 			<div className="mt-6">
-				<Suspense fallback={<></>}>
+				<Suspense fallback={<ProductCategoryDataTableSkeleton />}>
 					<ProductCategoryDataTable
 						emptyState={
 							<EmptyState

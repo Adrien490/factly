@@ -2,6 +2,7 @@ import { ProductCategoryToggleArchivedButton } from "@/domains/product-category/
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
+import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
@@ -104,7 +105,7 @@ export default async function ProductsCategoriesRootPage({
 					className="w-[200px] shrink-0"
 				/>
 				<ProductCategoryToggleArchivedButton />
-				<Suspense fallback={<></>}>
+				<Suspense fallback={<ProductCategoryDataTableSkeleton />}>
 					<CreateProductCategorySheetForm
 						categoriesPromise={getProductCategories({
 							organizationId,
