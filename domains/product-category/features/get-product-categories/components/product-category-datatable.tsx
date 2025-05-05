@@ -19,10 +19,7 @@ import { use } from "react";
 
 import { ProductCategoryActions } from "@/domains/product-category/components/product-category-actions";
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
-import {
-	getCategoryAncestors,
-	getCategoryUrl,
-} from "@/domains/product-category/utils";
+import { getCategoryUrl } from "@/domains/product-category/utils";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
@@ -100,15 +97,8 @@ export function ProductCategoryDataTable({
 							(option) => option.value === category.status
 						);
 
-						// Récupérer tous les ancêtres (parents) de la catégorie
-						const ancestors = getCategoryAncestors(category);
-
 						// Construction de l'URL complète de la catégorie avec tous ses parents
-						const categoryUrl = getCategoryUrl(
-							organizationId,
-							category.slug,
-							ancestors
-						);
+						const categoryUrl = getCategoryUrl(organizationId, category.slug);
 
 						return (
 							<TableRow key={category.id} role="row" tabIndex={0}>

@@ -145,8 +145,8 @@ export const createProductCategory: ServerAction<
 		});
 
 		// 9. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`organizations:${validatedOrgId}:productCategories`);
-		revalidateTag(`organizations:${validatedOrgId}:productCategories:count`);
+		revalidateTag(`organizations:${validatedOrgId}:product-categories`);
+		revalidateTag(`organizations:${validatedOrgId}:product-categories:count`);
 
 		// 10. Retour de la réponse de succès
 		return createSuccessResponse(

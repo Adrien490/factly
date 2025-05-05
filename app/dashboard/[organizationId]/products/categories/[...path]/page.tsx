@@ -1,20 +1,13 @@
-import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
+import { SubCategoryBreadcrumb } from "@/domains/product-category/components";
+import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category/components/create-product-category-sheet-form";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
+import { getProductCategory } from "@/domains/product-category/features/get-product-category";
+import { getAncestors } from "@/domains/product-category/features/get-product-category-ancestors";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
-import {
-	getCategoryAncestors,
-	getCategoryUrl,
-} from "@/domains/product-category/utils";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
 	EmptyState,
 	HorizontalMenu,
 	PageContainer,
@@ -26,10 +19,8 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import db from "@/shared/lib/db";
-import { ChevronRight, FolderOpenDot } from "lucide-react";
 import { notFound } from "next/navigation";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 
 interface Props {
 	params: Promise<{
@@ -53,38 +44,10 @@ export default async function ProductsCategoriesPathPage({
 	// Récupérer le dernier slug dans le chemin pour trouver la catégorie actuelle
 	const currentSlug = path[path.length - 1];
 
-	// Récupérer les informations de la catégorie courante avec toute sa hiérarchie de parents
-	const currentCategory = await db.productCategory.findFirst({
-		where: {
-			slug: currentSlug,
-			organizationId,
-		},
-		select: {
-			id: true,
-			name: true,
-			slug: true,
-			parent: {
-				select: {
-					id: true,
-					name: true,
-					slug: true,
-					parent: {
-						select: {
-							id: true,
-							name: true,
-							slug: true,
-							parent: {
-								select: {
-									id: true,
-									name: true,
-									slug: true,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+	// Récupérer les informations de la catégorie courante sans récursion profonde
+	const currentCategory = await getProductCategory({
+		organizationId,
+		slug: currentSlug,
 	});
 
 	// Si la catégorie n'existe pas, rediriger vers 404
@@ -92,8 +55,7 @@ export default async function ProductsCategoriesPathPage({
 		notFound();
 	}
 
-	// Récupérer tous les ancêtres (parents) de la catégorie courante
-	const ancestors = getCategoryAncestors(currentCategory);
+	// Récupérer les ancêtres avec notre nouvelle fonction
 
 	return (
 		<PageContainer>
@@ -105,58 +67,18 @@ export default async function ProductsCategoriesPathPage({
 			<HorizontalMenu items={getProductNavigation(organizationId)} />
 
 			{/* Breadcrumb pour la navigation hiérarchique */}
-			<Breadcrumb className="mb-6">
-				<BreadcrumbList>
-					<BreadcrumbItem>
-						<BreadcrumbLink
-							href={`/dashboard/${organizationId}/products/categories`}
-							className="flex items-center gap-1.5"
-						>
-							<FolderOpenDot className="h-4 w-4" />
-							Toutes les catégories
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-
-					{/* Toujours ajouter un séparateur après le premier élément */}
-					<BreadcrumbSeparator>
-						<ChevronRight className="h-4 w-4" />
-					</BreadcrumbSeparator>
-
-					{ancestors.length > 0 && (
-						<>
-							{/* Afficher les ancêtres en ordre inverse (du plus éloigné au plus proche) */}
-							{[...ancestors].reverse().map((ancestor, index, array) => {
-								// Pour chaque ancêtre, on construit le chemin avec ses propres ancêtres
-								const ancestorAncestors = array
-									.slice(0, array.length - index - 1)
-									.reverse();
-								const href = getCategoryUrl(
-									organizationId,
-									ancestor.slug,
-									ancestorAncestors
-								);
-
-								return (
-									<React.Fragment key={ancestor.id}>
-										<BreadcrumbItem>
-											<BreadcrumbLink href={href}>
-												{ancestor.name}
-											</BreadcrumbLink>
-										</BreadcrumbItem>
-										<BreadcrumbSeparator>
-											<ChevronRight className="h-4 w-4" />
-										</BreadcrumbSeparator>
-									</React.Fragment>
-								);
-							})}
-						</>
-					)}
-
-					<BreadcrumbItem>
-						<BreadcrumbPage>{currentCategory.name}</BreadcrumbPage>
-					</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb>
+			<SubCategoryBreadcrumb
+				organizationId={organizationId}
+				categoryPromise={getProductCategory({
+					organizationId,
+					slug: currentSlug,
+				})}
+				ancestorsPromise={getAncestors({
+					organizationId,
+					categoryId: currentCategory.id,
+					maxDepth: 10,
+				})}
+			/>
 
 			<Toolbar>
 				<SearchForm
@@ -179,6 +101,9 @@ export default async function ProductsCategoriesPathPage({
 				<Suspense fallback={<></>}>
 					<CreateProductCategorySheetForm
 						defaultValues={{
+							organizationId,
+							name: "",
+							description: "",
 							parentId: currentCategory.id,
 						}}
 						categoriesPromise={getProductCategories({

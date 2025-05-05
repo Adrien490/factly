@@ -43,39 +43,3 @@ export function getCategoryUrl(
 	const path = buildCategoryPath(slug, parents);
 	return `/dashboard/${organizationId}/products/categories/${path}`;
 }
-
-// Type pour représenter la structure récursive d'une catégorie
-type CategoryWithParent = {
-	readonly slug: string;
-	readonly name: string;
-	readonly id: string;
-	readonly parent?: CategoryWithParent | null;
-};
-
-/**
- * Récupère un tableau de tous les parents d'une catégorie, en ordre de proximité
- * (du parent direct au parent le plus éloigné)
- * Implémentation itérative pour éviter les problèmes de pile d'appels récursifs
- * @param category La catégorie pour laquelle récupérer les parents
- * @returns Un tableau des parents, du plus proche au plus éloigné
- */
-export function getCategoryAncestors(category: {
-	parent?: CategoryWithParent | null;
-}): ReadonlyArray<{ id: string; name: string; slug: string }> {
-	// Tableau pour stocker les ancêtres
-	const ancestors: Array<{ id: string; name: string; slug: string }> = [];
-
-	// Approche itérative avec une boucle while au lieu de récursion
-	let currentCategory = category;
-
-	while (currentCategory?.parent) {
-		const { id, name, slug } = currentCategory.parent;
-		// Ajouter l'ancêtre au tableau
-		ancestors.push({ id, name, slug });
-		// Passer au parent suivant
-		currentCategory = { parent: currentCategory.parent.parent };
-	}
-
-	// Retourner le tableau en lecture seule pour garantir l'immutabilité
-	return Object.freeze([...ancestors]);
-}

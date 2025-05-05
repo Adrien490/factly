@@ -110,8 +110,8 @@ export const archiveProductCategory: ServerAction<
 		});
 
 		// 9. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:productCategories:${id}`);
-		revalidateTag(`organizations:${organizationId}:productCategories`);
+		revalidateTag(`organizations:${organizationId}:product-categories:${id}`);
+		revalidateTag(`organizations:${organizationId}:product-categories`);
 
 		return createSuccessResponse(
 			updatedCategory,

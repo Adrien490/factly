@@ -1,8 +1,5 @@
 import { ArchiveProductCategoryAlertDialog } from "@/domains/product-category/features/archive-product-category/components/archive-product-category-alert-dialog";
-import {
-	getCategoryAncestors,
-	getCategoryUrl,
-} from "@/domains/product-category/utils";
+import { getCategoryUrl } from "@/domains/product-category/utils";
 import {
 	Button,
 	DropdownMenu,
@@ -28,8 +25,7 @@ export function ProductCategoryActions({
 	organizationId,
 }: ProductCategoryActionsProps) {
 	// Récupérer les ancêtres pour construire l'URL complète
-	const ancestors = getCategoryAncestors(category);
-	const categoryUrl = getCategoryUrl(organizationId, category.slug, ancestors);
+	const categoryUrl = getCategoryUrl(organizationId, category.slug);
 
 	return (
 		<DropdownMenu modal={false}>

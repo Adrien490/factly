@@ -23,22 +23,22 @@ export async function fetchProductCategories(
 	"use cache";
 
 	// Tags de cache
-	cacheTag(`organizations:${params.organizationId}:productCategories`);
+	cacheTag(`organizations:${params.organizationId}:product-categories`);
 
 	if (params.search) {
 		cacheTag(
-			`organizations:${params.organizationId}:productCategories:search:${params.search}`
+			`organizations:${params.organizationId}:product-categories:search:${params.search}`
 		);
 	}
 
 	cacheTag(
-		`organizations:${params.organizationId}:productCategories:sort:${params.sortBy}:${params.sortOrder}`
+		`organizations:${params.organizationId}:product-categories:sort:${params.sortBy}:${params.sortOrder}`
 	);
 
 	if (params.parentId !== undefined) {
 		const parentIdTag = params.parentId === null ? "root" : params.parentId;
 		cacheTag(
-			`organizations:${params.organizationId}:productCategories:parentId:${parentIdTag}`
+			`organizations:${params.organizationId}:product-categories:parentId:${parentIdTag}`
 		);
 	}
 
@@ -49,7 +49,7 @@ export async function fetchProductCategories(
 		MAX_RESULTS_PER_PAGE
 	);
 	cacheTag(
-		`organizations:${params.organizationId}:productCategories:page:${page}:perPage:${perPage}`
+		`organizations:${params.organizationId}:product-categories:page:${page}:perPage:${perPage}`
 	);
 
 	// Durée de vie du cache

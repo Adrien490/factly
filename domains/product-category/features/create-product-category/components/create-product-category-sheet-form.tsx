@@ -19,23 +19,18 @@ import { ReactNode, use, useActionState, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { createProductCategory } from "../actions/create-product-category";
 import { createProductCategorySchema } from "../schemas";
-
-interface CreateProductCategoryDefaultValues {
-	name?: string;
-	description?: string;
-	parentId?: string | null;
-}
+import { CreateProductCategoryInput } from "../types";
 
 interface CreateProductCategorySheetFormProps {
 	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	children?: ReactNode;
-	defaultValues?: CreateProductCategoryDefaultValues;
+	defaultValues?: CreateProductCategoryInput;
 }
 
 export function CreateProductCategorySheetForm({
 	categoriesPromise,
 	children,
-	defaultValues = {},
+	defaultValues,
 }: CreateProductCategorySheetFormProps) {
 	const response = use(categoriesPromise);
 	const { categories } = response;
@@ -48,18 +43,18 @@ export function CreateProductCategorySheetForm({
 	const parentCategory = useMemo(() => {
 		// Si parentId est undefined ou null, on n'a pas de catégorie parente
 		if (
-			defaultValues.parentId === undefined ||
-			defaultValues.parentId === null
+			defaultValues?.parentId === undefined ||
+			defaultValues?.parentId === null
 		) {
 			return null;
 		}
 
 		// Sinon, on cherche la catégorie correspondante
 		return categories.find((cat) => cat.id === defaultValues.parentId) || null;
-	}, [categories, defaultValues.parentId]);
+	}, [categories, defaultValues?.parentId]);
 
 	// Flag pour savoir si on doit montrer le champ parentId ou non
-	const showParentIdField = defaultValues.parentId !== undefined;
+	const showParentIdField = defaultValues?.parentId !== undefined;
 	// Flag pour savoir si on doit montrer le select ou un champ en lecture seule
 	const showParentAsReadOnly = Boolean(parentCategory);
 
@@ -99,28 +94,15 @@ export function CreateProductCategorySheetForm({
 	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			name: defaultValues.name || "",
-			description: defaultValues.description || "",
-			parentId:
-				defaultValues.parentId !== undefined
-					? defaultValues.parentId === null
-						? "none"
-						: defaultValues.parentId
-					: "",
+			name: defaultValues?.name || "",
+			description: defaultValues?.description || "",
+			parentId: defaultValues?.parentId || "",
 		},
 
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
 			[state]
 		),
-	});
-
-	// Pour le debug
-	console.log("[CREATE_PRODUCT_CATEGORY_FORM]", {
-		defaultParentId: defaultValues.parentId,
-		parentCategory,
-		showParentIdField,
-		showParentAsReadOnly,
 	});
 
 	return (

@@ -73,8 +73,8 @@ export const refreshProductCategories: ServerAction<
 		}
 
 		// 5. Rafraîchissement des données
-		revalidateTag(`organizations:${organizationId}:productCategories`);
-		revalidateTag(`organizations:${organizationId}:productCategories:count`);
+		revalidateTag(`organizations:${organizationId}:product-categories`);
+		revalidateTag(`organizations:${organizationId}:product-categories:count`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(
