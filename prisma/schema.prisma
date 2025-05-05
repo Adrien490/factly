@@ -527,6 +527,5 @@ enum Country {
 // Enum pour le statut des catégories de produits
 enum ProductCategoryStatus {
   ACTIVE // Catégorie active, visible
-  INACTIVE // Catégorie inactive, non visible mais existante
   ARCHIVED // Catégorie archivée
 }

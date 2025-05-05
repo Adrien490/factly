@@ -6,11 +6,6 @@ export const getProductCategoriesSortFieldSchema = z
 	.enum(["name", "createdAt"])
 	.default("name");
 
-// Format de retour des données
-export const getProductCategoriesFormatSchema = z
-	.enum(["tree", "flat"])
-	.default("flat");
-
 // Schéma pour les filtres de catégories
 const filterValueSchema = z.union([
 	// Valeurs uniques (chaînes et booléens)
@@ -42,22 +37,23 @@ export const getProductCategoriesSchema = z.object({
 
 	// Paramètres de recherche et filtrage
 	search: z.string().optional(),
-	filters: productCategoryFiltersSchema.default({}),
+	filters: productCategoryFiltersSchema.optional().default({}),
 
-	// Navigation par dossier - paramètre principal
-	// null = niveau racine
-	// string = ID du dossier actuel
-	// undefined = tous les niveaux (mode liste plate)
+	// ID du parent pour récupérer les sous-catégories
+	// Si non fourni, récupère toutes les catégories
+	// Si null, récupère uniquement les catégories racine
 	parentId: z.string().nullable().optional(),
 
-	// Options de tri
-	sortBy: getProductCategoriesSortFieldSchema.default("name"),
-	sortOrder: sortOrderSchema,
+	// Indicateur pour récupérer uniquement les catégories racine
+	rootOnly: z.boolean().optional().default(false),
 
-	// Format de retour des données
-	// tree = structure hiérarchique avec propriété children
-	// flat = liste plate
-	format: getProductCategoriesFormatSchema.optional().default("flat"),
+	// Paramètres de pagination
+	page: z.number().optional().default(1),
+	perPage: z.number().optional().default(10),
+
+	// Options de tri
+	sortBy: getProductCategoriesSortFieldSchema.optional().default("name"),
+	sortOrder: sortOrderSchema.optional().default("asc"),
 
 	// Options pour les informations à inclure dans les résultats
 	include: includeOptionsSchema.optional(),

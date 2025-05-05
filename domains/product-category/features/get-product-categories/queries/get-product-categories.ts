@@ -3,21 +3,18 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
+import { z } from "zod";
 import { getProductCategoriesSchema } from "../schemas";
-import {
-	GetProductCategoriesParams,
-	GetProductCategoriesReturn,
-} from "../types";
-import { fetchCategoriesFlat } from "./fetch-categories-flat";
-import { fetchCategoriesTree } from "./fetch-categories-tree";
+import { GetProductCategoriesReturn } from "../types";
+import { fetchProductCategories } from "./fetch-product-categories";
 
 /**
- * Fonction pour récupérer les catégories de produits avec plusieurs formats de retour
- * @param params Paramètres de recherche, filtrage et format
- * @returns Tableau de catégories au format demandé
+ * Fonction pour récupérer les catégories de produits
+ * @param params Paramètres de recherche et filtrage
+ * @returns Tableau de catégories
  */
 export async function getProductCategories(
-	params: GetProductCategoriesParams
+	params: z.infer<typeof getProductCategoriesSchema>
 ): Promise<GetProductCategoriesReturn> {
 	try {
 		// Vérification de l'authentification
@@ -46,17 +43,25 @@ export async function getProductCategories(
 		}
 
 		const validatedParams = validation.data;
-		const format = validatedParams.format || "flat";
 
-		// Sélection de la fonction de récupération appropriée en fonction du format
-		if (format === "tree") {
-			return fetchCategoriesTree(validatedParams);
-		} else {
-			return fetchCategoriesFlat(validatedParams);
+		// Si rootOnly est à true, forcer parentId à null
+		if (validatedParams.rootOnly) {
+			validatedParams.parentId = null;
 		}
+
+		// Récupération des catégories
+		return fetchProductCategories(validatedParams);
 	} catch (error) {
 		console.error("[GET_PRODUCT_CATEGORIES]", error);
 		// En cas d'erreur, renvoyer un tableau vide
-		return [];
+		return {
+			categories: [],
+			pagination: {
+				page: 1,
+				perPage: 10,
+				total: 0,
+				pageCount: 0,
+			},
+		};
 	}
 }

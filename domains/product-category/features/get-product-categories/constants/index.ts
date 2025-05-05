@@ -1,5 +1,8 @@
 import { Prisma } from "@prisma/client";
 
+export const MAX_RESULTS_PER_PAGE = 100;
+export const DEFAULT_PER_PAGE = 10;
+
 /**
  * Sélection par défaut des champs pour les catégories de produits
  * Optimisée pour correspondre exactement au schéma Prisma et aux besoins de l'interface

@@ -29,7 +29,8 @@ export function CreateProductCategorySheetForm({
 	categoriesPromise,
 	children,
 }: CreateProductCategorySheetFormProps) {
-	const categories = use(categoriesPromise);
+	const response = use(categoriesPromise);
+	const { categories } = response;
 	const [isOpen, setIsOpen] = useState(false);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
@@ -181,7 +182,7 @@ export function CreateProductCategorySheetForm({
 							{/* Catégorie parente */}
 							<form.AppField name="parentId">
 								{(field) => (
-									<field.ComboboxField
+									<field.SelectField
 										label="Catégorie parente"
 										placeholder="Sélectionnez une catégorie parente"
 										disabled={isPending}
@@ -192,8 +193,6 @@ export function CreateProductCategorySheetForm({
 												label: category.name,
 											})),
 										]}
-										searchPlaceholder="Rechercher une catégorie..."
-										emptyMessage="Aucune catégorie trouvée."
 									/>
 								)}
 							</form.AppField>

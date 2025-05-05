@@ -1,5 +1,7 @@
+import { ProductCategoryToggleArchivedButton } from "@/domains/product-category/components/product-category-toggle-archived-button";
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
+import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
@@ -20,7 +22,6 @@ import {
 } from "@/shared/components";
 import { Calendar, FolderOpenDot, Users } from "lucide-react";
 import { Suspense } from "react";
-import { ProductCategoriesTree } from "./components/product-categories-tree";
 
 interface Props {
 	params: Promise<{
@@ -30,6 +31,8 @@ interface Props {
 		search?: string;
 		sortBy?: string;
 		sortOrder?: string;
+		page?: string;
+		perPage?: string;
 	}>;
 }
 
@@ -38,14 +41,7 @@ export default async function ProductsCategoriesRootPage({
 	searchParams,
 }: Props) {
 	const { organizationId } = await params;
-	const { search, sortBy, sortOrder } = await searchParams;
-
-	// Préparation des valeurs par défaut
-	const searchValue = search || "";
-	const sortByValue =
-		sortBy === "name" || sortBy === "createdAt" ? sortBy : "name";
-	const sortOrderValue =
-		sortOrder === "asc" || sortOrder === "desc" ? sortOrder : "asc";
+	const { search, sortBy, sortOrder, page, perPage } = await searchParams;
 
 	// Afficher uniquement les catégories racines (sans parent)
 	return (
@@ -100,20 +96,23 @@ export default async function ProductsCategoriesRootPage({
 							icon: <Calendar className="h-4 w-4" />,
 						},
 					]}
-					defaultSortBy={sortByValue}
-					defaultSortOrder={sortOrderValue}
+					defaultSortBy={sortBy}
+					defaultSortOrder={sortOrder as "asc" | "desc"}
 					className="w-[200px] shrink-0"
 				/>
+				<ProductCategoryToggleArchivedButton />
 				<Suspense fallback={<></>}>
 					<CreateProductCategorySheetForm
 						categoriesPromise={getProductCategories({
 							organizationId,
 							filters: {},
-							search: searchValue,
-							sortBy: sortByValue,
-							sortOrder: sortOrderValue,
+							search,
+							sortBy: sortBy as "name" | "createdAt",
+							sortOrder: sortOrder as "asc" | "desc",
 							parentId: null,
-							format: "flat",
+							rootOnly: false,
+							page: page ? parseInt(page) : 1,
+							perPage: 50,
 						})}
 					/>
 				</Suspense>
@@ -121,20 +120,19 @@ export default async function ProductsCategoriesRootPage({
 
 			{/* Tableau de données */}
 			<div className="mt-6">
-				<Suspense
-					fallback={
-						<div className="h-96 w-full animate-pulse bg-muted/50 rounded-lg"></div>
-					}
-				>
-					<ProductCategoriesTree
+				<Suspense fallback={<></>}>
+					<ProductCategoryDataTable
+						organizationId={organizationId}
 						categoriesPromise={getProductCategories({
 							organizationId,
 							filters: {},
-							search: searchValue,
-							sortBy: sortByValue,
-							sortOrder: sortOrderValue,
+							search,
+							sortBy: sortBy as "name" | "createdAt",
+							sortOrder: sortOrder as "asc" | "desc",
 							parentId: null,
-							format: "tree",
+							rootOnly: true,
+							page: page ? parseInt(page) : 1,
+							perPage: perPage ? parseInt(perPage) : 10,
 						})}
 					/>
 				</Suspense>

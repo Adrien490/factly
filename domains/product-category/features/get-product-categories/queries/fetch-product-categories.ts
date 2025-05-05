@@ -1,25 +1,28 @@
 "use server";
 
 import db from "@/shared/lib/db";
-import { Prisma } from "@prisma/client";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
-import { GET_PRODUCT_CATEGORIES_DEFAULT_SELECT } from "../constants";
+import {
+	DEFAULT_PER_PAGE,
+	GET_PRODUCT_CATEGORIES_DEFAULT_SELECT,
+	MAX_RESULTS_PER_PAGE,
+} from "../constants";
 import { getProductCategoriesSchema } from "../schemas";
-import { ProductCategoryFlat } from "../types";
+import { GetProductCategoriesReturn } from "../types";
 import { buildWhereClause } from "./build-where-clause";
 
 /**
- * Fonction qui récupère les catégories de produits au format plat
+ * Fonction qui récupère les catégories de produits
  * avec filtrage par parent et calcul optimisé du nombre d'enfants
  */
-export async function fetchCategoriesFlat(
+export async function fetchProductCategories(
 	params: z.infer<typeof getProductCategoriesSchema>
-): Promise<ProductCategoryFlat[]> {
+): Promise<GetProductCategoriesReturn> {
 	"use cache";
 
-	// Tags de cache - utilisation d'une clé générique commune avec fetchCategoriesTree
+	// Tags de cache
 	cacheTag(`organizations:${params.organizationId}:productCategories`);
 
 	if (params.search) {
@@ -39,6 +42,16 @@ export async function fetchCategoriesFlat(
 		);
 	}
 
+	// Normalisation et tag pour la pagination
+	const page = Math.max(1, Number(params.page) || 1);
+	const perPage = Math.min(
+		Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
+		MAX_RESULTS_PER_PAGE
+	);
+	cacheTag(
+		`organizations:${params.organizationId}:productCategories:page:${page}:perPage:${perPage}`
+	);
+
 	// Durée de vie du cache
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
@@ -50,25 +63,43 @@ export async function fetchCategoriesFlat(
 		// Construire la clause WHERE
 		const where = buildWhereClause(params);
 
-		// Appliquer directement le filtre parentId
+		// Appliquer le filtre parentId si spécifié
 		if (params.parentId !== undefined) {
 			where.parentId = params.parentId;
 		}
 
-		// S'assurer que l'ordre de tri est valide
-		const sortOrder = params.sortOrder as Prisma.SortOrder;
-		const sortBy = params.sortBy;
+		// Appliquer l'ordre de tri avec des valeurs par défaut
+		const sortOrder = params.sortOrder || "asc";
+		const sortBy = params.sortBy || "name";
 
-		// Récupérer les catégories filtrées
+		// Obtenir le nombre total de catégories pour la pagination
+		const total = await db.productCategory.count({ where });
+
+		// Calculer les paramètres de pagination
+		const totalPages = Math.ceil(total / perPage);
+		const currentPage = Math.min(page, totalPages || 1);
+		const skip = (currentPage - 1) * perPage;
+
+		// Récupérer les catégories filtrées avec pagination
 		const categories = await db.productCategory.findMany({
 			where,
 			select: GET_PRODUCT_CATEGORIES_DEFAULT_SELECT,
 			orderBy: [{ [sortBy]: sortOrder }],
+			take: perPage,
+			skip,
 		});
 
 		// Si pas de catégories trouvées, retourner un tableau vide
 		if (categories.length === 0) {
-			return [];
+			return {
+				categories: [],
+				pagination: {
+					page: currentPage,
+					perPage,
+					total: 0,
+					pageCount: 0,
+				},
+			};
 		}
 
 		// Récupérer le nombre d'enfants pour chaque catégorie en une seule requête
@@ -88,13 +119,31 @@ export async function fetchCategoriesFlat(
 		});
 
 		// Ajouter le nombre d'enfants à chaque catégorie
-		return categories.map((category) => ({
+		const categoriesWithChildCounts = categories.map((category) => ({
 			...category,
 			childCount: childCountsMap.get(category.id) || 0,
 			hasChildren: (childCountsMap.get(category.id) || 0) > 0,
 		}));
+
+		return {
+			categories: categoriesWithChildCounts,
+			pagination: {
+				page: currentPage,
+				perPage,
+				total,
+				pageCount: totalPages,
+			},
+		};
 	} catch (error) {
-		console.error("[FETCH_CATEGORIES_FLAT]", error);
-		return [];
+		console.error("[FETCH_CATEGORIES]", error);
+		return {
+			categories: [],
+			pagination: {
+				page: 1,
+				perPage: DEFAULT_PER_PAGE,
+				total: 0,
+				pageCount: 0,
+			},
+		};
 	}
 }
