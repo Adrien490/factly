@@ -188,7 +188,7 @@ export function CreateProductCategorySheetForm({
 							{/* Catégorie parente */}
 							<form.AppField name="parentId">
 								{(field) => (
-									<field.SelectField
+									<field.ComboboxField
 										label="Catégorie parente"
 										placeholder="Sélectionnez une catégorie parente"
 										disabled={isPending}
@@ -199,6 +199,8 @@ export function CreateProductCategorySheetForm({
 												label: category.name,
 											})),
 										]}
+										searchPlaceholder="Rechercher une catégorie..."
+										emptyMessage="Aucune catégorie trouvée."
 									/>
 								)}
 							</form.AppField>

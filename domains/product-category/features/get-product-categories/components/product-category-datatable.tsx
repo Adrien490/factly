@@ -114,7 +114,7 @@ export function ProductCategoryDataTable({
 										</div>
 										<div className="min-w-0">
 											<Link
-												href={`/dashboard/${organizationId}/products/categories/${category.slug}`}
+												href={`/dashboard/${organizationId}/categories/${category.slug}`}
 												className="hover:underline flex items-center truncate max-w-[220px]"
 											>
 												<span className="truncate">{category.name}</span>
