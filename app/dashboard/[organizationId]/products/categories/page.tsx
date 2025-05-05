@@ -111,6 +111,7 @@ export default async function ProductsCategoriesRootPage({
 							sortBy: "name",
 							sortOrder: "asc",
 							parentId: null,
+							format: "flat",
 						})}
 					/>
 				</Suspense>
@@ -123,6 +124,7 @@ export default async function ProductsCategoriesRootPage({
 						categoriesPromise={getProductCategories({
 							organizationId,
 							filters: {},
+							format: "flat",
 							search: search || "",
 							sortBy: sortBy as GetProductCategorySortField,
 							sortOrder: sortOrder as SortOrder,

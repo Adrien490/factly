@@ -12,7 +12,6 @@ export const GET_PRODUCT_CATEGORIES_DEFAULT_SELECT = {
 	description: true,
 	slug: true,
 	status: true,
-	imageUrl: true,
 
 	// Relations hiérarchiques
 	parentId: true,

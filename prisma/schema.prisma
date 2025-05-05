@@ -364,7 +364,6 @@ model ProductCategory {
   description String? // Description optionnelle
   slug        String // Slug pour URL
   status      ProductCategoryStatus @default(ACTIVE) // Statut de la catégorie
-  imageUrl    String? // URL de l'image de la catégorie
 
   // Hiérarchie des catégories
   parentId String? // ID de la catégorie parente

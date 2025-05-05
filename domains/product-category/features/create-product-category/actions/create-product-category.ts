@@ -70,7 +70,6 @@ export const createProductCategory: ServerAction<
 			status:
 				(formData.get("status") as ProductCategoryStatus) ||
 				ProductCategoryStatus.ACTIVE,
-			imageUrl: (formData.get("imageUrl") as string) || null,
 		};
 
 		console.log("[CREATE_PRODUCT_CATEGORY] Raw data:", rawData);
@@ -132,7 +131,6 @@ export const createProductCategory: ServerAction<
 			slug: categoryData.slug,
 			description: categoryData.description,
 			status: categoryData.status,
-			imageUrl: categoryData.imageUrl,
 			organization: { connect: { id: validatedOrgId } },
 		};
 

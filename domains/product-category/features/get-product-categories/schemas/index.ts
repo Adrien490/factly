@@ -6,6 +6,11 @@ export const getProductCategoriesSortFieldSchema = z
 	.enum(["name", "createdAt"])
 	.default("name");
 
+// Format de retour des données
+export const getProductCategoriesFormatSchema = z
+	.enum(["tree", "flat"])
+	.default("flat");
+
 // Schéma pour les filtres de catégories
 const filterValueSchema = z.union([
 	// Valeurs uniques (chaînes et booléens)
@@ -48,6 +53,11 @@ export const getProductCategoriesSchema = z.object({
 	// Options de tri
 	sortBy: getProductCategoriesSortFieldSchema.default("name"),
 	sortOrder: sortOrderSchema,
+
+	// Format de retour des données
+	// tree = structure hiérarchique avec propriété children
+	// flat = liste plate
+	format: getProductCategoriesFormatSchema.optional().default("flat"),
 
 	// Options pour les informations à inclure dans les résultats
 	include: includeOptionsSchema.optional(),

@@ -19,7 +19,6 @@ export const createProductCategorySchema = z.object({
 				"Le slug doit contenir uniquement des lettres minuscules, des chiffres et des tirets",
 		}),
 	description: z.string().optional(),
-	imageUrl: z.string().optional().nullable(),
 
 	// Hiérarchie
 	parentId: z.string().optional().nullable(),

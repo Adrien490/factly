@@ -7,13 +7,15 @@ import { getProductCategoriesSchema } from "../schemas";
 import {
 	GetProductCategoriesParams,
 	GetProductCategoriesReturn,
+	ProductCategoryFlat,
 } from "../types";
+import { buildCategoryTree } from "../utils";
 import { fetchProductCategories } from "./fetch-product-categories";
 
 /**
- * Fonction pour récupérer les catégories de produits avec navigation par dossier
- * @param params Paramètres de recherche et filtrage
- * @returns Tableau de catégories filtré selon le niveau de dossier spécifié
+ * Fonction pour récupérer les catégories de produits avec plusieurs formats de retour
+ * @param params Paramètres de recherche, filtrage et format
+ * @returns Tableau de catégories au format demandé
  */
 export async function getProductCategories(
 	params: GetProductCategoriesParams
@@ -45,42 +47,22 @@ export async function getProductCategories(
 		}
 
 		const validatedParams = validation.data;
+		const format = validatedParams.format || "flat";
 
-		// Récupération des données brutes
-		const allCategories = await fetchProductCategories(validatedParams);
+		// Récupération des données en fonction du format
+		const categories = await fetchProductCategories(validatedParams);
 
-		// Navigation par dossier simplifiée
-		if (allCategories.length > 0) {
-			// 1. Filtrer les catégories du niveau courant (défini par parentId)
-			const currentLevelCategories = allCategories.filter(
-				(category) => category.parentId === validatedParams.parentId
-			);
-
-			// 2. Enrichir chaque catégorie avec les données demandées
-			return Promise.all(
-				currentLevelCategories.map(async (category) => {
-					const result = { ...category };
-
-					// Par défaut, toujours inclure le nombre d'enfants sauf si explicitement désactivé
-					const shouldIncludeChildCount =
-						!validatedParams.include ||
-						validatedParams.include.childCount === undefined ||
-						validatedParams.include.childCount === true;
-
-					if (shouldIncludeChildCount) {
-						const childCount = allCategories.filter(
-							(c) => c.parentId === category.id
-						).length;
-						result.childCount = childCount;
-						result.hasChildren = childCount > 0;
-					}
-
-					return result;
-				})
-			);
+		if (categories.length === 0) {
+			return [];
 		}
 
-		return allCategories;
+		// Pour le format tree, il faut construire l'arborescence
+		if (format === "tree") {
+			return buildCategoryTree(categories as ProductCategoryFlat[]);
+		}
+
+		// Pour le format flat, les données sont déjà traitées par fetchProductCategories
+		return categories;
 	} catch (error) {
 		console.error("[GET_PRODUCT_CATEGORIES]", error);
 		// En cas d'erreur, renvoyer un tableau vide

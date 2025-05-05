@@ -4,7 +4,6 @@ import { GetProductCategoriesReturn } from "@/domains/product-category/features/
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
-	FormLabel,
 	Sheet,
 	SheetContent,
 	SheetFooter,
@@ -12,12 +11,9 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/shared/components/ui";
-import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { ProductCategory, ProductCategoryStatus } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
-import { Upload, X } from "lucide-react";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ReactNode, use, useActionState, useState } from "react";
 import { toast } from "sonner";
@@ -88,9 +84,6 @@ export function CreateProductCategorySheetForm({
 			[state]
 		),
 	});
-
-	// Gestion de l'upload d'images
-	const { isUploading, startUpload } = useUploadThing("categoryImage");
 
 	// Fonction pour générer le slug à partir du nom
 	const handleGenerateSlug = (name: string) => {
@@ -213,77 +206,6 @@ export function CreateProductCategorySheetForm({
 										placeholder="Description de la catégorie..."
 										disabled={isPending}
 									/>
-								)}
-							</form.AppField>
-						</div>
-
-						{/* Image de la catégorie */}
-						<div className="space-y-4 mx-auto w-full">
-							<form.AppField name="imageUrl">
-								{(field) => (
-									<div className="space-y-3 w-full">
-										<div className="flex items-center justify-between">
-											<FormLabel>Image</FormLabel>
-											{field.state.value && (
-												<Button
-													disabled={isPending}
-													type="button"
-													variant="ghost"
-													size="sm"
-													className="text-destructive flex items-center gap-1"
-													onClick={() => form.setFieldValue("imageUrl", "")}
-												>
-													<X className="h-4 w-4" />
-													Supprimer
-												</Button>
-											)}
-										</div>
-
-										{field.state.value ? (
-											<div className="flex items-center justify-center w-full">
-												<div className="relative h-32 w-32 rounded-md overflow-hidden">
-													<Image
-														src={field.state.value}
-														alt="Image de la catégorie"
-														fill
-														sizes="128px"
-														className="object-cover"
-														priority
-													/>
-												</div>
-											</div>
-										) : (
-											<div className="relative w-full">
-												<UploadDropzone
-													endpoint="categoryImage"
-													onChange={async (files) => {
-														const res = await startUpload(files);
-														const imageUrl = res?.[0]?.serverData?.url;
-														if (imageUrl) {
-															form.setFieldValue("imageUrl", imageUrl);
-														}
-													}}
-													onUploadError={(error) => {
-														console.error(error);
-														toast.error("Erreur lors de l'upload", {
-															description:
-																"Impossible de charger l'image. Veuillez réessayer.",
-														});
-													}}
-													className="border-2 border-dashed border-muted-foreground/25 h-32 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer ut-button:bg-primary ut-button:hover:bg-primary/90"
-												/>
-
-												{isUploading && (
-													<div className="absolute inset-0 flex items-center justify-center bg-background/80">
-														<div className="text-sm text-muted-foreground">
-															Chargement...{" "}
-															<Upload className="h-4 w-4 ml-2 animate-bounce" />
-														</div>
-													</div>
-												)}
-											</div>
-										)}
-									</div>
 								)}
 							</form.AppField>
 						</div>

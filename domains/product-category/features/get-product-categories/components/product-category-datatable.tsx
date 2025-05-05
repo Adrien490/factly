@@ -16,7 +16,6 @@ import { use } from "react";
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { GetProductCategoriesReturn } from "../types";
 
@@ -30,6 +29,8 @@ export function ProductCategoryDataTable({
 	organizationId,
 }: ProductCategoryDataTableProps) {
 	const categories = use(categoriesPromise);
+
+	console.log("tree", categories);
 
 	// Récupérer les catégories du niveau courant et les IDs pour la sélection
 	const categoryIds = categories.map((category) => category.id);
@@ -100,17 +101,7 @@ export function ProductCategoryDataTable({
 								<TableCell role="gridcell" className="font-medium w-[350px]">
 									<div className="flex items-center gap-2">
 										<div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
-											{category.imageUrl ? (
-												<Image
-													src={category.imageUrl}
-													width={32}
-													height={32}
-													alt={category.name}
-													className="object-cover"
-												/>
-											) : (
-												<Folder className="h-4 w-4 text-muted-foreground" />
-											)}
+											<Folder className="h-4 w-4 text-muted-foreground" />
 										</div>
 										<div className="min-w-0">
 											<Link
@@ -158,7 +149,7 @@ export function ProductCategoryDataTable({
 									role="gridcell"
 									className="text-center w-[150px] hidden lg:table-cell"
 								>
-									{category.childCount}
+									{category.childCount || 0}
 								</TableCell>
 								<TableCell
 									role="gridcell"

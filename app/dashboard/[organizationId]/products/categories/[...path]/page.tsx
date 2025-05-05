@@ -150,6 +150,7 @@ export default async function ProductsCategoriesPathPage({
 							sortBy: "name",
 							sortOrder: "asc",
 							parentId: currentCategory.id,
+							format: "flat",
 						})}
 					/>
 				</Suspense>
@@ -166,6 +167,7 @@ export default async function ProductsCategoriesPathPage({
 							sortBy: "name",
 							sortOrder: "asc",
 							parentId: currentCategory.id,
+							format: "flat",
 						})}
 						organizationId={organizationId}
 					/>
