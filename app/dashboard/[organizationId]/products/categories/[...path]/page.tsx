@@ -41,14 +41,14 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface Props {
-	params: {
+	params: Promise<{
 		organizationId: string;
 		path: string[];
-	};
+	}>;
 }
 
 export default async function ProductCategoryPage({ params }: Props) {
-	const { organizationId, path } = params;
+	const { organizationId, path } = await params;
 
 	// Récupérer toutes les catégories
 	const categories = await getProductCategories({
