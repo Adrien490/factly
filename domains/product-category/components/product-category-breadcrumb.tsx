@@ -41,8 +41,8 @@ export function ProductCategoryBreadcrumb({
 	}
 
 	return (
-		<Breadcrumb className="ml-auto text-sm">
-			<BreadcrumbList className="flex flex-nowrap items-center overflow-hidden">
+		<Breadcrumb className="text-sm">
+			<BreadcrumbList className="flex flex-nowrap items-center">
 				<BreadcrumbItem className="flex-shrink-0">
 					<BreadcrumbLink
 						href={`/dashboard/${organizationId}/products/categories`}
