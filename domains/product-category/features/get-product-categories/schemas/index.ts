@@ -81,13 +81,3 @@ export const getProductCategoriesSchema = z.object({
 	// Options de pagination
 	pagination: paginationOptionsSchema,
 });
-
-// Types exportés pour une utilisation facile
-export type GetProductCategoriesParams = z.infer<
-	typeof getProductCategoriesSchema
->;
-export type SortField = z.infer<typeof sortFieldSchema>;
-export type SortOrder = z.infer<typeof sortOrderSchema>;
-export type StructureOptions = z.infer<typeof structureOptionsSchema>;
-export type PaginationOptions = z.infer<typeof paginationOptionsSchema>;
-export type IncludeOptions = z.infer<typeof includeOptionsSchema>;
