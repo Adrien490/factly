@@ -4,6 +4,10 @@ import { ProductCategoryDataTable } from "@/domains/product-category/features/ge
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -14,7 +18,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import { Badge, Calendar, Users } from "lucide-react";
+import { Badge, Calendar, Home, Users } from "lucide-react";
 import { Suspense } from "react";
 
 interface Props {
@@ -42,6 +46,19 @@ export default async function ProductsCategoriesRootPage({
 				title="Catégories"
 				description="Gérer vos catégories de produits"
 			/>
+
+			{/* Breadcrumb pour la navigation hiérarchique */}
+			<Breadcrumb className="mb-6">
+				<BreadcrumbList>
+					<BreadcrumbItem>
+						<BreadcrumbLink
+							href={`/dashboard/${organizationId}/products/categories`}
+						>
+							<Home className="h-4 w-4 mr-1" />
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+				</BreadcrumbList>
+			</Breadcrumb>
 
 			<Toolbar
 				leftContent={
