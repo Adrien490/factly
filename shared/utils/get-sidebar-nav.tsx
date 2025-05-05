@@ -46,22 +46,22 @@ export const getSidebarNav = (organizationId: string) => [
 		title: "Catalogue",
 		icon: Package,
 		items: [
-			{
+			/*{
 				title: "Produits",
 				url: `/dashboard/${organizationId}/products`,
-			},
-			{
+			},*/
+			/*{
 				title: "Ajouter un produit",
 				url: `/dashboard/${organizationId}/products/new`,
-			},
+			},*/
 			{
 				title: "Catégories",
 				url: `/dashboard/${organizationId}/products/categories`,
 			},
-			{
+			/*{
 				title: "Taux de TVA",
 				url: `/dashboard/${organizationId}/products/tax-rates`,
-			},
+			},*/
 		],
 	},
 	/*{
