@@ -19,7 +19,9 @@ interface ToolbarProps {
 export function Toolbar({ children, className = "" }: ToolbarProps) {
 	return (
 		<Card>
-			<CardContent className={`flex flex-wrap gap-2 sm:gap-3 ${className}`}>
+			<CardContent
+				className={`flex flex-wrap gap-2 sm:gap-3 mb-6 ${className}`}
+			>
 				{children}
 			</CardContent>
 		</Card>
