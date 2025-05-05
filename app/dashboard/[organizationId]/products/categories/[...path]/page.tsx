@@ -115,11 +115,13 @@ export default async function ProductsCategoriesPathPage({
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 
+					{/* Toujours ajouter un séparateur après le premier élément */}
+					<BreadcrumbSeparator>
+						<ChevronRight className="h-4 w-4" />
+					</BreadcrumbSeparator>
+
 					{ancestors.length > 0 && (
 						<>
-							<BreadcrumbSeparator>
-								<ChevronRight className="h-4 w-4" />
-							</BreadcrumbSeparator>
 							{/* Afficher les ancêtres en ordre inverse (du plus éloigné au plus proche) */}
 							{[...ancestors].reverse().map((ancestor, index, array) => {
 								// Pour chaque ancêtre, on construit le chemin avec ses propres ancêtres
