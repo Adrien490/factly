@@ -64,23 +64,25 @@ export default async function ProductsCategoriesPathPage({
 				description="Gérer les sous-catégories"
 			/>
 
-			<div className="flex justify-between items-center gap-2 mb-6">
-				<HorizontalMenu
-					className="mb-0"
-					items={getProductNavigation(organizationId)}
-				/>
-				<ProductCategoryBreadcrumb
-					organizationId={organizationId}
-					productCategoryPromise={getProductCategory({
-						organizationId,
-						slug: currentSlug,
-					})}
-					productCategoryAncestorsPromise={getProductCategoryAncestors({
-						organizationId,
-						categoryId: currentCategory.id,
-						maxDepth: 10,
-					})}
-				/>
+			<div className="space-y-3 mb-6">
+				<nav aria-label="Fil d'Ariane" role="navigation">
+					<ProductCategoryBreadcrumb
+						organizationId={organizationId}
+						productCategoryPromise={getProductCategory({
+							organizationId,
+							slug: currentSlug,
+						})}
+						productCategoryAncestorsPromise={getProductCategoryAncestors({
+							organizationId,
+							categoryId: currentCategory.id,
+							maxDepth: 10,
+						})}
+					/>
+				</nav>
+
+				<div aria-label="Navigation principale" role="navigation">
+					<HorizontalMenu items={getProductNavigation(organizationId)} />
+				</div>
 			</div>
 
 			<Toolbar>
