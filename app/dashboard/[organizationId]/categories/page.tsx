@@ -55,6 +55,7 @@ export default async function ProductsCategoriesRootPage({
 							href={`/dashboard/${organizationId}/products/categories`}
 						>
 							<Home className="h-4 w-4 mr-1" />
+							Catégories
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 				</BreadcrumbList>

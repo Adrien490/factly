@@ -56,7 +56,7 @@ export const getSidebarNav = (organizationId: string) => [
 			},*/
 			{
 				title: "Catégories",
-				url: `/dashboard/${organizationId}/products/categories`,
+				url: `/dashboard/${organizationId}/categories`,
 			},
 			/*{
 				title: "Taux de TVA",
