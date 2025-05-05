@@ -30,11 +30,13 @@ import { GetProductCategoriesReturn } from "../types";
 export interface ProductCategoryDataTableProps {
 	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	organizationId: string;
+	emptyState?: React.ReactNode;
 }
 
 export function ProductCategoryDataTable({
 	categoriesPromise,
 	organizationId,
+	emptyState,
 }: ProductCategoryDataTableProps) {
 	const response = use(categoriesPromise);
 	const { categories, pagination } = response;
@@ -42,14 +44,14 @@ export function ProductCategoryDataTable({
 
 	if (categories.length === 0) {
 		return (
-			<EmptyState
-				title="Aucune catégorie trouvée"
-				description="Aucune catégorie n'a été trouvée. Vous pouvez en créer une nouvelle."
-				className="group-has-[[data-pending]]:animate-pulse py-12"
-			/>
+			emptyState || (
+				<EmptyState
+					title="Aucune catégorie trouvée"
+					description="Aucune catégorie n'a été trouvée. Vous pouvez en créer une nouvelle."
+				/>
+			)
 		);
 	}
-
 	return (
 		<SelectionProvider>
 			<Table className="group-has-[[data-pending]]:animate-pulse">

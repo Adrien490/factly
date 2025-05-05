@@ -14,6 +14,7 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
+	EmptyState,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
@@ -198,6 +199,12 @@ export default async function ProductsCategoriesPathPage({
 			<div className="mt-6">
 				<Suspense fallback={<></>}>
 					<ProductCategoryDataTable
+						emptyState={
+							<EmptyState
+								title="Aucune sous-catégorie trouvée"
+								description="Aucune sous-catégorie n'a été trouvée. Vous pouvez en créer une nouvelle."
+							/>
+						}
 						categoriesPromise={getProductCategories({
 							organizationId,
 							filters: {},
