@@ -8,6 +8,7 @@ import {
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
+	BreadcrumbPage,
 	BreadcrumbSeparator,
 	PageContainer,
 	PageHeader,
@@ -19,7 +20,7 @@ import {
 	TooltipTrigger,
 } from "@/shared/components";
 import db from "@/shared/lib/db";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, FolderOpenDot } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -76,7 +77,7 @@ export default async function ProductsCategoriesPathPage({
 	if (currentCategory.parent) {
 		breadcrumbItems.push({
 			name: currentCategory.parent.name,
-			href: `/dashboard/${organizationId}/products/categories/${currentCategory.parent.slug}`,
+			href: `/dashboard/${organizationId}/categories/${currentCategory.parent.slug}`,
 		});
 	}
 
@@ -92,10 +93,11 @@ export default async function ProductsCategoriesPathPage({
 				<BreadcrumbList>
 					<BreadcrumbItem>
 						<BreadcrumbLink
-							href={`/dashboard/${organizationId}/products/categories`}
+							href={`/dashboard/${organizationId}/categories`}
+							className="flex items-center gap-1.5"
 						>
-							<Home className="h-4 w-4 mr-1" />
-							Catégories
+							<FolderOpenDot className="h-4 w-4" />
+							Catégories racines
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 
@@ -116,7 +118,7 @@ export default async function ProductsCategoriesPathPage({
 					)}
 
 					<BreadcrumbItem>
-						<BreadcrumbLink href="#">{currentCategory.name}</BreadcrumbLink>
+						<BreadcrumbPage>{currentCategory.name}</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>

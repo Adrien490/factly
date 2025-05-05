@@ -1,5 +1,8 @@
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
-import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
+import {
+	getProductCategories,
+	getProductCategoriesSortFieldSchema,
+} from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
@@ -18,8 +21,10 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import { Badge, Calendar, Users } from "lucide-react";
+import { sortOrderSchema } from "@/shared/schemas";
+import { Calendar, FolderOpenDot, Users } from "lucide-react";
 import { Suspense } from "react";
+import { z } from "zod";
 
 interface Props {
 	params: Promise<{
@@ -44,14 +49,17 @@ export default async function ProductsCategoriesRootPage({
 		<PageContainer className="pb-12">
 			<PageHeader
 				title="Catégories"
-				description="Vous consultez les catégories racines. Cliquez sur une catégorie pour voir ses sous-catégories."
+				description="Gérer vos catégories de produits"
 			/>
 
 			{/* Breadcrumb pour la navigation hiérarchique */}
 			<Breadcrumb className="mb-6">
 				<BreadcrumbList>
 					<BreadcrumbItem>
-						<BreadcrumbPage>Catégories racines</BreadcrumbPage>
+						<BreadcrumbPage className="flex items-center gap-1.5">
+							<FolderOpenDot className="h-4 w-4" />
+							Catégories racines
+						</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
@@ -91,16 +99,6 @@ export default async function ProductsCategoriesRootPage({
 									value: "createdAt",
 									icon: <Calendar className="h-4 w-4" />,
 								},
-								{
-									label: "Date de mise à jour",
-									value: "updatedAt",
-									icon: <Calendar className="h-4 w-4" />,
-								},
-								{
-									label: "Statut",
-									value: "status",
-									icon: <Badge className="h-4 w-4" />,
-								},
 							]}
 							defaultSortBy="createdAt"
 							defaultSortOrder="desc"
@@ -130,8 +128,10 @@ export default async function ProductsCategoriesRootPage({
 							organizationId,
 							filters: {},
 							search: search || "",
-							sortBy: sortBy as "name" | "createdAt" | "updatedAt" | "status",
-							sortOrder: sortOrder as "asc" | "desc",
+							sortBy: sortBy as z.infer<
+								typeof getProductCategoriesSortFieldSchema
+							>,
+							sortOrder: sortOrder as z.infer<typeof sortOrderSchema>,
 							parentId: null,
 							include: {
 								childCount: true,

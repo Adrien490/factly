@@ -1,13 +1,11 @@
+import { sortOrderSchema } from "@/shared/schemas";
 import { z } from "zod";
 
 // Schéma de tri
-export const sortFieldSchema = z.enum([
+export const getProductCategoriesSortFieldSchema = z.enum([
 	"name",
 	"createdAt",
-	"updatedAt",
-	"status",
 ]);
-export const sortOrderSchema = z.enum(["asc", "desc"]);
 
 // Schéma pour les filtres de catégories
 const filterValueSchema = z.union([
@@ -49,8 +47,8 @@ export const getProductCategoriesSchema = z.object({
 	parentId: z.string().nullable().optional(),
 
 	// Options de tri
-	sortBy: sortFieldSchema.default("name"),
-	sortOrder: sortOrderSchema.default("asc"),
+	sortBy: getProductCategoriesSortFieldSchema.default("name"),
+	sortOrder: sortOrderSchema,
 
 	// Options pour les informations à inclure dans les résultats
 	include: includeOptionsSchema.optional(),
