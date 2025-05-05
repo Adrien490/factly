@@ -1,3 +1,4 @@
+import { ProductCategoryBreadcrumb } from "@/domains/product-category/components";
 import { ProductCategoryToggleArchivedButton } from "@/domains/product-category/components/product-category-toggle-archived-button";
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
@@ -6,10 +7,6 @@ import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/fea
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbList,
-	BreadcrumbPage,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
@@ -21,7 +18,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import { Calendar, FolderOpenDot, Users } from "lucide-react";
+import { Calendar, Users } from "lucide-react";
 import { Suspense } from "react";
 
 interface Props {
@@ -58,16 +55,7 @@ export default async function ProductsCategoriesRootPage({
 			<HorizontalMenu items={getProductNavigation(organizationId)} />
 
 			{/* Breadcrumb pour la navigation hiérarchique */}
-			<Breadcrumb className="mb-6">
-				<BreadcrumbList>
-					<BreadcrumbItem>
-						<BreadcrumbPage className="flex items-center gap-1.5">
-							<FolderOpenDot className="h-4 w-4" />
-							Toutes les catégories
-						</BreadcrumbPage>
-					</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb>
+			<ProductCategoryBreadcrumb organizationId={organizationId} />
 
 			<Toolbar>
 				<SearchForm

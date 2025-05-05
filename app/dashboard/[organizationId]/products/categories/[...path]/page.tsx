@@ -1,4 +1,4 @@
-import { SubCategoryBreadcrumb } from "@/domains/product-category/components";
+import { ProductCategoryBreadcrumb } from "@/domains/product-category/components";
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category/components/create-product-category-sheet-form";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
@@ -67,13 +67,13 @@ export default async function ProductsCategoriesPathPage({
 			<HorizontalMenu items={getProductNavigation(organizationId)} />
 
 			{/* Breadcrumb pour la navigation hiérarchique */}
-			<SubCategoryBreadcrumb
+			<ProductCategoryBreadcrumb
 				organizationId={organizationId}
-				categoryPromise={getProductCategory({
+				productCategoryPromise={getProductCategory({
 					organizationId,
 					slug: currentSlug,
 				})}
-				ancestorsPromise={getProductCategoryAncestors({
+				productCategoryAncestorsPromise={getProductCategoryAncestors({
 					organizationId,
 					categoryId: currentCategory.id,
 					maxDepth: 10,
