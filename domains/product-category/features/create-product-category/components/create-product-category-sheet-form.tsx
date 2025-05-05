@@ -14,7 +14,7 @@ import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { ProductCategory } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useParams, useRouter } from "next/navigation";
-import { ReactNode, use, useActionState, useState } from "react";
+import { ReactNode, useActionState, useState } from "react";
 import { toast } from "sonner";
 import { GetProductCategoryReturn } from "../../get-product-category";
 import { createProductCategory } from "../actions/create-product-category";
@@ -22,14 +22,13 @@ import { createProductCategorySchema } from "../schemas";
 
 interface CreateProductCategorySheetFormProps {
 	children?: ReactNode;
-	parentCategoryPromise?: Promise<GetProductCategoryReturn | null>;
+	currentCategory?: GetProductCategoryReturn;
 }
 
 export function CreateProductCategorySheetForm({
-	parentCategoryPromise,
+	currentCategory,
 	children,
 }: CreateProductCategorySheetFormProps) {
-	const parentCategory = use(parentCategoryPromise!);
 	const [isOpen, setIsOpen] = useState(false);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
@@ -73,7 +72,7 @@ export function CreateProductCategorySheetForm({
 			organizationId,
 			name: "",
 			description: "",
-			parentId: parentCategory?.id || "",
+			parentId: currentCategory?.id || "",
 		},
 
 		transform: useTransform(
@@ -96,9 +95,9 @@ export function CreateProductCategorySheetForm({
 				>
 					<SheetHeader className="mb-5">
 						<SheetTitle>Nouvelle catégorie de produit</SheetTitle>
-						{parentCategory && (
+						{currentCategory && (
 							<p className="text-sm text-muted-foreground">
-								Sous-catégorie de : {parentCategory.name}
+								Sous-catégorie de : {currentCategory.name}
 							</p>
 						)}
 					</SheetHeader>

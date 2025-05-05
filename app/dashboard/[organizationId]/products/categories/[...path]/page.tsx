@@ -99,12 +99,7 @@ export default async function ProductsCategoriesPathPage({
 				</TooltipProvider>
 
 				<Suspense fallback={<></>}>
-					<CreateProductCategorySheetForm
-						parentCategoryPromise={getProductCategory({
-							organizationId,
-							slug: currentSlug,
-						})}
-					/>
+					<CreateProductCategorySheetForm currentCategory={currentCategory} />
 				</Suspense>
 			</Toolbar>
 
