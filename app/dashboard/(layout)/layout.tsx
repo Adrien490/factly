@@ -59,6 +59,7 @@ export default async function DashboardLayout({
 					{/* Menu de navigation horizontal */}
 					<div className="h-10 px-4 sm:px-6 lg:px-8">
 						<HorizontalMenu
+							className="border-none"
 							items={[
 								{
 									title: "Organisations",
