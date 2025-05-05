@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	Badge,
 	EmptyState,
@@ -19,7 +17,6 @@ import { use } from "react";
 
 import { ProductCategoryActions } from "@/domains/product-category/components/product-category-actions";
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
-import { getCategoryUrl } from "@/domains/product-category/utils";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
@@ -29,12 +26,18 @@ export interface ProductCategoryDataTableProps {
 	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	organizationId: string;
 	emptyState?: React.ReactNode;
+	/**
+	 * Chemin actuel dans l'URL (pour la construction des liens imbriqués)
+	 * Format: ['parent-slug', 'child-slug']
+	 */
+	currentPath?: string[];
 }
 
 export function ProductCategoryDataTable({
 	categoriesPromise,
 	organizationId,
 	emptyState,
+	currentPath = [],
 }: ProductCategoryDataTableProps) {
 	const response = use(categoriesPromise);
 	const { categories, pagination } = response;
@@ -50,6 +53,7 @@ export function ProductCategoryDataTable({
 			)
 		);
 	}
+
 	return (
 		<SelectionProvider>
 			<Table className="group-has-[[data-pending]]:animate-pulse">
@@ -97,8 +101,9 @@ export function ProductCategoryDataTable({
 							(option) => option.value === category.status
 						);
 
-						// Construction de l'URL complète de la catégorie avec tous ses parents
-						const categoryUrl = getCategoryUrl(organizationId, category.slug);
+						// Construction de l'URL en fonction du chemin actuel et du slug de la catégorie
+						const categoryPath = [...currentPath, category.slug].join("/");
+						const categoryUrl = `/dashboard/${organizationId}/products/categories/${categoryPath}`;
 
 						return (
 							<TableRow key={category.id} role="row" tabIndex={0}>

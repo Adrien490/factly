@@ -125,6 +125,7 @@ export default async function ProductsCategoriesPathPage({
 							perPage: perPage ? parseInt(perPage) : 50,
 						})}
 						organizationId={organizationId}
+						currentPath={path}
 					/>
 				</Suspense>
 			</div>
