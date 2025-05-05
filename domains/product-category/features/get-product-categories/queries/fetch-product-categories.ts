@@ -106,13 +106,6 @@ export async function fetchProductCategories(
 				{ id: sortOrder }, // Tri secondaire par ID pour garantir la cohérence
 			],
 		});
-
-		console.log(
-			"[FETCH_PRODUCT_CATEGORIES] Found",
-			categories.length,
-			"categories"
-		);
-
 		// Retourner les résultats avec les informations de pagination
 		return {
 			categories,

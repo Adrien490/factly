@@ -1,5 +1,8 @@
 "use server";
 
+import { auth } from "@/domains/auth";
+import { hasOrganizationAccess } from "@/domains/organization/features";
+import { headers } from "next/headers";
 import { getProductCategoriesSchema } from "../schemas";
 import {
 	GetProductCategoriesParams,
@@ -16,8 +19,32 @@ export async function getProductCategories(
 	params: GetProductCategoriesParams
 ): Promise<GetProductCategoriesReturn> {
 	try {
+		// Vérification de l'authentification
+		const session = await auth.api.getSession({
+			headers: await headers(),
+		});
+
+		if (!session?.user?.id) {
+			throw new Error("Unauthorized");
+		}
+
+		// Vérification des droits d'accès à l'organisation
+		const hasAccess = await hasOrganizationAccess(
+			params.organizationId as string
+		);
+
+		if (!hasAccess) {
+			throw new Error("Access denied");
+		}
+
 		// Validation des paramètres
-		const validatedParams = getProductCategoriesSchema.parse(params);
+		const validation = getProductCategoriesSchema.safeParse(params);
+
+		if (!validation.success) {
+			throw new Error("Paramètres invalides");
+		}
+
+		const validatedParams = validation.data;
 
 		// Récupération des données
 		const result = await fetchProductCategories(validatedParams);
