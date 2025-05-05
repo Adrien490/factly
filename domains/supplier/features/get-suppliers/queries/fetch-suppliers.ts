@@ -83,7 +83,7 @@ export async function fetchSuppliers(
 		const skip = (currentPage - 1) * perPage;
 
 		// Ordre de tri
-		const sortOrder = (params.sortOrder as Prisma.SortOrder) || "asc";
+		const sortOrder = params.sortOrder as Prisma.SortOrder;
 
 		// Récupération des données
 		const suppliers = await db.supplier.findMany({
@@ -91,12 +91,7 @@ export async function fetchSuppliers(
 			select: GET_SUPPLIERS_DEFAULT_SELECT,
 			take: perPage,
 			skip,
-			orderBy: [
-				{
-					[String(params.sortBy) || "name"]: sortOrder,
-				},
-				{ id: sortOrder }, // Tri secondaire pour garantir la cohérence
-			],
+			orderBy: [{ [params.sortBy]: sortOrder }],
 		});
 
 		// Formatage de la réponse

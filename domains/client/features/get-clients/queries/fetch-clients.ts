@@ -81,7 +81,7 @@ export async function fetchClients(
 		const skip = (currentPage - 1) * perPage;
 
 		// Ensure sort order is valid
-		const sortOrder = (params.sortOrder as Prisma.SortOrder) || "asc";
+		const sortOrder = params.sortOrder as Prisma.SortOrder;
 
 		// Get data with performance tracking
 		const clients = await db.client.findMany({
@@ -89,12 +89,7 @@ export async function fetchClients(
 			select: GET_CLIENTS_DEFAULT_SELECT,
 			take: perPage,
 			skip,
-			orderBy: [
-				{
-					[String(params.sortBy) || "name"]: sortOrder,
-				},
-				{ id: sortOrder }, // Toujours ajouter un tri secondaire pour garantir la cohérence
-			],
+			orderBy: [{ [params.sortBy]: sortOrder }],
 		});
 
 		// Transforming clients to match expected return type

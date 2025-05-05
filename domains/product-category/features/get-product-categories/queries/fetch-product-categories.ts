@@ -77,18 +77,8 @@ export async function fetchProductCategories(
 		const categories = await db.productCategory.findMany({
 			where,
 			select: GET_PRODUCT_CATEGORIES_DEFAULT_SELECT,
-			orderBy: [
-				{ [sortBy]: sortOrder },
-				{ id: sortOrder }, // Tri secondaire par ID pour garantir la cohérence
-			],
-			take: 1000, // Limite raisonnable pour éviter les problèmes de performance
+			orderBy: [{ [sortBy]: sortOrder }],
 		});
-
-		console.log(
-			"[FETCH_PRODUCT_CATEGORIES] Found",
-			categories.length,
-			"categories"
-		);
 
 		// Retourner directement le tableau de catégories
 		return categories;
