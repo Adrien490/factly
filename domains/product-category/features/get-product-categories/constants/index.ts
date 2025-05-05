@@ -1,5 +1,4 @@
 import { Prisma } from "@prisma/client";
-import { SortField } from "../schemas";
 
 /**
  * Valeurs par défaut pour la pagination
@@ -76,16 +75,3 @@ export const GET_PRODUCT_CATEGORIES_FULL_SELECT = {
  * Profondeur maximale par défaut pour les requêtes hiérarchiques
  */
 export const DEFAULT_MAX_DEPTH = 5;
-
-/**
- * Correspondances entre les champs de tri et les expressions Prisma
- */
-export const SORT_FIELD_MAPPING: Record<
-	SortField,
-	Prisma.ProductCategoryOrderByWithRelationInput
-> = {
-	name: { name: "asc" },
-	createdAt: { createdAt: "desc" },
-	updatedAt: { updatedAt: "desc" },
-	status: { status: "asc" },
-};
