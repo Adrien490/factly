@@ -18,23 +18,6 @@ export const buildFilterConditions = (
 		if (!value) return;
 
 		switch (key) {
-			case "hasProducts":
-				// Filtre pour les catégories ayant des produits associés
-				if (value === true) {
-					conditions.push({
-						products: {
-							some: {},
-						},
-					});
-				} else if (value === false) {
-					conditions.push({
-						products: {
-							none: {},
-						},
-					});
-				}
-				break;
-
 			case "isRoot":
 				// Filtre pour les catégories racines (sans parent)
 				if (value === true) {

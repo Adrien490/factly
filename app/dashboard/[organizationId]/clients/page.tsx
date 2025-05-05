@@ -1,8 +1,4 @@
-import {
-	CLIENT_SORT_FIELDS,
-	CLIENT_STATUSES,
-	CLIENT_TYPES,
-} from "@/domains/client/constants";
+import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
 import { getClients } from "@/domains/client/features/get-clients";
 import { getClientNavigation } from "@/domains/client/utils";
 
@@ -40,7 +36,7 @@ import {
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { Archive, Filter, Undo } from "lucide-react";
+import { Archive, Calendar, Filter, Tag, Undo, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -132,7 +128,23 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				rightContent={
 					<>
 						<SortingOptionsDropdown
-							sortFields={CLIENT_SORT_FIELDS}
+							sortFields={[
+								{
+									label: "Nom",
+									value: "name",
+									icon: <Users className="h-4 w-4" />,
+								},
+								{
+									label: "Référence",
+									value: "reference",
+									icon: <Tag className="h-4 w-4" />,
+								},
+								{
+									label: "Date de création",
+									value: "createdAt",
+									icon: <Calendar className="h-4 w-4" />,
+								},
+							]}
 							defaultSortBy="createdAt"
 							defaultSortOrder="desc"
 							className="w-[200px] shrink-0"

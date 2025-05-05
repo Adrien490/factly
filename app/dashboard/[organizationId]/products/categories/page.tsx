@@ -7,12 +7,14 @@ import {
 	PageContainer,
 	PageHeader,
 	SearchForm,
+	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
+import { Badge, Calendar, Users } from "lucide-react";
 import { Suspense } from "react";
 
 interface Props {
@@ -21,6 +23,8 @@ interface Props {
 	};
 	searchParams: {
 		search?: string;
+		sortBy?: string;
+		sortOrder?: string;
 	};
 }
 
@@ -29,7 +33,7 @@ export default async function ProductsCategoriesRootPage({
 	searchParams,
 }: Props) {
 	const { organizationId } = params;
-	const { search } = searchParams;
+	const { search, sortBy, sortOrder } = searchParams;
 
 	// Afficher uniquement les catégories racines (sans parent)
 	return (
@@ -62,6 +66,33 @@ export default async function ProductsCategoriesRootPage({
 				}
 				rightContent={
 					<>
+						<SortingOptionsDropdown
+							sortFields={[
+								{
+									label: "Nom",
+									value: "name",
+									icon: <Users className="h-4 w-4" />,
+								},
+								{
+									label: "Date de création",
+									value: "createdAt",
+									icon: <Calendar className="h-4 w-4" />,
+								},
+								{
+									label: "Date de mise à jour",
+									value: "updatedAt",
+									icon: <Calendar className="h-4 w-4" />,
+								},
+								{
+									label: "Statut",
+									value: "status",
+									icon: <Badge className="h-4 w-4" />,
+								},
+							]}
+							defaultSortBy="createdAt"
+							defaultSortOrder="desc"
+							className="w-[200px] shrink-0"
+						/>
 						<Suspense fallback={<></>}>
 							<CreateProductCategorySheetForm
 								categoriesPromise={getProductCategories({
@@ -86,9 +117,13 @@ export default async function ProductsCategoriesRootPage({
 							organizationId,
 							filters: {},
 							search: search || "",
-							sortBy: "name",
-							sortOrder: "asc",
+							sortBy: sortBy as "name" | "createdAt" | "updatedAt" | "status",
+							sortOrder: sortOrder as "asc" | "desc",
 							parentId: null,
+							include: {
+								childCount: true,
+								parent: true,
+							},
 						})}
 						organizationId={organizationId}
 					/>

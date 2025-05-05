@@ -13,6 +13,7 @@ export type GetProductCategoriesReturn = Array<
 	ProductCategory & {
 		childCount?: number;
 		hasChildren?: boolean;
+		productCount?: number;
 	}
 >;
 

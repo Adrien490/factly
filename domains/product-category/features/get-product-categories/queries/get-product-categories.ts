@@ -56,18 +56,28 @@ export async function getProductCategories(
 				(category) => category.parentId === validatedParams.parentId
 			);
 
-			// 2. Enrichir chaque catégorie avec le nombre d'enfants
-			return currentLevelCategories.map((category) => {
-				const childCount = allCategories.filter(
-					(c) => c.parentId === category.id
-				).length;
+			// 2. Enrichir chaque catégorie avec les données demandées
+			return Promise.all(
+				currentLevelCategories.map(async (category) => {
+					const result = { ...category };
 
-				return {
-					...category,
-					childCount,
-					hasChildren: childCount > 0,
-				};
-			});
+					// Par défaut, toujours inclure le nombre d'enfants sauf si explicitement désactivé
+					const shouldIncludeChildCount =
+						!validatedParams.include ||
+						validatedParams.include.childCount === undefined ||
+						validatedParams.include.childCount === true;
+
+					if (shouldIncludeChildCount) {
+						const childCount = allCategories.filter(
+							(c) => c.parentId === category.id
+						).length;
+						result.childCount = childCount;
+						result.hasChildren = childCount > 0;
+					}
+
+					return result;
+				})
+			);
 		}
 
 		return allCategories;

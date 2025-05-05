@@ -1,4 +1,3 @@
-import { ORGANIZATION_SORT_FIELDS } from "@/domains/organization/constants";
 import {
 	getOrganizations,
 	OrganizationList,
@@ -15,6 +14,7 @@ import {
 } from "@/shared/components";
 
 import { ViewType } from "@/shared/types";
+import { Calendar, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -49,7 +49,18 @@ export default async function DashboardPage({ searchParams }: Props) {
 					<>
 						{/* Sélecteur de tri */}
 						<SortingOptionsDropdown
-							sortFields={ORGANIZATION_SORT_FIELDS}
+							sortFields={[
+								{
+									label: "Nom",
+									value: "name",
+									icon: <Users className="h-4 w-4" />,
+								},
+								{
+									label: "Date de création",
+									value: "createdAt",
+									icon: <Calendar className="h-4 w-4" />,
+								},
+							]}
 							defaultSortBy="name"
 							defaultSortOrder="asc"
 						/>

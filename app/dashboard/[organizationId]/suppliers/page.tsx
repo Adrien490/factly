@@ -1,5 +1,4 @@
 import {
-	SUPPLIER_SORT_FIELDS,
 	SUPPLIER_STATUSES,
 	SUPPLIER_TYPES,
 } from "@/domains/supplier/constants";
@@ -39,7 +38,15 @@ import {
 import { CheckboxFilter } from "@/shared/components/checkbox-filter";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
-import { Archive, Filter, Undo } from "lucide-react";
+import {
+	Archive,
+	Briefcase,
+	Calendar,
+	Filter,
+	Store,
+	Truck,
+	Undo,
+} from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -132,7 +139,29 @@ export default async function SuppliersPage({
 				rightContent={
 					<>
 						<SortingOptionsDropdown
-							sortFields={SUPPLIER_SORT_FIELDS}
+							sortFields={[
+								{
+									label: "Nom",
+									value: "name",
+									icon: <Store className="h-4 w-4" />,
+								},
+
+								{
+									label: "Type de fournisseur",
+									value: "supplierType",
+									icon: <Truck className="h-4 w-4" />,
+								},
+								{
+									label: "Statut",
+									value: "status",
+									icon: <Briefcase className="h-4 w-4" />,
+								},
+								{
+									label: "Date de création",
+									value: "createdAt",
+									icon: <Calendar className="h-4 w-4" />,
+								},
+							]}
 							defaultSortBy="createdAt"
 							defaultSortOrder="desc"
 							className="w-[200px] shrink-0"
