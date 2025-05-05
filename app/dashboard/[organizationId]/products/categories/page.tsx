@@ -6,11 +6,13 @@ import {
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
+import { getProductNavigation } from "@/domains/product/utils";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbList,
 	BreadcrumbPage,
+	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -50,6 +52,8 @@ export default async function ProductsCategoriesRootPage({
 				title="Catégories"
 				description="Gérer vos catégories de produits"
 			/>
+
+			<HorizontalMenu items={getProductNavigation(organizationId)} />
 
 			{/* Breadcrumb pour la navigation hiérarchique */}
 			<Breadcrumb className="mb-6">
