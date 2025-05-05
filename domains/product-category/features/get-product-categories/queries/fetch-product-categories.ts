@@ -1,10 +1,15 @@
 "use server";
 
 import db from "@/shared/lib/db";
+import { Prisma } from "@prisma/client";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
-import { GET_PRODUCT_CATEGORIES_DEFAULT_SELECT } from "../constants";
+import {
+	DEFAULT_PER_PAGE,
+	GET_PRODUCT_CATEGORIES_DEFAULT_SELECT,
+	MAX_RESULTS_PER_PAGE,
+} from "../constants";
 import { getProductCategoriesSchema } from "../schemas";
 import { GetProductCategoriesReturn } from "../types";
 import { buildWhereClause } from "./build-where-clause";
@@ -27,12 +32,27 @@ export async function fetchProductCategories(
 		);
 	}
 
+	// Tag pour le tri
+	cacheTag(
+		`organizations:${params.organizationId}:productCategories:sort:${params.sortBy}:${params.sortOrder}`
+	);
+
 	// Tag pour filtrer par parent
 	if (params.parentId) {
 		cacheTag(
 			`organizations:${params.organizationId}:productCategories:parentId:${params.parentId}`
 		);
 	}
+
+	// Tag pour la pagination
+	const page = Math.max(1, Number(params.pagination.page) || 1);
+	const perPage = Math.min(
+		Math.max(1, Number(params.pagination.perPage) || DEFAULT_PER_PAGE),
+		MAX_RESULTS_PER_PAGE
+	);
+	cacheTag(
+		`organizations:${params.organizationId}:productCategories:page:${page}:perPage:${perPage}`
+	);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
@@ -63,13 +83,27 @@ export async function fetchProductCategories(
 		// Construire la clause WHERE
 		const where = buildWhereClause(params);
 
+		// Récupérer le nombre total de catégories pour la pagination
+		const total = await db.productCategory.count({ where });
+
+		// Calculer les paramètres de pagination
+		const totalPages = Math.ceil(total / perPage);
+		const currentPage = Math.min(page, totalPages || 1);
+		const skip = (currentPage - 1) * perPage;
+
+		// S'assurer que l'ordre de tri est valide
+		const sortOrder = (params.sortOrder as Prisma.SortOrder) || "asc";
+		const sortBy = params.sortBy || "name";
+
 		// Récupérer les catégories
 		const categories = await db.productCategory.findMany({
 			where,
 			select: GET_PRODUCT_CATEGORIES_DEFAULT_SELECT,
+			take: perPage,
+			skip,
 			orderBy: [
-				{ name: "asc" }, // Tri principal par nom
-				{ id: "asc" }, // Tri secondaire par ID pour garantir la cohérence
+				{ [sortBy]: sortOrder },
+				{ id: sortOrder }, // Tri secondaire par ID pour garantir la cohérence
 			],
 		});
 
@@ -78,9 +112,27 @@ export async function fetchProductCategories(
 			categories.length,
 			"categories"
 		);
-		return categories;
+
+		// Retourner les résultats avec les informations de pagination
+		return {
+			categories,
+			pagination: {
+				page: currentPage,
+				perPage,
+				total,
+				pageCount: totalPages,
+			},
+		};
 	} catch (error) {
 		console.error("[FETCH_PRODUCT_CATEGORIES]", error);
-		return [];
+		return {
+			categories: [],
+			pagination: {
+				page: 1,
+				perPage: DEFAULT_PER_PAGE,
+				total: 0,
+				pageCount: 0,
+			},
+		};
 	}
 }

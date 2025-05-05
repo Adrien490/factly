@@ -120,7 +120,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger asChild>
-									<RefreshClientsButton organizationId={organizationId} />
+									<RefreshClientsButton />
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>Rafraîchir la liste des clients</p>

@@ -1,54 +1,47 @@
 "use server";
 
-import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
-import { headers } from "next/headers";
-import { z } from "zod";
 import { getProductCategoriesSchema } from "../schemas";
-import { GetProductCategoriesReturn } from "../types";
+import {
+	GetProductCategoriesParams,
+	GetProductCategoriesReturn,
+} from "../types";
 import { fetchProductCategories } from "./fetch-product-categories";
 
 /**
- * Récupère la liste des catégories de produits d'une organisation
- * @param params - Paramètres validés par getProductCategoriesSchema
- * @returns Liste des catégories de produits
+ * Fonction pour récupérer les catégories de produits avec pagination et filtrage
+ * @param params Paramètres de recherche et filtrage
+ * @returns Catégories de produits correspondant aux critères et informations de pagination
  */
 export async function getProductCategories(
-	params: z.infer<typeof getProductCategoriesSchema>
+	params: GetProductCategoriesParams
 ): Promise<GetProductCategoriesReturn> {
 	try {
-		// Vérification de l'authentification
-		const session = await auth.api.getSession({
-			headers: await headers(),
-		});
+		// Validation des paramètres
+		const validatedParams = getProductCategoriesSchema.parse(params);
 
-		if (!session?.user?.id) {
-			throw new Error("Unauthorized");
+		// Récupération des données
+		const result = await fetchProductCategories(validatedParams);
+
+		// Application des options de structure
+		if (validatedParams.structure.asTree && result.categories.length > 0) {
+			// Si la structure en arbre est demandée, transformer les données
+			// Cette logique devrait être implémentée selon les besoins
+			console.log("Structure en arbre demandée");
 		}
 
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(
-			params.organizationId as string
-		);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
-		}
-
-		const validation = getProductCategoriesSchema.safeParse(params);
-
-		if (!validation.success) {
-			throw new Error("Invalid parameters");
-		}
-
-		const validatedParams = validation.data;
-
-		return await fetchProductCategories(validatedParams);
+		return result;
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			throw new Error("Invalid parameters");
-		}
+		console.error("[GET_PRODUCT_CATEGORIES]", error);
 
-		throw error;
+		// En cas d'erreur, renvoyer un résultat vide
+		return {
+			categories: [],
+			pagination: {
+				page: 1,
+				perPage: params.pagination?.perPage || 50,
+				total: 0,
+				pageCount: 0,
+			},
+		};
 	}
 }

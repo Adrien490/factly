@@ -8,9 +8,9 @@ import { GetProductCategoriesReturn } from "../features/get-product-categories/t
  * @returns La catégorie correspondante ou undefined si non trouvée
  */
 export async function getCategoryByPath(
-	categories: GetProductCategoriesReturn,
+	categories: GetProductCategoriesReturn["categories"],
 	pathSegments: string[]
-): Promise<GetProductCategoriesReturn[0] | undefined> {
+): Promise<GetProductCategoriesReturn["categories"][number] | undefined> {
 	if (!pathSegments.length) return undefined;
 
 	// Le dernier segment est le slug de la catégorie que nous recherchons
@@ -27,8 +27,8 @@ export async function getCategoryByPath(
  * @returns Tableau d'éléments breadcrumb
  */
 export function buildCategoryPath(
-	categories: GetProductCategoriesReturn,
-	currentCategory: GetProductCategoriesReturn[0]
+	categories: GetProductCategoriesReturn["categories"],
+	currentCategory: GetProductCategoriesReturn["categories"][number]
 ): BreadcrumbItem[] {
 	const breadcrumbItems: BreadcrumbItem[] = [];
 	const organizationId = currentCategory.organizationId;
@@ -76,8 +76,8 @@ export function buildCategoryPath(
  * @returns Chaîne de caractères représentant le chemin complet
  */
 export function buildPathString(
-	categories: GetProductCategoriesReturn,
-	category: GetProductCategoriesReturn[0]
+	categories: GetProductCategoriesReturn["categories"],
+	category: GetProductCategoriesReturn["categories"][number]
 ): string {
 	const slugs: string[] = [category.slug];
 
