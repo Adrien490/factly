@@ -6,6 +6,7 @@ import {
 	getCategoryAncestors,
 	getCategoryUrl,
 } from "@/domains/product-category/utils";
+import { getProductNavigation } from "@/domains/product/utils";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,6 +14,7 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
+	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -97,6 +99,8 @@ export default async function ProductsCategoriesPathPage({
 				title={`Catégorie: ${currentCategory.name}`}
 				description="Gérer les sous-catégories"
 			/>
+
+			<HorizontalMenu items={getProductNavigation(organizationId)} />
 
 			{/* Breadcrumb pour la navigation hiérarchique */}
 			<Breadcrumb className="mb-6">
