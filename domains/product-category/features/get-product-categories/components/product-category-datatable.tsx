@@ -17,6 +17,7 @@ import {
 import { Folder } from "lucide-react";
 import { use } from "react";
 
+import { ProductCategoryActions } from "@/domains/product-category/components/product-category-actions";
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
 import {
 	getCategoryAncestors,
@@ -162,10 +163,12 @@ export function ProductCategoryDataTable({
 								>
 									{category.childCount || 0}
 								</TableCell>
-								<TableCell
-									role="gridcell"
-									className="text-right w-[100px]"
-								></TableCell>
+								<TableCell role="gridcell" className="text-right w-[100px]">
+									<ProductCategoryActions
+										category={category}
+										organizationId={organizationId}
+									/>
+								</TableCell>
 							</TableRow>
 						);
 					})}
