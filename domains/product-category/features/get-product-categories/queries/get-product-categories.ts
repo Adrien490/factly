@@ -7,10 +7,9 @@ import { getProductCategoriesSchema } from "../schemas";
 import {
 	GetProductCategoriesParams,
 	GetProductCategoriesReturn,
-	ProductCategoryFlat,
 } from "../types";
-import { buildCategoryTree } from "../utils";
-import { fetchProductCategories } from "./fetch-product-categories";
+import { fetchCategoriesFlat } from "./fetch-categories-flat";
+import { fetchCategoriesTree } from "./fetch-categories-tree";
 
 /**
  * Fonction pour récupérer les catégories de produits avec plusieurs formats de retour
@@ -49,20 +48,12 @@ export async function getProductCategories(
 		const validatedParams = validation.data;
 		const format = validatedParams.format || "flat";
 
-		// Récupération des données en fonction du format
-		const categories = await fetchProductCategories(validatedParams);
-
-		if (categories.length === 0) {
-			return [];
-		}
-
-		// Pour le format tree, il faut construire l'arborescence
+		// Sélection de la fonction de récupération appropriée en fonction du format
 		if (format === "tree") {
-			return buildCategoryTree(categories as ProductCategoryFlat[]);
+			return fetchCategoriesTree(validatedParams);
+		} else {
+			return fetchCategoriesFlat(validatedParams);
 		}
-
-		// Pour le format flat, les données sont déjà traitées par fetchProductCategories
-		return categories;
 	} catch (error) {
 		console.error("[GET_PRODUCT_CATEGORIES]", error);
 		// En cas d'erreur, renvoyer un tableau vide
