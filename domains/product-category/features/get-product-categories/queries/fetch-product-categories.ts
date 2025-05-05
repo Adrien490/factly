@@ -70,8 +70,8 @@ export async function fetchProductCategories(
 		const where = buildWhereClause(params);
 
 		// S'assurer que l'ordre de tri est valide
-		const sortOrder = (params.sortOrder as Prisma.SortOrder) || "desc";
-		const sortBy = params.sortBy || "name";
+		const sortOrder = params.sortOrder as Prisma.SortOrder;
+		const sortBy = params.sortBy;
 
 		// Récupérer les catégories - limiter à un nombre raisonnable pour éviter les problèmes de performance
 		const categories = await db.productCategory.findMany({
