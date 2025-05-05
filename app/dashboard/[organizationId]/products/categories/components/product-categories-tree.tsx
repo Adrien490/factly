@@ -1,5 +1,3 @@
-"use client";
-
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
 import { Badge, EmptyState } from "@/shared/components";
 import {
@@ -18,17 +16,16 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/utils";
 import {
-	ArrowRight,
+	ChevronRight,
 	Edit,
 	Eye,
-	FileBox,
 	FileText,
 	Folder,
+	FolderIcon,
 	FolderOpen,
 	MoreVertical,
 	Plus,
 	Search,
-	Tag,
 	Trash,
 } from "lucide-react";
 import { use } from "react";
@@ -44,6 +41,7 @@ export function ProductCategoriesTree({
 	className,
 }: ProductCategoriesTreeProps) {
 	const categories = use(categoriesPromise);
+
 	// Fonction récursive pour rendre l'arbre des catégories
 	const renderCategoryTree = (items: ProductCategoryNode[], depth = 0) => {
 		return (
@@ -58,68 +56,16 @@ export function ProductCategoriesTree({
 						<AccordionItem
 							key={category.id}
 							value={category.id}
-							className="border-b-0 mb-1 transition-all duration-150 hover:bg-muted/50"
+							className="border-0 mb-1 rounded-md overflow-hidden"
 						>
-							<div className="flex items-center justify-between pr-2 rounded-md group">
-								<AccordionTrigger className="py-2.5 px-3 hover:no-underline flex-1 gap-3 rounded-md hover:bg-muted/30">
-									<div className="flex items-center gap-2.5">
-										{hasChildren ? (
-											<>
-												<FolderOpen className="h-4 w-4 text-blue-500 data-[state=closed]:hidden" />
-												<Folder className="h-4 w-4 text-blue-500 data-[state=open]:hidden" />
-											</>
-										) : (
-											<FileBox className="h-4 w-4 text-gray-500" />
-										)}
-										<div className="flex flex-col space-y-1 max-w-[250px]">
-											<div className="font-medium text-sm truncate">
-												{category.name}
-											</div>
-											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-												<Tag className="h-3 w-3 shrink-0" />
-												<span className="truncate">{category.slug}</span>
-											</div>
-										</div>
-
-										<div className="ml-auto flex items-center gap-2">
-											{category.status !== "ACTIVE" && statusOption && (
-												<Badge
-													variant="outline"
-													style={{
-														backgroundColor: `${statusOption.color}20`,
-														color: statusOption.color,
-														borderColor: `${statusOption.color}40`,
-													}}
-												>
-													{statusOption.label}
-												</Badge>
-											)}
-
-											{!hasChildren && (
-												<span className="text-xs text-muted-foreground">
-													{Math.floor(Math.random() * 50)} produits
-												</span>
-											)}
-										</div>
-									</div>
-								</AccordionTrigger>
-
-								<div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-									<Button
-										variant="ghost"
-										size="icon"
-										className="h-8 w-8 rounded-md"
-										title="Ajouter un produit"
-									>
-										<Plus className="h-4 w-4" />
-									</Button>
-
+							<div className="group relative w-full hover:bg-muted/50 rounded-md">
+								<div className="absolute right-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button
 												variant="ghost"
 												size="icon"
-												className="h-8 w-8 rounded-md"
+												className="h-7 w-7 rounded-full hover:bg-background"
 											>
 												<MoreVertical className="h-4 w-4" />
 											</Button>
@@ -136,7 +82,7 @@ export function ProductCategoriesTree({
 											<DropdownMenuItem>
 												<FileText className="h-4 w-4 mr-2" />
 												<span>Voir les produits</span>
-												<ArrowRight className="h-3 w-3 ml-auto" />
+												<ChevronRight className="h-3.5 w-3.5 ml-auto opacity-70" />
 											</DropdownMenuItem>
 
 											<DropdownMenuSeparator />
@@ -155,19 +101,57 @@ export function ProductCategoriesTree({
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</div>
+
+								<AccordionTrigger className="py-2.5 pl-3 pr-10 hover:no-underline flex-1 rounded-md data-[state=open]:bg-muted/50 w-full">
+									<div className="flex items-center w-full gap-3">
+										<div className="flex-shrink-0">
+											{hasChildren ? (
+												<div className="relative w-5 h-5 flex items-center justify-center">
+													<FolderOpen className="h-[18px] w-[18px] text-blue-500 data-[state=closed]:hidden absolute" />
+													<Folder className="h-[18px] w-[18px] text-blue-500 data-[state=open]:hidden absolute" />
+												</div>
+											) : (
+												<FolderIcon className="h-[18px] w-[18px] text-muted-foreground/70" />
+											)}
+										</div>
+
+										<div className="flex-grow min-w-0">
+											<div className="font-medium text-sm truncate">
+												{category.name}
+											</div>
+											<div className="text-xs text-muted-foreground truncate">
+												{category.slug}
+											</div>
+										</div>
+
+										{statusOption && (
+											<Badge
+												variant="outline"
+												className="ml-auto flex-shrink-0"
+												style={{
+													backgroundColor: `${statusOption.color}20`,
+													color: statusOption.color,
+													borderColor: `${statusOption.color}40`,
+												}}
+											>
+												{statusOption.label}
+											</Badge>
+										)}
+									</div>
+								</AccordionTrigger>
 							</div>
 
-							<AccordionContent
-								className={cn("pl-8", depth > 0 ? "border-l ml-3" : "")}
-							>
-								{hasChildren && category.children ? (
-									renderCategoryTree(category.children, depth + 1)
-								) : (
-									<div className="py-2 px-2 text-sm text-muted-foreground italic">
-										Aucune sous-catégorie
-									</div>
-								)}
-							</AccordionContent>
+							{hasChildren && (
+								<AccordionContent
+									className={cn(
+										"pl-8",
+										depth > 0 && "border-l-2 border-border/50 ml-3 pt-1"
+									)}
+								>
+									{category.children &&
+										renderCategoryTree(category.children, depth + 1)}
+								</AccordionContent>
+							)}
 						</AccordionItem>
 					);
 				})}
@@ -175,7 +159,7 @@ export function ProductCategoriesTree({
 		);
 	};
 
-	if (categories.length === 0) {
+	if (!categories || categories.length === 0) {
 		return (
 			<EmptyState
 				icon={<Search className="w-10 h-10" />}
@@ -187,15 +171,8 @@ export function ProductCategoriesTree({
 	}
 
 	return (
-		<div className={cn("rounded-lg border overflow-hidden bg-card", className)}>
-			<div className="p-4 border-b bg-muted/30">
-				<h3 className="text-sm font-semibold">Catégories de produits</h3>
-				<p className="text-xs text-muted-foreground mt-1">
-					Organisez vos produits en catégories hiérarchiques
-				</p>
-			</div>
-
-			<div className="p-3">{renderCategoryTree(categories)}</div>
+		<div className={cn("overflow-hidden", className)}>
+			<div className="space-y-0.5">{renderCategoryTree(categories)}</div>
 		</div>
 	);
 }

@@ -133,6 +133,7 @@ export default async function ProductsCategoriesRootPage({
 							search: searchValue,
 							sortBy: sortByValue,
 							sortOrder: sortOrderValue,
+							parentId: null,
 							format: "tree",
 						})}
 					/>
