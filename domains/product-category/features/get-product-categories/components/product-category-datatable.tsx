@@ -14,7 +14,6 @@ import { ChevronRight, Folder, Search } from "lucide-react";
 import { use } from "react";
 
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
-import { buildPathString } from "@/domains/product-category/utils/category-path";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import Image from "next/image";
@@ -157,7 +156,6 @@ export function ProductCategoryDataTable({
 
 								{/* Sous-catégories */}
 								{children.map((childCategory) => {
-									const childPath = buildPathString(categories, childCategory);
 									const childStatusOption = PRODUCT_CATEGORY_STATUSES.find(
 										(option) => option.value === childCategory.status
 									);
@@ -185,16 +183,14 @@ export function ProductCategoryDataTable({
 													</div>
 													<div className="min-w-0">
 														<Link
-															href={`/dashboard/${organizationId}/products/categories/${childPath}`}
+															href={`/dashboard/${organizationId}/products/categories`}
 															className="hover:underline flex items-center truncate max-w-[180px]"
 														>
 															<span className="truncate">
 																{childCategory.name}
 															</span>
 														</Link>
-														<span className="text-xs text-muted-foreground truncate block max-w-[180px]">
-															/{childPath}
-														</span>
+														<span className="text-xs text-muted-foreground truncate block max-w-[180px]"></span>
 													</div>
 												</div>
 											</TableCell>
