@@ -100,22 +100,9 @@ export default async function ProductsCategoriesPathPage({
 
 				<Suspense fallback={<></>}>
 					<CreateProductCategorySheetForm
-						defaultValues={{
+						parentCategoryPromise={getProductCategory({
 							organizationId,
-							name: "",
-							description: "",
-							parentId: currentCategory.id,
-						}}
-						categoriesPromise={getProductCategories({
-							organizationId,
-							filters: {},
-							search: "",
-							rootOnly: false,
-							sortBy: "name",
-							sortOrder: "asc",
-							parentId: null,
-							page: page ? parseInt(page) : 1,
-							perPage: perPage ? parseInt(perPage) : 50,
+							slug: currentSlug,
 						})}
 					/>
 				</Suspense>

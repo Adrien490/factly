@@ -1,6 +1,5 @@
 "use client";
 
-import { GetProductCategoriesReturn } from "@/domains/product-category/features/get-product-categories/types";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
@@ -15,48 +14,26 @@ import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { ProductCategory } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useParams, useRouter } from "next/navigation";
-import { ReactNode, use, useActionState, useMemo, useState } from "react";
+import { ReactNode, use, useActionState, useState } from "react";
 import { toast } from "sonner";
+import { GetProductCategoryReturn } from "../../get-product-category";
 import { createProductCategory } from "../actions/create-product-category";
 import { createProductCategorySchema } from "../schemas";
-import { CreateProductCategoryInput } from "../types";
 
 interface CreateProductCategorySheetFormProps {
-	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	children?: ReactNode;
-	defaultValues?: CreateProductCategoryInput;
+	parentCategoryPromise?: Promise<GetProductCategoryReturn | null>;
 }
 
 export function CreateProductCategorySheetForm({
-	categoriesPromise,
+	parentCategoryPromise,
 	children,
-	defaultValues,
 }: CreateProductCategorySheetFormProps) {
-	const response = use(categoriesPromise);
-	const { categories } = response;
+	const parentCategory = use(parentCategoryPromise!);
 	const [isOpen, setIsOpen] = useState(false);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	const router = useRouter();
-
-	// Trouver la catégorie parente si un parentId est fourni
-	const parentCategory = useMemo(() => {
-		// Si parentId est undefined ou null, on n'a pas de catégorie parente
-		if (
-			defaultValues?.parentId === undefined ||
-			defaultValues?.parentId === null
-		) {
-			return null;
-		}
-
-		// Sinon, on cherche la catégorie correspondante
-		return categories.find((cat) => cat.id === defaultValues.parentId) || null;
-	}, [categories, defaultValues?.parentId]);
-
-	// Flag pour savoir si on doit montrer le champ parentId ou non
-	const showParentIdField = defaultValues?.parentId !== undefined;
-	// Flag pour savoir si on doit montrer le select ou un champ en lecture seule
-	const showParentAsReadOnly = Boolean(parentCategory);
 
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
@@ -94,9 +71,9 @@ export function CreateProductCategorySheetForm({
 	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			name: defaultValues?.name || "",
-			description: defaultValues?.description || "",
-			parentId: defaultValues?.parentId || "",
+			name: "",
+			description: "",
+			parentId: parentCategory?.id || "",
 		},
 
 		transform: useTransform(
@@ -142,6 +119,13 @@ export function CreateProductCategorySheetForm({
 						)}
 					</form.AppField>
 
+					{/* Champ caché parentId */}
+					<form.AppField name="parentId">
+						{(field) => (
+							<input type="hidden" name="parentId" value={field.state.value} />
+						)}
+					</form.AppField>
+
 					{/* Contenu du formulaire avec défilement */}
 					<div className="flex-1 overflow-y-auto pr-1 space-y-6">
 						{/* Informations de base */}
@@ -165,63 +149,6 @@ export function CreateProductCategorySheetForm({
 									/>
 								)}
 							</form.AppField>
-
-							{/* Catégorie parente - affiché seulement si parentId est défini dans defaultValues */}
-							{showParentIdField ? (
-								<>
-									{showParentAsReadOnly ? (
-										<div className="space-y-2">
-											<label className="text-sm font-medium">
-												Catégorie parente
-											</label>
-											<div className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
-												{parentCategory?.name ||
-													"Aucune catégorie parente sélectionnée"}
-											</div>
-											<form.AppField name="parentId">
-												{(field) => (
-													<input
-														type="hidden"
-														name="parentId"
-														value={field.state.value}
-													/>
-												)}
-											</form.AppField>
-										</div>
-									) : (
-										<form.AppField name="parentId">
-											{(field) => (
-												<field.SelectField
-													label="Catégorie parente"
-													placeholder="Sélectionnez une catégorie parente"
-													disabled={isPending}
-													options={[
-														{
-															value: "none",
-															label: "Aucune (catégorie principale)",
-														},
-														...categories.map((category) => ({
-															value: category.id,
-															label: category.name,
-														})),
-													]}
-												/>
-											)}
-										</form.AppField>
-									)}
-								</>
-							) : (
-								// Si parentId n'est pas défini dans defaultValues, cacher le champ
-								<form.AppField name="parentId">
-									{(field) => (
-										<input
-											type="hidden"
-											name="parentId"
-											value={field.state.value}
-										/>
-									)}
-								</form.AppField>
-							)}
 
 							{/* Description */}
 							<form.AppField name="description">

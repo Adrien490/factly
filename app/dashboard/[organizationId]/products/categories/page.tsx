@@ -26,7 +26,6 @@ interface Props {
 		organizationId: string;
 	}>;
 	searchParams: Promise<{
-		q?: string;
 		search?: string;
 		sortBy?: string;
 		sortOrder?: string;
@@ -41,7 +40,7 @@ export default async function ProductsCategoriesRootPage({
 	searchParams,
 }: Props) {
 	const { organizationId } = await params;
-	const { q, search, sortBy, sortOrder, page, perPage, status } =
+	const { search, sortBy, sortOrder, page, perPage, status } =
 		await searchParams;
 
 	// Afficher uniquement les catégories racines (sans parent)
@@ -94,19 +93,7 @@ export default async function ProductsCategoriesRootPage({
 				/>
 				<ProductCategoryToggleArchivedButton />
 				<Suspense fallback={<ProductCategoryDataTableSkeleton />}>
-					<CreateProductCategorySheetForm
-						categoriesPromise={getProductCategories({
-							organizationId,
-							filters: { status: status || "ACTIVE" },
-							search: q || "",
-							sortBy: "name",
-							sortOrder: "asc",
-							parentId: null,
-							rootOnly: false,
-							page: page ? parseInt(page) : 1,
-							perPage: 50,
-						})}
-					/>
+					<CreateProductCategorySheetForm />
 				</Suspense>
 			</Toolbar>
 
