@@ -4,7 +4,7 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import { GET_PRODUCT_CATEGORY_ANCESTORS_SELECT } from "../constants";
 import { getProductCategoryAncestorsSchema } from "../schemas";
-import { CategoryAncestor, GetProductCategoryAncestorsReturn } from "../types";
+import { GetProductCategoryAncestorsReturn } from "../types";
 
 /**
  * Fonction cacheable qui récupère les ancêtres d'une catégorie de produit
@@ -30,7 +30,7 @@ export async function fetchProductCategoryAncestors(
 
 	try {
 		// Liste pour stocker les ancêtres
-		const ancestors: CategoryAncestor[] = [];
+		const ancestors: GetProductCategoryAncestorsReturn = [];
 
 		// Récupérer d'abord la catégorie initiale si slug est fourni
 		let currentCategory;

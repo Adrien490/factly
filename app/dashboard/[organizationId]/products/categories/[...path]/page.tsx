@@ -4,7 +4,7 @@ import { getProductCategories } from "@/domains/product-category/features/get-pr
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { getProductCategory } from "@/domains/product-category/features/get-product-category";
-import { getAncestors } from "@/domains/product-category/features/get-product-category-ancestors";
+import { getProductCategoryAncestors } from "@/domains/product-category/features/get-product-category-ancestors";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
@@ -73,7 +73,7 @@ export default async function ProductsCategoriesPathPage({
 					organizationId,
 					slug: currentSlug,
 				})}
-				ancestorsPromise={getAncestors({
+				ancestorsPromise={getProductCategoryAncestors({
 					organizationId,
 					categoryId: currentCategory.id,
 					maxDepth: 10,

@@ -1,5 +1,5 @@
-import { CategoryAncestor } from "@/domains/product-category/features/get-product-category-ancestors/types";
-import { ProductCategory } from "@/domains/product-category/features/get-product-category/types";
+import { GetProductCategoryAncestorsReturn } from "@/domains/product-category/features/get-product-category-ancestors/types";
+import { GetProductCategoryReturn } from "@/domains/product-category/features/get-product-category/types";
 import { getCategoryUrl } from "@/domains/product-category/utils";
 import {
 	Breadcrumb,
@@ -14,8 +14,8 @@ import { notFound } from "next/navigation";
 import React, { use } from "react";
 
 interface SubCategoryBreadcrumbProps {
-	categoryPromise: Promise<ProductCategory | null>;
-	ancestorsPromise: Promise<CategoryAncestor[]>;
+	categoryPromise: Promise<GetProductCategoryReturn | null>;
+	ancestorsPromise: Promise<GetProductCategoryAncestorsReturn>;
 	organizationId: string;
 }
 
