@@ -1,7 +1,6 @@
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
-import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import {
 	Breadcrumb,
@@ -31,6 +30,8 @@ interface Props {
 	}>;
 	searchParams: Promise<{
 		search?: string;
+		page?: string;
+		perPage?: string;
 	}>;
 }
 
@@ -39,7 +40,7 @@ export default async function ProductsCategoriesPathPage({
 	searchParams,
 }: Props) {
 	const { organizationId, path } = await params;
-	const { search } = await searchParams;
+	const { search, page, perPage } = await searchParams;
 
 	// Récupérer le dernier slug dans le chemin pour trouver la catégorie actuelle
 	const currentSlug = path[path.length - 1];
@@ -147,10 +148,12 @@ export default async function ProductsCategoriesPathPage({
 							organizationId,
 							filters: {},
 							search: "",
+							rootOnly: false,
 							sortBy: "name",
 							sortOrder: "asc",
 							parentId: currentCategory.id,
-							format: "flat",
+							page: page ? parseInt(page) : 1,
+							perPage: perPage ? parseInt(perPage) : 50,
 						})}
 					/>
 				</Suspense>
@@ -158,16 +161,18 @@ export default async function ProductsCategoriesPathPage({
 
 			{/* Tableau de données */}
 			<div className="mt-6">
-				<Suspense fallback={<ProductCategoryDataTableSkeleton />}>
+				<Suspense fallback={<></>}>
 					<ProductCategoryDataTable
 						categoriesPromise={getProductCategories({
 							organizationId,
 							filters: {},
 							search: search || "",
+							rootOnly: false,
 							sortBy: "name",
 							sortOrder: "asc",
 							parentId: currentCategory.id,
-							format: "flat",
+							page: page ? parseInt(page) : 1,
+							perPage: perPage ? parseInt(perPage) : 50,
 						})}
 						organizationId={organizationId}
 					/>
