@@ -4,20 +4,17 @@ import { GET_PRODUCT_CATEGORIES_DEFAULT_SELECT } from "../constants";
 import { getProductCategoriesSchema } from "../schemas";
 
 // Type pour les catégories de produits
-type ProductCategory = Prisma.ProductCategoryGetPayload<{
+export type ProductCategory = Prisma.ProductCategoryGetPayload<{
 	select: typeof GET_PRODUCT_CATEGORIES_DEFAULT_SELECT;
 }>;
 
-// Type incluant la pagination similaire à get-clients
-export type GetProductCategoriesReturn = {
-	categories: Array<ProductCategory>;
-	pagination: {
-		page: number;
-		perPage: number;
-		total: number;
-		pageCount: number;
-	};
-};
+// Type simplifié retournant directement un tableau de catégories enrichies
+export type GetProductCategoriesReturn = Array<
+	ProductCategory & {
+		childCount?: number;
+		hasChildren?: boolean;
+	}
+>;
 
 export type GetProductCategoriesParams = z.infer<
 	typeof getProductCategoriesSchema

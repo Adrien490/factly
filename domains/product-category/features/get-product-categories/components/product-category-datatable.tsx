@@ -2,12 +2,10 @@ import {
 	Badge,
 	EmptyState,
 	ItemCheckbox,
-	Pagination,
 	SelectAllCheckbox,
 	Table,
 	TableBody,
 	TableCell,
-	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -32,7 +30,7 @@ export function ProductCategoryDataTable({
 	categoriesPromise,
 	organizationId,
 }: ProductCategoryDataTableProps) {
-	const { categories, pagination } = use(categoriesPromise);
+	const categories = use(categoriesPromise);
 
 	// Récupérer les catégories racines (sans parent)
 	const rootCategories = categories.filter((category) => !category.parentId);
@@ -67,11 +65,11 @@ export function ProductCategoryDataTable({
 							Statut
 						</TableHead>
 						<TableHead
-							key="products"
+							key="children"
 							role="columnheader"
 							className="w-[100px] text-center"
 						>
-							Produits
+							Sous-catégories
 						</TableHead>
 						<TableHead
 							key="actions"
@@ -152,8 +150,7 @@ export function ProductCategoryDataTable({
 										</Badge>
 									</TableCell>
 									<TableCell role="gridcell" className="text-center">
-										{/* À remplacer par le compte réel des produits quand implémenté */}
-										0
+										{category.childCount || children.length || 0}
 									</TableCell>
 									<TableCell role="gridcell" className="text-right"></TableCell>
 								</TableRow>
@@ -228,8 +225,7 @@ export function ProductCategoryDataTable({
 												</Badge>
 											</TableCell>
 											<TableCell role="gridcell" className="text-center">
-												{/* À remplacer par le compte réel des produits quand implémenté */}
-												0
+												{childCategory.childCount || 0}
 											</TableCell>
 											<TableCell
 												role="gridcell"
@@ -242,18 +238,6 @@ export function ProductCategoryDataTable({
 						);
 					})}
 				</TableBody>
-				<TableFooter>
-					<TableRow>
-						<TableCell colSpan={6} className="px-4 py-2 hover:bg-transparent">
-							<Pagination
-								total={pagination.total}
-								pageCount={pagination.pageCount}
-								page={pagination.page}
-								perPage={pagination.perPage}
-							/>
-						</TableCell>
-					</TableRow>
-				</TableFooter>
 			</Table>
 		</SelectionProvider>
 	);

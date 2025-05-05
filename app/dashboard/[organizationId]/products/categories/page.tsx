@@ -21,6 +21,7 @@ interface Props {
 	}>;
 	searchParams: Promise<{
 		search?: string;
+		parentId?: string;
 	}>;
 }
 
@@ -29,7 +30,7 @@ export default async function ProductsCategoriesPage({
 	searchParams,
 }: Props) {
 	const { organizationId } = await params;
-	const { search } = await searchParams;
+	const { search, parentId } = await searchParams;
 
 	return (
 		<PageContainer>
@@ -69,19 +70,11 @@ export default async function ProductsCategoriesPage({
 									search: "",
 									sortBy: "name",
 									sortOrder: "asc",
-									structure: {
-										asTree: false,
-										includeProductCount: false,
-										includeChildrenCount: false,
-										maxDepth: 5,
-									},
+									parentId: parentId ? parentId : null,
 									include: {
-										parent: false,
-										children: false,
-									},
-									pagination: {
-										page: 1,
-										perPage: 50,
+										parent: true,
+										children: true,
+										childCount: true,
 									},
 								})}
 							/>
@@ -100,19 +93,11 @@ export default async function ProductsCategoriesPage({
 							search: search || "",
 							sortBy: "name",
 							sortOrder: "asc",
-							structure: {
-								asTree: false,
-								includeProductCount: false,
-								includeChildrenCount: false,
-								maxDepth: 5,
-							},
+							parentId: parentId ? parentId : null,
 							include: {
-								parent: false,
-								children: false,
-							},
-							pagination: {
-								page: 1,
-								perPage: 50,
+								parent: true,
+								children: true,
+								childCount: true,
 							},
 						})}
 						organizationId={organizationId}

@@ -11,9 +11,9 @@ import {
 import { fetchProductCategories } from "./fetch-product-categories";
 
 /**
- * Fonction pour récupérer les catégories de produits avec pagination et filtrage
+ * Fonction pour récupérer les catégories de produits avec navigation par dossier
  * @param params Paramètres de recherche et filtrage
- * @returns Catégories de produits correspondant aux critères et informations de pagination
+ * @returns Tableau de catégories filtré selon le niveau de dossier spécifié
  */
 export async function getProductCategories(
 	params: GetProductCategoriesParams
@@ -46,29 +46,34 @@ export async function getProductCategories(
 
 		const validatedParams = validation.data;
 
-		// Récupération des données
-		const result = await fetchProductCategories(validatedParams);
+		// Récupération des données brutes
+		const allCategories = await fetchProductCategories(validatedParams);
 
-		// Application des options de structure
-		if (validatedParams.structure.asTree && result.categories.length > 0) {
-			// Si la structure en arbre est demandée, transformer les données
-			// Cette logique devrait être implémentée selon les besoins
-			console.log("Structure en arbre demandée");
+		// Navigation par dossier simplifiée
+		if (allCategories.length > 0) {
+			// 1. Filtrer les catégories du niveau courant (défini par parentId)
+			const currentLevelCategories = allCategories.filter(
+				(category) => category.parentId === validatedParams.parentId
+			);
+
+			// 2. Enrichir chaque catégorie avec le nombre d'enfants
+			return currentLevelCategories.map((category) => {
+				const childCount = allCategories.filter(
+					(c) => c.parentId === category.id
+				).length;
+
+				return {
+					...category,
+					childCount,
+					hasChildren: childCount > 0,
+				};
+			});
 		}
 
-		return result;
+		return allCategories;
 	} catch (error) {
 		console.error("[GET_PRODUCT_CATEGORIES]", error);
-
-		// En cas d'erreur, renvoyer un résultat vide
-		return {
-			categories: [],
-			pagination: {
-				page: 1,
-				perPage: params.pagination?.perPage || 50,
-				total: 0,
-				pageCount: 0,
-			},
-		};
+		// En cas d'erreur, renvoyer un tableau vide
+		return [];
 	}
 }

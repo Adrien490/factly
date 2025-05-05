@@ -1,10 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-/**
- * Valeurs par défaut pour la pagination
- */
-export const MAX_RESULTS_PER_PAGE = 100;
-export const DEFAULT_PER_PAGE = 50;
+type SortField = "name" | "createdAt" | "updatedAt" | "status";
 
 /**
  * Sélection par défaut des champs pour les catégories de produits
@@ -75,3 +71,16 @@ export const GET_PRODUCT_CATEGORIES_FULL_SELECT = {
  * Profondeur maximale par défaut pour les requêtes hiérarchiques
  */
 export const DEFAULT_MAX_DEPTH = 5;
+
+/**
+ * Correspondances entre les champs de tri et les expressions Prisma
+ */
+export const SORT_FIELD_MAPPING: Record<
+	SortField,
+	Prisma.ProductCategoryOrderByWithRelationInput
+> = {
+	name: { name: "asc" },
+	createdAt: { createdAt: "desc" },
+	updatedAt: { updatedAt: "desc" },
+	status: { status: "asc" },
+};

@@ -33,7 +33,7 @@ export function CreateProductCategorySheetForm({
 	categoriesPromise,
 	children,
 }: CreateProductCategorySheetFormProps) {
-	const { categories } = use(categoriesPromise);
+	const categories = use(categoriesPromise);
 	const [isOpen, setIsOpen] = useState(false);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
