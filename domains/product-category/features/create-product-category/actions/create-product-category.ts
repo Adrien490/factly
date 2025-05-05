@@ -62,7 +62,11 @@ export const createProductCategory: ServerAction<
 			name: formData.get("name") as string,
 			slug: formData.get("slug") as string,
 			description: formData.get("description") as string,
-			parentId: (formData.get("parentId") as string) || null,
+			parentId:
+				(formData.get("parentId") as string) === "none" ||
+				!formData.get("parentId")
+					? null
+					: (formData.get("parentId") as string),
 			status:
 				(formData.get("status") as ProductCategoryStatus) ||
 				ProductCategoryStatus.ACTIVE,
@@ -132,39 +136,25 @@ export const createProductCategory: ServerAction<
 			organization: { connect: { id: validatedOrgId } },
 		};
 
-		// Ajouter la relation parentId seulement si elle existe
-		if (categoryData.parentId) {
-			const category = await db.productCategory.create({
-				data: {
-					...createData,
-					parent: { connect: { id: categoryData.parentId } },
-				},
-			});
+		// Créer la catégorie avec ou sans parent
+		const category = await db.productCategory.create({
+			data: categoryData.parentId
+				? {
+						...createData,
+						parent: { connect: { id: categoryData.parentId } },
+				  }
+				: createData,
+		});
 
-			// 9. Invalidation du cache pour forcer un rafraîchissement des données
-			revalidateTag(`organizations:${validatedOrgId}:productCategories`);
-			revalidateTag(`organizations:${validatedOrgId}:productCategories:count`);
+		// 9. Invalidation du cache pour forcer un rafraîchissement des données
+		revalidateTag(`organizations:${validatedOrgId}:productCategories`);
+		revalidateTag(`organizations:${validatedOrgId}:productCategories:count`);
 
-			// 10. Retour de la réponse de succès
-			return createSuccessResponse(
-				category,
-				`La catégorie ${category.name} a été créée avec succès`
-			);
-		} else {
-			const category = await db.productCategory.create({
-				data: createData,
-			});
-
-			// 9. Invalidation du cache pour forcer un rafraîchissement des données
-			revalidateTag(`organizations:${validatedOrgId}:productCategories`);
-			revalidateTag(`organizations:${validatedOrgId}:productCategories:count`);
-
-			// 10. Retour de la réponse de succès
-			return createSuccessResponse(
-				category,
-				`La catégorie ${category.name} a été créée avec succès`
-			);
-		}
+		// 10. Retour de la réponse de succès
+		return createSuccessResponse(
+			category,
+			`La catégorie ${category.name} a été créée avec succès`
+		);
 	} catch (error) {
 		console.error("[CREATE_PRODUCT_CATEGORY]", error);
 		return createErrorResponse(

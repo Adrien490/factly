@@ -32,6 +32,7 @@ export function ProductCategoryDataTable({
 	organizationId,
 }: ProductCategoryDataTableProps) {
 	const categories = use(categoriesPromise);
+	console.log(categories);
 
 	// Récupérer les catégories racines (sans parent)
 	const rootCategories = categories.filter((category) => !category.parentId);

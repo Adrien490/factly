@@ -18,17 +18,19 @@ export async function fetchProductCategories(
 	"use cache";
 
 	// Tag de base pour toutes les catégories de produits de l'organisation
-	cacheTag(`organizations:${params.organizationId}:product-categories`);
+	cacheTag(`organizations:${params.organizationId}:productCategories`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`organizations:${params.organizationId}:search:${params.search}`);
+		cacheTag(
+			`organizations:${params.organizationId}:productCategories:search:${params.search}`
+		);
 	}
 
 	// Tag pour filtrer par parent
 	if (params.parentId) {
 		cacheTag(
-			`organizations:${params.organizationId}:parentId:${params.parentId}`
+			`organizations:${params.organizationId}:productCategories:parentId:${params.parentId}`
 		);
 	}
 
@@ -38,13 +40,13 @@ export async function fetchProductCategories(
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
 				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value.join(
-						","
-					)}`
+					`organizations:${
+						params.organizationId
+					}:productCategories:filter:${key}:${value.join(",")}`
 				);
 			} else {
 				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value}`
+					`organizations:${params.organizationId}:productCategories:filter:${key}:${value}`
 				);
 			}
 		});
@@ -71,6 +73,11 @@ export async function fetchProductCategories(
 			],
 		});
 
+		console.log(
+			"[FETCH_PRODUCT_CATEGORIES] Found",
+			categories.length,
+			"categories"
+		);
 		return categories;
 	} catch (error) {
 		console.error("[FETCH_PRODUCT_CATEGORIES]", error);

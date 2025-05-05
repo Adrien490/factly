@@ -10,6 +10,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components";
+import { Fragment } from "react";
 
 export function ProductCategoryDataTableSkeleton() {
 	// Calculer le nombre de colonnes pour le colSpan
@@ -61,7 +62,7 @@ export function ProductCategoryDataTableSkeleton() {
 				<TableBody>
 					{/* Catégories racines avec enfants */}
 					{Array.from({ length: 3 }).map((_, parentIndex) => (
-						<>
+						<Fragment key={`parent-group-${parentIndex}`}>
 							{/* Catégorie parent */}
 							<TableRow key={`parent-${parentIndex}`} role="row">
 								<TableCell role="gridcell">
@@ -124,7 +125,7 @@ export function ProductCategoryDataTableSkeleton() {
 									</TableCell>
 								</TableRow>
 							))}
-						</>
+						</Fragment>
 					))}
 				</TableBody>
 				<TableFooter>
