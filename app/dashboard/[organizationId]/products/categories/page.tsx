@@ -51,10 +51,13 @@ export default async function ProductsCategoriesRootPage({
 				description="Gérer vos catégories de produits"
 			/>
 
-			<HorizontalMenu items={getProductNavigation(organizationId)} />
-
-			{/* Breadcrumb pour la navigation hiérarchique */}
-			<ProductCategoryBreadcrumb organizationId={organizationId} />
+			<div className="flex justify-between items-center gap-2 mb-6">
+				<HorizontalMenu
+					className="mb-0"
+					items={getProductNavigation(organizationId)}
+				/>
+				<ProductCategoryBreadcrumb organizationId={organizationId} />
+			</div>
 
 			<Toolbar>
 				<SearchForm

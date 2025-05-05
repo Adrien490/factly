@@ -1,6 +1,5 @@
 import { GetProductCategoryAncestorsReturn } from "@/domains/product-category/features/get-product-category-ancestors/types";
 import { GetProductCategoryReturn } from "@/domains/product-category/features/get-product-category/types";
-import { getCategoryUrl } from "@/domains/product-category/utils";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -8,10 +7,12 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
+	Skeleton,
 } from "@/shared/components";
-import { ChevronRight, FolderOpenDot } from "lucide-react";
+import { ChevronRight, Home } from "lucide-react";
 import { notFound } from "next/navigation";
 import React, { use } from "react";
+import { getCategoryUrl } from "../utils";
 
 interface ProductCategoryBreadcrumbProps {
 	productCategoryPromise?: Promise<GetProductCategoryReturn | null>;
@@ -40,28 +41,28 @@ export function ProductCategoryBreadcrumb({
 	}
 
 	return (
-		<Breadcrumb className="mb-6">
-			<BreadcrumbList>
-				<BreadcrumbItem>
+		<Breadcrumb className="ml-auto text-sm">
+			<BreadcrumbList className="flex flex-nowrap items-center overflow-hidden">
+				<BreadcrumbItem className="flex-shrink-0">
 					<BreadcrumbLink
 						href={`/dashboard/${organizationId}/products/categories`}
-						className="flex items-center gap-1.5"
+						className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
 					>
-						<FolderOpenDot className="h-4 w-4" />
-						Toutes les catégories
+						<Home className="h-3.5 w-3.5" />
+						<span className="hidden sm:inline">Catégories</span>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 
 				{/* Si on n'est pas en mode simple, afficher la hiérarchie complète */}
 				{!isSimpleMode && (
 					<>
-						{/* Séparateur après "Toutes les catégories" */}
-						<BreadcrumbSeparator>
-							<ChevronRight className="h-4 w-4" />
+						{/* Séparateur après "Catégories" */}
+						<BreadcrumbSeparator className="mx-1 flex-shrink-0 text-muted-foreground/50">
+							<ChevronRight className="h-3 w-3" />
 						</BreadcrumbSeparator>
 
 						{/* Afficher les ancêtres s'ils existent */}
-						{productCategoryAncestors!.length > 0 && (
+						{productCategoryAncestors!.length > 0 ? (
 							<>
 								{/* Afficher les ancêtres en ordre inverse (du plus éloigné au plus proche) */}
 								{[...productCategoryAncestors!]
@@ -77,25 +78,54 @@ export function ProductCategoryBreadcrumb({
 											ancestorAncestors
 										);
 
+										// Afficher seulement le dernier ancêtre sur petit écran
+										const isLastAncestor = index === array.length - 1;
+										const showOnMobile = isLastAncestor;
+
 										return (
 											<React.Fragment key={ancestor.id}>
-												<BreadcrumbItem>
-													<BreadcrumbLink href={href}>
+												<BreadcrumbItem
+													className={`flex-shrink-0 ${
+														!showOnMobile ? "hidden sm:block" : ""
+													}`}
+												>
+													<BreadcrumbLink
+														href={href}
+														className="text-muted-foreground hover:text-foreground transition-colors truncate max-w-[100px] md:max-w-[150px]"
+														title={ancestor.name}
+													>
 														{ancestor.name}
 													</BreadcrumbLink>
 												</BreadcrumbItem>
-												<BreadcrumbSeparator>
-													<ChevronRight className="h-4 w-4" />
+												<BreadcrumbSeparator
+													className={`mx-1 flex-shrink-0 text-muted-foreground/50 ${
+														!showOnMobile ? "hidden sm:block" : ""
+													}`}
+												>
+													<ChevronRight className="h-3 w-3" />
 												</BreadcrumbSeparator>
 											</React.Fragment>
 										);
 									})}
 							</>
-						)}
+						) : productCategoryAncestors!.length === 0 &&
+						  productCategory!.parentId ? (
+							// État de chargement pour les ancêtres
+							<BreadcrumbItem className="flex-shrink-0">
+								<div>
+									<Skeleton className="h-3 w-16 rounded-md" />
+								</div>
+							</BreadcrumbItem>
+						) : null}
 
 						{/* Afficher la catégorie courante */}
-						<BreadcrumbItem>
-							<BreadcrumbPage>{productCategory!.name}</BreadcrumbPage>
+						<BreadcrumbItem className="flex-shrink-0">
+							<BreadcrumbPage
+								className="font-medium text-foreground truncate max-w-[150px] md:max-w-[200px]"
+								title={productCategory!.name}
+							>
+								{productCategory!.name}
+							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</>
 				)}
@@ -103,11 +133,16 @@ export function ProductCategoryBreadcrumb({
 				{/* Si on est en mode simple et qu'un titre est fourni, l'afficher */}
 				{isSimpleMode && productCategory && (
 					<>
-						<BreadcrumbSeparator>
-							<ChevronRight className="h-4 w-4" />
+						<BreadcrumbSeparator className="mx-1 flex-shrink-0 text-muted-foreground/50">
+							<ChevronRight className="h-3 w-3" />
 						</BreadcrumbSeparator>
-						<BreadcrumbItem>
-							<BreadcrumbPage>{productCategory.name}</BreadcrumbPage>
+						<BreadcrumbItem className="flex-shrink-0">
+							<BreadcrumbPage
+								className="font-medium text-foreground truncate max-w-[150px] md:max-w-[200px]"
+								title={productCategory.name}
+							>
+								{productCategory.name}
+							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</>
 				)}
