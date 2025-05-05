@@ -13,7 +13,6 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import { Breadcrumbs } from "@/shared/components/breadcrumbs/breadcrumbs";
 import { Suspense } from "react";
 
 interface Props {
@@ -34,11 +33,6 @@ export default async function ProductsCategoriesPage({
 
 	return (
 		<PageContainer>
-			<Breadcrumbs
-				items={[{ label: "Catégories", href: undefined }]}
-				className="mb-4"
-			/>
-
 			<PageHeader
 				title="Catégories"
 				description="Gérer vos catégories de produits"
