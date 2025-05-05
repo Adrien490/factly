@@ -7,21 +7,16 @@ import { useActionState } from "react";
 import { toast } from "sonner";
 import { restoreMultipleClients } from "../actions/restore-multiple-clients";
 import { restoreMultipleClientsSchema } from "../schemas/restore-multiple-clients-schema";
-import { RestoreMultipleClientsReturn } from "../types";
 
 export const useRestoreMultipleClients = () => {
-	const { clearItems } = useSelectionContext();
+	const { clearAll } = useSelectionContext();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			restoreMultipleClients,
 			createToastCallbacks<Client[], typeof restoreMultipleClientsSchema>({
 				loadingMessage: "Restauration des clients en cours...",
 				onSuccess: (response) => {
-					const data =
-						response?.data as unknown as RestoreMultipleClientsReturn;
-					if (data?.restoredClientIds?.length > 0) {
-						clearItems(data.restoredClientIds);
-					}
+					clearAll();
 					toast.success(response?.message);
 				},
 			})
