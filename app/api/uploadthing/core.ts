@@ -53,6 +53,33 @@ export const ourFileRouter = {
 			return { url: file.ufsUrl };
 		}),
 
+	categoryImage: f({
+		image: {
+			maxFileSize: "2MB",
+			maxFileCount: 1,
+			contentDisposition: "inline",
+		},
+	})
+		.middleware(async () => {
+			const user = await getUser();
+
+			if (!user)
+				throw new UploadThingError(
+					"Vous devez être connecté pour télécharger une image de catégorie"
+				);
+
+			return { userId: user.id };
+		})
+		.onUploadComplete(async ({ metadata, file }) => {
+			console.log(
+				"Upload d'image de catégorie complété pour l'utilisateur:",
+				metadata.userId
+			);
+			console.log("URL du fichier:", file.ufsUrl);
+
+			return { url: file.ufsUrl };
+		}),
+
 	organizationLogo: f({
 		image: {
 			maxFileSize: "2MB",

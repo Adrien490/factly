@@ -1,4 +1,10 @@
-import { CalendarClock, LayoutDashboard, Truck, Users } from "lucide-react";
+import {
+	CalendarClock,
+	LayoutDashboard,
+	Package,
+	Truck,
+	Users,
+} from "lucide-react";
 
 export const getSidebarNav = (organizationId: string) => [
 	{
@@ -36,7 +42,7 @@ export const getSidebarNav = (organizationId: string) => [
 			},
 		],
 	},
-	/*{
+	{
 		title: "Catalogue",
 		icon: Package,
 		items: [
@@ -57,7 +63,7 @@ export const getSidebarNav = (organizationId: string) => [
 				url: `/dashboard/${organizationId}/products/tax-rates`,
 			},
 		],
-	},*/
+	},
 	/*{
 		title: "Devis",
 		icon: FileText,

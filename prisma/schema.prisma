@@ -133,8 +133,9 @@ model Organization {
   fiscalYears FiscalYear[] // Relation avec les années fiscales
 
   // Relations pour la gestion commerciale
-
-  suppliers Supplier[]
+  suppliers         Supplier[]
+  products          Product[] // Relation avec les produits
+  productCategories ProductCategory[] // Relation avec les catégories de produits
 
   // Relation avec User (créateur)
   creator   User?   @relation("UserOrganizations", fields: [creatorId], references: [id])
@@ -237,6 +238,7 @@ model Supplier {
   organizationId String
   addresses      Address[]
   contacts       Contact[]
+  products       Product[] // Relation avec les produits fournis
 
   @@index([name])
   @@index([status, organizationId])
@@ -321,6 +323,70 @@ model Client {
   @@index([reference]) // via @@unique
 }
 
+// Nouveau modèle pour les produits
+model Product {
+  id          String        @id @default(cuid())
+  reference   String // Référence produit
+  name        String // Nom du produit
+  description String? // Description détaillée
+  status      ProductStatus @default(ACTIVE)
+
+  // Prix et taxation
+  price   Float // Prix de base HT
+  vatRate Float // Taux de TVA (en pourcentage)
+
+  // Métadonnées
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?
+
+  category   ProductCategory? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  // Index pour optimiser les recherches
+  @@unique([reference, organizationId])
+  @@index([name])
+  @@index([status, organizationId])
+  @@index([categoryId])
+  @@index([supplierId])
+}
+
+// Modèle pour les catégories de produits
+model ProductCategory {
+  id          String                @id @default(cuid())
+  name        String // Nom de la catégorie
+  description String? // Description optionnelle
+  slug        String // Slug pour URL
+  status      ProductCategoryStatus @default(ACTIVE) // Statut de la catégorie
+  imageUrl    String? // URL de l'image de la catégorie
+
+  // Hiérarchie des catégories
+  parentId String? // ID de la catégorie parente
+  parent   ProductCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children ProductCategory[] @relation("CategoryHierarchy")
+
+  // Métadonnées
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  products       Product[] // Produits dans cette catégorie
+
+  // Contraintes et index
+  @@unique([slug, organizationId])
+  @@index([name, organizationId])
+  @@index([parentId])
+  @@index([status, organizationId])
+}
+
 enum Civility {
   MR // Monsieur
   MRS // Madame
@@ -393,6 +459,15 @@ enum SupplierStatus {
   ARCHIVED // Archivé
 }
 
+// Enum pour le statut des produits
+enum ProductStatus {
+  ACTIVE // Produit actif, disponible à la vente
+  INACTIVE // Produit inactif, non disponible à la vente
+  DRAFT // Produit en cours de création, non publié
+  DISCONTINUED // Produit arrêté, plus commercialisé
+  ARCHIVED // Produit archivé
+}
+
 enum Country {
   FRANCE
   GERMANY
@@ -448,4 +523,11 @@ enum Country {
   QATAR
   SAUDI_ARABIA
   OTHER
+}
+
+// Enum pour le statut des catégories de produits
+enum ProductCategoryStatus {
+  ACTIVE // Catégorie active, visible
+  INACTIVE // Catégorie inactive, non visible mais existante
+  ARCHIVED // Catégorie archivée
 }
