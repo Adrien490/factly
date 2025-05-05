@@ -2,10 +2,9 @@ import { sortOrderSchema } from "@/shared/schemas";
 import { z } from "zod";
 
 // Schéma de tri
-export const getProductCategoriesSortFieldSchema = z.enum([
-	"name",
-	"createdAt",
-]);
+export const getProductCategoriesSortFieldSchema = z
+	.enum(["name", "createdAt"])
+	.default("name");
 
 // Schéma pour les filtres de catégories
 const filterValueSchema = z.union([

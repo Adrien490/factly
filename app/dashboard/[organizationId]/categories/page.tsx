@@ -1,7 +1,7 @@
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import {
 	getProductCategories,
-	getProductCategoriesSortFieldSchema,
+	GetProductCategorySortField,
 } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
@@ -21,10 +21,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import { sortOrderSchema } from "@/shared/schemas";
+import { SortOrder } from "@/shared/types";
 import { Calendar, FolderOpenDot, Users } from "lucide-react";
 import { Suspense } from "react";
-import { z } from "zod";
 
 interface Props {
 	params: Promise<{
@@ -100,8 +99,8 @@ export default async function ProductsCategoriesRootPage({
 									icon: <Calendar className="h-4 w-4" />,
 								},
 							]}
-							defaultSortBy="createdAt"
-							defaultSortOrder="desc"
+							defaultSortBy="name"
+							defaultSortOrder="asc"
 							className="w-[200px] shrink-0"
 						/>
 						<Suspense fallback={<></>}>
@@ -128,10 +127,8 @@ export default async function ProductsCategoriesRootPage({
 							organizationId,
 							filters: {},
 							search: search || "",
-							sortBy: sortBy as z.infer<
-								typeof getProductCategoriesSortFieldSchema
-							>,
-							sortOrder: sortOrder as z.infer<typeof sortOrderSchema>,
+							sortBy: sortBy as GetProductCategorySortField,
+							sortOrder: sortOrder as SortOrder,
 							parentId: null,
 							include: {
 								childCount: true,
