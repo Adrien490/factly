@@ -52,13 +52,13 @@ export default async function ProductsCategoriesRootPage({
 			/>
 
 			<div className="space-y-3 mb-6">
-				<nav aria-label="Fil d'Ariane" role="navigation">
-					<ProductCategoryBreadcrumb organizationId={organizationId} />
-				</nav>
-
 				<div aria-label="Navigation principale" role="navigation">
 					<HorizontalMenu items={getProductNavigation(organizationId)} />
 				</div>
+
+				<nav aria-label="Fil d'Ariane" role="navigation">
+					<ProductCategoryBreadcrumb organizationId={organizationId} />
+				</nav>
 			</div>
 
 			<Toolbar>

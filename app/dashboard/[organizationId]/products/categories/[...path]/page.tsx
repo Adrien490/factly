@@ -65,6 +65,10 @@ export default async function ProductsCategoriesPathPage({
 			/>
 
 			<div className="space-y-3 mb-6">
+				<div aria-label="Navigation principale" role="navigation">
+					<HorizontalMenu items={getProductNavigation(organizationId)} />
+				</div>
+
 				<nav aria-label="Fil d'Ariane" role="navigation">
 					<ProductCategoryBreadcrumb
 						organizationId={organizationId}
@@ -79,10 +83,6 @@ export default async function ProductsCategoriesPathPage({
 						})}
 					/>
 				</nav>
-
-				<div aria-label="Navigation principale" role="navigation">
-					<HorizontalMenu items={getProductNavigation(organizationId)} />
-				</div>
 			</div>
 
 			<Toolbar>
