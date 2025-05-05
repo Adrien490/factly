@@ -67,6 +67,22 @@ export default async function ProductsCategoriesPage({
 									organizationId,
 									filters: {},
 									search: "",
+									sortBy: "name",
+									sortOrder: "asc",
+									structure: {
+										asTree: false,
+										includeProductCount: false,
+										includeChildrenCount: false,
+										maxDepth: 5,
+									},
+									include: {
+										parent: false,
+										children: false,
+									},
+									pagination: {
+										page: 1,
+										perPage: 50,
+									},
 								})}
 							/>
 						</Suspense>
@@ -82,6 +98,22 @@ export default async function ProductsCategoriesPage({
 							organizationId,
 							filters: {},
 							search: search || "",
+							sortBy: "name",
+							sortOrder: "asc",
+							structure: {
+								asTree: false,
+								includeProductCount: false,
+								includeChildrenCount: false,
+								maxDepth: 5,
+							},
+							include: {
+								parent: false,
+								children: false,
+							},
+							pagination: {
+								page: 1,
+								perPage: 50,
+							},
 						})}
 						organizationId={organizationId}
 					/>

@@ -1,5 +1,6 @@
 "use client";
 
+import { GetProductCategoriesReturn } from "@/domains/product-category/features/get-product-categories/types";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
@@ -24,7 +25,7 @@ import { createProductCategory } from "../actions/create-product-category";
 import { createProductCategorySchema } from "../schemas";
 
 interface CreateProductCategorySheetFormProps {
-	categoriesPromise: Promise<ProductCategory[]>;
+	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	children?: ReactNode;
 }
 
@@ -32,7 +33,7 @@ export function CreateProductCategorySheetForm({
 	categoriesPromise,
 	children,
 }: CreateProductCategorySheetFormProps) {
-	const categories = use(categoriesPromise);
+	const { categories } = use(categoriesPromise);
 	const [isOpen, setIsOpen] = useState(false);
 	const params = useParams();
 	const organizationId = params.organizationId as string;
