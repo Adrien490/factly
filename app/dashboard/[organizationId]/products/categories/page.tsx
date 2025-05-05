@@ -22,22 +22,22 @@ import { Badge, Calendar, Home, Users } from "lucide-react";
 import { Suspense } from "react";
 
 interface Props {
-	params: {
+	params: Promise<{
 		organizationId: string;
-	};
-	searchParams: {
+	}>;
+	searchParams: Promise<{
 		search?: string;
 		sortBy?: string;
 		sortOrder?: string;
-	};
+	}>;
 }
 
 export default async function ProductsCategoriesRootPage({
 	params,
 	searchParams,
 }: Props) {
-	const { organizationId } = params;
-	const { search, sortBy, sortOrder } = searchParams;
+	const { organizationId } = await params;
+	const { search, sortBy, sortOrder } = await searchParams;
 
 	// Afficher uniquement les catégories racines (sans parent)
 	return (
