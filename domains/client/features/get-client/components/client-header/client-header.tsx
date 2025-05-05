@@ -1,15 +1,17 @@
 import NotFound from "@/app/dashboard/[organizationId]/not-found";
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
+import { use } from "react";
 import { CLIENT_STATUSES } from "../../../../constants";
 import { CLIENT_TYPES } from "../../../../constants/client-types";
 import { GetClientReturn } from "../../types";
 
 interface ClientHeaderProps {
-	client: GetClientReturn | null;
+	clientPromise: Promise<GetClientReturn | null>;
 }
 
-export function ClientHeader({ client }: ClientHeaderProps) {
+export function ClientHeader({ clientPromise }: ClientHeaderProps) {
+	const client = use(clientPromise);
 	if (!client) {
 		return <NotFound />;
 	}
