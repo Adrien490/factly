@@ -111,7 +111,7 @@ export default async function ProductsCategoriesPathPage({
 							className="flex items-center gap-1.5"
 						>
 							<FolderOpenDot className="h-4 w-4" />
-							Catégories racines
+							Toutes les catégories
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 

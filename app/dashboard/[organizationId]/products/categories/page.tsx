@@ -62,7 +62,7 @@ export default async function ProductsCategoriesRootPage({
 					<BreadcrumbItem>
 						<BreadcrumbPage className="flex items-center gap-1.5">
 							<FolderOpenDot className="h-4 w-4" />
-							Catégories racines
+							Toutes les catégories
 						</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
