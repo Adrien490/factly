@@ -14,7 +14,8 @@
 		"test:ui": "vitest --ui",
 		"test:coverage": "vitest run --coverage",
 		"postinstall": "prisma generate",
-		"seed:clients": "npx tsx scripts/seed-clients.ts"
+		"seed:clients": "npx tsx scripts/seed-clients.ts",
+		"seed:product-categories": "npx tsx scripts/seed-product-categories.ts"
 	},
 	"overrides": {
 		"react": "$react",

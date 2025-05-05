@@ -102,7 +102,7 @@ export function ProductCategoryDataTable({
 									</TableCell>
 									<TableCell role="gridcell" className="font-medium">
 										<div className="flex items-center gap-2">
-											<div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center overflow-hidden">
+											<div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
 												{category.imageUrl ? (
 													<Image
 														src={category.imageUrl}
@@ -115,21 +115,23 @@ export function ProductCategoryDataTable({
 													<Folder className="h-4 w-4 text-muted-foreground" />
 												)}
 											</div>
-											<div>
+											<div className="min-w-0">
 												<Link
 													href={`/dashboard/${organizationId}/products/categories/${category.slug}`}
-													className="hover:underline flex items-center"
+													className="hover:underline flex items-center truncate max-w-[220px]"
 												>
-													{category.name}
+													<span className="truncate">{category.name}</span>
 												</Link>
-												<span className="text-xs text-muted-foreground">
+												<span className="text-xs text-muted-foreground truncate block max-w-[220px]">
 													/{category.slug}
 												</span>
 											</div>
 										</div>
 									</TableCell>
 									<TableCell role="gridcell" className="text-muted-foreground">
-										{category.description || "-"}
+										<div className="truncate max-w-[300px]">
+											{category.description || "-"}
+										</div>
 									</TableCell>
 									<TableCell role="gridcell">
 										<Badge
@@ -170,8 +172,8 @@ export function ProductCategoryDataTable({
 											</TableCell>
 											<TableCell role="gridcell" className="font-medium">
 												<div className="flex items-center gap-2 ml-8">
-													<ChevronRight className="h-4 w-4 text-muted-foreground" />
-													<div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center overflow-hidden">
+													<ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+													<div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
 														{childCategory.imageUrl ? (
 															<Image
 																src={childCategory.imageUrl}
@@ -184,14 +186,16 @@ export function ProductCategoryDataTable({
 															<Folder className="h-4 w-4 text-muted-foreground" />
 														)}
 													</div>
-													<div>
+													<div className="min-w-0">
 														<Link
 															href={`/dashboard/${organizationId}/products/categories/${childPath}`}
-															className="hover:underline flex items-center"
+															className="hover:underline flex items-center truncate max-w-[180px]"
 														>
-															{childCategory.name}
+															<span className="truncate">
+																{childCategory.name}
+															</span>
 														</Link>
-														<span className="text-xs text-muted-foreground">
+														<span className="text-xs text-muted-foreground truncate block max-w-[180px]">
 															/{childPath}
 														</span>
 													</div>
@@ -201,7 +205,9 @@ export function ProductCategoryDataTable({
 												role="gridcell"
 												className="text-muted-foreground"
 											>
-												{childCategory.description || "-"}
+												<div className="truncate max-w-[300px]">
+													{childCategory.description || "-"}
+												</div>
 											</TableCell>
 											<TableCell role="gridcell">
 												<Badge
