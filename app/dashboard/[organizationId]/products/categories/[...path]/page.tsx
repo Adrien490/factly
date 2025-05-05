@@ -58,7 +58,7 @@ export default async function ProductsCategoriesPathPage({
 	// Récupérer les ancêtres avec notre nouvelle fonction
 
 	return (
-		<PageContainer>
+		<PageContainer className="pb-12">
 			<PageHeader
 				title={`Catégorie: ${currentCategory.name}`}
 				description="Gérer les sous-catégories"
