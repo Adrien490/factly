@@ -22,18 +22,6 @@ const filterValueSchema = z.union([
 // Le schéma pour les filtres de catégories
 export const productCategoryFiltersSchema = z.record(filterValueSchema);
 
-// Schéma pour spécifier les relations à inclure
-export const includeOptionsSchema = z
-	.object({
-		// En mode navigation par dossier, on inclut toujours le parent pour construire les breadcrumbs
-		parent: z.boolean().default(true),
-		// En mode navigation par dossier, on inclut les enfants directs pour afficher la hiérarchie
-		children: z.boolean().default(true),
-		// Inclure le nombre d'enfants pour chaque catégorie
-		childCount: z.boolean().default(true),
-	})
-	.default({});
-
 // Schéma principal pour get-product-categories
 export const getProductCategoriesSchema = z.object({
 	// Paramètre requis - l'organisation à laquelle appartiennent les catégories
@@ -52,7 +40,4 @@ export const getProductCategoriesSchema = z.object({
 	// Options de tri
 	sortBy: sortFieldSchema.default("name"),
 	sortOrder: sortOrderSchema.default("asc"),
-
-	// Options pour les relations et les informations à inclure
-	include: includeOptionsSchema,
 });

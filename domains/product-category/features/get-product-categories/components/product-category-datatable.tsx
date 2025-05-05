@@ -18,6 +18,7 @@ import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 import { GetProductCategoriesReturn } from "../types";
 
 export interface ProductCategoryDataTableProps {
@@ -31,8 +32,7 @@ export function ProductCategoryDataTable({
 }: ProductCategoryDataTableProps) {
 	const categories = use(categoriesPromise);
 
-	// Récupérer les catégories racines (sans parent)
-	const rootCategories = categories.filter((category) => !category.parentId);
+	// Récupérer les catégories du niveau courant et les IDs pour la sélection
 	const categoryIds = categories.map((category) => category.id);
 
 	if (categories.length === 0) {
@@ -80,7 +80,7 @@ export function ProductCategoryDataTable({
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{rootCategories.map((category) => {
+					{categories.map((category) => {
 						// Récupérer les enfants directs de la catégorie
 						const children = categories.filter(
 							(child) => child.parentId === category.id
@@ -90,8 +90,9 @@ export function ProductCategoryDataTable({
 							(option) => option.value === category.status
 						);
 
+						// Afficher la catégorie principale et ses enfants
 						return (
-							<>
+							<React.Fragment key={`category-group-${category.id}`}>
 								{/* Catégorie principale */}
 								<TableRow key={category.id} role="row" tabIndex={0}>
 									<TableCell role="gridcell">
@@ -183,7 +184,7 @@ export function ProductCategoryDataTable({
 													</div>
 													<div className="min-w-0">
 														<Link
-															href={`/dashboard/${organizationId}/products/categories`}
+															href={`/dashboard/${organizationId}/products/categories/${childCategory.slug}`}
 															className="hover:underline flex items-center truncate max-w-[180px]"
 														>
 															<span className="truncate">
@@ -230,7 +231,7 @@ export function ProductCategoryDataTable({
 										</TableRow>
 									);
 								})}
-							</>
+							</React.Fragment>
 						);
 					})}
 				</TableBody>

@@ -16,24 +16,24 @@ import {
 import { Suspense } from "react";
 
 interface Props {
-	params: Promise<{
+	params: {
 		organizationId: string;
-	}>;
-	searchParams: Promise<{
+	};
+	searchParams: {
 		search?: string;
-		parentId?: string;
-	}>;
+	};
 }
 
-export default async function ProductsCategoriesPage({
+export default async function ProductsCategoriesRootPage({
 	params,
 	searchParams,
 }: Props) {
-	const { organizationId } = await params;
-	const { search, parentId } = await searchParams;
+	const { organizationId } = params;
+	const { search } = searchParams;
 
+	// Afficher uniquement les catégories racines (sans parent)
 	return (
-		<PageContainer>
+		<PageContainer className="pb-12">
 			<PageHeader
 				title="Catégories"
 				description="Gérer vos catégories de produits"
@@ -70,12 +70,7 @@ export default async function ProductsCategoriesPage({
 									search: "",
 									sortBy: "name",
 									sortOrder: "asc",
-									parentId: parentId ? parentId : null,
-									include: {
-										parent: true,
-										children: true,
-										childCount: true,
-									},
+									parentId: null,
 								})}
 							/>
 						</Suspense>
@@ -93,12 +88,7 @@ export default async function ProductsCategoriesPage({
 							search: search || "",
 							sortBy: "name",
 							sortOrder: "asc",
-							parentId: parentId ? parentId : null,
-							include: {
-								parent: true,
-								children: true,
-								childCount: true,
-							},
+							parentId: null,
 						})}
 						organizationId={organizationId}
 					/>
