@@ -30,6 +30,7 @@ export const getSidebarNav = (organizationId: string) => [
 	{
 		title: "Catalogue",
 		icon: Package,
+		url: `/dashboard/${organizationId}/products`,
 		items: getProductNavigation(organizationId),
 	},
 	/*{
@@ -86,6 +87,7 @@ export const getSidebarNav = (organizationId: string) => [
 	{
 		title: "Années fiscales",
 		icon: CalendarClock,
+		url: `/dashboard/${organizationId}/fiscal-years`,
 		items: [
 			{
 				title: "Vue d'ensemble",
