@@ -109,14 +109,6 @@ export function ProductHeader({ productPromise }: ProductHeaderProps) {
 								title: "Modifier",
 								url: `/dashboard/${product.organizationId}/products/${product.id}/edit`,
 							},
-							{
-								title: "Historique",
-								url: `/dashboard/${product.organizationId}/products/${product.id}/history`,
-							},
-							{
-								title: "Documents",
-								url: `/dashboard/${product.organizationId}/products/${product.id}/documents`,
-							},
 						]}
 					/>
 				</div>
