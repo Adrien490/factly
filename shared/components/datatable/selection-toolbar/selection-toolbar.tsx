@@ -71,7 +71,7 @@ export function SelectionToolbar({ children }: SelectionToolbarProps) {
 			{hasSelection && (
 				<div className="flex items-center gap-2 h-8">
 					<span className="text-sm text-muted-foreground italic">
-						Utilisez les actions ci-dessous pour traiter la sélection
+						Utilisez les actions suivantes pour traiter la sélection
 					</span>
 
 					{children}

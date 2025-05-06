@@ -1,4 +1,7 @@
-import { ProductCategoryBreadcrumb } from "@/domains/product-category/components";
+import {
+	ProductCategoryBreadcrumb,
+	ProductCategoryToggleArchivedButton,
+} from "@/domains/product-category/components";
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category/components/create-product-category-sheet-form";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
@@ -8,17 +11,20 @@ import { getProductCategoryAncestors } from "@/domains/product-category/features
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
+	Calendar,
 	EmptyState,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
+	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
+import { Users } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -31,6 +37,8 @@ interface Props {
 		search?: string;
 		page?: string;
 		perPage?: string;
+		sortBy?: string;
+		sortOrder?: string;
 	}>;
 }
 
@@ -39,7 +47,7 @@ export default async function ProductsCategoriesPathPage({
 	searchParams,
 }: Props) {
 	const { organizationId, path } = await params;
-	const { search, page, perPage } = await searchParams;
+	const { search, page, perPage, sortBy, sortOrder } = await searchParams;
 
 	// Récupérer le dernier slug dans le chemin pour trouver la catégorie actuelle
 	const currentSlug = path[path.length - 1];
@@ -103,8 +111,26 @@ export default async function ProductsCategoriesPathPage({
 					</Tooltip>
 				</TooltipProvider>
 
-				<Suspense fallback={<></>}>
-					<CreateProductCategorySheetForm currentCategory={currentCategory} />
+				<SortingOptionsDropdown
+					sortFields={[
+						{
+							label: "Nom",
+							value: "name",
+							icon: <Users className="h-4 w-4" />,
+						},
+						{
+							label: "Date de création",
+							value: "createdAt",
+							icon: <Calendar className="h-4 w-4" />,
+						},
+					]}
+					defaultSortBy={sortBy}
+					defaultSortOrder={sortOrder as "asc" | "desc"}
+					className="w-[200px] shrink-0"
+				/>
+				<ProductCategoryToggleArchivedButton />
+				<Suspense fallback={<ProductCategoryDataTableSkeleton />}>
+					<CreateProductCategorySheetForm />
 				</Suspense>
 			</Toolbar>
 
