@@ -51,4 +51,8 @@ export const GET_SUPPLIERS_DEFAULT_SORT_BY = "createdAt";
 
 export const GET_SUPPLIERS_DEFAULT_SORT_ORDER = "desc";
 
-export const GET_SUPPLIERS_SORT_FIELDS = ["name", "createdAt"] as const;
+export const GET_SUPPLIERS_SORT_FIELDS = [
+	"name",
+	"createdAt",
+	"reference",
+] as const;
