@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, FormLabel } from "@/shared/components";
+import { Button, DotsLoader, FormLabel } from "@/shared/components";
 import {
 	FieldInfo,
 	FormFooter,
@@ -8,8 +8,6 @@ import {
 	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
-import { GridLoader } from "@/shared/components/loaders";
-import { MiniDotsLoader } from "@/shared/components/loaders/mini-dots-loader";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 
 import { Product, ProductStatus, VatRate } from "@prisma/client";
@@ -268,11 +266,7 @@ export function CreateProductForm() {
 										{isUploading && (
 											<div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-[2px] rounded-lg transition-all duration-300">
 												<div className="flex items-center gap-3 flex-col">
-													<GridLoader color="primary" size="xs" />
-													<div className="text-sm font-medium text-primary/80 flex items-center gap-2">
-														<span>Chargement</span>
-														<MiniDotsLoader color="primary" size="xs" />
-													</div>
+													<DotsLoader color="primary" size="xs" />
 												</div>
 											</div>
 										)}
