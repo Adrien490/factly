@@ -16,7 +16,7 @@ interface SelectionToolbarProps {
 }
 
 export function SelectionToolbar({ children }: SelectionToolbarProps) {
-	const { selectedItems, handleSelectionChange } = useSelectionContext();
+	const { selectedItems, clearAll } = useSelectionContext();
 	const hasSelection = selectedItems.length > 0;
 
 	if (selectedItems.length === 0) {
@@ -53,7 +53,7 @@ export function SelectionToolbar({ children }: SelectionToolbarProps) {
 								<Button
 									variant="ghost"
 									size="sm"
-									onClick={() => handleSelectionChange([], false)}
+									onClick={clearAll}
 									className="h-7 px-2 text-xs transition-colors hover:bg-destructive/10 hover:text-destructive"
 									aria-label="Effacer la sélection"
 								>
