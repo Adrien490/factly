@@ -34,7 +34,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 	return (
 		<PageContainer className="space-y-6 py-6 group">
 			{/* Barre d'outils principale */}
-			<Toolbar>
+			<Toolbar className="">
 				<SearchForm
 					paramName="search"
 					placeholder="Rechercher une organisation..."
