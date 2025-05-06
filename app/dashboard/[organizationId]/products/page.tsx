@@ -11,7 +11,6 @@ import {
 import { getProductNavigation } from "@/domains/product/utils";
 import {
 	Button,
-	Calendar,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
@@ -26,7 +25,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ProductStatus } from "@prisma/client";
-import { DollarSign, Tag, Trash2, Undo2, Users } from "lucide-react";
+import { Calendar, DollarSign, Tag, Trash2, Undo2, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
