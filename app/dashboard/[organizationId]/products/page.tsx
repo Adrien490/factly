@@ -26,7 +26,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ProductStatus } from "@prisma/client";
-import { DollarSign, Tag, Users } from "lucide-react";
+import { DollarSign, Tag, Trash2, Undo2, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -134,6 +134,7 @@ export default async function ProductsPage({
 				{isArchivedView ? (
 					<Button variant="default" className="shrink-0" asChild>
 						<Link href={`/dashboard/${organizationId}/products`}>
+							<Undo2 className="h-4 w-4 mr-2" />
 							Voir tous les produits
 						</Link>
 					</Button>
@@ -142,6 +143,7 @@ export default async function ProductsPage({
 						<Link
 							href={`/dashboard/${organizationId}/products?status=${ProductStatus.ARCHIVED}`}
 						>
+							<Trash2 className="h-4 w-4 mr-2" />
 							Voir les produits archivés
 						</Link>
 					</Button>

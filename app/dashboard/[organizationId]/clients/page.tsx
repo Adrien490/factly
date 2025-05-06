@@ -30,6 +30,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
+import { Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -134,6 +135,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				{isArchivedView ? (
 					<Button variant="default" className="shrink-0" asChild>
 						<Link href={`/dashboard/${organizationId}/clients`}>
+							<Undo2 className="h-4 w-4 mr-2" />
 							Voir tous les clients
 						</Link>
 					</Button>
@@ -142,6 +144,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						<Link
 							href={`/dashboard/${organizationId}/clients?status=${ClientStatus.ARCHIVED}`}
 						>
+							<Trash2 className="h-4 w-4 mr-2" />
 							Voir les clients archivés
 						</Link>
 					</Button>

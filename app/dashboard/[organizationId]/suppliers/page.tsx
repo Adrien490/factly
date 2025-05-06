@@ -27,7 +27,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
-import { Briefcase, Calendar, Store, Truck } from "lucide-react";
+import { Briefcase, Calendar, Store, Trash2, Truck, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -151,6 +151,7 @@ export default async function SuppliersPage({
 				{isArchivedView ? (
 					<Button variant="default" className="shrink-0" asChild>
 						<Link href={`/dashboard/${organizationId}/suppliers`}>
+							<Undo2 className="h-4 w-4 mr-2" />
 							Voir tous les fournisseurs
 						</Link>
 					</Button>
@@ -159,6 +160,7 @@ export default async function SuppliersPage({
 						<Link
 							href={`/dashboard/${organizationId}/suppliers?status=${SupplierStatus.ARCHIVED}`}
 						>
+							<Trash2 className="h-4 w-4 mr-2" />
 							Voir les fournisseurs archivés
 						</Link>
 					</Button>
