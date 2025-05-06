@@ -30,6 +30,12 @@ export const updateProductSchema = z.object({
 		})
 		.default(VatRate.STANDARD),
 
+	// Dimensions et poids
+	weight: z.number().optional().nullable(),
+	width: z.number().optional().nullable(),
+	height: z.number().optional().nullable(),
+	depth: z.number().optional().nullable(),
+
 	// Relations
 	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 	categoryId: z.string().optional().nullable(),
