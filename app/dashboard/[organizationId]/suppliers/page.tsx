@@ -4,7 +4,10 @@ import {
 } from "@/domains/supplier/components";
 import { ArchivedSupplierSelectionActions } from "@/domains/supplier/components/archived-supplier-selection-actions";
 import { SupplierSelectionActions } from "@/domains/supplier/components/supplier-selection-actions";
-import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
+import {
+	GET_SUPPLIERS_SORT_FIELDS,
+	getSuppliers,
+} from "@/domains/supplier/features/get-suppliers";
 import {
 	SupplierDataTable,
 	SupplierDataTableSkeleton,
@@ -176,7 +179,7 @@ export default async function SuppliersPage({
 						organizationId,
 						perPage: Number(perPage) || 10,
 						page: Number(page) || 1,
-						sortBy: sortBy as string,
+						sortBy: sortBy as (typeof GET_SUPPLIERS_SORT_FIELDS)[number],
 						sortOrder: sortOrder as SortOrder,
 						search,
 						filters,

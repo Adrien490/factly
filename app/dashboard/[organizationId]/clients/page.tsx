@@ -1,6 +1,6 @@
 import {
+	GET_CLIENTS_SORT_FIELDS,
 	getClients,
-	getClientsSortFieldSchema,
 } from "@/domains/client/features/get-clients";
 import { getClientNavigation } from "@/domains/client/utils";
 
@@ -34,7 +34,6 @@ import { ClientStatus, ClientType } from "@prisma/client";
 import { Calendar, Tag, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { z } from "zod";
 
 // Options pour le type de client
 
@@ -165,7 +164,7 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 						organizationId,
 						perPage: Number(perPage) || 10,
 						page: Number(page) || 1,
-						sortBy: sortBy as z.infer<typeof getClientsSortFieldSchema>,
+						sortBy: sortBy as (typeof GET_CLIENTS_SORT_FIELDS)[number],
 						sortOrder: sortOrder as SortOrder,
 						search,
 						filters,
