@@ -4,7 +4,7 @@ import { ClientStatusOption } from "../types";
 /**
  * Mapping des statuts client vers des libellés plus lisibles
  */
-const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
+export const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
 	[ClientStatus.LEAD]: "Lead",
 	[ClientStatus.PROSPECT]: "Prospect",
 	[ClientStatus.ACTIVE]: "Client actif",
@@ -15,7 +15,7 @@ const CLIENT_STATUS_LABELS: Record<ClientStatus, string> = {
 /**
  * Descriptions détaillées pour chaque statut client
  */
-const CLIENT_STATUS_DESCRIPTIONS: Record<ClientStatus, string> = {
+export const CLIENT_STATUS_DESCRIPTIONS: Record<ClientStatus, string> = {
 	[ClientStatus.LEAD]: "Contact initial, potentiellement intéressé",
 	[ClientStatus.PROSPECT]:
 		"A montré un intérêt concret pour nos produits/services",
@@ -29,7 +29,7 @@ const CLIENT_STATUS_DESCRIPTIONS: Record<ClientStatus, string> = {
 /**
  * Couleurs associées à chaque statut pour l'affichage visuel
  */
-const CLIENT_STATUS_COLORS: Record<ClientStatus, string> = {
+export const CLIENT_STATUS_COLORS: Record<ClientStatus, string> = {
 	[ClientStatus.LEAD]: "#9333ea", // Violet
 	[ClientStatus.PROSPECT]: "#f97316", // Orange
 	[ClientStatus.ACTIVE]: "#22c55e", // Vert

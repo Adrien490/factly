@@ -4,7 +4,11 @@ import {
 } from "@/domains/client/features/get-clients";
 import { getClientNavigation } from "@/domains/client/utils";
 
-import { ClientToggleArchivedButton } from "@/domains/client/components";
+import {
+	ArchivedClientSelectionActions,
+	ClientSelectionActions,
+	ClientToggleArchivedButton,
+} from "@/domains/client/components";
 import { ClientFilterSheet } from "@/domains/client/components/client-filter-sheet";
 import {
 	ClientDataTable,
@@ -17,6 +21,7 @@ import {
 	PageContainer,
 	PageHeader,
 	SearchForm,
+	SelectionToolbar,
 	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
@@ -35,7 +40,7 @@ import { z } from "zod";
 
 type PageProps = {
 	searchParams: Promise<{
-		// Pagination
+		selected?: string[];
 		perPage?: string;
 		page?: string;
 
@@ -56,12 +61,19 @@ type PageProps = {
 };
 
 export default async function ClientsPage({ searchParams, params }: PageProps) {
-	const { perPage, page, sortBy, sortOrder, search, status, type } =
+	const { perPage, page, sortBy, sortOrder, search, status, type, selected } =
 		await searchParams;
 	const { organizationId } = await params;
 
+	console.log(selected);
+
 	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};
+	const selectedClientIds = !Array.isArray(selected)
+		? selected
+			? [selected]
+			: []
+		: (selected.filter(Boolean) as string[]);
 	if (status) {
 		filters.status = status;
 	} else {
@@ -149,7 +161,19 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				</Button>
 			</Toolbar>
 
-			{/* Tableau de données */}
+			<SelectionToolbar>
+				{isArchivedView ? (
+					<ArchivedClientSelectionActions
+						selectedClientIds={selectedClientIds}
+						organizationId={organizationId}
+					/>
+				) : (
+					<ClientSelectionActions
+						selectedClientIds={selectedClientIds}
+						organizationId={organizationId}
+					/>
+				)}
+			</SelectionToolbar>
 			<Suspense fallback={<ClientDataTableSkeleton />}>
 				<ClientDataTable
 					clientsPromise={getClients({

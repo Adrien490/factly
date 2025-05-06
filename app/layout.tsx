@@ -1,5 +1,7 @@
+import { SelectionProvider } from "@/shared/contexts";
 import { ThemeProvider } from "@/shared/providers/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { connection } from "next/server";
@@ -8,7 +10,6 @@ import { Toaster } from "sonner";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import "./globals.css";
-import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -50,8 +51,7 @@ export default function RootLayout({
 					<Suspense>
 						<UTSSR />
 					</Suspense>
-					{children}
-					
+					<SelectionProvider>{children}</SelectionProvider>
 				</ThemeProvider>
 				<SpeedInsights />
 			</body>

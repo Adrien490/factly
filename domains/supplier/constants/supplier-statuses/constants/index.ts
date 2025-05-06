@@ -4,7 +4,7 @@ import { SupplierStatusOption } from "../types";
 /**
  * Mapping des statuts fournisseur vers des libellés plus lisibles
  */
-const SUPPLIER_STATUS_LABELS: Record<SupplierStatus, string> = {
+export const SUPPLIER_STATUS_LABELS: Record<SupplierStatus, string> = {
 	[SupplierStatus.ACTIVE]: "Actif",
 	[SupplierStatus.INACTIVE]: "Inactif",
 	[SupplierStatus.ONBOARDING]: "En intégration",
@@ -15,7 +15,7 @@ const SUPPLIER_STATUS_LABELS: Record<SupplierStatus, string> = {
 /**
  * Descriptions détaillées pour chaque statut fournisseur
  */
-const SUPPLIER_STATUS_DESCRIPTIONS: Record<SupplierStatus, string> = {
+export const SUPPLIER_STATUS_DESCRIPTIONS: Record<SupplierStatus, string> = {
 	[SupplierStatus.ACTIVE]:
 		"Fournisseur avec lequel nous travaillons activement",
 	[SupplierStatus.INACTIVE]: "Fournisseur temporairement inactif",
@@ -27,7 +27,7 @@ const SUPPLIER_STATUS_DESCRIPTIONS: Record<SupplierStatus, string> = {
 /**
  * Couleurs associées à chaque statut pour l'affichage visuel
  */
-const SUPPLIER_STATUS_COLORS: Record<SupplierStatus, string> = {
+export const SUPPLIER_STATUS_COLORS: Record<SupplierStatus, string> = {
 	[SupplierStatus.ACTIVE]: "#22c55e", // Vert
 	[SupplierStatus.INACTIVE]: "#64748b", // Gris-bleu
 	[SupplierStatus.ONBOARDING]: "#3b82f6", // Bleu

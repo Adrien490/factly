@@ -2,6 +2,8 @@ import {
 	SupplierFilterSheet,
 	SupplierToggleArchivedButton,
 } from "@/domains/supplier/components";
+import { ArchivedSupplierSelectionActions } from "@/domains/supplier/components/archived-supplier-selection-actions";
+import { SupplierSelectionActions } from "@/domains/supplier/components/supplier-selection-actions";
 import { getSuppliers } from "@/domains/supplier/features/get-suppliers";
 import {
 	SupplierDataTable,
@@ -15,6 +17,7 @@ import {
 	PageContainer,
 	PageHeader,
 	SearchForm,
+	SelectionToolbar,
 	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
@@ -33,8 +36,7 @@ type PageProps = {
 		// Pagination
 		perPage?: string;
 		page?: string;
-		cursor?: string;
-
+		selected?: string[];
 		// Tri
 		sortBy?: string;
 		sortOrder?: SortOrder;
@@ -55,12 +57,24 @@ export default async function SuppliersPage({
 	searchParams,
 	params,
 }: PageProps) {
-	const { perPage, page, sortBy, sortOrder, search, status, supplierType } =
-		await searchParams;
 	const { organizationId } = await params;
-
+	const {
+		perPage,
+		page,
+		sortBy,
+		sortOrder,
+		search,
+		status,
+		supplierType,
+		selected,
+	} = await searchParams;
 	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};
+	const selectedSupplierIds = !Array.isArray(selected)
+		? selected
+			? [selected]
+			: []
+		: (selected.filter(Boolean) as string[]);
 	if (status) {
 		filters.status = status;
 	} else {
@@ -154,7 +168,19 @@ export default async function SuppliersPage({
 				</Button>
 			</Toolbar>
 
-			{/* Tableau de données */}
+			<SelectionToolbar>
+				{isArchivedView ? (
+					<ArchivedSupplierSelectionActions
+						selectedSupplierIds={selectedSupplierIds}
+						organizationId={organizationId}
+					/>
+				) : (
+					<SupplierSelectionActions
+						selectedSupplierIds={selectedSupplierIds}
+						organizationId={organizationId}
+					/>
+				)}
+			</SelectionToolbar>
 			<Suspense fallback={<SupplierDataTableSkeleton />}>
 				<SupplierDataTable
 					suppliersPromise={getSuppliers({

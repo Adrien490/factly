@@ -4,7 +4,7 @@ import { SupplierTypeOption } from "../types";
 /**
  * Mapping des types de fournisseur vers des libellés plus lisibles
  */
-const SUPPLIER_TYPE_LABELS: Record<SupplierType, string> = {
+export const SUPPLIER_TYPE_LABELS: Record<SupplierType, string> = {
 	[SupplierType.MANUFACTURER]: "Fabricant",
 	[SupplierType.WHOLESALER]: "Grossiste",
 	[SupplierType.DISTRIBUTOR]: "Distributeur",
@@ -16,7 +16,7 @@ const SUPPLIER_TYPE_LABELS: Record<SupplierType, string> = {
 /**
  * Descriptions détaillées pour chaque type de fournisseur
  */
-const SUPPLIER_TYPE_DESCRIPTIONS: Record<SupplierType, string> = {
+export const SUPPLIER_TYPE_DESCRIPTIONS: Record<SupplierType, string> = {
 	[SupplierType.MANUFACTURER]: "Entreprise qui fabrique les produits",
 	[SupplierType.WHOLESALER]: "Entreprise qui vend en gros aux professionnels",
 	[SupplierType.DISTRIBUTOR]: "Entreprise qui distribue des produits",
@@ -29,7 +29,7 @@ const SUPPLIER_TYPE_DESCRIPTIONS: Record<SupplierType, string> = {
 /**
  * Couleurs pour chaque type de fournisseur (palette professionnelle)
  */
-const SUPPLIER_TYPE_COLORS: Record<SupplierType, string> = {
+export const SUPPLIER_TYPE_COLORS: Record<SupplierType, string> = {
 	[SupplierType.MANUFACTURER]: "#0369a1", // Bleu profond
 	[SupplierType.WHOLESALER]: "#0284c7", // Bleu standard
 	[SupplierType.DISTRIBUTOR]: "#0ea5e9", // Bleu clair

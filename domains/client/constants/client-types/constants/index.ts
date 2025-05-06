@@ -8,7 +8,7 @@ import { ClientTypeOption } from "../types";
 /**
  * Mapping des types de client vers des libellés plus lisibles
  */
-const CLIENT_TYPE_LABELS: Record<ClientType, string> = {
+export const CLIENT_TYPE_LABELS: Record<ClientType, string> = {
 	[ClientType.INDIVIDUAL]: "Particulier",
 	[ClientType.COMPANY]: "Entreprise",
 };
@@ -16,12 +16,15 @@ const CLIENT_TYPE_LABELS: Record<ClientType, string> = {
 /**
  * Descriptions détaillées pour chaque type de client
  */
-const CLIENT_TYPE_DESCRIPTIONS: Record<ClientType, string> = {
+export const CLIENT_TYPE_DESCRIPTIONS: Record<ClientType, string> = {
 	[ClientType.INDIVIDUAL]: "Personne physique (consommateur)",
 	[ClientType.COMPANY]: "Personne morale (entreprise, association)",
 };
 
-const CLIENT_TYPE_COLORS: Record<ClientType, string> = {
+/**
+ * Couleurs pour chaque type de client
+ */
+export const CLIENT_TYPE_COLORS: Record<ClientType, string> = {
 	[ClientType.INDIVIDUAL]: "#6366f1", // Indigo
 	[ClientType.COMPANY]: "#f59e0b", // Ambre
 };

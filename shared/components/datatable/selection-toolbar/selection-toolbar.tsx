@@ -7,25 +7,21 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components/ui";
+import { useSelectionContext } from "@/shared/contexts";
 import { CheckSquare, X } from "lucide-react";
+import { ReactNode } from "react";
 
-type Props = {
-	children?: React.ReactNode;
-	selectedCount: number;
-	clearSelection: () => void;
-};
+interface SelectionToolbarProps {
+	children: ReactNode;
+}
 
-export function SelectionToolbar({
-	children,
-	selectedCount,
-	clearSelection,
-}: Props) {
-	const hasSelection = selectedCount > 0;
-	const selectionText = hasSelection
-		? `${selectedCount} ${
-				selectedCount > 1 ? "éléments sélectionnés" : "élément sélectionné"
-		  }`
-		: "Aucune sélection";
+export function SelectionToolbar({ children }: SelectionToolbarProps) {
+	const { selectedItems, handleSelectionChange } = useSelectionContext();
+	const hasSelection = selectedItems.length > 0;
+
+	if (selectedItems.length === 0) {
+		return null;
+	}
 
 	return (
 		<div
@@ -48,7 +44,7 @@ export function SelectionToolbar({
 						hasSelection ? "font-medium" : "text-muted-foreground"
 					}`}
 				>
-					{selectionText}
+					{selectedItems.length} élément(s) sélectionné(s)
 				</span>
 				{hasSelection && (
 					<TooltipProvider>
@@ -57,7 +53,7 @@ export function SelectionToolbar({
 								<Button
 									variant="ghost"
 									size="sm"
-									onClick={clearSelection}
+									onClick={() => handleSelectionChange([], false)}
 									className="h-7 px-2 text-xs transition-colors hover:bg-destructive/10 hover:text-destructive"
 									aria-label="Effacer la sélection"
 								>
@@ -72,15 +68,15 @@ export function SelectionToolbar({
 					</TooltipProvider>
 				)}
 			</div>
-
-			<div className="flex items-center gap-2 h-8">
-				{hasSelection && !children && (
+			{hasSelection && (
+				<div className="flex items-center gap-2 h-8">
 					<span className="text-sm text-muted-foreground italic">
 						Utilisez les actions ci-dessous pour traiter la sélection
 					</span>
-				)}
-				{children}
-			</div>
+
+					{children}
+				</div>
+			)}
 		</div>
 	);
 }
