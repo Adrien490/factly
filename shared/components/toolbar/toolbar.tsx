@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Card, CardContent } from "../ui";
 
 interface ToolbarProps {
 	/**
@@ -18,12 +17,10 @@ interface ToolbarProps {
  */
 export function Toolbar({ children, className = "" }: ToolbarProps) {
 	return (
-		<Card className="mb-6">
-			<CardContent
-				className={`flex flex-wrap items-center justify-between py-2 gap-2 sm:gap-3 ${className}`}
-			>
-				{children}
-			</CardContent>
-		</Card>
+		<div
+			className={`mb-6 flex flex-wrap items-center justify-between py-2 gap-2 sm:gap-3 ${className}`}
+		>
+			{children}
+		</div>
 	);
 }
