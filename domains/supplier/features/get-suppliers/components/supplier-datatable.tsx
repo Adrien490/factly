@@ -113,9 +113,9 @@ export function SupplierDataTable({
 										<div className="flex flex-col space-y-1">
 											{supplier.name && (
 												<div className="flex flex-col gap-0.5">
-													<span className="font-medium truncate">
+													<div className="font-medium truncate">
 														{supplier.name}
-													</span>
+													</div>
 													{supplier.legalName && (
 														<span className="text-xs text-muted-foreground truncate">
 															{supplier.legalName}
@@ -199,15 +199,12 @@ export function SupplierDataTable({
 									>
 										<div className="flex items-center gap-2 max-w-[200px]">
 											<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-											{supplier.addresses?.find((addr) => addr.isDefault) ? (
-												<span className="truncate">
+											{supplier.addresses && supplier.addresses.length > 0 ? (
+												<span className="truncate text-muted-foreground">
 													{[
-														supplier.addresses.find((addr) => addr.isDefault)
-															?.addressLine1,
-														supplier.addresses.find((addr) => addr.isDefault)
-															?.postalCode,
-														supplier.addresses.find((addr) => addr.isDefault)
-															?.city,
+														supplier.addresses[0].addressLine1,
+														supplier.addresses[0].postalCode,
+														supplier.addresses[0].city,
 													]
 														.filter(Boolean)
 														.join(", ")}
