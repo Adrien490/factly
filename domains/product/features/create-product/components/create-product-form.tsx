@@ -72,10 +72,10 @@ export function CreateProductForm() {
 			price: 0,
 			vatRate: VatRate.STANDARD,
 			imageUrl: "",
-			weight: "",
-			width: "",
-			height: "",
-			depth: "",
+			weight: null as number | null,
+			width: null as number | null,
+			height: null as number | null,
+			depth: null as number | null,
 			categoryId: "",
 			supplierId: "",
 		},
@@ -352,6 +352,7 @@ export function CreateProductForm() {
 									step={0.01}
 									disabled={isPending}
 									placeholder="0.00"
+									value={field.state.value === null ? "" : field.state.value}
 								/>
 							)}
 						</form.AppField>
@@ -365,6 +366,7 @@ export function CreateProductForm() {
 									step={0.1}
 									disabled={isPending}
 									placeholder="0.0"
+									value={field.state.value === null ? "" : field.state.value}
 								/>
 							)}
 						</form.AppField>
@@ -378,6 +380,7 @@ export function CreateProductForm() {
 									step={0.1}
 									disabled={isPending}
 									placeholder="0.0"
+									value={field.state.value === null ? "" : field.state.value}
 								/>
 							)}
 						</form.AppField>
@@ -391,6 +394,7 @@ export function CreateProductForm() {
 									step={0.1}
 									disabled={isPending}
 									placeholder="0.0"
+									value={field.state.value === null ? "" : field.state.value}
 								/>
 							)}
 						</form.AppField>
