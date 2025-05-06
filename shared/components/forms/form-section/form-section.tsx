@@ -1,4 +1,4 @@
-import { Card } from "@/shared/components/";
+import { Card, CardContent, CardHeader } from "@/shared/components/";
 import { cn } from "@/shared/utils";
 import { FormSectionProps } from "./types";
 
@@ -14,29 +14,34 @@ export function FormSection({
 	className = "",
 }: FormSectionProps) {
 	return (
-		<Card className={cn("p-6 mb-6", className)}>
-			{/* En-tête de section */}
-			<div className="mb-6 pb-4 border-b border-border/30">
-				<div className="flex items-start gap-4">
-					{/* Icône avec effet de fond */}
-					<div className="py-2 px-3 text-primary">
-						<Icon className="h-5 w-5" />
-					</div>
+		<Card className={cn("", className)}>
+			<CardHeader>
+				{/* En-tête de section */}
+				<div className="border-b border-border/30">
+					<div className="flex items-start gap-4">
+						{/* Icône avec effet de fond */}
+						<div className="py-2 px-3 text-primary">
+							<Icon className="h-5 w-5" />
+						</div>
 
-					{/* Titre et description avec meilleure hiérarchie */}
-					<div className="flex-1 pt-1">
-						<h3 className="text-base font-semibold tracking-tight">{title}</h3>
-						{description && (
-							<p className="mt-1.5 text-sm text-muted-foreground leading-relaxed max-w-prose">
-								{description}
-							</p>
-						)}
+						{/* Titre et description avec meilleure hiérarchie */}
+						<div className="flex-1 pt-1">
+							<h3 className="text-base font-semibold tracking-tight">
+								{title}
+							</h3>
+							{description && (
+								<p className="mt-1.5 text-sm text-muted-foreground leading-relaxed max-w-prose">
+									{description}
+								</p>
+							)}
+						</div>
 					</div>
 				</div>
-			</div>
-
-			{/* Contenu de la section avec meilleur espacement */}
-			<div className="space-y-4">{children}</div>
+			</CardHeader>
+			<CardContent>
+				{/* Contenu de la section avec meilleur espacement */}
+				{children}
+			</CardContent>
 		</Card>
 	);
 }

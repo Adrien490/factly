@@ -7,6 +7,9 @@ interface InputFieldProps {
 	disabled?: boolean;
 	label?: string;
 	placeholder?: string;
+	type?: string;
+	min?: number;
+	step?: number;
 	required?: boolean;
 }
 
@@ -15,6 +18,9 @@ export const InputField = ({
 	label,
 	placeholder,
 	required,
+	type,
+	min,
+	step,
 }: InputFieldProps) => {
 	const field = useFieldContext<string>();
 
@@ -25,6 +31,9 @@ export const InputField = ({
 				{required && <span className="text-destructive ml-1">*</span>}
 			</FormLabel>
 			<Input
+				min={min}
+				step={step}
+				type={type}
 				disabled={disabled}
 				name={field.name}
 				placeholder={placeholder}

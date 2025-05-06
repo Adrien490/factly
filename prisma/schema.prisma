@@ -323,40 +323,6 @@ model Client {
   @@index([reference]) // via @@unique
 }
 
-// Nouveau modèle pour les produits
-model Product {
-  id          String        @id @default(cuid())
-  reference   String // Référence produit
-  name        String // Nom du produit
-  description String? // Description détaillée
-  status      ProductStatus @default(ACTIVE)
-
-  // Prix et taxation
-  price   Float // Prix de base HT
-  vatRate Float // Taux de TVA (en pourcentage)
-
-  // Métadonnées
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-
-  supplier   Supplier? @relation(fields: [supplierId], references: [id])
-  supplierId String?
-
-  category   ProductCategory? @relation(fields: [categoryId], references: [id])
-  categoryId String?
-
-  // Index pour optimiser les recherches
-  @@unique([reference, organizationId])
-  @@index([name])
-  @@index([status, organizationId])
-  @@index([categoryId])
-  @@index([supplierId])
-}
-
 // Modèle pour les catégories de produits
 model ProductCategory {
   id          String                @id @default(cuid())
@@ -384,6 +350,64 @@ model ProductCategory {
   @@index([name, organizationId])
   @@index([parentId])
   @@index([status, organizationId])
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  reference   String // Référence produit
+  name        String // Nom du produit
+  description String? // Description détaillée
+  status      ProductStatus @default(ACTIVE)
+
+  // Image principale
+  imageUrl String? // URL de l'image principale
+
+  // Prix et taxation
+  price   Float // Prix de base HT
+  vatRate VatRate @default(STANDARD) // Taux de TVA
+
+  // Métadonnées
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?
+
+  category   ProductCategory? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  // Relation avec la galerie d'images
+  images ProductImage[]
+
+  // Index pour optimiser les recherches
+  @@unique([reference, organizationId])
+  @@index([name])
+  @@index([status, organizationId])
+  @@index([categoryId])
+  @@index([supplierId])
+}
+
+// Modèle pour la galerie d'images du produit
+model ProductImage {
+  id          String  @id @default(cuid())
+  url         String // URL de l'image
+  alt         String? // Texte alternatif pour l'accessibilité
+  title       String? // Titre de l'image
+  description String? // Description de l'image
+
+  // Métadonnées
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation avec le produit
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  @@index([productId]) // Pour récupérer les images triées par ordre
 }
 
 enum Civility {
@@ -528,4 +552,13 @@ enum Country {
 enum ProductCategoryStatus {
   ACTIVE // Catégorie active, visible
   ARCHIVED // Catégorie archivée
+}
+
+enum VatRate {
+  STANDARD // 20% - Taux normal applicable à la majorité des biens et services
+  INTERMEDIATE // 10% - Taux intermédiaire (restauration, transport...)
+  REDUCED // 5.5% - Taux réduit (alimentation, livres, produits de première nécessité...)
+  SUPER_REDUCED // 2.1% - Taux particulier (médicaments remboursables, presse...)
+  ZERO // 0% - Pour certaines opérations internationales
+  EXEMPT // Exonéré - Pour les activités exonérées de TVA
 }

@@ -1,4 +1,3 @@
-import { ADDRESS_TYPES } from "@/domains/address/constants/address-types";
 import {
 	CreateAddressSheetForm,
 	getAddresses,
@@ -6,6 +5,7 @@ import {
 } from "@/domains/address/features";
 import { AddressList } from "@/domains/address/features/get-addresses/components";
 import { AddressListSkeleton } from "@/domains/address/features/get-addresses/components/address-list-skeleton";
+import { CLIENT_ADDRESS_TYPES } from "@/domains/client/constants";
 import { FilterSelect, SearchForm, Toolbar } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { AddressType } from "@prisma/client";
@@ -62,16 +62,14 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 					Filtrer par:
 				</span>
 
-				<FilterSelect filterKey="type" label="Type" options={ADDRESS_TYPES} />
+				<FilterSelect
+					filterKey="type"
+					label="Type"
+					options={CLIENT_ADDRESS_TYPES}
+				/>
 				<Suspense fallback={<></>}>
 					<CreateAddressSheetForm
-						addressTypes={ADDRESS_TYPES.filter(
-							(type) =>
-								type.value !== AddressType.COMMERCIAL &&
-								type.value !== AddressType.WAREHOUSE &&
-								type.value !== AddressType.PRODUCTION &&
-								type.value !== AddressType.HEADQUARTERS
-						)}
+						addressTypes={CLIENT_ADDRESS_TYPES}
 						searchAddressPromise={searchAddress({
 							query: q,
 							...(postcode && { postcode }),

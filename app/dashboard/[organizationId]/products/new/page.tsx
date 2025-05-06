@@ -1,3 +1,4 @@
+import { CreateProductForm } from "@/domains/product/features/create-product";
 import { getProductNavigation } from "@/domains/product/utils";
 import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
 
@@ -17,6 +18,8 @@ export default async function NewProductPage({ params }: NewProductPageProps) {
 			/>
 
 			<HorizontalMenu items={getProductNavigation(organizationId)} />
+
+			<CreateProductForm />
 		</PageContainer>
 	);
 }

@@ -148,7 +148,7 @@ export function CreateAddressSheetForm({
 			<SheetTrigger asChild>
 				{children || <Button className="shrink-0">Nouvelle adresse</Button>}
 			</SheetTrigger>
-			<SheetContent className="">
+			<SheetContent>
 				<SheetHeader>
 					<SheetTitle>Nouvelle adresse</SheetTitle>
 				</SheetHeader>

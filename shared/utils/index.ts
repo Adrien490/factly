@@ -2,6 +2,7 @@ import clsx, { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export * from "./create-toast-callbacks";
+export * from "./format-price";
 export * from "./generate-reference";
 export * from "./get-sidebar-nav";
 export * from "./with-callbacks";
