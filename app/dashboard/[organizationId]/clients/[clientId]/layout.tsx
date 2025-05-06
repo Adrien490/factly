@@ -1,5 +1,7 @@
 import { ClientHeader, getClient } from "@/domains/client/features/get-client";
+import { ClientHeaderSkeleton } from "@/domains/client/features/get-client/components/client-header-skeleton";
 import { PageContainer } from "@/shared/components";
+import { Suspense } from "react";
 
 type Props = {
 	children: React.ReactNode;
@@ -14,9 +16,11 @@ export default async function ClientLayout({ children, params }: Props) {
 
 	return (
 		<PageContainer className="pt-4 pb-12">
-			<ClientHeader
-				clientPromise={getClient({ id: clientId, organizationId })}
-			/>
+			<Suspense fallback={<ClientHeaderSkeleton />}>
+				<ClientHeader
+					clientPromise={getClient({ id: clientId, organizationId })}
+				/>
+			</Suspense>
 
 			{children}
 		</PageContainer>
