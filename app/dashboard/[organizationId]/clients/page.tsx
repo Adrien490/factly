@@ -7,7 +7,6 @@ import { getClientNavigation } from "@/domains/client/utils";
 import {
 	ArchivedClientSelectionActions,
 	ClientSelectionActions,
-	ClientToggleArchivedButton,
 } from "@/domains/client/components";
 import { ClientFilterSheet } from "@/domains/client/components/client-filter-sheet";
 import {
@@ -132,7 +131,21 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 					isArchivedView={isArchivedView}
 				/>
 
-				<ClientToggleArchivedButton />
+				{isArchivedView ? (
+					<Button variant="default" className="shrink-0" asChild>
+						<Link href={`/dashboard/${organizationId}/clients`}>
+							Voir tous les clients
+						</Link>
+					</Button>
+				) : (
+					<Button variant="outline" className="shrink-0" asChild>
+						<Link
+							href={`/dashboard/${organizationId}/clients?status=${ClientStatus.ARCHIVED}`}
+						>
+							Voir les clients archivés
+						</Link>
+					</Button>
+				)}
 
 				<Button className="shrink-0" asChild>
 					<Link href={`/dashboard/${organizationId}/clients/new`}>

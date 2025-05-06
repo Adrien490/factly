@@ -1,7 +1,4 @@
-import {
-	SupplierFilterSheet,
-	SupplierToggleArchivedButton,
-} from "@/domains/supplier/components";
+import { SupplierFilterSheet } from "@/domains/supplier/components";
 import { ArchivedSupplierSelectionActions } from "@/domains/supplier/components/archived-supplier-selection-actions";
 import { SupplierSelectionActions } from "@/domains/supplier/components/supplier-selection-actions";
 import {
@@ -151,7 +148,21 @@ export default async function SuppliersPage({
 					isArchivedView={isArchivedView}
 				/>
 
-				<SupplierToggleArchivedButton />
+				{isArchivedView ? (
+					<Button variant="default" className="shrink-0" asChild>
+						<Link href={`/dashboard/${organizationId}/suppliers`}>
+							Voir tous les fournisseurs
+						</Link>
+					</Button>
+				) : (
+					<Button variant="outline" className="shrink-0" asChild>
+						<Link
+							href={`/dashboard/${organizationId}/suppliers?status=${SupplierStatus.ARCHIVED}`}
+						>
+							Voir les fournisseurs archivés
+						</Link>
+					</Button>
+				)}
 
 				<Button className="shrink-0" asChild>
 					<Link href={`/dashboard/${organizationId}/suppliers/new`}>
