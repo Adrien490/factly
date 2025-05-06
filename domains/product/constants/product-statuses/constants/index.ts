@@ -3,7 +3,7 @@ import { ProductStatus, ProductStatusOption } from "../types";
 /**
  * Mapping des statuts produit vers des libellés plus lisibles
  */
-const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
+export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
 	[ProductStatus.ACTIVE]: "Actif",
 	[ProductStatus.INACTIVE]: "Inactif",
 	[ProductStatus.DRAFT]: "Brouillon",
@@ -14,7 +14,7 @@ const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
 /**
  * Descriptions détaillées pour chaque statut produit
  */
-const PRODUCT_STATUS_DESCRIPTIONS: Record<ProductStatus, string> = {
+export const PRODUCT_STATUS_DESCRIPTIONS: Record<ProductStatus, string> = {
 	[ProductStatus.ACTIVE]: "Produit disponible à la vente",
 	[ProductStatus.INACTIVE]: "Temporairement indisponible à la vente",
 	[ProductStatus.DRAFT]: "En cours de création, non publié",
@@ -25,7 +25,7 @@ const PRODUCT_STATUS_DESCRIPTIONS: Record<ProductStatus, string> = {
 /**
  * Couleurs associées à chaque statut pour l'affichage visuel
  */
-const PRODUCT_STATUS_COLORS: Record<ProductStatus, string> = {
+export const PRODUCT_STATUS_COLORS: Record<ProductStatus, string> = {
 	[ProductStatus.ACTIVE]: "#22c55e", // Vert
 	[ProductStatus.INACTIVE]: "#f97316", // Orange
 	[ProductStatus.DRAFT]: "#3b82f6", // Bleu
