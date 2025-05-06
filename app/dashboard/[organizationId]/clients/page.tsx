@@ -31,7 +31,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { Calendar, Tag, Users } from "lucide-react";
+import { Calendar, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { z } from "zod";
@@ -130,11 +130,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							label: "Nom",
 							value: "name",
 							icon: <Users className="h-4 w-4" />,
-						},
-						{
-							label: "Référence",
-							value: "reference",
-							icon: <Tag className="h-4 w-4" />,
 						},
 						{
 							label: "Date de création",

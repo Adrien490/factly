@@ -33,18 +33,12 @@ import { Suspense } from "react";
 
 type PageProps = {
 	searchParams: Promise<{
-		// Pagination
 		perPage?: string;
 		page?: string;
 		selected?: string[];
-		// Tri
 		sortBy?: string;
 		sortOrder?: SortOrder;
-
-		// Recherche
 		search?: string;
-
-		// Filtres
 		status?: SupplierStatus | SupplierStatus[];
 		supplierType?: SupplierType;
 	}>;
@@ -85,11 +79,8 @@ export default async function SuppliersPage({
 	}
 	if (supplierType) filters.supplierType = supplierType;
 
-	// Calculer le nombre de filtres actifs
 	const activeFiltersCount = Object.keys(filters).filter((key) => {
-		// Ne pas compter le filtre status par défaut (exclusion des archivés)
 		if (key === "status" && !status) return false;
-		// Ne pas compter le statut "archived" s'il est présent
 		if (key === "status" && status === SupplierStatus.ARCHIVED) return false;
 		return true;
 	}).length;
@@ -98,7 +89,6 @@ export default async function SuppliersPage({
 
 	return (
 		<PageContainer className="group pb-12">
-			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Fournisseurs"
 				description="Gérez votre portefeuille fournisseurs"
@@ -106,7 +96,6 @@ export default async function SuppliersPage({
 
 			<HorizontalMenu items={getSupplierNavigation(organizationId)} />
 
-			{/* Barre d'actions principale */}
 			<Toolbar>
 				<SearchForm
 					paramName="search"
