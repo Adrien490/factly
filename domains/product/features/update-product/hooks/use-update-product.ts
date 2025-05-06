@@ -2,7 +2,7 @@
 
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Product } from "@prisma/client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
 import { updateProduct } from "../actions/update-product";
