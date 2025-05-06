@@ -3,15 +3,8 @@ import { FieldInfo } from "..";
 import { useFieldContext } from "../../lib/form-context";
 import { FormLabel } from "../ui";
 
-interface InputFieldProps {
-	disabled?: boolean;
+interface HTMLInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string;
-	placeholder?: string;
-	type?: string;
-	min?: number;
-	step?: number;
-	required?: boolean;
-	value?: string;
 }
 
 export const InputField = ({
@@ -23,7 +16,7 @@ export const InputField = ({
 	min,
 	step,
 	value,
-}: InputFieldProps) => {
+}: HTMLInputProps) => {
 	const field = useFieldContext<string>();
 
 	return (
