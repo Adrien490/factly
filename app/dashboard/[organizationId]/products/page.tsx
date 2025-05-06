@@ -24,7 +24,7 @@ import {
 	TooltipTrigger,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
-import { ProductStatus } from "@prisma/client";
+import { ProductStatus, VatRate } from "@prisma/client";
 import { Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -38,6 +38,7 @@ interface ProductsPageProps {
 		sortOrder?: SortOrder;
 		search?: string;
 		status?: ProductStatus | ProductStatus[];
+		vatRate?: VatRate | VatRate[];
 	}>;
 	params: Promise<{
 		organizationId: string;
@@ -47,8 +48,16 @@ export default async function ProductsPage({
 	searchParams,
 	params,
 }: ProductsPageProps) {
-	const { perPage, page, sortBy, sortOrder, search, status, selected } =
-		await searchParams;
+	const {
+		perPage,
+		page,
+		sortBy,
+		sortOrder,
+		search,
+		status,
+		selected,
+		vatRate,
+	} = await searchParams;
 	const { organizationId } = await params;
 
 	const filters: Record<string, string | string[]> = {};
@@ -63,6 +72,9 @@ export default async function ProductsPage({
 		filters.status = Object.values(ProductStatus).filter(
 			(status) => status !== ProductStatus.ARCHIVED
 		);
+	}
+	if (vatRate) {
+		filters.vatRate = vatRate;
 	}
 
 	const activeFiltersCount = Object.keys(filters).filter((key) => {
