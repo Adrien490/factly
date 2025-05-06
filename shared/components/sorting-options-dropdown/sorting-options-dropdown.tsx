@@ -23,7 +23,7 @@ export function SortingOptionsDropdown({
 	defaultSortOrder = "desc",
 	className = "",
 }: {
-	sortFields: Array<{ label: string; value: string; icon: React.ReactNode }>;
+	sortFields: Array<{ label: string; value: string; icon?: React.ReactNode }>;
 	defaultSortBy?: string;
 	defaultSortOrder?: "asc" | "desc";
 	className?: string;
@@ -71,7 +71,7 @@ export function SortingOptionsDropdown({
 						className="flex items-center gap-2 px-2 py-1.5"
 						onClick={() => toggleSortOrder(field.value)}
 					>
-						{field.icon}
+						{field.icon && field.icon}
 						<span className="flex-1">{field.label}</span>
 						{currentSortBy === field.value ? (
 							currentSortOrder === "asc" ? (
