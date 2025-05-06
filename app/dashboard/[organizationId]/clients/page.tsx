@@ -31,7 +31,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ClientStatus, ClientType } from "@prisma/client";
-import { Calendar, Users } from "lucide-react";
+import { Calendar, Tag, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { z } from "zod";
@@ -43,15 +43,9 @@ type PageProps = {
 		selected?: string[];
 		perPage?: string;
 		page?: string;
-
-		// Tri
 		sortBy?: string;
 		sortOrder?: SortOrder;
-
-		// Recherche
 		search?: string;
-
-		// Filtres
 		status?: ClientStatus | ClientStatus[];
 		type?: ClientType;
 	}>;
@@ -65,9 +59,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 		await searchParams;
 	const { organizationId } = await params;
 
-	console.log(selected);
-
-	// Construire l'objet de filtres
 	const filters: Record<string, string | string[]> = {};
 	const selectedClientIds = !Array.isArray(selected)
 		? selected
@@ -77,18 +68,14 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 	if (status) {
 		filters.status = status;
 	} else {
-		// Par défaut, exclure les clients archivés
 		filters.status = Object.values(ClientStatus).filter(
 			(status) => status !== ClientStatus.ARCHIVED
 		);
 	}
 	if (type) filters.type = type;
 
-	// Calculer le nombre de filtres actifs
 	const activeFiltersCount = Object.keys(filters).filter((key) => {
-		// Ne pas compter le filtre status par défaut (exclusion des archivés)
 		if (key === "status" && !status) return false;
-		// Ne pas compter le statut "archived" s'il est présent
 		if (key === "status" && status === ClientStatus.ARCHIVED) return false;
 		return true;
 	}).length;
@@ -97,7 +84,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 
 	return (
 		<PageContainer className="group pb-12">
-			{/* En-tête avec action principale */}
 			<PageHeader
 				title="Clients"
 				description="Gérez votre portefeuille clients"
@@ -105,7 +91,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 
 			<HorizontalMenu items={getClientNavigation(organizationId)} />
 
-			{/* Barre d'actions principale */}
 			<Toolbar>
 				<SearchForm
 					paramName="search"
@@ -130,6 +115,11 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 							label: "Nom",
 							value: "name",
 							icon: <Users className="h-4 w-4" />,
+						},
+						{
+							label: "Référence",
+							value: "reference",
+							icon: <Tag className="h-4 w-4" />,
 						},
 						{
 							label: "Date de création",

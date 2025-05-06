@@ -2,7 +2,11 @@ import { sortOrderSchema } from "@/shared/schemas";
 import { ClientStatus, ClientType } from "@prisma/client";
 import { z } from "zod";
 
-export const getClientsSortFieldSchema = z.enum(["name", "createdAt"]);
+export const getClientsSortFieldSchema = z.enum([
+	"name",
+	"createdAt",
+	"reference",
+]);
 
 const filterValueSchema = z.union([
 	// Valeurs uniques (chaînes)
