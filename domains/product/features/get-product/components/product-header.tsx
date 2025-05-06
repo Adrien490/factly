@@ -6,8 +6,6 @@ import {
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { formatPrice } from "@/shared/utils";
-import { ImageIcon } from "lucide-react";
-import Image from "next/image";
 import { use } from "react";
 import { GetProductReturn } from "../types";
 
@@ -27,24 +25,6 @@ export function ProductHeader({ productPromise }: ProductHeaderProps) {
 				{/* Section principale avec nom et identifiants */}
 				<div className="flex items-start gap-4">
 					{/* Image du produit */}
-					<div className="flex-shrink-0">
-						{product.imageUrl ? (
-							<div className="relative h-16 w-16 rounded-md overflow-hidden">
-								<Image
-									src={product.imageUrl}
-									alt={product.name}
-									fill
-									sizes="64px"
-									className="object-cover"
-									priority
-								/>
-							</div>
-						) : (
-							<div className="h-16 w-16 rounded-md bg-muted flex items-center justify-center">
-								<ImageIcon className="h-8 w-8 text-muted-foreground" />
-							</div>
-						)}
-					</div>
 
 					<div className="flex-grow">
 						<div className="flex flex-wrap items-center gap-3">
