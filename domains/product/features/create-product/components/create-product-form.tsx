@@ -21,7 +21,7 @@ import {
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
-import { ImageIcon, Receipt, Tag, Wand2 } from "lucide-react";
+import { Box, ImageIcon, Receipt, Tag, Wand2 } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useActionState } from "react";
@@ -72,6 +72,10 @@ export function CreateProductForm() {
 			price: 0,
 			vatRate: VatRate.STANDARD,
 			imageUrl: "",
+			weight: null,
+			width: null,
+			height: null,
+			depth: null,
 			categoryId: "",
 			supplierId: "",
 		},
@@ -161,15 +165,13 @@ export function CreateProductForm() {
 											disabled={isPending}
 											size="sm"
 											onClick={handleGenerateReference}
-											title="Générer une référence unique"
 											className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
 										>
 											<Wand2 className="h-3 w-3 mr-1" />
 											Générer
 										</Button>
 									</div>
-									<field.InputField disabled={isPending} placeholder="REF123" />
-									<FieldInfo field={field} />
+									<field.InputField disabled={isPending} />
 								</div>
 							)}
 						</form.AppField>
@@ -334,7 +336,68 @@ export function CreateProductForm() {
 					</div>
 				</FormSection>
 
-				{/* Section 4: Catégories et fournisseurs */}
+				{/* Section 4: Dimensions et poids */}
+				<FormSection
+					title="Dimensions et poids"
+					description="Spécifiez les dimensions et le poids du produit"
+					icon={Box}
+				>
+					<div className="grid grid-cols-2 gap-4">
+						<form.AppField name="weight">
+							{(field) => (
+								<field.InputField
+									label="Poids (kg)"
+									type="number"
+									min={0}
+									step={0.01}
+									disabled={isPending}
+									placeholder="0.00"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="height">
+							{(field) => (
+								<field.InputField
+									label="Hauteur (cm)"
+									type="number"
+									min={0}
+									step={0.1}
+									disabled={isPending}
+									placeholder="0.0"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="width">
+							{(field) => (
+								<field.InputField
+									label="Largeur (cm)"
+									type="number"
+									min={0}
+									step={0.1}
+									disabled={isPending}
+									placeholder="0.0"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="depth">
+							{(field) => (
+								<field.InputField
+									label="Profondeur (cm)"
+									type="number"
+									min={0}
+									step={0.1}
+									disabled={isPending}
+									placeholder="0.0"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</FormSection>
+
+				{/* Section 5: Catégories et fournisseurs */}
 				<FormSection
 					icon={Tag}
 					title="Classification"
@@ -371,7 +434,7 @@ export function CreateProductForm() {
 					</div>
 				</FormSection>
 
-				{/* Section 5: Statut */}
+				{/* Section 6: Statut */}
 				<FormSection
 					title="Statut"
 					description="Définissez le statut du produit"

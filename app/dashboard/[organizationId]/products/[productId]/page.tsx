@@ -211,9 +211,47 @@ export default async function ProductPage({ params }: Props) {
 						</CardHeader>
 
 						<CardContent>
-							<div className="text-sm text-muted-foreground text-center p-4">
-								Aucune spécification technique disponible
-							</div>
+							{product.weight ||
+							product.width ||
+							product.height ||
+							product.depth ? (
+								<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+									<div className="bg-muted/40 rounded-lg p-3 text-center">
+										<p className="text-xs text-muted-foreground mb-1">Poids</p>
+										<p className="text-sm font-medium">
+											{product.weight ? `${product.weight} kg` : "-"}
+										</p>
+									</div>
+									<div className="bg-muted/40 rounded-lg p-3 text-center">
+										<p className="text-xs text-muted-foreground mb-1">
+											Hauteur
+										</p>
+										<p className="text-sm font-medium">
+											{product.height ? `${product.height} cm` : "-"}
+										</p>
+									</div>
+									<div className="bg-muted/40 rounded-lg p-3 text-center">
+										<p className="text-xs text-muted-foreground mb-1">
+											Largeur
+										</p>
+										<p className="text-sm font-medium">
+											{product.width ? `${product.width} cm` : "-"}
+										</p>
+									</div>
+									<div className="bg-muted/40 rounded-lg p-3 text-center">
+										<p className="text-xs text-muted-foreground mb-1">
+											Profondeur
+										</p>
+										<p className="text-sm font-medium">
+											{product.depth ? `${product.depth} cm` : "-"}
+										</p>
+									</div>
+								</div>
+							) : (
+								<div className="text-sm text-muted-foreground text-center p-4">
+									Aucune spécification technique disponible
+								</div>
+							)}
 						</CardContent>
 					</Card>
 				</div>

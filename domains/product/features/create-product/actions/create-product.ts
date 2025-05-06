@@ -44,6 +44,10 @@ export const createProduct: ServerAction<
 			status: formData.get("status") as string,
 			price: parseFloat(formData.get("price") as string),
 			vatRate: formData.get("vatRate") as string,
+			weight: formData.get("weight") as string,
+			width: formData.get("width") as string,
+			height: formData.get("height") as string,
+			depth: formData.get("depth") as string,
 			imageUrl: (formData.get("imageUrl") as string) || null,
 			organizationId: formData.get("organizationId") as string,
 			categoryId:

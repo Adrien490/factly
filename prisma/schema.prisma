@@ -366,6 +366,12 @@ model Product {
   price   Float // Prix de base HT
   vatRate VatRate @default(STANDARD) // Taux de TVA
 
+  // Dimensions et poids
+  weight Float? // Poids du produit en kg
+  width  Float? // Largeur en cm
+  height Float? // Hauteur en cm
+  depth  Float? // Profondeur en cm
+
   // Métadonnées
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
