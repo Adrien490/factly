@@ -58,44 +58,44 @@ export function SupplierDataTable({
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
 						<TableRow>
-							<TableHead key="select" role="columnheader">
+							<TableHead key="select" role="columnheader" className="w-[50px]">
 								<div className="flex-1 font-medium">
 									<SelectAllCheckbox itemIds={supplierIds} />
 								</div>
 							</TableHead>
-							<TableHead key="name" role="columnheader">
+							<TableHead key="name" role="columnheader" className="w-[220px]">
 								<div className="flex-1 font-medium">Fournisseur</div>
 							</TableHead>
 							<TableHead
 								key="supplierType"
 								role="columnheader"
-								className="hidden md:table-cell"
+								className="hidden md:table-cell w-[120px]"
 							>
 								<div className="flex-1 font-medium">Type</div>
 							</TableHead>
 							<TableHead
 								key="status"
 								role="columnheader"
-								className="hidden md:table-cell"
+								className="hidden md:table-cell w-[120px]"
 							>
 								<div className="flex-1 font-medium">Statut</div>
 							</TableHead>
 							<TableHead
 								key="fiscalInfo"
 								role="columnheader"
-								className="hidden lg:table-cell"
+								className="hidden lg:table-cell w-[180px]"
 							>
 								<div className="flex-1 font-medium">Infos fiscales</div>
 							</TableHead>
 							<TableHead
 								key="address"
 								role="columnheader"
-								className="hidden lg:table-cell"
+								className="hidden lg:table-cell w-[240px]"
 							>
 								<div className="flex-1 font-medium">Adresse</div>
 							</TableHead>
 
-							<TableHead key="actions" role="columnheader" className="">
+							<TableHead key="actions" role="columnheader" className="w-[80px]">
 								<div className="flex-1 font-medium"></div>
 							</TableHead>
 						</TableRow>
@@ -106,11 +106,11 @@ export function SupplierDataTable({
 
 							return (
 								<TableRow key={supplier.id} role="row" tabIndex={0}>
-									<TableCell role="gridcell">
+									<TableCell role="gridcell" className="w-[50px]">
 										<ItemCheckbox itemId={supplier.id} />
 									</TableCell>
-									<TableCell role="gridcell">
-										<div className="w-[200px] flex flex-col space-y-1">
+									<TableCell role="gridcell" className="w-[220px]">
+										<div className="flex flex-col space-y-1">
 											{supplier.name && (
 												<div className="flex flex-col gap-0.5">
 													<span className="font-medium truncate">
@@ -125,7 +125,10 @@ export function SupplierDataTable({
 											)}
 										</div>
 									</TableCell>
-									<TableCell role="gridcell" className="hidden md:table-cell">
+									<TableCell
+										role="gridcell"
+										className="hidden md:table-cell w-[120px]"
+									>
 										<div className="flex items-center gap-2">
 											<Badge
 												variant="outline"
@@ -143,7 +146,10 @@ export function SupplierDataTable({
 											</Badge>
 										</div>
 									</TableCell>
-									<TableCell role="gridcell" className="hidden md:table-cell">
+									<TableCell
+										role="gridcell"
+										className="hidden md:table-cell w-[120px]"
+									>
 										<div>
 											<Badge
 												variant="outline"
@@ -161,7 +167,10 @@ export function SupplierDataTable({
 											</Badge>
 										</div>
 									</TableCell>
-									<TableCell role="gridcell" className="hidden lg:table-cell">
+									<TableCell
+										role="gridcell"
+										className="hidden lg:table-cell w-[180px]"
+									>
 										<div className="flex flex-col space-y-1 max-w-[150px]">
 											{supplier.siret && (
 												<div className="flex items-center gap-1.5 text-xs">
@@ -182,7 +191,10 @@ export function SupplierDataTable({
 											)}
 										</div>
 									</TableCell>
-									<TableCell role="gridcell" className="hidden lg:table-cell">
+									<TableCell
+										role="gridcell"
+										className="hidden lg:table-cell w-[240px]"
+									>
 										<div className="flex items-center gap-2 max-w-[200px]">
 											<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
 											{supplier.addresses?.find((addr) => addr.isDefault) ? (
@@ -205,7 +217,10 @@ export function SupplierDataTable({
 											)}
 										</div>
 									</TableCell>
-									<TableCell role="gridcell" className="flex justify-end">
+									<TableCell
+										role="gridcell"
+										className="flex justify-end w-[80px]"
+									>
 										{isArchived ? (
 											<ArchivedSupplierActions supplier={supplier} />
 										) : (
