@@ -1,6 +1,5 @@
 "use client";
 
-import { AuroraBackground } from "@/shared/components/ui/aurora-background";
 import { BackgroundLines } from "@/shared/components/ui/background-lines";
 import { useTheme } from "next-themes";
 
@@ -13,6 +12,6 @@ export function HeroBackground({ children }: HeroBackgroundProps) {
 	if (theme.theme === "dark") {
 		return <BackgroundLines>{children}</BackgroundLines>;
 	} else {
-		return <AuroraBackground>{children}</AuroraBackground>;
+		return <>{children}</>;
 	}
 }
