@@ -132,6 +132,7 @@ export function SupplierDataTable({
 										<div className="flex items-center gap-2">
 											<Badge
 												variant="outline"
+												className="truncate"
 												style={{
 													backgroundColor: `${
 														SUPPLIER_TYPE_COLORS[supplier.supplierType]
@@ -153,6 +154,7 @@ export function SupplierDataTable({
 										<div>
 											<Badge
 												variant="outline"
+												className="truncate"
 												style={{
 													backgroundColor: `${
 														SUPPLIER_STATUS_COLORS[supplier.status]
@@ -185,7 +187,7 @@ export function SupplierDataTable({
 												</div>
 											)}
 											{!supplier.siret && !supplier.vatNumber && (
-												<span className="text-xs text-muted-foreground italic">
+												<span className="text-xs text-muted-foreground italic truncate">
 													Non renseignées
 												</span>
 											)}
@@ -211,7 +213,7 @@ export function SupplierDataTable({
 														.join(", ")}
 												</span>
 											) : (
-												<span className="text-muted-foreground italic">
+												<span className="text-muted-foreground italic truncate">
 													Non renseignée
 												</span>
 											)}
