@@ -306,6 +306,9 @@ export function CreateProductForm() {
 									step={0.01}
 									disabled={isPending}
 									placeholder="0.00"
+									value={
+										field.state.value === 0 ? "" : String(field.state.value)
+									}
 								/>
 							)}
 						</form.AppField>

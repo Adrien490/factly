@@ -11,6 +11,7 @@ interface InputFieldProps {
 	min?: number;
 	step?: number;
 	required?: boolean;
+	value?: string;
 }
 
 export const InputField = ({
@@ -21,6 +22,7 @@ export const InputField = ({
 	type,
 	min,
 	step,
+	value,
 }: InputFieldProps) => {
 	const field = useFieldContext<string>();
 
@@ -37,7 +39,7 @@ export const InputField = ({
 				disabled={disabled}
 				name={field.name}
 				placeholder={placeholder}
-				value={field.state.value}
+				value={value ?? field.state.value}
 				onChange={(e) => field.handleChange(e.target.value)}
 				className="border-input focus:ring-1 focus:ring-primary"
 			/>
