@@ -61,13 +61,6 @@ export function ProductDataTable({ productsPromise }: ProductDataTableProps) {
 								Produit
 							</TableHead>
 							<TableHead
-								key="reference"
-								role="columnheader"
-								className="hidden md:table-cell"
-							>
-								Référence
-							</TableHead>
-							<TableHead
 								key="price"
 								role="columnheader"
 								className="hidden md:table-cell"
@@ -113,38 +106,42 @@ export function ProductDataTable({ productsPromise }: ProductDataTableProps) {
 										<ItemCheckbox itemId={product.id} />
 									</TableCell>
 									<TableCell role="gridcell">
-										<div className="w-[200px] flex items-center gap-2">
+										<div className="flex items-start gap-3">
 											{product.imageUrl ? (
-												<div className="relative h-10 w-10 rounded-md overflow-hidden shrink-0">
+												<div className="relative h-12 w-12 rounded-md overflow-hidden shrink-0">
 													<Image
 														src={product.imageUrl}
 														alt={product.name}
 														fill
-														sizes="40px"
+														sizes="48px"
 														className="object-cover"
 													/>
 												</div>
 											) : (
-												<div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center shrink-0">
-													<ImageIcon className="h-5 w-5 text-muted-foreground" />
+												<div className="h-12 w-12 rounded-md bg-muted flex items-center justify-center shrink-0">
+													<ImageIcon className="h-6 w-6 text-muted-foreground" />
 												</div>
 											)}
-											<div className="flex flex-col">
-												<span className="font-medium truncate">
+											<div className="flex flex-col space-y-1 w-[200px]">
+												<div className="font-medium truncate">
 													{product.name}
-												</span>
-												{product.supplier && (
-													<span className="text-xs text-muted-foreground truncate">
-														{product.supplier.name}
-													</span>
-												)}
+												</div>
+												<div className="flex flex-col gap-1">
+													{product.reference && (
+														<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+															<Tag className="h-3 w-3 shrink-0" />
+															<span className="truncate">
+																{product.reference}
+															</span>
+														</div>
+													)}
+													{product.supplier && (
+														<span className="text-xs text-muted-foreground truncate">
+															{product.supplier.name}
+														</span>
+													)}
+												</div>
 											</div>
-										</div>
-									</TableCell>
-									<TableCell role="gridcell" className="hidden md:table-cell">
-										<div className="flex items-center gap-1.5">
-											<Tag className="h-3 w-3 text-muted-foreground" />
-											<span className="truncate">{product.reference}</span>
 										</div>
 									</TableCell>
 									<TableCell
@@ -208,7 +205,7 @@ export function ProductDataTable({ productsPromise }: ProductDataTableProps) {
 					</TableBody>
 					<TableFooter>
 						<TableRow>
-							<TableCell colSpan={8} className="px-4 py-2 hover:bg-transparent">
+							<TableCell colSpan={7} className="px-4 py-2 hover:bg-transparent">
 								<Pagination
 									total={pagination.total}
 									pageCount={pagination.pageCount}
