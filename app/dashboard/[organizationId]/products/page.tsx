@@ -26,7 +26,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ProductStatus } from "@prisma/client";
-import { Tag, Users } from "lucide-react";
+import { DollarSign, Tag, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -114,6 +114,11 @@ export default async function ProductsPage({
 							label: "Date de création",
 							value: "createdAt",
 							icon: <Calendar className="h-4 w-4" />,
+						},
+						{
+							label: "Prix",
+							value: "price",
+							icon: <DollarSign className="h-4 w-4" />,
 						},
 					]}
 					defaultSortBy="createdAt"
