@@ -27,7 +27,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { SupplierStatus, SupplierType } from "@prisma/client";
-import { Briefcase, Calendar, Store, Trash2, Truck, Undo2 } from "lucide-react";
+import { Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -119,23 +119,19 @@ export default async function SuppliersPage({
 						{
 							label: "Nom",
 							value: "name",
-							icon: <Store className="h-4 w-4" />,
 						},
 
 						{
 							label: "Type de fournisseur",
 							value: "supplierType",
-							icon: <Truck className="h-4 w-4" />,
 						},
 						{
 							label: "Statut",
 							value: "status",
-							icon: <Briefcase className="h-4 w-4" />,
 						},
 						{
 							label: "Date de création",
 							value: "createdAt",
-							icon: <Calendar className="h-4 w-4" />,
 						},
 					]}
 					defaultSortBy="createdAt"

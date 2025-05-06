@@ -25,7 +25,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { ProductStatus } from "@prisma/client";
-import { Calendar, DollarSign, Tag, Trash2, Undo2, Users } from "lucide-react";
+import { Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -102,22 +102,18 @@ export default async function ProductsPage({
 						{
 							label: "Nom",
 							value: "name",
-							icon: <Users className="h-4 w-4" />,
 						},
 						{
 							label: "Référence",
 							value: "reference",
-							icon: <Tag className="h-4 w-4" />,
 						},
 						{
 							label: "Date de création",
 							value: "createdAt",
-							icon: <Calendar className="h-4 w-4" />,
 						},
 						{
 							label: "Prix",
 							value: "price",
-							icon: <DollarSign className="h-4 w-4" />,
 						},
 					]}
 					defaultSortBy="createdAt"
