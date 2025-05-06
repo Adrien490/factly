@@ -18,7 +18,7 @@ interface ToolbarProps {
 export function Toolbar({ children, className = "" }: ToolbarProps) {
 	return (
 		<div
-			className={`mb-6 flex flex-wrap items-center justify-between py-2 gap-2 sm:gap-3 ${className}`}
+			className={`mb-4 flex flex-wrap items-center justify-between py-2 gap-2 sm:gap-3 ${className}`}
 		>
 			{children}
 		</div>
