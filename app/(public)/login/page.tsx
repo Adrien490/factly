@@ -6,14 +6,14 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
-	searchParams: {
+	searchParams: Promise<{
 		callbackURL?: string;
 		formType?: "signin" | "signup";
-	};
+	}>;
 }
 
-export default function LoginPage({ searchParams }: Props) {
-	const { callbackURL, formType = "signin" } = searchParams;
+export default async function LoginPage({ searchParams }: Props) {
+	const { callbackURL, formType = "signin" } = await searchParams;
 
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
