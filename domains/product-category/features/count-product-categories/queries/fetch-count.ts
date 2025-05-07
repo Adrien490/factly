@@ -18,33 +18,6 @@ export async function fetchCount(
 	// Tag de base pour toutes les catégories de l'organisation
 	cacheTag(`organizations:${params.organizationId}:product-categories:count`);
 
-	// Tags spécifiques pour les options de hiérarchie
-	if (params.hierarchy) {
-		if (params.hierarchy.rootCategoriesOnly) {
-			cacheTag(
-				`organizations:${params.organizationId}:product-categories:rootOnly:count`
-			);
-		}
-
-		if (params.hierarchy.withChildrenOnly) {
-			cacheTag(
-				`organizations:${params.organizationId}:product-categories:withChildren:count`
-			);
-		}
-
-		if (params.hierarchy.leafCategoriesOnly) {
-			cacheTag(
-				`organizations:${params.organizationId}:product-categories:leafOnly:count`
-			);
-		}
-
-		if (params.hierarchy.parentId) {
-			cacheTag(
-				`organizations:${params.organizationId}:product-categories:parent:${params.hierarchy.parentId}:count`
-			);
-		}
-	}
-
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
 		Object.entries(params.filters).forEach(([key, value]) => {

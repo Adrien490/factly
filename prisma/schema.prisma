@@ -70,9 +70,6 @@ model User {
   accounts      Account[]
   passkeys      Passkey[] // Relation avec les passkeys
 
-  // Nouvelle relation pour les invitations envoyées
-  invitations Invitation[] @relation("invitations")
-
   @@map("user")
 }
 
@@ -129,7 +126,6 @@ model Organization {
   // Relations
   members     Member[]
   clients     Client[]
-  invitations Invitation[]
   fiscalYears FiscalYear[] // Relation avec les années fiscales
 
   // Relations pour la gestion commerciale
@@ -184,30 +180,6 @@ model Member {
   @@unique([userId, organizationId])
 }
 
-model Invitation {
-  id        String           @id @default(cuid())
-  email     String
-  status    InvitationStatus @default(PENDING)
-  expiresAt DateTime
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
-
-  // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-
-  // Relation avec l'utilisateur qui a envoyé l'invitation
-  user   User   @relation(name: "invitations", fields: [userId], references: [id])
-  userId String
-
-  // Contrainte d'unicité pour empêcher les invitations multiples
-  @@unique([email, organizationId, status])
-  // Index pour les recherches courantes
-  @@index([email, organizationId, status]) // via @@unique
-  @@index([expiresAt]) // Pour les requêtes de nettoyage
-  @@index([status, email]) // Pour requêtes par statut
-}
-
 model Supplier {
   id        String  @id @default(cuid())
   name      String // Nom commercial
@@ -250,9 +222,13 @@ model Contact {
   civility  Civility?
   firstName String
   lastName  String
+  function  String? // Nouveau champ pour "Fonction"
   email     String?
-  phone     String?
-  title     String?
+  phone     String? // Champ existant pour "Tél"
+  mobile    String? // Nouveau champ pour "Mobile"
+  fax       String? // Nouveau champ pour "Fax"
+  website   String? // Nouveau champ pour "Site web"
+  birthDate DateTime? // Nouveau champ pour "Date de naissance"
   isDefault Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -328,13 +304,7 @@ model ProductCategory {
   id          String                @id @default(cuid())
   name        String // Nom de la catégorie
   description String? // Description optionnelle
-  slug        String // Slug pour URL
   status      ProductCategoryStatus @default(ACTIVE) // Statut de la catégorie
-
-  // Hiérarchie des catégories
-  parentId String? // ID de la catégorie parente
-  parent   ProductCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children ProductCategory[] @relation("CategoryHierarchy")
 
   // Métadonnées
   createdAt DateTime @default(now())
@@ -346,9 +316,7 @@ model ProductCategory {
   products       Product[] // Produits dans cette catégorie
 
   // Contraintes et index
-  @@unique([slug, organizationId])
-  @@index([name, organizationId])
-  @@index([parentId])
+  @@unique([name, organizationId])
   @@index([status, organizationId])
 }
 

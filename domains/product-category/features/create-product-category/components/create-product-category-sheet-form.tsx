@@ -72,7 +72,6 @@ export function CreateProductCategorySheetForm({
 			organizationId,
 			name: "",
 			description: "",
-			parentId: currentCategory?.id || "",
 		},
 
 		transform: useTransform(
@@ -115,13 +114,6 @@ export function CreateProductCategorySheetForm({
 								name="organizationId"
 								value={field.state.value}
 							/>
-						)}
-					</form.AppField>
-
-					{/* Champ caché parentId */}
-					<form.AppField name="parentId">
-						{(field) => (
-							<input type="hidden" name="parentId" value={field.state.value} />
 						)}
 					</form.AppField>
 

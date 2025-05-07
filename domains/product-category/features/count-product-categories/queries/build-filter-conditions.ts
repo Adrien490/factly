@@ -22,34 +22,7 @@ export function buildFilterConditions(
 					});
 				}
 				break;
-			case "parentId":
-				if (value === null || value === "null") {
-					// Filtrage des catégories racines (sans parent)
-					conditions.push({ parentId: null });
-				} else if (typeof value === "string" && value.trim() !== "") {
-					// Filtrage par ID parent spécifique
-					conditions.push({ parentId: value });
-				}
-				break;
-			case "hasChildren":
-				if (typeof value === "boolean") {
-					if (value) {
-						// Catégories ayant des enfants
-						conditions.push({
-							children: {
-								some: {},
-							},
-						});
-					} else {
-						// Catégories n'ayant pas d'enfants
-						conditions.push({
-							children: {
-								none: {},
-							},
-						});
-					}
-				}
-				break;
+
 			default:
 				// Gestion générique des autres champs
 				if (typeof value === "string" && value.trim() !== "") {

@@ -41,22 +41,6 @@ export const buildFilterConditions = (
 					}
 				}
 				break;
-			case "hasChildren":
-				// Filtre pour les catégories ayant des enfants
-				if (value === true) {
-					conditions.push({
-						children: {
-							some: {},
-						},
-					});
-				} else if (value === false) {
-					conditions.push({
-						children: {
-							none: {},
-						},
-					});
-				}
-				break;
 		}
 	});
 

@@ -9,9 +9,7 @@ export const GET_PRODUCT_CATEGORY_DEFAULT_SELECT = {
 	organizationId: true,
 	name: true,
 	description: true,
-	slug: true,
 	status: true,
-	parentId: true,
 	createdAt: true,
 	updatedAt: true,
 } as const satisfies Prisma.ProductCategorySelect;

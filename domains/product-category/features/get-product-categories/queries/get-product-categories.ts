@@ -44,11 +44,6 @@ export async function getProductCategories(
 
 		const validatedParams = validation.data;
 
-		// Si rootOnly est à true, forcer parentId à null
-		if (validatedParams.rootOnly) {
-			validatedParams.parentId = null;
-		}
-
 		// Récupération des catégories
 		return fetchProductCategories(validatedParams);
 	} catch (error) {

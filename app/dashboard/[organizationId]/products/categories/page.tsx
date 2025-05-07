@@ -1,5 +1,3 @@
-import { ProductCategoryBreadcrumb } from "@/domains/product-category/components";
-import { ProductCategoryToggleArchivedButton } from "@/domains/product-category/components/product-category-toggle-archived-button";
 import { CreateProductCategorySheetForm } from "@/domains/product-category/features/create-product-category";
 import { getProductCategories } from "@/domains/product-category/features/get-product-categories";
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
@@ -7,6 +5,7 @@ import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/fea
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
 import { getProductNavigation } from "@/domains/product/utils";
 import {
+	Button,
 	HorizontalMenu,
 	PageContainer,
 	PageHeader,
@@ -18,7 +17,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components";
-import { Calendar, Users } from "lucide-react";
+import { ProductCategoryStatus } from "@prisma/client";
+import { Calendar, Trash2, Undo2, Users } from "lucide-react";
+import Link from "next/link";
 import { Suspense } from "react";
 
 interface Props {
@@ -32,15 +33,16 @@ interface Props {
 		page?: string;
 		perPage?: string;
 		status?: string;
+		isArchivedView?: boolean;
 	}>;
 }
 
-export default async function ProductsCategoriesRootPage({
+export default async function ProductsCategoriesPage({
 	params,
 	searchParams,
 }: Props) {
 	const { organizationId } = await params;
-	const { search, sortBy, sortOrder, page, perPage, status } =
+	const { search, sortBy, sortOrder, page, perPage, status, isArchivedView } =
 		await searchParams;
 
 	// Afficher uniquement les catégories racines (sans parent)
@@ -51,15 +53,7 @@ export default async function ProductsCategoriesRootPage({
 				description="Gérer vos catégories de produits"
 			/>
 
-			<div className="space-y-3 mb-6">
-				<div aria-label="Navigation principale" role="navigation">
-					<HorizontalMenu items={getProductNavigation(organizationId)} />
-				</div>
-
-				<nav aria-label="Fil d'Ariane" role="navigation">
-					<ProductCategoryBreadcrumb organizationId={organizationId} />
-				</nav>
-			</div>
+			<HorizontalMenu items={getProductNavigation(organizationId)} />
 
 			<Toolbar>
 				<SearchForm
@@ -96,7 +90,23 @@ export default async function ProductsCategoriesRootPage({
 					defaultSortOrder={sortOrder as "asc" | "desc"}
 					className="w-[200px] shrink-0"
 				/>
-				<ProductCategoryToggleArchivedButton />
+				{isArchivedView ? (
+					<Button variant="default" className="shrink-0" asChild>
+						<Link href={`/dashboard/${organizationId}/products/categories`}>
+							<Undo2 className="h-4 w-4 mr-2" />
+							Voir toutes les catégories
+						</Link>
+					</Button>
+				) : (
+					<Button variant="outline" className="shrink-0" asChild>
+						<Link
+							href={`/dashboard/${organizationId}/products/categories?status=${ProductCategoryStatus.ARCHIVED}`}
+						>
+							<Trash2 className="h-4 w-4 mr-2" />
+							Voir les catégories archivées
+						</Link>
+					</Button>
+				)}
 				<Suspense fallback={<ProductCategoryDataTableSkeleton />}>
 					<CreateProductCategorySheetForm />
 				</Suspense>
@@ -113,8 +123,6 @@ export default async function ProductsCategoriesRootPage({
 							search,
 							sortBy: sortBy as "name" | "createdAt",
 							sortOrder: sortOrder as "asc" | "desc",
-							parentId: null,
-							rootOnly: true,
 							page: page ? parseInt(page) : 1,
 							perPage: perPage ? parseInt(perPage) : 10,
 						})}

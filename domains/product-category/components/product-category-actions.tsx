@@ -1,5 +1,4 @@
 import { ArchiveProductCategoryAlertDialog } from "@/domains/product-category/features/archive-product-category/components/archive-product-category-alert-dialog";
-import { getCategoryUrl } from "@/domains/product-category/utils";
 import {
 	Button,
 	DropdownMenu,
@@ -7,11 +6,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-	LoadingIndicator,
 } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { ProductCategoryStatus } from "@prisma/client";
-import { FolderOpen, MoreVerticalIcon } from "lucide-react";
+import { MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
 import { GetProductCategoriesReturn } from "../features/get-product-categories/types";
 
@@ -25,7 +23,6 @@ export function ProductCategoryActions({
 	organizationId,
 }: ProductCategoryActionsProps) {
 	// Récupérer les ancêtres pour construire l'URL complète
-	const categoryUrl = getCategoryUrl(organizationId, category.slug);
 
 	return (
 		<DropdownMenu modal={false}>
@@ -48,22 +45,6 @@ export function ProductCategoryActions({
 				sideOffset={4}
 				className="w-48"
 			>
-				{category.childCount && category.childCount > 0 && (
-					<>
-						<DropdownMenuItem asChild>
-							<Link
-								href={categoryUrl}
-								className={cn("flex w-full items-center")}
-							>
-								<FolderOpen className="mr-2 h-4 w-4" />
-								Sous-catégories
-								<LoadingIndicator className="ml-auto h-4 w-4 invisible" />
-							</Link>
-						</DropdownMenuItem>
-						<DropdownMenuSeparator />
-					</>
-				)}
-
 				<DropdownMenuItem asChild>
 					<Link
 						href={`/dashboard/${organizationId}/products/categories/${category.id}/edit`}

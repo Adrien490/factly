@@ -13,12 +13,5 @@ export const buildSearchConditions = (
 	return [
 		{ name: { contains: searchTerm, mode: "insensitive" } },
 		{ description: { contains: searchTerm, mode: "insensitive" } },
-		{ slug: { contains: searchTerm, mode: "insensitive" } },
-
-		{
-			parent: {
-				name: { contains: searchTerm, mode: "insensitive" },
-			},
-		},
 	];
 };

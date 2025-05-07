@@ -11,7 +11,4 @@ export const createProductCategorySchema = z.object({
 	// Informations de base
 	name: z.string().min(1, "Le nom est requis"),
 	description: z.string().optional(),
-
-	// Hiérarchie
-	parentId: z.string().optional().nullable(),
 });

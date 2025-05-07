@@ -10,21 +10,6 @@ export const DEFAULT_PER_PAGE = 10;
 export const PARENT_SELECT_RECURSIVE = {
 	id: true,
 	name: true,
-	slug: true,
-	parent: {
-		select: {
-			id: true,
-			name: true,
-			slug: true,
-			parent: {
-				select: {
-					id: true,
-					name: true,
-					slug: true,
-				},
-			},
-		},
-	},
 } as const;
 
 /**
@@ -37,18 +22,11 @@ export const GET_PRODUCT_CATEGORIES_DEFAULT_SELECT = {
 	organizationId: true,
 	name: true,
 	description: true,
-	slug: true,
 	status: true,
 
 	// Relations hiérarchiques
-	parentId: true,
 
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
-
-	// Relation parent avec sélection récursive pour avoir l'arborescence complète
-	parent: {
-		select: PARENT_SELECT_RECURSIVE,
-	},
 } as const satisfies Prisma.ProductCategorySelect;

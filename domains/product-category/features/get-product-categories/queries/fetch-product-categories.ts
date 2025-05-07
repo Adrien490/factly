@@ -35,13 +35,6 @@ export async function fetchProductCategories(
 		`organizations:${params.organizationId}:product-categories:sort:${params.sortBy}:${params.sortOrder}`
 	);
 
-	if (params.parentId !== undefined) {
-		const parentIdTag = params.parentId === null ? "root" : params.parentId;
-		cacheTag(
-			`organizations:${params.organizationId}:product-categories:parentId:${parentIdTag}`
-		);
-	}
-
 	// Normalisation et tag pour la pagination
 	const page = Math.max(1, Number(params.page) || 1);
 	const perPage = Math.min(
@@ -97,31 +90,8 @@ export async function fetchProductCategories(
 			};
 		}
 
-		// Récupérer le nombre d'enfants pour chaque catégorie en une seule requête
-		const categoryIds = categories.map((cat) => cat.id);
-		const childCounts = await db.productCategory.groupBy({
-			by: ["parentId"],
-			where: { parentId: { in: categoryIds } },
-			_count: { id: true },
-		});
-
-		// Transformer en dictionnaire pour un accès facile
-		const childCountsMap = new Map();
-		childCounts.forEach((count) => {
-			if (count.parentId) {
-				childCountsMap.set(count.parentId, count._count.id);
-			}
-		});
-
-		// Ajouter le nombre d'enfants à chaque catégorie
-		const categoriesWithChildCounts = categories.map((category) => ({
-			...category,
-			childCount: childCountsMap.get(category.id) || 0,
-			hasChildren: (childCountsMap.get(category.id) || 0) > 0,
-		}));
-
 		return {
-			categories: categoriesWithChildCounts,
+			categories,
 			pagination: {
 				page: currentPage,
 				perPage,

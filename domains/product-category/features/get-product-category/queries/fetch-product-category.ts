@@ -17,9 +17,7 @@ export async function fetchProductCategory(
 	"use cache";
 
 	// Configuration du cache
-	const cacheKey = params.id
-		? `organizations:${params.organizationId}:product-categories:id:${params.id}`
-		: `organizations:${params.organizationId}:product-categories:slug:${params.slug}`;
+	const cacheKey = `organizations:${params.organizationId}:product-categories:id:${params.id}`;
 
 	cacheTag(cacheKey);
 	cacheLife({
@@ -40,13 +38,7 @@ export async function fetchProductCategory(
 				...whereCondition,
 				id: params.id,
 			};
-		} else if (params.slug) {
-			whereCondition = {
-				...whereCondition,
-				slug: params.slug,
-			};
 		}
-
 		// Récupération de la catégorie
 		const category = await prisma.productCategory.findFirst({
 			where: whereCondition,

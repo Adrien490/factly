@@ -16,31 +16,6 @@ export function buildWhereClause(
 	};
 
 	// Application des options de hiérarchie
-	if (params.hierarchy) {
-		// 1. Catégories de premier niveau uniquement (root)
-		if (params.hierarchy.rootCategoriesOnly) {
-			whereClause.parentId = null;
-		}
-
-		// 2. Filtrage par catégorie parente spécifique
-		else if (params.hierarchy.parentId !== undefined) {
-			whereClause.parentId = params.hierarchy.parentId;
-		}
-
-		// 3. Catégories ayant des enfants
-		if (params.hierarchy.withChildrenOnly) {
-			whereClause.children = {
-				some: {},
-			};
-		}
-
-		// 4. Catégories feuilles (sans enfants)
-		if (params.hierarchy.leafCategoriesOnly) {
-			whereClause.children = {
-				none: {},
-			};
-		}
-	}
 
 	// Ajouter les filtres spécifiques
 	if (params.filters && Object.keys(params.filters).length > 0) {

@@ -67,11 +67,6 @@ export const archiveProductCategory: ServerAction<
 				id: true,
 				name: true,
 				status: true,
-				children: {
-					select: {
-						id: true,
-					},
-				},
 			},
 		});
 
@@ -87,14 +82,6 @@ export const archiveProductCategory: ServerAction<
 			return createErrorResponse(
 				ActionStatus.ERROR,
 				"Cette catégorie est déjà archivée"
-			);
-		}
-
-		// 7. Vérification si la catégorie a des sous-catégories
-		if (existingCategory.children && existingCategory.children.length > 0) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				`Cette catégorie contient ${existingCategory.children.length} sous-catégorie(s). Veuillez d'abord archiver ou déplacer ces sous-catégories.`
 			);
 		}
 

@@ -10,7 +10,6 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
-import { generateSlug } from "@/shared/utils";
 import { ProductCategory } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -59,21 +58,12 @@ export const createProductCategory: ServerAction<
 
 		// 4. Préparation et transformation des données brutes
 		const name = formData.get("name") as string;
-		// Génération automatique du slug à partir du nom
-		const slug = generateSlug(name);
 
 		const rawData = {
 			organizationId: organizationId.toString(),
 			name,
-			slug,
 			description: formData.get("description") as string,
-			parentId:
-				(formData.get("parentId") as string) === "" || !formData.get("parentId")
-					? null
-					: (formData.get("parentId") as string),
 		};
-
-		console.log("[CREATE_PRODUCT_CATEGORY] Raw data:", rawData);
 
 		// 5. Validation des données avec le schéma Zod
 		const validation = createProductCategorySchema.safeParse(rawData);
@@ -92,7 +82,7 @@ export const createProductCategory: ServerAction<
 		// 6. Vérification de l'unicité du slug dans l'organisation
 		const existingCategory = await db.productCategory.findFirst({
 			where: {
-				slug: slug,
+				name: validation.data.name,
 				organizationId: validation.data.organizationId,
 			},
 			select: { id: true },
@@ -105,43 +95,19 @@ export const createProductCategory: ServerAction<
 			);
 		}
 
-		// 7. Si un parent est spécifié, vérifier qu'il existe
-		if (validation.data.parentId) {
-			const parentCategory = await db.productCategory.findFirst({
-				where: {
-					id: validation.data.parentId,
-					organizationId: validation.data.organizationId,
-				},
-				select: { id: true },
-			});
-
-			if (!parentCategory) {
-				return createErrorResponse(
-					ActionStatus.NOT_FOUND,
-					"La catégorie parente spécifiée n'existe pas"
-				);
-			}
-		}
-
 		// 8. Création de la catégorie dans la base de données
 		const { organizationId: validatedOrgId, ...categoryData } = validation.data;
 
 		// Créer la catégorie avec les relations appropriées
 		const createData = {
 			name: categoryData.name,
-			slug: slug,
 			description: categoryData.description,
 			organization: { connect: { id: validatedOrgId } },
 		};
 
 		// Créer la catégorie avec ou sans parent
 		const category = await db.productCategory.create({
-			data: categoryData.parentId
-				? {
-						...createData,
-						parent: { connect: { id: categoryData.parentId } },
-				  }
-				: createData,
+			data: createData,
 		});
 
 		// 9. Invalidation du cache pour forcer un rafraîchissement des données

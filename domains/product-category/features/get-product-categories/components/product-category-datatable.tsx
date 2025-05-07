@@ -21,25 +21,18 @@ import { ProductCategoryActions } from "@/domains/product-category/components/pr
 import { PRODUCT_CATEGORY_STATUSES } from "@/domains/product-category/constants/product-category-statuses";
 import { SelectionProvider } from "@/shared/contexts";
 import { cn } from "@/shared/utils";
-import Link from "next/link";
 import { GetProductCategoriesReturn } from "../types";
 
 export interface ProductCategoryDataTableProps {
 	categoriesPromise: Promise<GetProductCategoriesReturn>;
 	organizationId: string;
 	emptyState?: React.ReactNode;
-	/**
-	 * Chemin actuel dans l'URL (pour la construction des liens imbriqués)
-	 * Format: ['parent-slug', 'child-slug']
-	 */
-	currentPath?: string[];
 }
 
 export function ProductCategoryDataTable({
 	categoriesPromise,
 	organizationId,
 	emptyState,
-	currentPath = [],
 }: ProductCategoryDataTableProps) {
 	const response = use(categoriesPromise);
 	const { categories, pagination } = response;
@@ -87,13 +80,7 @@ export function ProductCategoryDataTable({
 								>
 									Statut
 								</TableHead>
-								<TableHead
-									key="children"
-									role="columnheader"
-									className="w-[150px] text-center hidden lg:table-cell"
-								>
-									Sous-catégories
-								</TableHead>
+
 								<TableHead
 									key="actions"
 									role="columnheader"
@@ -110,8 +97,6 @@ export function ProductCategoryDataTable({
 								);
 
 								// Construction de l'URL en fonction du chemin actuel et du slug de la catégorie
-								const categoryPath = [...currentPath, category.slug].join("/");
-								const categoryUrl = `/dashboard/${organizationId}/products/categories/${categoryPath}`;
 
 								return (
 									<TableRow key={category.id} role="row" tabIndex={0}>
@@ -127,12 +112,7 @@ export function ProductCategoryDataTable({
 													<Folder className="h-4 w-4 text-muted-foreground" />
 												</div>
 												<div className="min-w-0">
-													<Link
-														href={categoryUrl}
-														className="hover:underline flex items-center truncate max-w-[220px]"
-													>
-														<span className="truncate">{category.name}</span>
-													</Link>
+													<span className="truncate">{category.name}</span>
 												</div>
 											</div>
 										</TableCell>
@@ -163,12 +143,7 @@ export function ProductCategoryDataTable({
 												{statusOption?.label || category.status}
 											</Badge>
 										</TableCell>
-										<TableCell
-											role="gridcell"
-											className="text-center w-[150px] hidden lg:table-cell"
-										>
-											{category.childCount || 0}
-										</TableCell>
+
 										<TableCell role="gridcell" className="text-right w-[100px]">
 											<ProductCategoryActions
 												category={category}

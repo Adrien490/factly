@@ -17,15 +17,6 @@ export const buildWhereClause = (
 		organizationId: params.organizationId as string,
 	};
 
-	// Priorité 1: Si rootOnly est true, on force parentId à null (catégories racines)
-	if (params.rootOnly === true) {
-		whereClause.parentId = null;
-	}
-	// Priorité 2: Sinon, si parentId est spécifié, on l'utilise
-	else if (params.parentId !== undefined) {
-		whereClause.parentId = params.parentId;
-	}
-
 	// Ajouter les conditions de recherche textuelle
 	if (typeof params.search === "string" && params.search.trim()) {
 		whereClause.OR = buildSearchConditions(params.search);
