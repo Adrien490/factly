@@ -3,6 +3,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { passkey } from "better-auth/plugins/passkey";
+import { sendEmailVerification } from "../features/send-verification-email/actions/send-verification-email";
 
 // Vérification si nous sommes côté client ou serveur
 
@@ -13,6 +14,16 @@ const betterAuthSecret = process.env.BETTER_AUTH_SECRET;
 const betterAuthUrl = process.env.BETTER_AUTH_URL;
 
 export const auth = betterAuth({
+	emailVerification: {
+		requireEmailVerification: true,
+		sendVerificationEmail: async ({ user, url }) => {
+			await sendEmailVerification({
+				to: user.email,
+				subject: "Verify your email address",
+				url,
+			});
+		},
+	},
 	emailAndPassword: {
 		enabled: true,
 	},
@@ -28,7 +39,7 @@ export const auth = betterAuth({
 						clientId: googleClientId,
 						clientSecret: googleClientSecret,
 					},
-			  }
+				}
 			: {}),
 	},
 	plugins: [nextCookies(), passkey()],

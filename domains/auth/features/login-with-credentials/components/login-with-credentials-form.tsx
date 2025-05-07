@@ -2,9 +2,13 @@
 
 import { Button } from "@/shared/components";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
+import { useSearchParams } from "next/navigation";
 import { useLoginWithCredentials } from "../hooks/use-login-with-credentials";
 
 export function LoginWithCredentialsForm() {
+	const searchParams = useSearchParams();
+	const callbackURL = searchParams.get("callbackURL") || "/dashboard";
+
 	const { dispatch, isPending } = useLoginWithCredentials();
 
 	// TanStack Form setup
@@ -12,6 +16,7 @@ export function LoginWithCredentialsForm() {
 		defaultValues: {
 			email: "",
 			password: "",
+			callbackURL: callbackURL || "/dashboard",
 		},
 	});
 
@@ -27,6 +32,7 @@ export function LoginWithCredentialsForm() {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
+			<input type="hidden" name="callbackURL" value={callbackURL} />
 
 			<div className="space-y-4">
 				<form.AppField

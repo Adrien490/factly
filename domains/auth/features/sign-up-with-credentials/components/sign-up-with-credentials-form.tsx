@@ -12,6 +12,7 @@ export function SignUpWithCredentialsForm() {
 		defaultValues: {
 			email: "",
 			password: "",
+			confirmPassword: "",
 			name: "",
 		},
 	});
@@ -90,6 +91,32 @@ export function SignUpWithCredentialsForm() {
 							label="Mot de passe"
 							disabled={isPending}
 							placeholder="Votre mot de passe"
+							type="password"
+							required
+						/>
+					)}
+				</form.AppField>
+
+				<form.AppField
+					name="confirmPassword"
+					validators={{
+						onChange: ({ value }) => {
+							if (!value) return "La confirmation du mot de passe est requise";
+							if (value.length < 8) {
+								return "Le mot de passe doit contenir au moins 8 caractères";
+							}
+							if (value.length > 32) {
+								return "Le mot de passe ne doit pas dépasser 32 caractères";
+							}
+							return undefined;
+						},
+					}}
+				>
+					{(field) => (
+						<field.InputField
+							label="Confirmer le mot de passe"
+							disabled={isPending}
+							placeholder="Confirmez votre mot de passe"
 							type="password"
 							required
 						/>

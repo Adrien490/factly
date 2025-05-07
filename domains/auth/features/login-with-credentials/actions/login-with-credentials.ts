@@ -4,11 +4,11 @@ import { auth } from "@/domains/auth/lib";
 import {
 	ActionStatus,
 	createErrorResponse,
-	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { loginWithCredentialsSchema } from "../schemas/login-with-credentials";
 
 export const loginWithCredentials: ServerAction<
@@ -29,7 +29,7 @@ export const loginWithCredentials: ServerAction<
 		const rawData = {
 			email: formData.get("email") as string,
 			password: formData.get("password") as string,
-			callbackURL: (formData.get("callbackURL") as string) || "/dashboard",
+			callbackURL: formData.get("callbackURL") as string,
 		};
 
 		const validation = loginWithCredentialsSchema.safeParse(rawData);
@@ -60,7 +60,7 @@ export const loginWithCredentials: ServerAction<
 			}
 
 			// La redirection va lancer une erreur NEXT_REDIRECT, c'est normal
-			return createSuccessResponse(null, "Connexion réussie");
+			redirect(callbackURL);
 		} catch (error) {
 			// Vérifier si l'erreur est liée à une redirection Next.js
 
