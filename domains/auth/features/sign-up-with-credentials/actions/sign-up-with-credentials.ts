@@ -4,20 +4,15 @@ import { auth } from "@/domains/auth/lib";
 import {
 	ActionStatus,
 	createErrorResponse,
+	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { signUpWithCredentialsSchema } from "../schemas/sign-up-with-credentials";
 
-// Interface pour typer l'erreur de redirection Next.js
-interface NextRedirectError extends Error {
-	digest?: string;
-}
-
 export const signUpWithCredentials: ServerAction<
-	{ success: boolean },
+	null,
 	typeof signUpWithCredentialsSchema
 > = async (_, formData) => {
 	try {
@@ -64,17 +59,9 @@ export const signUpWithCredentials: ServerAction<
 				);
 			}
 
-			redirect("/dashboard");
+			return createSuccessResponse(null, "Inscription réussie");
 		} catch (error) {
 			// Vérifier si l'erreur est liée à une redirection Next.js
-			if (
-				error instanceof Error &&
-				(error.message === "NEXT_REDIRECT" ||
-					(error as NextRedirectError).digest?.startsWith("NEXT_REDIRECT"))
-			) {
-				// Laisser l'erreur de redirection se propager
-				throw error;
-			}
 
 			const errorMessage =
 				error instanceof Error
@@ -84,16 +71,6 @@ export const signUpWithCredentials: ServerAction<
 			return createErrorResponse(ActionStatus.ERROR, errorMessage);
 		}
 	} catch (error) {
-		// Vérifier si l'erreur est liée à une redirection Next.js
-		if (
-			error instanceof Error &&
-			(error.message === "NEXT_REDIRECT" ||
-				(error as NextRedirectError).digest?.startsWith("NEXT_REDIRECT"))
-		) {
-			// Laisser l'erreur de redirection se propager
-			throw error;
-		}
-
 		const errorMessage =
 			error instanceof Error
 				? error.message

@@ -1,9 +1,11 @@
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
 import { signUpWithCredentials } from "../actions/sign-up-with-credentials";
 
 export function useSignUpWithCredentials() {
+	const router = useRouter();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			signUpWithCredentials,
@@ -14,6 +16,7 @@ export function useSignUpWithCredentials() {
 						description: "Vous allez être redirigé...",
 						duration: 3000,
 					});
+					router.push("/dashboard");
 				},
 			})
 		),
