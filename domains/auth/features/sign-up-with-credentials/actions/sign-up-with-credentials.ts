@@ -29,11 +29,13 @@ export const signUpWithCredentials: ServerAction<
 		const rawData = {
 			email: formData.get("email") as string,
 			password: formData.get("password") as string,
+			confirmPassword: formData.get("confirmPassword") as string,
 			name: formData.get("name") as string,
 		};
 
 		const validation = signUpWithCredentialsSchema.safeParse(rawData);
 		if (!validation.success) {
+			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				rawData,
