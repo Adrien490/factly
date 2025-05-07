@@ -1,0 +1,28 @@
+import { createToastCallbacks, withCallbacks } from "@/shared/utils";
+import { useActionState } from "react";
+import { toast } from "sonner";
+import { signUpWithCredentials } from "../actions/sign-up-with-credentials";
+
+export function useSignUpWithCredentials() {
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			signUpWithCredentials,
+			createToastCallbacks({
+				loadingMessage: "Inscription en cours...",
+				onSuccess: () => {
+					toast.success("Inscription réussie", {
+						description: "Vous allez être redirigé...",
+						duration: 3000,
+					});
+				},
+			})
+		),
+		undefined
+	);
+
+	return {
+		state,
+		dispatch,
+		isPending,
+	};
+}

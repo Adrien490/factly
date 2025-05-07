@@ -1,78 +1,130 @@
+import { LoginWithCredentialsForm } from "@/domains/auth/features/login-with-credentials/components/login-with-credentials-form";
 import { LoginWithSocialProviderForm } from "@/domains/auth/features/login-with-social-provider/components";
+import { SignUpWithCredentialsForm } from "@/domains/auth/features/sign-up-with-credentials/components/sign-up-with-credentials-form";
 import { Logo, Spotlight } from "@/shared/components";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function LoginPage() {
+interface Props {
+	searchParams: {
+		callbackURL?: string;
+		formType?: "signin" | "signup";
+	};
+}
+
+export default function LoginPage({ searchParams }: Props) {
+	const { callbackURL, formType = "signin" } = searchParams;
+
 	return (
-		<div className="flex flex-col items-center justify-start sm:justify-center px-4 sm:px-6 py-8 min-h-screen mx-auto relative overflow-hidden">
+		<div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
 			{/* Spotlight avec effet subtil */}
 			<Spotlight translateY={-100} width={500} height={500} duration={10} />
 
 			{/* Navigation simplifiée */}
-			<header className="absolute top-0 left-0 w-full flex justify-between items-center p-4 sm:p-8 z-20">
+			<header className="fixed top-0 left-0 w-full p-4 sm:p-8 z-20">
 				<Link
 					href="/"
-					className="flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-full px-4 py-2 bg-background/60 backdrop-blur-xs"
+					className="inline-flex items-center gap-2 rounded-full bg-background/60 px-4 py-2 text-sm font-medium text-foreground/80 backdrop-blur-xs transition-colors hover:text-foreground"
 					aria-label="Retour à l'accueil"
 				>
-					<ArrowLeft className="w-4 h-4" />
+					<ArrowLeft className="h-4 w-4" />
 					<span>Accueil</span>
 				</Link>
 			</header>
 
-			{/* Carte principale simplifiée avec bordure améliorée */}
-			<div
-				className="w-full max-w-md p-6 sm:p-8 space-y-5 rounded-xl relative z-10 
-                bg-background/90 backdrop-blur-xs 
-                border border-border
-                
-                mt-16 sm:mt-0"
-			>
-				{/* En-tête simplifié */}
-				<div className="space-y-3 text-center">
-					<div className="flex justify-center mb-2">
+			{/* Carte principale */}
+			<div className="w-full max-w-md space-y-6 rounded-xl border border-border/50 bg-background/95 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+				{/* En-tête */}
+				<div className="space-y-4 text-center">
+					<div className="flex justify-center">
 						<Logo variant="default" size="md" shape="circle" hideText={true} />
 					</div>
 
-					<h1 className="text-xl font-bold">Bienvenue sur Factly</h1>
-
-					<p className="text-muted-foreground text-sm">
-						Connectez-vous pour accéder à votre espace de travail
-					</p>
+					<div className="space-y-2">
+						<h1 className="text-2xl font-bold tracking-tight">
+							{formType === "signin"
+								? "Bienvenue sur Factly"
+								: "Créer un compte"}
+						</h1>
+						<p className="text-sm text-muted-foreground">
+							{formType === "signin"
+								? "Connectez-vous pour accéder à votre espace de travail"
+								: "Créez votre compte pour commencer à utiliser Factly"}
+						</p>
+					</div>
 				</div>
 
 				{/* Options de connexion sociale */}
-				<div className="py-2">
+				<div className="w-full">
 					<LoginWithSocialProviderForm />
 				</div>
 
-				{/* Séparateur simple */}
-				<div className="relative py-1">
+				{/* Séparateur */}
+				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
-						<span className="w-full border-t border-border/20"></span>
+						<span className="w-full border-t border-border/20" />
 					</div>
 					<div className="relative flex justify-center text-xs">
-						<span className="px-3 py-1 text-muted-foreground bg-background/90 backdrop-blur-xs">
+						<span className="bg-background/95 px-3 py-1 text-muted-foreground backdrop-blur-sm">
 							ou
 						</span>
 					</div>
 				</div>
 
-				{/* Mentions légales simplifiées */}
+				{/* Formulaire de connexion ou d'inscription */}
+				<div className="w-full">
+					{formType === "signin" ? (
+						<LoginWithCredentialsForm />
+					) : (
+						<SignUpWithCredentialsForm />
+					)}
+				</div>
+
+				{/* Bouton de basculement */}
 				<div className="text-center">
-					<p className="text-muted-foreground text-xs text-center">
+					<p className="text-sm text-muted-foreground">
+						{formType === "signin" ? (
+							<>
+								Pas encore de compte ?{" "}
+								<Link
+									href={`/login?formType=signup${
+										callbackURL ? `&callbackURL=${callbackURL}` : ""
+									}`}
+									className="font-medium text-primary hover:underline"
+								>
+									S&apos;inscrire
+								</Link>
+							</>
+						) : (
+							<>
+								Déjà un compte ?{" "}
+								<Link
+									href={`/login?formType=signin${
+										callbackURL ? `&callbackURL=${callbackURL}` : ""
+									}`}
+									className="font-medium text-primary hover:underline"
+								>
+									Se connecter
+								</Link>
+							</>
+						)}
+					</p>
+				</div>
+
+				{/* Mentions légales */}
+				<div className="text-center">
+					<p className="text-xs text-muted-foreground">
 						En continuant, vous acceptez nos{" "}
 						<Link
 							href="/terms"
-							className="text-primary/90 hover:text-primary transition-colors font-medium hover:underline"
+							className="font-medium text-primary/90 transition-colors hover:text-primary hover:underline"
 						>
 							Conditions d&apos;Utilisation
 						</Link>{" "}
 						et{" "}
 						<Link
 							href="/privacy"
-							className="text-primary/90 hover:text-primary transition-colors font-medium hover:underline"
+							className="font-medium text-primary/90 transition-colors hover:text-primary hover:underline"
 						>
 							Politique de Confidentialité
 						</Link>

@@ -13,6 +13,9 @@ const betterAuthSecret = process.env.BETTER_AUTH_SECRET;
 const betterAuthUrl = process.env.BETTER_AUTH_URL;
 
 export const auth = betterAuth({
+	emailAndPassword: {
+		enabled: true,
+	},
 	secret: betterAuthSecret,
 	baseUrl: betterAuthUrl,
 	database: prismaAdapter(prisma, {

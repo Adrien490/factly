@@ -355,34 +355,12 @@ model Product {
   category   ProductCategory? @relation(fields: [categoryId], references: [id])
   categoryId String?
 
-  // Relation avec la galerie d'images
-  images ProductImage[]
-
   // Index pour optimiser les recherches
   @@unique([reference, organizationId])
   @@index([name])
   @@index([status, organizationId])
   @@index([categoryId])
   @@index([supplierId])
-}
-
-// Modèle pour la galerie d'images du produit
-model ProductImage {
-  id          String  @id @default(cuid())
-  url         String // URL de l'image
-  alt         String? // Texte alternatif pour l'accessibilité
-  title       String? // Titre de l'image
-  description String? // Description de l'image
-
-  // Métadonnées
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relation avec le produit
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
-
-  @@index([productId]) // Pour récupérer les images triées par ordre
 }
 
 enum Civility {
