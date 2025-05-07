@@ -21,6 +21,11 @@ export const createProductSchema = z.object({
 
 	// Prix et taxation
 	price: z.number().min(0, "Le prix doit être positif"),
+	purchasePrice: z
+		.number()
+		.min(0, "Le prix d'achat doit être positif")
+		.optional()
+		.nullable(),
 	vatRate: z
 		.nativeEnum(VatRate, {
 			errorMap: () => ({ message: "Le taux de TVA est requis" }),

@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, VatRate } from "@prisma/client";
 import { z } from "zod";
 import { GET_PRODUCT_DEFAULT_SELECT } from "../constants";
 import { getProductSchema } from "../schemas";
@@ -8,3 +8,9 @@ export type GetProductReturn = Prisma.ProductGetPayload<{
 }> | null;
 
 export type GetProductParams = z.infer<typeof getProductSchema>;
+
+export type Product = {
+	price: number;
+	purchasePrice: number | null;
+	vatRate: VatRate;
+};

@@ -363,8 +363,9 @@ model Product {
   imageUrl String? // URL de l'image principale
 
   // Prix et taxation
-  price   Float // Prix de base HT
-  vatRate VatRate @default(STANDARD) // Taux de TVA
+  price         Float // Prix de base HT
+  purchasePrice Float? // Prix d'achat HT
+  vatRate       VatRate @default(STANDARD) // Taux de TVA
 
   // Dimensions et poids
   weight Float? // Poids du produit en kg

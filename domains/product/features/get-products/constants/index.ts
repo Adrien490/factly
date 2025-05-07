@@ -20,7 +20,7 @@ export const GET_PRODUCTS_DEFAULT_SELECT = {
 	// Prix et taxation
 	price: true,
 	vatRate: true,
-
+	purchasePrice: true,
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,

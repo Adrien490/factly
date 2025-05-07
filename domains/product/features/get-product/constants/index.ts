@@ -12,6 +12,7 @@ export const GET_PRODUCT_DEFAULT_SELECT = {
 	price: true,
 	vatRate: true,
 	imageUrl: true,
+	purchasePrice: true,
 	weight: true,
 	width: true,
 	height: true,

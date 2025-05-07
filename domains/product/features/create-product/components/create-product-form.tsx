@@ -70,6 +70,7 @@ export function CreateProductForm() {
 			description: "",
 			status: ProductStatus.ACTIVE,
 			price: 0,
+			purchasePrice: null as number | null,
 			vatRate: VatRate.STANDARD,
 			imageUrl: "",
 			weight: null as number | null,
@@ -302,7 +303,7 @@ export function CreateProductForm() {
 						>
 							{(field) => (
 								<field.InputField
-									label="Prix HT*"
+									label="Prix de vente HT*"
 									type="number"
 									min={0}
 									step={0.01}
@@ -310,6 +311,31 @@ export function CreateProductForm() {
 									placeholder="0.00"
 									value={
 										field.state.value === 0 ? "" : String(field.state.value)
+									}
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="purchasePrice"
+							validators={{
+								onChange: ({ value }) => {
+									if (value !== null && value < 0)
+										return "Le prix d'achat doit être positif";
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Prix d'achat HT"
+									type="number"
+									min={0}
+									step={0.01}
+									disabled={isPending}
+									placeholder="0.00"
+									value={
+										field.state.value === null ? "" : String(field.state.value)
 									}
 								/>
 							)}

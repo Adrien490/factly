@@ -52,6 +52,7 @@ export function UpdateProductForm({ product }: UpdateProductFormProps) {
 			width: state?.inputs?.width ?? product.width,
 			height: state?.inputs?.height ?? product.height,
 			depth: state?.inputs?.depth ?? product.depth,
+			purchasePrice: state?.inputs?.purchasePrice ?? product.purchasePrice,
 			categoryId: state?.inputs?.categoryId ?? "",
 			supplierId: state?.inputs?.supplierId ?? "",
 		},
@@ -281,7 +282,7 @@ export function UpdateProductForm({ product }: UpdateProductFormProps) {
 						>
 							{(field) => (
 								<field.InputField
-									label="Prix HT*"
+									label="Prix de vente HT*"
 									type="number"
 									min={0}
 									step={0.01}
@@ -289,6 +290,31 @@ export function UpdateProductForm({ product }: UpdateProductFormProps) {
 									placeholder="0.00"
 									value={
 										field.state.value === 0 ? "" : String(field.state.value)
+									}
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="purchasePrice"
+							validators={{
+								onChange: ({ value }) => {
+									if (value !== null && value < 0)
+										return "Le prix d'achat doit être positif";
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Prix d'achat HT"
+									type="number"
+									min={0}
+									step={0.01}
+									disabled={isPending}
+									placeholder="0.00"
+									value={
+										field.state.value === null ? "" : String(field.state.value)
 									}
 								/>
 							)}
