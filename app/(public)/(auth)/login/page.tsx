@@ -1,4 +1,4 @@
-import { LoginWithSocialProviderForm } from "@/domains/auth/features/login-with-social-provider/components";
+import { LoginWithSocialProviderForm } from "@/domains/auth/features/login-with-social-provider";
 import { SignInEmailForm } from "@/domains/auth/features/sign-in-email/components/sign-in-email-form";
 import { SignUpEmailForm } from "@/domains/auth/features/sign-up-email/components/sign-up-email-form";
 import { Logo, Spotlight } from "@/shared/components";
