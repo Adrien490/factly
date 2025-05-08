@@ -5,7 +5,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmailVerification(data: {
+export async function sendVerificationEmail(data: {
 	to: string;
 	subject: string;
 	url: string;

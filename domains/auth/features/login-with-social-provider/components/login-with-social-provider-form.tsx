@@ -3,8 +3,8 @@
 import { Button } from "@/shared/components";
 import { useSearchParams } from "next/navigation";
 import { useTransition } from "react";
-import { providers } from "../../constants";
-import { useLoginWithSocialProvider } from "../../hooks/use-login-with-social-provider";
+import { providers } from "../constants";
+import { useLoginWithSocialProvider } from "../hooks/use-login-with-social-provider";
 
 export function LoginWithSocialProviderForm() {
 	const searchParams = useSearchParams();
