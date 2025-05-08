@@ -16,6 +16,7 @@ const betterAuthUrl = process.env.BETTER_AUTH_URL;
 export const auth = betterAuth({
 	emailVerification: {
 		requireEmailVerification: true,
+		sendOnSignUp: true,
 		sendVerificationEmail: async ({ user, url }) => {
 			await sendEmailVerification({
 				to: user.email,

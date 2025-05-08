@@ -9,12 +9,12 @@ import {
 	ServerAction,
 } from "@/shared/types";
 import { headers } from "next/headers";
-import { signUpWithCredentialsSchema } from "../schemas/sign-up-with-credentials";
+import { signUpEmailSchema } from "../schemas/sign-up-email-schema";
 
-export const signUpWithCredentials: ServerAction<
-	null,
-	typeof signUpWithCredentialsSchema
-> = async (_, formData) => {
+export const signUpEmail: ServerAction<null, typeof signUpEmailSchema> = async (
+	_,
+	formData
+) => {
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),
@@ -33,7 +33,7 @@ export const signUpWithCredentials: ServerAction<
 			name: formData.get("name") as string,
 		};
 
-		const validation = signUpWithCredentialsSchema.safeParse(rawData);
+		const validation = signUpEmailSchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(

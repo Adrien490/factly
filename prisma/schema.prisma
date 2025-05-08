@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -154,8 +155,10 @@ model FiscalYear {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-  @@index([startDate, endDate]) // Important
-  @@index([status, organizationId]) // Reqûetes combo
+  // Important
+  // Reqûetes combo
+  @@index([startDate, endDate])
+  @@index([status, organizationId])
 }
 
 // Enum pour le statut de l'année fiscale
@@ -294,12 +297,16 @@ model Client {
   // Pour les requêtes de triage par date
   // Pour les requêtes de modification récente
   // Pour filtrer par type dans une organisation
-  @@index([name, status]) // Courant
-  @@index([organizationId, clientType]) // Courant
-  @@index([reference]) // via @@unique
+  // Courant
+  // Courant
+  // via @@unique
+  @@index([name, status])
+  @@index([organizationId, clientType])
+  @@index([reference])
 }
 
 // Modèle pour les catégories de produits
+
 model ProductCategory {
   id          String                @id @default(cuid())
   name        String // Nom de la catégorie
@@ -373,6 +380,7 @@ enum Civility {
 }
 
 // Enums
+
 enum AddressType {
   BILLING
   SHIPPING
@@ -436,6 +444,7 @@ enum SupplierStatus {
 }
 
 // Enum pour le statut des produits
+
 enum ProductStatus {
   ACTIVE // Produit actif, disponible à la vente
   INACTIVE // Produit inactif, non disponible à la vente
@@ -502,6 +511,7 @@ enum Country {
 }
 
 // Enum pour le statut des catégories de produits
+
 enum ProductCategoryStatus {
   ACTIVE // Catégorie active, visible
   ARCHIVED // Catégorie archivée

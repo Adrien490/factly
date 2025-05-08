@@ -2,13 +2,13 @@ import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { signUpWithCredentials } from "../actions/sign-up-with-credentials";
+import { signUpEmail } from "../actions/sign-up-email";
 
-export function useSignUpWithCredentials() {
+export function useSignUpEmail() {
 	const router = useRouter();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
-			signUpWithCredentials,
+			signUpEmail,
 			createToastCallbacks({
 				loadingMessage: "Inscription en cours...",
 				onSuccess: () => {

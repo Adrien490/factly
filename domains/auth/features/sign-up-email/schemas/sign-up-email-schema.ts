@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const signUpWithCredentialsSchema = z
+export const signUpEmailSchema = z
 	.object({
 		email: z.string().email("Format d'email invalide"),
 		password: z
@@ -18,7 +18,3 @@ export const signUpWithCredentialsSchema = z
 		message: "Les mots de passe ne correspondent pas",
 		path: ["confirmPassword"],
 	});
-
-export type SignUpWithCredentialsSchema = z.infer<
-	typeof signUpWithCredentialsSchema
->;

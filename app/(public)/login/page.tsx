@@ -1,6 +1,6 @@
-import { LoginWithCredentialsForm } from "@/domains/auth/features/login-with-credentials/components/login-with-credentials-form";
 import { LoginWithSocialProviderForm } from "@/domains/auth/features/login-with-social-provider/components";
-import { SignUpWithCredentialsForm } from "@/domains/auth/features/sign-up-with-credentials/components/sign-up-with-credentials-form";
+import { SignInEmailForm } from "@/domains/auth/features/sign-in-email/components/sign-in-email-form";
+import { SignUpEmailForm } from "@/domains/auth/features/sign-up-email/components/sign-up-email-form";
 import { Logo, Spotlight } from "@/shared/components";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -73,11 +73,7 @@ export default async function LoginPage({ searchParams }: Props) {
 
 				{/* Formulaire de connexion ou d'inscription */}
 				<div className="w-full">
-					{formType === "signin" ? (
-						<LoginWithCredentialsForm />
-					) : (
-						<SignUpWithCredentialsForm />
-					)}
+					{formType === "signin" ? <SignInEmailForm /> : <SignUpEmailForm />}
 				</div>
 
 				{/* Bouton de basculement */}

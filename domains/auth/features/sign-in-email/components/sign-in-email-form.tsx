@@ -2,18 +2,21 @@
 
 import { Button } from "@/shared/components";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
-import { useSignUpWithCredentials } from "../hooks/use-sign-up-with-credentials";
+import { useSearchParams } from "next/navigation";
+import { useSignInEmail } from "../hooks/use-sign-in-email";
 
-export function SignUpWithCredentialsForm() {
-	const { dispatch, isPending } = useSignUpWithCredentials();
+export function SignInEmailForm() {
+	const searchParams = useSearchParams();
+	const callbackURL = searchParams.get("callbackURL") || "/dashboard";
+
+	const { dispatch, isPending } = useSignInEmail();
 
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
 			password: "",
-			confirmPassword: "",
-			name: "",
+			callbackURL: callbackURL || "/dashboard",
 		},
 	});
 
@@ -28,26 +31,10 @@ export function SignUpWithCredentialsForm() {
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
 
-			<div className="space-y-4">
-				<form.AppField
-					name="name"
-					validators={{
-						onChange: ({ value }) => {
-							if (!value) return "Le nom est requis";
-							return undefined;
-						},
-					}}
-				>
-					{(field) => (
-						<field.InputField
-							label="Nom"
-							disabled={isPending}
-							placeholder="Votre nom"
-							required
-						/>
-					)}
-				</form.AppField>
+			{/* Champs cachés */}
+			<input type="hidden" name="callbackURL" value={callbackURL} />
 
+			<div className="space-y-4">
 				<form.AppField
 					name="email"
 					validators={{
@@ -76,12 +63,6 @@ export function SignUpWithCredentialsForm() {
 					validators={{
 						onChange: ({ value }) => {
 							if (!value) return "Le mot de passe est requis";
-							if (value.length < 8) {
-								return "Le mot de passe doit contenir au moins 8 caractères";
-							}
-							if (value.length > 32) {
-								return "Le mot de passe ne doit pas dépasser 32 caractères";
-							}
 							return undefined;
 						},
 					}}
@@ -96,32 +77,6 @@ export function SignUpWithCredentialsForm() {
 						/>
 					)}
 				</form.AppField>
-
-				<form.AppField
-					name="confirmPassword"
-					validators={{
-						onChange: ({ value }) => {
-							if (!value) return "La confirmation du mot de passe est requise";
-							if (value.length < 8) {
-								return "Le mot de passe doit contenir au moins 8 caractères";
-							}
-							if (value.length > 32) {
-								return "Le mot de passe ne doit pas dépasser 32 caractères";
-							}
-							return undefined;
-						},
-					}}
-				>
-					{(field) => (
-						<field.InputField
-							label="Confirmer le mot de passe"
-							disabled={isPending}
-							placeholder="Confirmez votre mot de passe"
-							type="password"
-							required
-						/>
-					)}
-				</form.AppField>
 			</div>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
@@ -131,7 +86,7 @@ export function SignUpWithCredentialsForm() {
 						className="w-full"
 						type="submit"
 					>
-						S&apos;inscrire
+						Se connecter
 					</Button>
 				)}
 			</form.Subscribe>
