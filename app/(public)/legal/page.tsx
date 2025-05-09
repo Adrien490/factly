@@ -7,7 +7,7 @@ export default function LegalPage() {
 		<PageContainer className="relative py-8">
 			{/* Navigation */}
 			<div className="flex items-center gap-2 mb-8">
-				<BackButton label="Retour à l'accueil" />
+				<BackButton label="Retour" />
 			</div>
 
 			{/* En-tête */}

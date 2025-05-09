@@ -3,7 +3,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { Button } from "../ui";
+import { Button } from "../ui/button";
 
 interface Props {
 	label?: string;
@@ -19,15 +19,11 @@ export function BackButton({ label }: Props) {
 		});
 	};
 	return (
-		<Button
-			onClick={handleClick}
-			disabled={isPending}
-			variant="outline"
-			size="icon"
-			asChild
-		>
-			<ArrowLeft />
-			{label && <span>{label}</span>}
+		<Button onClick={handleClick} disabled={isPending} variant="ghost" asChild>
+			<div className="flex items-center gap-2">
+				<ArrowLeft />
+				{label && <span>{label}</span>}
+			</div>
 		</Button>
 	);
 }
