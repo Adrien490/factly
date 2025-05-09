@@ -1,5 +1,5 @@
-import { Button, Logo, PageContainer } from "@/shared/components";
-import { ArrowLeft } from "lucide-react";
+import { Logo, PageContainer } from "@/shared/components";
+import { BackButton } from "@/shared/components/back-button";
 import Link from "next/link";
 
 export default function LegalPage() {
@@ -7,12 +7,7 @@ export default function LegalPage() {
 		<PageContainer className="relative py-8">
 			{/* Navigation */}
 			<div className="flex items-center gap-2 mb-8">
-				<Button variant="ghost" size="sm" asChild>
-					<Link href="/" className="flex items-center gap-2">
-						<ArrowLeft className="h-4 w-4" />
-						Retour à l&apos;accueil
-					</Link>
-				</Button>
+				<BackButton label="Retour à l'accueil" />
 			</div>
 
 			{/* En-tête */}
