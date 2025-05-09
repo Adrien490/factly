@@ -3,10 +3,10 @@
 import { Button } from "@/shared/components";
 import {
 	FieldInfo,
+	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
-	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormLabel } from "@/shared/components/ui/form";
@@ -104,7 +104,7 @@ export function UpdateClientForm({ client }: Props) {
 
 			<FormLayout withDividers columns={2} className="">
 				{/* Section 1: Informations de base */}
-				<FormSection
+				<FormCard
 					title="Informations de base"
 					description="Renseignez les informations principales du client"
 					icon={Building}
@@ -194,10 +194,10 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 4: Informations fiscales */}
-				<FormSection
+				<FormCard
 					title="Informations fiscales"
 					description="Identifiants fiscaux et réglementaires"
 					icon={Receipt}
@@ -264,10 +264,10 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 3: Classification */}
-				<FormSection
+				<FormCard
 					title="Classification"
 					description="Catégorisation et statut du client"
 					icon={Tag}
@@ -295,10 +295,10 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 2: Informations de contact */}
-				<FormSection
+				<FormCard
 					title="Informations de contact"
 					description="Coordonnées du client"
 					icon={User}
@@ -368,9 +368,9 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
-				<FormSection
+				<FormCard
 					title="Suivi commercial"
 					description="Informations de suivi et qualification"
 					icon={Clock}
@@ -386,7 +386,7 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

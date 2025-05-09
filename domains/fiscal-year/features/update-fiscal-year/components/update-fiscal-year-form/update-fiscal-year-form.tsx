@@ -3,10 +3,10 @@
 import { FISCAL_YEAR_STATUSES } from "@/domains/fiscal-year/constants/fiscal-year-statuses/constants";
 import {
 	FieldInfo,
+	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
-	FormSection,
 } from "@/shared/components/forms";
 import {
 	Button,
@@ -103,7 +103,7 @@ export function UpdateFiscalYearForm({
 
 			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
-				<FormSection
+				<FormCard
 					title="Informations générales"
 					description="Modifiez les informations principales de l'année fiscale"
 					icon={CalendarIcon}
@@ -164,10 +164,10 @@ export function UpdateFiscalYearForm({
 							)}
 						</form.Field>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 2: Dates */}
-				<FormSection
+				<FormCard
 					title="Période de l'année fiscale"
 					description="Modifiez les dates de début et de fin de l'année fiscale"
 					icon={Clock}
@@ -326,7 +326,7 @@ export function UpdateFiscalYearForm({
 							</div>
 						</div>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

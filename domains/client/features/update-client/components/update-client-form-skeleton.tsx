@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/shared/components";
-import { FormLayout, FormSection } from "@/shared/components/forms";
+import { FormCard, FormLayout } from "@/shared/components/forms";
 import { Building, Clock, Receipt, Tag, User } from "lucide-react";
 
 export function UpdateClientFormSkeleton() {
@@ -11,7 +11,7 @@ export function UpdateClientFormSkeleton() {
 			<div className="space-y-6">
 				<FormLayout withDividers columns={2}>
 					{/* Section 1: Informations de base */}
-					<FormSection
+					<FormCard
 						title="Informations de base"
 						description="Renseignez les informations principales du client"
 						icon={Building}
@@ -44,10 +44,10 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section 2: Coordonnées */}
-					<FormSection
+					<FormCard
 						title="Coordonnées"
 						description="Coordonnées du client"
 						icon={User}
@@ -71,10 +71,10 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section 3: Informations fiscales */}
-					<FormSection
+					<FormCard
 						title="Informations fiscales"
 						description="Informations légales et fiscales"
 						icon={Receipt}
@@ -98,10 +98,10 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section 4: Notes et commentaires */}
-					<FormSection
+					<FormCard
 						title="Notes"
 						description="Informations supplémentaires"
 						icon={Tag}
@@ -113,10 +113,10 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-32 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section 5: Informations de facturation */}
-					<FormSection
+					<FormCard
 						title="Informations de facturation"
 						description="Modalités de facturation"
 						icon={Clock}
@@ -137,7 +137,7 @@ export function UpdateClientFormSkeleton() {
 								</div>
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 				</FormLayout>
 
 				{/* Boutons d'action */}

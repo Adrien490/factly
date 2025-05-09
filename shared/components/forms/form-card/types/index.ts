@@ -1,7 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
-export interface FormSectionProps {
+export interface FormCardProps {
 	title: string;
 	description: string;
 	icon: LucideIcon;

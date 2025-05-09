@@ -17,10 +17,10 @@ import {
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
+	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
-	FormSection,
 } from "@/shared/components/forms";
 import { ActionStatus } from "@/shared/types";
 import {
@@ -136,8 +136,8 @@ export function UpdateAddressForm({
 								(address.clientId
 									? `/dashboard/${organizationId}/clients/${address.clientId}`
 									: address.supplierId
-									? `/dashboard/${organizationId}/suppliers/${address.supplierId}`
-									: `/dashboard/${organizationId}`)
+										? `/dashboard/${organizationId}/suppliers/${address.supplierId}`
+										: `/dashboard/${organizationId}`)
 						);
 						toast.dismiss();
 					},
@@ -199,7 +199,7 @@ export function UpdateAddressForm({
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section Adresse */}
-				<FormSection
+				<FormCard
 					title="Informations d'adresse"
 					description="Modifiez les informations de l'adresse"
 					icon={MapPin}
@@ -262,9 +262,9 @@ export function UpdateAddressForm({
 							)}
 						</form.Field>
 					</div>
-				</FormSection>
+				</FormCard>
 
-				<FormSection
+				<FormCard
 					title="Détails de l'adresse"
 					description="Saisissez les détails de l'adresse"
 					icon={MapPin}
@@ -474,7 +474,7 @@ export function UpdateAddressForm({
 							)}
 						</form.Field>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			{/* Boutons d'action */}
@@ -485,8 +485,8 @@ export function UpdateAddressForm({
 					(address.clientId
 						? `/dashboard/${organizationId}/clients/${address.clientId}`
 						: address.supplierId
-						? `/dashboard/${organizationId}/suppliers/${address.supplierId}`
-						: `/dashboard/${organizationId}`)
+							? `/dashboard/${organizationId}/suppliers/${address.supplierId}`
+							: `/dashboard/${organizationId}`)
 				}
 				isPending={isPending}
 			/>

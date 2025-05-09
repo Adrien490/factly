@@ -11,10 +11,10 @@ import { useCreateOrganization } from "@/domains/organization/features";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
+	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
-	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
 import { DotsLoader } from "@/shared/components/loaders";
@@ -138,7 +138,7 @@ export function CreateOrganizationForm({
 
 			<FormLayout columns={2} className="mt-6">
 				{/* Section Logo */}
-				<FormSection
+				<FormCard
 					title="Identité visuelle"
 					description="Ajoutez un logo pour identifier votre organisation"
 					icon={Upload}
@@ -212,10 +212,10 @@ export function CreateOrganizationForm({
 							</div>
 						)}
 					</form.Field>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 1: Informations de base */}
-				<FormSection
+				<FormCard
 					title="Informations de base"
 					description="Renseignez les informations principales de l'organisation"
 					icon={Building2}
@@ -301,10 +301,10 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 2: Identifiants fiscaux */}
-				<FormSection
+				<FormCard
 					title="Identifiants fiscaux"
 					description="Renseignez les identifiants fiscaux de l'organisation"
 					icon={Receipt}
@@ -372,10 +372,10 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 3: Adresse */}
-				<FormSection
+				<FormCard
 					title="Adresse"
 					description="Indiquez l'adresse de l'organisation"
 					icon={MapPin}
@@ -530,10 +530,10 @@ export function CreateOrganizationForm({
 							</form.AppField>
 						</div>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 4: Informations complémentaires */}
-				<FormSection
+				<FormCard
 					title="Informations complémentaires"
 					description="Renseignez les informations complémentaires"
 					icon={Globe}
@@ -574,7 +574,7 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

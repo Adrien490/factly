@@ -6,14 +6,14 @@ import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
+import { CLIENT_TYPES } from "@/domains/client/constants";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
-import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
+	FormCard,
 	FormErrors,
 	FormLayout,
-	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
@@ -23,7 +23,7 @@ import {
 	withCallbacks,
 } from "@/shared/utils";
 import { AddressType, Client, ClientStatus, ClientType } from "@prisma/client";
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import {
 	Building,
 	Clock,
@@ -183,6 +183,8 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		}
 	};
 
+	const clientType = useStore(form.store, (state) => state.values.clientType);
+
 	return (
 		<form
 			action={dispatch}
@@ -226,16 +228,28 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
-				<FormSection
-					title="Informations de base"
-					description="Renseignez les informations principales du client"
+				<FormCard
+					title="Informations générales"
+					description="Renseignez les informations générales du client"
 					icon={Building}
 				>
 					<div className="space-y-4">
+						<form.AppField name="clientType">
+							{(field) => (
+								<field.SelectField
+									disabled={isPending}
+									label="Type de client"
+									options={CLIENT_TYPES.map((type) => ({
+										value: type.value,
+										label: type.label,
+									}))}
+								/>
+							)}
+						</form.AppField>
+
 						<form.Field
 							name="reference"
 							validators={{
-								onChangeAsyncDebounceMs: 500,
 								onChange: ({ value }) => {
 									if (!value) return "La référence est requise";
 									if (value.length < 3)
@@ -275,14 +289,13 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										/>
 									</div>
 
-									{/* Messages d'aide et erreurs standard */}
 									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
 
 						<form.AppField
-							name="name"
+							name="website"
 							validators={{
 								onChange: ({ value }) => {
 									if (!value) return "Le nom du client est requis";
@@ -294,30 +307,95 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							{(field) => (
 								<field.InputField
 									disabled={isPending}
-									label="Nom"
-									placeholder="Nom du client ou de l'entreprise"
+									label="Site web"
+									placeholder="https://www.example.com"
 									required
 								/>
 							)}
 						</form.AppField>
-
-						<form.AppField name="clientType">
-							{(field) => (
-								<field.SelectField
-									disabled={isPending}
-									label="Type de client"
-									options={CLIENT_TYPES.map((type) => ({
-										value: type.value,
-										label: type.label,
-									}))}
-								/>
-							)}
-						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
+
+				{clientType === ClientType.COMPANY ? (
+					<FormCard
+						title="Informations légales"
+						description="Informations légales de l'entreprise"
+						icon={Receipt}
+					>
+						<div className="space-y-4">
+							<form.AppField name="siren">
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIREN"
+										placeholder="9 chiffres (ex: 123456789)"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="siret">
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIRET"
+										placeholder="14 chiffres (ex: 12345678900001)"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="vatNumber">
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="N° TVA"
+										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
+									/>
+								)}
+							</form.AppField>
+						</div>
+					</FormCard>
+				) : (
+					<FormCard
+						title="Informations du contact"
+						description="Informations de contact du particulier"
+						icon={User}
+					>
+						<div className="space-y-4">
+							<form.AppField
+								name="email"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+											return "Format d'email invalide";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Email"
+										disabled={isPending}
+										placeholder="Ex: contact@example.com"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="phone">
+								{(field) => (
+									<field.InputField
+										label="Téléphone"
+										disabled={isPending}
+										placeholder="Ex: +33 1 23 45 67 89"
+									/>
+								)}
+							</form.AppField>
+						</div>
+					</FormCard>
+				)}
 
 				{/* Section 5: Adresse */}
-				<FormSection
+				<FormCard
 					title="Adresse de facturation"
 					description="Adresse de facturation du client"
 					icon={MapPin}
@@ -457,10 +535,10 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 						</div>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 4: Informations fiscales */}
-				<FormSection
+				<FormCard
 					title="Informations fiscales"
 					description="Identifiants fiscaux et réglementaires"
 					icon={Receipt}
@@ -527,10 +605,10 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 3: Classification */}
-				<FormSection
+				<FormCard
 					title="Classification"
 					description="Catégorisation et statut du client"
 					icon={Tag}
@@ -560,10 +638,10 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 2: Informations de contact */}
-				<FormSection
+				<FormCard
 					title="Informations de contact"
 					description="Coordonnées du client"
 					icon={User}
@@ -624,9 +702,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
-				<FormSection
+				<FormCard
 					title="Suivi commercial"
 					description="Informations de suivi et qualification"
 					icon={Clock}
@@ -642,7 +720,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

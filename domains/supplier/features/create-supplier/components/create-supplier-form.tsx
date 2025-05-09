@@ -13,10 +13,10 @@ import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
+	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
-	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
@@ -203,7 +203,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
-				<FormSection
+				<FormCard
 					title="Informations de base"
 					description="Renseignez les informations principales du fournisseur"
 					icon={Building}
@@ -266,10 +266,10 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 2: Adresse */}
-				<FormSection
+				<FormCard
 					title="Adresse"
 					description="Adresse principale du fournisseur"
 					icon={MapPin}
@@ -407,10 +407,10 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 						</div>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 3: Coordonnées */}
-				<FormSection
+				<FormCard
 					title="Coordonnées"
 					description="Informations de contact du fournisseur"
 					icon={User}
@@ -471,10 +471,10 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 4: Informations fiscales */}
-				<FormSection
+				<FormCard
 					title="Informations fiscales"
 					description="Identifiants fiscaux du fournisseur"
 					icon={Receipt}
@@ -510,10 +510,10 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 5: Notes */}
-				<FormSection
+				<FormCard
 					title="Notes"
 					description="Informations complémentaires sur le fournisseur"
 					icon={Globe}
@@ -530,7 +530,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			{/* Boutons d'action */}

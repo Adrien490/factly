@@ -3,9 +3,9 @@
 import { Button, DotsLoader, FormLabel } from "@/shared/components";
 import {
 	FieldInfo,
+	FormCard,
 	FormFooter,
 	FormLayout,
-	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
@@ -138,7 +138,7 @@ export function CreateProductForm() {
 
 			<FormLayout columns={2}>
 				{/* Section 1: Informations de base */}
-				<FormSection
+				<FormCard
 					title="Informations de base"
 					description="Renseignez les informations principales du produit"
 					icon={Tag}
@@ -205,10 +205,10 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 2: Image du produit */}
-				<FormSection
+				<FormCard
 					title="Image du produit"
 					description="Ajoutez une image pour illustrer votre produit"
 					icon={ImageIcon}
@@ -282,10 +282,10 @@ export function CreateProductForm() {
 							</div>
 						)}
 					</form.Field>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 3: Tarification */}
-				<FormSection
+				<FormCard
 					title="Tarification"
 					description="Définissez le prix et le taux de TVA"
 					icon={Receipt}
@@ -360,10 +360,10 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 4: Dimensions et poids */}
-				<FormSection
+				<FormCard
 					title="Dimensions et poids"
 					description="Spécifiez les dimensions et le poids du produit"
 					icon={Box}
@@ -425,10 +425,10 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 5: Catégories et fournisseurs */}
-				<FormSection
+				<FormCard
 					icon={Tag}
 					title="Classification"
 					description="Associez une catégorie et un fournisseur au produit"
@@ -462,10 +462,10 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section 6: Statut */}
-				<FormSection
+				<FormCard
 					title="Statut"
 					description="Définissez le statut du produit"
 					icon={Tag}
@@ -494,7 +494,7 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

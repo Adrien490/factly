@@ -1,10 +1,10 @@
 "use client";
 
 import {
+	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
-	FormSection,
 	useAppForm,
 } from "@/shared/components/forms";
 
@@ -72,7 +72,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 
 			<FormLayout withDividers columns={2}>
 				{/* Section Information de base */}
-				<FormSection
+				<FormCard
 					title="Informations de base"
 					description="Informations générales sur le fournisseur"
 					icon={Building}
@@ -140,10 +140,10 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section Coordonnées */}
-				<FormSection
+				<FormCard
 					title="Coordonnées"
 					description="Informations de contact du fournisseur"
 					icon={ClipboardEdit}
@@ -179,10 +179,10 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section Informations fiscales */}
-				<FormSection
+				<FormCard
 					title="Informations fiscales"
 					description="Informations légales et fiscales"
 					icon={Receipt}
@@ -218,10 +218,10 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 
 				{/* Section Notes */}
-				<FormSection
+				<FormCard
 					title="Notes"
 					description="Informations supplémentaires"
 					icon={Tag}
@@ -237,7 +237,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormSection>
+				</FormCard>
 			</FormLayout>
 
 			{/* Boutons d'action */}

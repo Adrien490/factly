@@ -7,23 +7,29 @@ interface CheckboxFieldProps {
 	disabled?: boolean;
 	label?: string;
 	required?: boolean;
+	onCheckedChange?: (checked: boolean) => void;
+	checked?: boolean;
 }
 
 export const CheckboxField = ({
 	disabled,
 	label,
 	required,
+	checked,
+	onCheckedChange,
 }: CheckboxFieldProps) => {
 	const field = useFieldContext<boolean>();
 
 	return (
-		<div className="flex items-start space-x-2">
+		<div className="flex items-center space-x-2">
 			<Checkbox
 				disabled={disabled}
 				name={field.name}
 				id={field.name}
-				checked={field.state.value}
-				onCheckedChange={(checked) => field.handleChange(Boolean(checked))}
+				checked={checked}
+				onCheckedChange={(checked) => {
+					onCheckedChange?.(Boolean(checked));
+				}}
 				className="mt-1"
 			/>
 			<div className="space-y-1">

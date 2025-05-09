@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/shared/components";
-import { FormLayout, FormSection } from "@/shared/components/forms";
+import { FormCard, FormLayout } from "@/shared/components/forms";
 import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 
 export function UpdateSupplierFormSkeleton() {
@@ -11,7 +11,7 @@ export function UpdateSupplierFormSkeleton() {
 			<div className="space-y-6">
 				<FormLayout withDividers columns={2} className="mt-6">
 					{/* Section Information de base */}
-					<FormSection
+					<FormCard
 						title="Informations de base"
 						description="Informations générales sur le fournisseur"
 						icon={Building}
@@ -43,10 +43,10 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section Coordonnées */}
-					<FormSection
+					<FormCard
 						title="Coordonnées"
 						description="Informations de contact du fournisseur"
 						icon={ClipboardEdit}
@@ -70,10 +70,10 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section Informations fiscales */}
-					<FormSection
+					<FormCard
 						title="Informations fiscales"
 						description="Informations légales et fiscales"
 						icon={Receipt}
@@ -97,10 +97,10 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 
 					{/* Section Notes */}
-					<FormSection
+					<FormCard
 						title="Notes"
 						description="Informations supplémentaires"
 						icon={Tag}
@@ -112,7 +112,7 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-32 w-full" />
 							</div>
 						</div>
-					</FormSection>
+					</FormCard>
 				</FormLayout>
 
 				{/* Boutons d'action */}
