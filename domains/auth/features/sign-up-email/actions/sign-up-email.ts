@@ -10,12 +10,11 @@ import {
 } from "@/shared/types";
 import { headers } from "next/headers";
 import { signUpEmailSchema } from "../schemas/sign-up-email-schema";
-import { SignUpEmailResponse } from "../types";
 
-export const signUpEmail: ServerAction<
-	SignUpEmailResponse,
-	typeof signUpEmailSchema
-> = async (_, formData) => {
+export const signUpEmail: ServerAction<null, typeof signUpEmailSchema> = async (
+	_,
+	formData
+) => {
 	try {
 		const session = await auth.api.getSession({
 			headers: await headers(),
@@ -62,10 +61,7 @@ export const signUpEmail: ServerAction<
 				);
 			}
 
-			return createSuccessResponse(
-				{ message: "Inscription réussie" },
-				"Inscription réussie"
-			);
+			return createSuccessResponse(null, "Inscription réussie");
 		} catch (error) {
 			// Vérifier si l'erreur est liée à une redirection Next.js
 

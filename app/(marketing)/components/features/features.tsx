@@ -1,4 +1,4 @@
-import { features } from "@/app/(public)/(marketing)/components/features/constants";
+import { features } from "@/app/(marketing)/components/features/constants";
 import { PageContainer } from "@/shared/components/page-container";
 import { cn } from "@/shared/utils";
 import { Sparkles } from "lucide-react";

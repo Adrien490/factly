@@ -3,6 +3,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { passkey } from "better-auth/plugins/passkey";
+import { sendResetPassword } from "../features/send-reset-password";
 import { sendVerificationEmail } from "../features/send-verification-email/actions/send-verification-email";
 
 // Vérification si nous sommes côté client ou serveur
@@ -15,7 +16,6 @@ const betterAuthUrl = process.env.BETTER_AUTH_URL;
 
 export const auth = betterAuth({
 	emailVerification: {
-		requireEmailVerification: true,
 		autoSignInAfterVerification: true,
 		sendOnSignUp: true,
 		sendVerificationEmail: async ({ user, url }) => {
@@ -27,7 +27,15 @@ export const auth = betterAuth({
 		},
 	},
 	emailAndPassword: {
+		requireEmailVerification: true,
 		enabled: true,
+		sendResetPassword: async ({ user, url }) => {
+			await sendResetPassword({
+				to: user.email,
+				subject: "Reset your password",
+				url,
+			});
+		},
 	},
 	secret: betterAuthSecret,
 	baseUrl: betterAuthUrl,
