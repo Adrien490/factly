@@ -10,7 +10,7 @@ import {
 import console from "console";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { loginWithSocialProviderSchema } from "../schemas";
+import { signInSocialSchema } from "../schemas";
 import { ResponseState } from "../types";
 
 // Interface pour typer l'erreur de redirection Next.js
@@ -18,9 +18,9 @@ interface NextRedirectError extends Error {
 	digest?: string;
 }
 
-export const loginWithSocialProvider: ServerAction<
+export const signInSocial: ServerAction<
 	ResponseState,
-	typeof loginWithSocialProviderSchema
+	typeof signInSocialSchema
 > = async (_, formData) => {
 	try {
 		const session = await auth.api.getSession({
@@ -41,7 +41,7 @@ export const loginWithSocialProvider: ServerAction<
 
 		console.log("🚀 rawData:", rawData);
 
-		const validation = loginWithSocialProviderSchema.safeParse(rawData);
+		const validation = signInSocialSchema.safeParse(rawData);
 		console.log("🚀 validation:", validation);
 		if (!validation.success) {
 			console.log("❌ Validation échec:", validation.error.flatten());

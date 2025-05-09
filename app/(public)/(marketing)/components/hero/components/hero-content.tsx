@@ -58,7 +58,7 @@ export function HeroContent() {
 							className="w-full h-12 rounded-full relative z-10"
 						>
 							<Link
-								href="/login"
+								href="/signin"
 								aria-label="Commencer à utiliser Factly maintenant"
 							>
 								<span className="absolute inset-0 bg-white/10 rounded-full" />

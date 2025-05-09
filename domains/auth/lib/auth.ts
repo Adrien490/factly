@@ -47,6 +47,6 @@ export const auth = betterAuth({
 	plugins: [nextCookies(), passkey()],
 	pages: {
 		error: "/auth/error",
-		signIn: "/login",
+		signIn: "/signin",
 	},
 });

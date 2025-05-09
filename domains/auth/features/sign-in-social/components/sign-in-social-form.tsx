@@ -4,18 +4,16 @@ import { Button } from "@/shared/components";
 import { useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { providers } from "../constants";
-import { useLoginWithSocialProvider } from "../hooks/use-login-with-social-provider";
+import { useSignInSocial } from "../hooks/use-sign-in-social";
 
-export function LoginWithSocialProviderForm() {
+export function SignInSocialForm() {
 	const searchParams = useSearchParams();
 	const callbackURL = searchParams.get("callbackURL") || "/dashboard";
 	const [isPending, startTransition] = useTransition();
-	const { dispatch } = useLoginWithSocialProvider();
+	const { dispatch } = useSignInSocial();
 
 	// Fonction simplifiée pour la redirection directe
-	const handleLoginWithSocialProvider = async (
-		provider: (typeof providers)[number]
-	) => {
+	const handleSignSocial = async (provider: (typeof providers)[number]) => {
 		const formData = new FormData();
 		formData.append("provider", provider.id);
 		formData.append("callbackURL", callbackURL);
@@ -37,7 +35,7 @@ export function LoginWithSocialProviderForm() {
 						variant="outline"
 						size="lg"
 						className="w-full bg-background/50 transition-colors duration-200"
-						onClick={() => handleLoginWithSocialProvider(provider)}
+						onClick={() => handleSignSocial(provider)}
 					>
 						<div className="flex items-center justify-center w-full">
 							<span className="mr-2">{provider.icon}</span>
