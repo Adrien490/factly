@@ -1,9 +1,15 @@
+import { ActionStatus } from "@/shared/types";
 import { useActionState } from "react";
 import { signInEmail } from "../actions/sign-in-email";
+
 export function useSignInEmail() {
-	const [, dispatch, isPending] = useActionState(signInEmail, undefined);
+	const [state, dispatch, isPending] = useActionState(signInEmail, {
+		status: ActionStatus.INITIAL,
+		message: "",
+	});
 
 	return {
+		state,
 		dispatch,
 		isPending,
 	};

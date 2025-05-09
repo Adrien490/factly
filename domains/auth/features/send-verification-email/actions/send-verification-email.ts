@@ -11,14 +11,20 @@ export async function sendVerificationEmail(data: {
 	url: string;
 }) {
 	try {
-		await resend.emails.send({
+		const { data: emailData, error } = await resend.emails.send({
 			from: "Factly <noreply@factly.fr>",
-			to: data.to,
+			to: [data.to],
 			subject: data.subject,
 			react: VerificationEmailTemplate({ url: data.url, userEmail: data.to }),
 		});
 
-		return { success: true, message: "Email envoyé avec succès" };
+		if (error) {
+			return {
+				success: false,
+				error: error.message,
+			};
+		}
+		return emailData;
 	} catch (error) {
 		const errorMessage =
 			error instanceof Error

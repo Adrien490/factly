@@ -2,6 +2,7 @@
 
 import { Button } from "@/shared/components";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
+import { ActionStatus } from "@/shared/types";
 import { useSearchParams } from "next/navigation";
 import { useSignInEmail } from "../hooks/use-sign-in-email";
 
@@ -9,7 +10,7 @@ export function SignInEmailForm() {
 	const searchParams = useSearchParams();
 	const callbackURL = searchParams.get("callbackURL") || "/dashboard";
 
-	const { dispatch, isPending } = useSignInEmail();
+	const { dispatch, isPending, state } = useSignInEmail();
 
 	// TanStack Form setup
 	const form = useAppForm({
@@ -30,6 +31,13 @@ export function SignInEmailForm() {
 			<form.Subscribe selector={(state) => state.errors}>
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
+
+			{/* Erreur d'authentification */}
+			{state?.status !== ActionStatus.SUCCESS && state?.message && (
+				<div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+					{state.message}
+				</div>
+			)}
 
 			{/* Champs cachés */}
 			<input type="hidden" name="callbackURL" value={callbackURL} />

@@ -37,7 +37,7 @@ export const signInEmail: ServerAction<null, typeof signInEmailSchema> = async (
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				rawData,
-				"Données invalides"
+				""
 			);
 		}
 
@@ -59,21 +59,28 @@ export const signInEmail: ServerAction<null, typeof signInEmailSchema> = async (
 				);
 			}
 
-			// La redirection va lancer une erreur NEXT_REDIRECT, c'est normal
 			redirect(callbackURL);
 		} catch (error) {
-			// Vérifier si l'erreur est liée à une redirection Next.js
+			// Gestion spécifique des erreurs d'authentification
+			if (error instanceof Error) {
+				if (
+					error.message.includes("Invalid email or password") ||
+					error.message.includes("Invalid credentials")
+				) {
+					return createErrorResponse(
+						ActionStatus.UNAUTHORIZED,
+						"Email ou mot de passe incorrect"
+					);
+				}
+				return createErrorResponse(ActionStatus.ERROR, error.message);
+			}
 
-			const errorMessage =
-				error instanceof Error
-					? error.message
-					: "Une erreur est survenue lors de la connexion";
-
-			return createErrorResponse(ActionStatus.ERROR, errorMessage);
+			return createErrorResponse(
+				ActionStatus.ERROR,
+				"Une erreur est survenue lors de la connexion"
+			);
 		}
 	} catch (error) {
-		// Vérifier si l'erreur est liée à une redirection Next.js
-
 		const errorMessage =
 			error instanceof Error
 				? error.message
