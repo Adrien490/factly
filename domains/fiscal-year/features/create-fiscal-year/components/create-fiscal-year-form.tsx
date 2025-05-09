@@ -2,7 +2,6 @@
 
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -123,7 +122,7 @@ export function CreateFiscalYearForm() {
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations générales"
 					description="Renseignez les informations principales de l'année fiscale"
 					icon={CalendarIcon}
@@ -184,10 +183,10 @@ export function CreateFiscalYearForm() {
 							)}
 						</form.Field>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 2: Dates */}
-				<FormCard
+				<ContentCard
 					title="Période de l'année fiscale"
 					description="Définissez les dates de début et de fin de l'année fiscale"
 					icon={Clock}
@@ -328,7 +327,7 @@ export function CreateFiscalYearForm() {
 							</p>
 						</div>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

@@ -100,13 +100,17 @@ export function SignUpEmailForm() {
 				<form.AppField
 					name="confirmPassword"
 					validators={{
-						onChange: ({ value }) => {
+						onChangeListenTo: ["password"],
+						onChange: ({ value, fieldApi }) => {
 							if (!value) return "La confirmation du mot de passe est requise";
 							if (value.length < 8) {
 								return "Le mot de passe doit contenir au moins 8 caractères";
 							}
 							if (value.length > 32) {
 								return "Le mot de passe ne doit pas dépasser 32 caractères";
+							}
+							if (value !== fieldApi.form.getFieldValue("password")) {
+								return "Les mots de passe ne correspondent pas";
 							}
 							return undefined;
 						},

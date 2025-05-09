@@ -3,7 +3,6 @@
 import { Button, DotsLoader, FormLabel } from "@/shared/components";
 import {
 	FieldInfo,
-	FormCard,
 	FormFooter,
 	FormLayout,
 	useAppForm,
@@ -15,13 +14,14 @@ import { Product, ProductStatus, VatRate } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 
 import { VAT_RATES } from "@/domains/product/constants/vat-rates";
+import { ContentCard } from "@/shared/components/content-card";
 import { FormErrors } from "@/shared/components/forms/form-errors";
 import {
 	createToastCallbacks,
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
-import { Box, ImageIcon, Receipt, Tag, Wand2 } from "lucide-react";
+import { Wand2 } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useActionState } from "react";
@@ -138,10 +138,9 @@ export function CreateProductForm() {
 
 			<FormLayout columns={2}>
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations de base"
 					description="Renseignez les informations principales du produit"
-					icon={Tag}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -205,13 +204,12 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 2: Image du produit */}
-				<FormCard
+				<ContentCard
 					title="Image du produit"
 					description="Ajoutez une image pour illustrer votre produit"
-					icon={ImageIcon}
 				>
 					<form.Field name="imageUrl">
 						{(field) => (
@@ -282,13 +280,12 @@ export function CreateProductForm() {
 							</div>
 						)}
 					</form.Field>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 3: Tarification */}
-				<FormCard
+				<ContentCard
 					title="Tarification"
 					description="Définissez le prix et le taux de TVA"
-					icon={Receipt}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -360,13 +357,12 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 4: Dimensions et poids */}
-				<FormCard
+				<ContentCard
 					title="Dimensions et poids"
 					description="Spécifiez les dimensions et le poids du produit"
-					icon={Box}
 				>
 					<div className="grid grid-cols-2 gap-4">
 						<form.AppField name="weight">
@@ -425,11 +421,10 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 5: Catégories et fournisseurs */}
-				<FormCard
-					icon={Tag}
+				<ContentCard
 					title="Classification"
 					description="Associez une catégorie et un fournisseur au produit"
 				>
@@ -462,13 +457,12 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 6: Statut */}
-				<FormCard
+				<ContentCard
 					title="Statut"
 					description="Définissez le statut du produit"
-					icon={Tag}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -494,7 +488,7 @@ export function CreateProductForm() {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

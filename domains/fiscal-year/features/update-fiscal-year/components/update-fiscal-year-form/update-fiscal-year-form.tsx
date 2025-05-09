@@ -1,9 +1,9 @@
 "use client";
 
 import { FISCAL_YEAR_STATUSES } from "@/domains/fiscal-year/constants/fiscal-year-statuses/constants";
+import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -23,7 +23,7 @@ import { FiscalYear } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useUpdateFiscalYear } from "../../hooks/use-update-fiscal-year";
 
@@ -103,10 +103,9 @@ export function UpdateFiscalYearForm({
 
 			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations générales"
 					description="Modifiez les informations principales de l'année fiscale"
-					icon={CalendarIcon}
 				>
 					<div className="space-y-4">
 						<form.Field
@@ -164,13 +163,12 @@ export function UpdateFiscalYearForm({
 							)}
 						</form.Field>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 2: Dates */}
-				<FormCard
+				<ContentCard
 					title="Période de l'année fiscale"
 					description="Modifiez les dates de début et de fin de l'année fiscale"
-					icon={Clock}
 				>
 					<div className="space-y-4">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -326,7 +324,7 @@ export function UpdateFiscalYearForm({
 							</div>
 						</div>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

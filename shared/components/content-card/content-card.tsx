@@ -1,23 +1,29 @@
 import { Card, CardContent, CardHeader } from "@/shared/components/";
 import { cn } from "@/shared/utils";
-import { FormCardProps } from "./types";
+import { ReactNode } from "react";
 
 /**
  * Section de formulaire avec design raffiné et structure visuelle claire
  * Mise en page optimisée pour une meilleure lisibilité et hiérarchie visuelle
+ *
+ *
  */
-export function FormCard({
+interface ContentCardProps {
+	title: string;
+	description: string;
+	children: ReactNode;
+	className?: string;
+}
+export function ContentCard({
 	title,
 	description,
-	icon: Icon,
 	children,
 	className = "",
-}: FormCardProps) {
+}: ContentCardProps) {
 	return (
 		<Card className={cn("", className)}>
 			<CardHeader>
 				<div className="flex items-center gap-3 pb-2">
-					<Icon className="h-5 w-5 text-primary" />
 					<div>
 						<h3 className="text-base font-semibold">{title}</h3>
 						{description && (

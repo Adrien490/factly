@@ -17,7 +17,6 @@ import {
 import { Autocomplete } from "@/shared/components/autocomplete";
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -199,7 +198,7 @@ export function UpdateAddressForm({
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section Adresse */}
-				<FormCard
+				<ContentCard
 					title="Informations d'adresse"
 					description="Modifiez les informations de l'adresse"
 					icon={MapPin}
@@ -262,9 +261,9 @@ export function UpdateAddressForm({
 							)}
 						</form.Field>
 					</div>
-				</FormCard>
+				</ContentCard>
 
-				<FormCard
+				<ContentCard
 					title="Détails de l'adresse"
 					description="Saisissez les détails de l'adresse"
 					icon={MapPin}
@@ -474,7 +473,7 @@ export function UpdateAddressForm({
 							)}
 						</form.Field>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			{/* Boutons d'action */}

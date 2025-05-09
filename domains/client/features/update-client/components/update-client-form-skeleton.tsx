@@ -1,8 +1,8 @@
 "use client";
 
 import { Skeleton } from "@/shared/components";
-import { FormCard, FormLayout } from "@/shared/components/forms";
-import { Building, Clock, Receipt, Tag, User } from "lucide-react";
+import { ContentCard } from "@/shared/components/content-card";
+import { FormLayout } from "@/shared/components/forms";
 
 export function UpdateClientFormSkeleton() {
 	return (
@@ -11,10 +11,9 @@ export function UpdateClientFormSkeleton() {
 			<div className="space-y-6">
 				<FormLayout withDividers columns={2}>
 					{/* Section 1: Informations de base */}
-					<FormCard
+					<ContentCard
 						title="Informations de base"
 						description="Renseignez les informations principales du client"
-						icon={Building}
 					>
 						<div className="space-y-4">
 							{/* Champ Référence */}
@@ -44,14 +43,10 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section 2: Coordonnées */}
-					<FormCard
-						title="Coordonnées"
-						description="Coordonnées du client"
-						icon={User}
-					>
+					<ContentCard title="Coordonnées" description="Coordonnées du client">
 						<div className="space-y-4">
 							{/* Champ Email */}
 							<div className="space-y-1.5">
@@ -71,13 +66,12 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section 3: Informations fiscales */}
-					<FormCard
+					<ContentCard
 						title="Informations fiscales"
 						description="Informations légales et fiscales"
-						icon={Receipt}
 					>
 						<div className="space-y-4">
 							{/* Champ SIREN */}
@@ -98,14 +92,10 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section 4: Notes et commentaires */}
-					<FormCard
-						title="Notes"
-						description="Informations supplémentaires"
-						icon={Tag}
-					>
+					<ContentCard title="Notes" description="Informations supplémentaires">
 						<div className="space-y-4">
 							{/* Champ Notes */}
 							<div className="space-y-1.5">
@@ -113,13 +103,12 @@ export function UpdateClientFormSkeleton() {
 								<Skeleton className="h-32 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section 5: Informations de facturation */}
-					<FormCard
+					<ContentCard
 						title="Informations de facturation"
 						description="Modalités de facturation"
-						icon={Clock}
 						className="col-span-2"
 					>
 						<div className="space-y-4">
@@ -137,7 +126,7 @@ export function UpdateClientFormSkeleton() {
 								</div>
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 				</FormLayout>
 
 				{/* Boutons d'action */}

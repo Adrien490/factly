@@ -3,7 +3,6 @@
 import { Button } from "@/shared/components";
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -15,10 +14,11 @@ import { Input } from "@/shared/components/ui/input";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { GetClientReturn } from "@/domains/client/features/get-client";
+import { ContentCard } from "@/shared/components/content-card";
 import { generateReference } from "@/shared/utils/generate-reference";
 import { ClientType } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
-import { Building, Clock, Receipt, Tag, User, Wand2 } from "lucide-react";
+import { Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useUpdateClient } from "../hooks/use-update-client";
 
@@ -104,10 +104,9 @@ export function UpdateClientForm({ client }: Props) {
 
 			<FormLayout withDividers columns={2} className="">
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations de base"
 					description="Renseignez les informations principales du client"
-					icon={Building}
 				>
 					<div className="space-y-4">
 						<form.Field
@@ -194,13 +193,12 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 4: Informations fiscales */}
-				<FormCard
+				<ContentCard
 					title="Informations fiscales"
 					description="Identifiants fiscaux et réglementaires"
-					icon={Receipt}
 				>
 					<div className="space-y-4">
 						<form.Subscribe selector={(state) => state.values.clientType}>
@@ -264,13 +262,12 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 3: Classification */}
-				<FormCard
+				<ContentCard
 					title="Classification"
 					description="Catégorisation et statut du client"
-					icon={Tag}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -295,13 +292,12 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 2: Informations de contact */}
-				<FormCard
+				<ContentCard
 					title="Informations de contact"
 					description="Coordonnées du client"
-					icon={User}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -368,12 +364,11 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
-				<FormCard
+				<ContentCard
 					title="Suivi commercial"
 					description="Informations de suivi et qualification"
-					icon={Clock}
 				>
 					<div className="space-y-4">
 						<form.AppField name="notes">
@@ -386,7 +381,7 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

@@ -9,9 +9,9 @@ import {
 } from "@/domains/address/features";
 import { useCreateOrganization } from "@/domains/organization/features";
 import { Autocomplete } from "@/shared/components/autocomplete";
+import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -22,7 +22,7 @@ import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { LegalForm } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
-import { Building2, Globe, MapPin, Receipt, Upload, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useTransition } from "react";
@@ -138,10 +138,9 @@ export function CreateOrganizationForm({
 
 			<FormLayout columns={2} className="mt-6">
 				{/* Section Logo */}
-				<FormCard
+				<ContentCard
 					title="Identité visuelle"
 					description="Ajoutez un logo pour identifier votre organisation"
-					icon={Upload}
 				>
 					<form.Field name="logoUrl">
 						{(field) => (
@@ -212,13 +211,12 @@ export function CreateOrganizationForm({
 							</div>
 						)}
 					</form.Field>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations de base"
 					description="Renseignez les informations principales de l'organisation"
-					icon={Building2}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -301,13 +299,12 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 2: Identifiants fiscaux */}
-				<FormCard
+				<ContentCard
 					title="Identifiants fiscaux"
 					description="Renseignez les identifiants fiscaux de l'organisation"
-					icon={Receipt}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -372,13 +369,12 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 3: Adresse */}
-				<FormCard
+				<ContentCard
 					title="Adresse"
 					description="Indiquez l'adresse de l'organisation"
-					icon={MapPin}
 				>
 					<div className="space-y-4">
 						<form.AppField name="country">
@@ -530,13 +526,12 @@ export function CreateOrganizationForm({
 							</form.AppField>
 						</div>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 4: Informations complémentaires */}
-				<FormCard
+				<ContentCard
 					title="Informations complémentaires"
 					description="Renseignez les informations complémentaires"
-					icon={Globe}
 				>
 					<div className="space-y-4">
 						<form.AppField name="phone">
@@ -574,7 +569,7 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

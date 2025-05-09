@@ -138,6 +138,83 @@ model Organization {
   creatorId String?
 }
 
+// Modifications du modèle Client existant
+
+model Client {
+  id         String       @id @default(cuid())
+  reference  String       @unique
+  clientType ClientType   @default(INDIVIDUAL)
+  status     ClientStatus @default(LEAD)
+
+  // Champs existants
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company   Company?
+
+  // Relations existantes
+  addresses      Address[]
+  contacts       Contact[]
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  // Index composé pour recherche par nom + statut
+  // Pour les requêtes de triage par date
+  // Pour les requêtes de modification récente
+  // Pour filtrer par type dans une organisation
+  // Courant
+  // Courant
+  // via @@unique
+  @@index([status])
+  @@index([organizationId, clientType])
+  @@index([reference])
+}
+
+model Contact {
+  id           String    @id @default(cuid())
+  civility     Civility?
+  firstName    String
+  lastName     String
+  function     String? // Nouveau champ pour "Fonction"
+  email        String?
+  phoneNumber  String? // Champ existant pour "Tél"
+  mobileNumber String? // Nouveau champ pour "Mobile"
+  faxNumber    String? // Nouveau champ pour "Fax"
+  website      String? // Nouveau champ pour "Site web"
+  isDefault    Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplierId String
+
+  client   Client? @relation(fields: [clientId], references: [id])
+  clientId String?
+}
+
+model Company {
+  id             String          @id @default(uuid())
+  companyName    String
+  legalForm      LegalForm?
+  siret          String?
+  siren          String?
+  phoneNumber    String?
+  mobileNumber   String?
+  faxNumber      String?
+  website        String?
+  nafApeCode     String?
+  capital        String?
+  rcs            String?
+  vatNumber      String?
+  businessSector BusinessSector?
+  employeeCount  EmployeeCount?
+
+  // Relation to client
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String @unique
+}
+
 model FiscalYear {
   id          String           @id @default(cuid())
   name        String // Ex: "Année fiscale 2023-2024"
@@ -219,29 +296,6 @@ model Supplier {
   @@index([supplierType, organizationId])
 }
 
-model Contact {
-  id        String    @id @default(cuid())
-  civility  Civility?
-  firstName String
-  lastName  String
-  function  String? // Nouveau champ pour "Fonction"
-  email     String?
-  phone     String? // Champ existant pour "Tél"
-  mobile    String? // Nouveau champ pour "Mobile"
-  fax       String? // Nouveau champ pour "Fax"
-  website   String? // Nouveau champ pour "Site web"
-  isDefault Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  // Relations
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  supplierId String
-
-  client   Client? @relation(fields: [clientId], references: [id])
-  clientId String?
-}
-
 model Address {
   id           String      @id @default(cuid())
   addressType  AddressType @default(BILLING)
@@ -264,59 +318,11 @@ model Address {
   @@index([supplierId])
 }
 
-// Modifications du modèle Client existant
-
-model Client {
-  id           String       @id @default(cuid())
-  reference    String       @unique
-  email        String?
-  phoneNumber  String?
-  mobileNumber String?
-  faxNumber    String?
-  website      String?
-  clientType   ClientType   @default(INDIVIDUAL)
-  status       ClientStatus @default(LEAD)
-
-  // Champs existants
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  company   Company?
-
-  // Relations existantes
-  addresses      Address[]
-  contacts       Contact[]
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-
-  // Index composé pour recherche par nom + statut
-  // Pour les requêtes de triage par date
-  // Pour les requêtes de modification récente
-  // Pour filtrer par type dans une organisation
-  // Courant
-  // Courant
-  // via @@unique
-  @@index([status])
-  @@index([organizationId, clientType])
-  @@index([reference])
-}
-
-model Company {
-  id             String  @id @default(uuid())
-  companyName    String
-  legalForm      String?
-  siretNumber    String?
-  sirenNumber    String?
-  nafApeCode     String?
-  capital        String?
-  rcs            String?
-  vatNumber      String?
-  businessSector String?
-  employeeCount  Int?
-
-  // Relation to client
-  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId String @unique
+enum EmployeeCount {
+  ONE_TO_TWO
+  THREE_TO_TEN
+  ELEVEN_TO_FIFTY
+  MORE_THAN_FIFTY
 }
 
 // Modèle pour les catégories de produits
@@ -538,4 +544,23 @@ enum VatRate {
   SUPER_REDUCED // 2.1% - Taux particulier (médicaments remboursables, presse...)
   ZERO // 0% - Pour certaines opérations internationales
   EXEMPT // Exonéré - Pour les activités exonérées de TVA
+}
+
+enum BusinessSector {
+  AGRICULTURE // Agriculture, sylviculture et pêche
+  INDUSTRY // Industrie manufacturière
+  CONSTRUCTION // Construction
+  TRADE // Commerce
+  TRANSPORT // Transport et entreposage
+  HOSPITALITY // Hébergement et restauration
+  INFORMATION // Information et communication
+  FINANCE // Activités financières et d'assurance
+  REAL_ESTATE // Activités immobilières
+  PROFESSIONAL // Activités spécialisées, scientifiques et techniques
+  ADMINISTRATIVE // Activités de services administratifs et de soutien
+  PUBLIC // Administration publique
+  EDUCATION // Enseignement
+  HEALTH // Santé humaine et action sociale
+  ARTS // Arts, spectacles et activités récréatives
+  OTHER // Autres activités de services
 }

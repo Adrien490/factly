@@ -11,9 +11,9 @@ import { SUPPLIER_ADDRESS_TYPES } from "@/domains/supplier/constants";
 import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
 import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
+import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -27,7 +27,7 @@ import {
 	SupplierType,
 } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
-import { Building, Globe, MapPin, Receipt, User, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
@@ -203,10 +203,9 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations de base"
 					description="Renseignez les informations principales du fournisseur"
-					icon={Building}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -266,13 +265,12 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 2: Adresse */}
-				<FormCard
+				<ContentCard
 					title="Adresse"
 					description="Adresse principale du fournisseur"
-					icon={MapPin}
 				>
 					<div className="space-y-4">
 						<form.AppField name="country">
@@ -407,13 +405,12 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 						</div>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 3: Coordonnées */}
-				<FormCard
+				<ContentCard
 					title="Coordonnées"
 					description="Informations de contact du fournisseur"
-					icon={User}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -471,13 +468,12 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 4: Informations fiscales */}
-				<FormCard
+				<ContentCard
 					title="Informations fiscales"
 					description="Identifiants fiscaux du fournisseur"
-					icon={Receipt}
 				>
 					<div className="space-y-4">
 						<form.AppField name="siren">
@@ -510,13 +506,12 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 5: Notes */}
-				<FormCard
+				<ContentCard
 					title="Notes"
 					description="Informations complémentaires sur le fournisseur"
-					icon={Globe}
 					className="col-span-full"
 				>
 					<div className="space-y-4">
@@ -530,7 +525,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			{/* Boutons d'action */}

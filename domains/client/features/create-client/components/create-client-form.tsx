@@ -6,34 +6,34 @@ import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
-import { CLIENT_TYPES } from "@/domains/client/constants";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
+import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
+import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
+import { CIVILITIES } from "@/domains/contact/constants/civilities";
 import { Autocomplete } from "@/shared/components/autocomplete";
+import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
-	FormCard,
 	FormErrors,
 	FormLayout,
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
+import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import {
 	createToastCallbacks,
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
-import { AddressType, Client, ClientStatus, ClientType } from "@prisma/client";
-import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import {
-	Building,
-	Clock,
-	MapPin,
-	Receipt,
-	Tag,
-	User,
-	Wand2,
-	X,
-} from "lucide-react";
+	AddressType,
+	Client,
+	ClientStatus,
+	ClientType,
+	EmployeeCount,
+} from "@prisma/client";
+import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
+import { Wand2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
@@ -58,9 +58,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				loadingMessage: "Création du client en cours...",
 				onSuccess: (result) => {
 					toast.success("Client créé avec succès", {
-						description: `Le client "${
-							result.data?.name || ""
-						}" a été ajouté à votre organisation.`,
+						description: `Le client a été ajouté à votre organisation.`,
 						duration: 5000,
 						action: {
 							label: "Voir le client",
@@ -84,17 +82,29 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			name: "",
 			reference: "",
 			email: "",
-			phone: "",
+			phoneNumber: "",
+			mobileNumber: "",
+			faxNumber: "",
+			civility: "",
+			firstname: "",
+			lastname: "",
 			website: "",
+			function: "",
+			legalForm: "",
 			clientType: ClientType.INDIVIDUAL as ClientType,
-			status: ClientStatus.LEAD as ClientStatus,
+			status: ClientStatus.ACTIVE as ClientStatus,
 			notes: "",
-			siren: "",
-			siret: "",
+			sirenNumber: "",
+			siretNumber: "",
+			nafApeCode: "",
 			vatNumber: "",
+			businessSector: "",
+			capital: "",
+			rcs: "",
+			employeeCount: EmployeeCount.ONE_TO_TWO,
+			companyName: "",
 			// Adresse principale
 			addressType: AddressType.BILLING as AddressType,
 			addressLine1: "",
@@ -178,6 +188,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			});
 
 			form.setFieldValue("reference", reference);
+			form.validateField("reference", "change");
 		} catch (error) {
 			console.error("Erreur lors de la génération de référence", error);
 		}
@@ -228,25 +239,41 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 
 			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section 1: Informations de base */}
-				<FormCard
+				<ContentCard
 					title="Informations générales"
 					description="Renseignez les informations générales du client"
-					icon={Building}
 				>
 					<div className="space-y-4">
 						<form.AppField name="clientType">
 							{(field) => (
-								<field.SelectField
-									disabled={isPending}
-									label="Type de client"
-									options={CLIENT_TYPES.map((type) => ({
-										value: type.value,
-										label: type.label,
-									}))}
-								/>
+								<div className="flex flex-col gap-3">
+									<FormLabel htmlFor="clientType">
+										Type de client{" "}
+										<span className="text-destructive ml-1">*</span>
+									</FormLabel>
+									<field.CheckboxField
+										disabled={isPending}
+										label="Entreprise"
+										checked={field.state.value === ClientType.COMPANY}
+										onCheckedChange={(checked) => {
+											field.handleChange(
+												checked ? ClientType.COMPANY : ClientType.INDIVIDUAL
+											);
+										}}
+									/>
+								</div>
 							)}
 						</form.AppField>
-
+						{clientType === ClientType.COMPANY && (
+							<form.AppField name="companyName">
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="Nom de la société"
+									/>
+								)}
+							</form.AppField>
+						)}
 						<form.Field
 							name="reference"
 							validators={{
@@ -298,32 +325,228 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							name="website"
 							validators={{
 								onChange: ({ value }) => {
-									if (!value) return "Le nom du client est requis";
-									if (value.length < 1) return "Le nom est requis";
+									if (
+										value &&
+										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+											value
+										)
+									) {
+										return "Format d'URL invalide (ex: https://www.example.com)";
+									}
 									return undefined;
 								},
 							}}
 						>
 							{(field) => (
 								<field.InputField
-									disabled={isPending}
 									label="Site web"
-									placeholder="https://www.example.com"
-									required
+									disabled={isPending}
+									placeholder="Ex: https://www.example.com"
+								/>
+							)}
+						</form.AppField>
+						<form.AppField name="notes">
+							{(field) => (
+								<field.TextareaField
+									disabled={isPending}
+									label="Notes"
+									rows={6}
+									placeholder="Notes et informations complémentaires"
 								/>
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
+				<ContentCard
+					title={`${clientType === ClientType.COMPANY ? "Contact principal" : "Informations du contact"}`}
+					description={`Informations de contact`}
+				>
+					<div className="space-y-4">
+						<form.AppField name="civility">
+							{(field) => (
+								<field.RadioGroupField
+									disabled={isPending}
+									label="Civilité"
+									options={CIVILITIES.map((civility) => ({
+										value: civility.value,
+										label: civility.label,
+									}))}
+								/>
+							)}
+						</form.AppField>
 
-				{clientType === ClientType.COMPANY ? (
-					<FormCard
+						<div className="grid grid-cols-2 gap-4">
+							<form.AppField name="lastname">
+								{(field) => (
+									<field.InputField
+										label="Nom"
+										disabled={isPending}
+										placeholder="Nom du contact"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="firstname">
+								{(field) => (
+									<field.InputField
+										label="Prénom"
+										disabled={isPending}
+										placeholder="Prénom du contact"
+									/>
+								)}
+							</form.AppField>
+						</div>
+
+						<form.AppField name="function">
+							{(field) => (
+								<field.InputField
+									label="Fonction"
+									disabled={isPending}
+									placeholder="Fonction du contact"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="email"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+										return "Format d'email invalide";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="Ex: contact@example.com"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="phoneNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+						<form.AppField
+							name="mobileNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(value)
+									) {
+										return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Mobile"
+									disabled={isPending}
+									placeholder="Ex: +33 6 12 34 56 78"
+								/>
+							)}
+						</form.AppField>
+						<form.AppField
+							name="faxNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de fax invalide (ex: +33 1 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Fax"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</ContentCard>
+
+				{clientType === ClientType.COMPANY && (
+					<ContentCard
 						title="Informations légales"
 						description="Informations légales de l'entreprise"
-						icon={Receipt}
 					>
 						<div className="space-y-4">
-							<form.AppField name="siren">
+							<form.AppField name="legalForm">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Forme juridique"
+										options={LEGAL_FORM_OPTIONS}
+										placeholder="Sélectionnez une forme juridique"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="siretNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^\d{14}$/.test(value)) {
+											return "Le numéro SIRET doit comporter exactement 14 chiffres";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIRET"
+										placeholder="14 chiffres (ex: 12345678900001)"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="sirenNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^\d{9}$/.test(value)) {
+											return "Le numéro SIREN doit comporter exactement 9 chiffres";
+										}
+										return undefined;
+									},
+								}}
+							>
 								{(field) => (
 									<field.InputField
 										disabled={isPending}
@@ -333,40 +556,53 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="siret">
-								{(field) => (
-									<field.InputField
-										disabled={isPending}
-										label="SIRET"
-										placeholder="14 chiffres (ex: 12345678900001)"
-									/>
-								)}
-							</form.AppField>
+							<div className="grid grid-cols-2 gap-4">
+								<form.AppField
+									name="nafApeCode"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
+												return "Le code APE doit être au format 4 chiffres + 1 lettre (ex: 6201Z)";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Code APE"
+											placeholder="Ex: 6201Z"
+										/>
+									)}
+								</form.AppField>
 
-							<form.AppField name="vatNumber">
-								{(field) => (
-									<field.InputField
-										disabled={isPending}
-										label="N° TVA"
-										placeholder="Format FR + 11 caractères (ex: FR12345678900)"
-									/>
-								)}
-							</form.AppField>
-						</div>
-					</FormCard>
-				) : (
-					<FormCard
-						title="Informations du contact"
-						description="Informations de contact du particulier"
-						icon={User}
-					>
-						<div className="space-y-4">
+								<form.AppField
+									name="capital"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
+												return "Le capital doit être un nombre avec maximum 2 décimales";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Capital social"
+											placeholder="Ex: 10000.00"
+										/>
+									)}
+								</form.AppField>
+							</div>
 							<form.AppField
-								name="email"
+								name="rcs"
 								validators={{
 									onChange: ({ value }) => {
-										if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-											return "Format d'email invalide";
+										if (value && !/^[A-Z]\d{8}$/.test(value)) {
+											return "Le numéro RCS doit commencer par une lettre suivie de 8 chiffres (ex: B12345678)";
 										}
 										return undefined;
 									},
@@ -374,31 +610,60 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							>
 								{(field) => (
 									<field.InputField
-										label="Email"
 										disabled={isPending}
-										placeholder="Ex: contact@example.com"
+										label="RCS"
+										placeholder="Ex: B12345678"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="vatNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^FR\d{2}\d{9}$/.test(value)) {
+											return "Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres (ex: FR12345678900)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="N° TVA"
+										placeholder="Ex: FR12345678900"
 									/>
 								)}
 							</form.AppField>
 
-							<form.AppField name="phone">
+							<form.AppField name="businessSector">
 								{(field) => (
-									<field.InputField
-										label="Téléphone"
+									<field.SelectField
 										disabled={isPending}
-										placeholder="Ex: +33 1 23 45 67 89"
+										label="Secteur d'activité"
+										options={BUSINESS_SECTORS}
+										placeholder="Sélectionnez un secteur d'activité"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField name="employeeCount">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Effectif"
+										options={EMPLOYEE_COUNTS}
+										placeholder="Sélectionnez l'effectif"
 									/>
 								)}
 							</form.AppField>
 						</div>
-					</FormCard>
+					</ContentCard>
 				)}
 
 				{/* Section 5: Adresse */}
-				<FormCard
+				<ContentCard
 					title="Adresse de facturation"
 					description="Adresse de facturation du client"
-					icon={MapPin}
 				>
 					<div className="space-y-4">
 						<form.Field
@@ -516,102 +781,23 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						<div className="grid grid-cols-2 gap-4">
 							<form.AppField name="postalCode">
 								{(field) => (
-									<field.InputField
-										label="Code postal"
-										placeholder="Ex: 75001"
-										disabled={isPending}
-									/>
+									<field.InputField label="Code postal" disabled={isPending} />
 								)}
 							</form.AppField>
 
 							<form.AppField name="city">
 								{(field) => (
-									<field.InputField
-										disabled={isPending}
-										label="Ville"
-										placeholder="Ex: Paris"
-									/>
+									<field.InputField disabled={isPending} label="Ville" />
 								)}
 							</form.AppField>
 						</div>
 					</div>
-				</FormCard>
-
-				{/* Section 4: Informations fiscales */}
-				<FormCard
-					title="Informations fiscales"
-					description="Identifiants fiscaux et réglementaires"
-					icon={Receipt}
-				>
-					<div className="space-y-4">
-						<form.Subscribe selector={(state) => state.values.clientType}>
-							{(clientType) => (
-								<>
-									{clientType === ClientType.COMPANY ? (
-										<>
-											<form.AppField name="siren">
-												{(field) => (
-													<field.InputField
-														disabled={isPending}
-														label="SIREN"
-														placeholder="9 chiffres (ex: 123456789)"
-													/>
-												)}
-											</form.AppField>
-
-											<form.AppField name="siret">
-												{(field) => (
-													<field.InputField
-														disabled={isPending}
-														label="SIRET"
-														placeholder="14 chiffres (ex: 12345678900001)"
-													/>
-												)}
-											</form.AppField>
-										</>
-									) : (
-										<>
-											<form.AppField name="siret">
-												{(field) => (
-													<field.InputField
-														disabled={isPending}
-														label="SIRET"
-														placeholder="14 chiffres (ex: 12345678900001)"
-													/>
-												)}
-											</form.AppField>
-											<form.AppField name="siren">
-												{(field) => (
-													<field.InputField
-														disabled={isPending}
-														label="SIREN"
-														placeholder="9 chiffres (ex: 123456789)"
-													/>
-												)}
-											</form.AppField>
-										</>
-									)}
-								</>
-							)}
-						</form.Subscribe>
-
-						<form.AppField name="vatNumber">
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="N° TVA"
-									placeholder="Format FR + 11 caractères (ex: FR12345678900)"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section 3: Classification */}
-				<FormCard
+				<ContentCard
 					title="Classification"
 					description="Catégorisation et statut du client"
-					icon={Tag}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -638,89 +824,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
-
-				{/* Section 2: Informations de contact */}
-				<FormCard
-					title="Informations de contact"
-					description="Coordonnées du client"
-					icon={User}
-				>
-					<div className="space-y-4">
-						<form.AppField
-							name="email"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-										return "Format d'email invalide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Email"
-									disabled={isPending}
-									placeholder="Ex: contact@example.com"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="phone">
-							{(field) => (
-								<field.InputField
-									label="Téléphone"
-									disabled={isPending}
-									placeholder="Ex: +33 1 23 45 67 89"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="website"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
-											value
-										)
-									) {
-										return "L'URL n'est pas valide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Site web"
-									disabled={isPending}
-									placeholder="Ex: https://www.example.com"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</FormCard>
-
-				<FormCard
-					title="Suivi commercial"
-					description="Informations de suivi et qualification"
-					icon={Clock}
-				>
-					<div className="space-y-4">
-						<form.AppField name="notes">
-							{(field) => (
-								<field.TextareaField
-									disabled={isPending}
-									label="Notes"
-									placeholder="Notes et informations complémentaires"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>

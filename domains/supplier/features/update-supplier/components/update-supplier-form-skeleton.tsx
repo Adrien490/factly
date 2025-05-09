@@ -1,8 +1,8 @@
 "use client";
 
 import { Skeleton } from "@/shared/components";
-import { FormCard, FormLayout } from "@/shared/components/forms";
-import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
+import { ContentCard } from "@/shared/components/content-card";
+import { FormLayout } from "@/shared/components/forms";
 
 export function UpdateSupplierFormSkeleton() {
 	return (
@@ -11,10 +11,9 @@ export function UpdateSupplierFormSkeleton() {
 			<div className="space-y-6">
 				<FormLayout withDividers columns={2} className="mt-6">
 					{/* Section Information de base */}
-					<FormCard
+					<ContentCard
 						title="Informations de base"
 						description="Informations générales sur le fournisseur"
-						icon={Building}
 					>
 						<div className="space-y-4">
 							{/* Champ Nom */}
@@ -43,13 +42,12 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section Coordonnées */}
-					<FormCard
+					<ContentCard
 						title="Coordonnées"
 						description="Informations de contact du fournisseur"
-						icon={ClipboardEdit}
 					>
 						<div className="space-y-4">
 							{/* Champ Email */}
@@ -70,13 +68,12 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section Informations fiscales */}
-					<FormCard
+					<ContentCard
 						title="Informations fiscales"
 						description="Informations légales et fiscales"
-						icon={Receipt}
 					>
 						<div className="space-y-4">
 							{/* Champ SIREN */}
@@ -97,14 +94,10 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-10 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 
 					{/* Section Notes */}
-					<FormCard
-						title="Notes"
-						description="Informations supplémentaires"
-						icon={Tag}
-					>
+					<ContentCard title="Notes" description="Informations supplémentaires">
 						<div className="space-y-4">
 							{/* Champ Notes */}
 							<div className="space-y-1.5">
@@ -112,7 +105,7 @@ export function UpdateSupplierFormSkeleton() {
 								<Skeleton className="h-32 w-full" />
 							</div>
 						</div>
-					</FormCard>
+					</ContentCard>
 				</FormLayout>
 
 				{/* Boutons d'action */}

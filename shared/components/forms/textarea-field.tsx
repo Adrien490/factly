@@ -5,20 +5,16 @@ import { FieldInfo } from "..";
 import { useFieldContext } from "../../lib/form-context";
 import { FormLabel } from "../ui";
 
-interface TextareaFieldProps {
-	disabled?: boolean;
+interface TextareaFieldProps extends React.ComponentProps<"textarea"> {
 	label?: string;
-	placeholder?: string;
-	required?: boolean;
-	rows?: number;
 }
 
 export const TextareaField = ({
 	disabled,
 	label,
+	rows,
 	placeholder,
 	required,
-	rows = 4,
 }: TextareaFieldProps) => {
 	const field = useFieldContext<string>();
 

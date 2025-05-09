@@ -1,7 +1,6 @@
 "use client";
 
 import {
-	FormCard,
 	FormErrors,
 	FormFooter,
 	FormLayout,
@@ -13,8 +12,8 @@ import {
 	SUPPLIER_TYPES,
 } from "@/domains/supplier/constants";
 import { GetSupplierReturn } from "@/domains/supplier/features/get-supplier";
+import { ContentCard } from "@/shared/components/content-card";
 import { mergeForm, useTransform } from "@tanstack/react-form";
-import { Building, ClipboardEdit, Receipt, Tag } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useUpdateSupplier } from "../hooks/use-update-supplier";
 
@@ -72,10 +71,9 @@ export function UpdateSupplierForm({ supplier }: Props) {
 
 			<FormLayout withDividers columns={2}>
 				{/* Section Information de base */}
-				<FormCard
+				<ContentCard
 					title="Informations de base"
 					description="Informations générales sur le fournisseur"
-					icon={Building}
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -140,13 +138,12 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section Coordonnées */}
-				<FormCard
+				<ContentCard
 					title="Coordonnées"
 					description="Informations de contact du fournisseur"
-					icon={ClipboardEdit}
 				>
 					<div className="space-y-4">
 						<form.AppField name="email">
@@ -179,13 +176,12 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section Informations fiscales */}
-				<FormCard
+				<ContentCard
 					title="Informations fiscales"
 					description="Informations légales et fiscales"
-					icon={Receipt}
 				>
 					<div className="space-y-4">
 						<form.AppField name="siren">
@@ -218,14 +214,10 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 
 				{/* Section Notes */}
-				<FormCard
-					title="Notes"
-					description="Informations supplémentaires"
-					icon={Tag}
-				>
+				<ContentCard title="Notes" description="Informations supplémentaires">
 					<div className="space-y-4">
 						<form.AppField name="notes">
 							{(field) => (
@@ -237,7 +229,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 					</div>
-				</FormCard>
+				</ContentCard>
 			</FormLayout>
 
 			{/* Boutons d'action */}
