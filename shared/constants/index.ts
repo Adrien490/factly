@@ -1,2 +1,2 @@
-export * from "./animations";
-export * from "./legal-form-options";
+export * from "./account-types";
+export * from "./legal-forms";

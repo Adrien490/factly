@@ -13,21 +13,28 @@ export const GET_CLIENTS_DEFAULT_SELECT = {
 	organizationId: true,
 	id: true,
 	reference: true,
-	name: true,
-	email: true,
-	phone: true,
-	website: true,
 	clientType: true,
 	status: true,
-	// Informations fiscales
-	siren: true,
-	siret: true,
-	vatNumber: true,
-
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
-
+	company: true,
+	contacts: {
+		select: {
+			id: true,
+			firstName: true,
+			civility: true,
+			lastName: true,
+			email: true,
+			phoneNumber: true,
+			function: true,
+			mobileNumber: true,
+			faxNumber: true,
+		},
+		where: {
+			isDefault: true,
+		},
+	},
 	// Relations avec sélections optimisées
 	addresses: {
 		select: {

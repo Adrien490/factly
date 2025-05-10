@@ -18,7 +18,7 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { DotsLoader } from "@/shared/components/loaders";
-import { LEGAL_FORM_OPTIONS } from "@/shared/constants/legal-form-options";
+import { LEGAL_FORMS } from "@/shared/constants/legal-forms";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { LegalForm } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
@@ -270,7 +270,7 @@ export function CreateOrganizationForm({
 									label="Forme juridique"
 									disabled={isPending}
 									placeholder="Sélectionnez une forme juridique"
-									options={LEGAL_FORM_OPTIONS.map((option) => ({
+									options={LEGAL_FORMS.map((option) => ({
 										label: option.label,
 										value: option.value,
 									}))}

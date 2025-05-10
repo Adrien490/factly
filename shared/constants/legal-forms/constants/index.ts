@@ -24,7 +24,7 @@ export const LEGAL_FORM_LABELS: Record<LegalForm, string> = {
  * Options de forme juridique pré-calculées
  * Calculées une seule fois pour plus d'efficacité
  */
-export const LEGAL_FORM_OPTIONS = Object.values(LegalForm).map((form) => ({
+export const LEGAL_FORMS = Object.values(LegalForm).map((form) => ({
 	label: LEGAL_FORM_LABELS[form],
 	value: form,
 }));

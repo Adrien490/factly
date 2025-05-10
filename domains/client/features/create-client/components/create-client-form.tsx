@@ -2,6 +2,7 @@
 
 import { Button, FormLabel, Input } from "@/shared/components/ui";
 
+import { COUNTRIES } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -19,17 +20,19 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
-import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
+import { ACCOUNT_TYPES, LEGAL_FORMS } from "@/shared/constants";
 import {
 	createToastCallbacks,
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
 import {
+	AccountType,
 	AddressType,
 	Client,
 	ClientStatus,
 	ClientType,
+	Country,
 	EmployeeCount,
 } from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
@@ -105,13 +108,15 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			rcs: "",
 			employeeCount: EmployeeCount.ONE_TO_TWO,
 			companyName: "",
+			accountType: AccountType.CLIENTS as AccountType,
+			auxiliaryAccount: "",
 			// Adresse principale
 			addressType: AddressType.BILLING as AddressType,
 			addressLine1: "",
 			addressLine2: "",
 			postalCode: "",
 			city: "",
-			country: "France",
+			country: Country.FRANCE as Country,
 			// Coordonnées géographiques
 			latitude: null as number | null,
 			longitude: null as number | null,
@@ -511,7 +516,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Forme juridique"
-										options={LEGAL_FORM_OPTIONS}
+										options={LEGAL_FORMS}
 										placeholder="Sélectionnez une forme juridique"
 									/>
 								)}
@@ -791,6 +796,16 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 						</div>
+						<form.AppField name="country">
+							{(field) => (
+								<field.SelectField
+									disabled={isPending}
+									label="Pays"
+									options={COUNTRIES}
+									placeholder="Sélectionnez un pays"
+								/>
+							)}
+						</form.AppField>
 					</div>
 				</ContentCard>
 
@@ -820,6 +835,43 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										label: status.label,
 									}))}
 									placeholder="Sélectionnez un statut"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</ContentCard>
+
+				{/* Section 4: Données Comptables */}
+				<ContentCard
+					title="Données Comptables"
+					description="Informations comptables du client"
+				>
+					<div className="space-y-4">
+						<form.AppField
+							name="accountType"
+							validators={{
+								onChange: ({ value }) => {
+									if (!value) return "Le type de compte est requis";
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.SelectField
+									label="Compte tiers"
+									disabled={isPending}
+									options={ACCOUNT_TYPES}
+									placeholder="Sélectionnez un compte tiers"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="auxiliaryAccount">
+							{(field) => (
+								<field.InputField
+									label="Compte auxiliaire"
+									disabled={isPending}
+									placeholder="Ex: CLI001"
 								/>
 							)}
 						</form.AppField>

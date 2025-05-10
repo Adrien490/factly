@@ -20,13 +20,15 @@ import { use } from "react";
 import {
 	CLIENT_STATUS_COLORS,
 	CLIENT_STATUS_LABELS,
+} from "@/domains/client/constants/client-statuses";
+import {
 	CLIENT_TYPE_COLORS,
 	CLIENT_TYPE_LABELS,
-} from "@/domains/client/constants";
+} from "@/domains/client/constants/client-types";
 import { ClientStatus } from "@prisma/client";
 import { ArchivedClientActions } from "../../../components/archived-client-actions";
 import { ClientActions } from "../../../components/client-actions";
-import { GetClientsReturn } from "../types";
+import { GetClientsReturn } from "../types/index";
 
 export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;
@@ -106,7 +108,19 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 										<div className="w-[200px] flex flex-col space-y-1">
 											<div className="flex items-center gap-2">
 												<div className="font-medium truncate">
-													{client.name}
+													{client.clientType === "COMPANY" ? (
+														client.company?.companyName
+													) : (
+														<>
+															{client.contacts[0]?.civility && (
+																<span className="text-muted-foreground">
+																	{client.contacts[0].civility}{" "}
+																</span>
+															)}
+															{client.contacts[0]?.lastName}{" "}
+															{client.contacts[0]?.firstName}
+														</>
+													)}
 												</div>
 											</div>
 											{client.reference && (
@@ -149,19 +163,23 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									</TableCell>
 									<TableCell role="gridcell" className="hidden lg:table-cell">
 										<div className="flex flex-col space-y-1 max-w-[150px]">
-											{client.siret && (
+											{client.company?.siret && (
 												<div className="flex items-center gap-1.5 text-xs">
 													<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
-													<span className="truncate">{client.siret}</span>
+													<span className="truncate">
+														{client.company.siret}
+													</span>
 												</div>
 											)}
-											{client.vatNumber && (
+											{client.company?.vatNumber && (
 												<div className="flex items-center gap-1.5 text-xs">
 													<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
-													<span className="truncate">{client.vatNumber}</span>
+													<span className="truncate">
+														{client.company.vatNumber}
+													</span>
 												</div>
 											)}
-											{!client.siret && !client.vatNumber && (
+											{!client.company?.siret && !client.company?.vatNumber && (
 												<span className="text-xs text-muted-foreground italic">
 													Non renseignées
 												</span>
@@ -183,8 +201,8 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 																	{addr.addressType === "BILLING"
 																		? "Facturation"
 																		: addr.addressType === "SHIPPING"
-																		? "Livraison"
-																		: "Autre"}
+																			? "Livraison"
+																			: "Autre"}
 																</span>
 																<span className="truncate text-muted-foreground">
 																	{[

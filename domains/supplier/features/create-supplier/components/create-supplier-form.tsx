@@ -8,8 +8,6 @@ import {
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
 import { SUPPLIER_ADDRESS_TYPES } from "@/domains/supplier/constants";
-import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
-import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { ContentCard } from "@/shared/components/content-card";
 import {
@@ -19,6 +17,8 @@ import {
 	FormLayout,
 	useAppForm,
 } from "@/shared/components/forms";
+import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
+import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import {
 	AddressType,
