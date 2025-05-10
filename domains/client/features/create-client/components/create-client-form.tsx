@@ -92,8 +92,8 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			civility: "",
 			firstname: "",
 			lastname: "",
+			contactFunction: "",
 			website: "",
-			function: "",
 			legalForm: "",
 			clientType: ClientType.INDIVIDUAL as ClientType,
 			status: ClientStatus.ACTIVE as ClientStatus,
@@ -400,7 +400,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 						</div>
 
-						<form.AppField name="function">
+						<form.AppField name="contactFunction">
 							{(field) => (
 								<field.InputField
 									label="Fonction"
@@ -808,6 +808,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				</ContentCard>
 
 				{/* Section 3: Classification */}
+
 				<ContentCard
 					title="Classification"
 					description="Catégorisation et statut du client"
@@ -839,6 +840,31 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					</div>
 				</ContentCard>
 			</FormLayout>
+			<ContentCard
+				title="Notes"
+				description="informations complémentaires sur le client"
+			>
+				<div className="space-y-4">
+					<form.AppField
+						name="notes"
+						validators={{
+							onChange: ({ value }) => {
+								if (!value) return "Les notes sont requises";
+								return undefined;
+							},
+						}}
+					>
+						{(field) => (
+							<field.TextareaField
+								label="Notes"
+								disabled={isPending}
+								rows={6}
+								placeholder="Notes et informations complémentaires"
+							/>
+						)}
+					</form.AppField>
+				</div>
+			</ContentCard>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (

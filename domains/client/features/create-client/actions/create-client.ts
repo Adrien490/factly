@@ -130,8 +130,35 @@ export const createClient: ServerAction<
 		// 7. Création du client dans la base de données
 		const {
 			organizationId: validatedOrgId,
+			clientType,
+			status,
+			reference,
+			notes,
 
-			// Extraire les champs d'adresse pour les gérer séparément
+			// Informations de contact
+			civility,
+			firstname,
+			lastname,
+			contactFunction,
+			email,
+			phoneNumber,
+			mobileNumber,
+			faxNumber,
+			website,
+
+			// Informations d'entreprise
+			companyName,
+			legalForm,
+			sirenNumber,
+			siretNumber,
+			nafApeCode,
+			capital,
+			rcs,
+			vatNumber,
+			businessSector,
+			employeeCount,
+
+			// Informations d'adresse
 			addressType,
 			addressLine1,
 			addressLine2,
@@ -140,14 +167,54 @@ export const createClient: ServerAction<
 			country,
 			latitude,
 			longitude,
-			...clientData
 		} = validation.data;
 
 		// Créer le client avec les relations appropriées
 		const client = await db.client.create({
 			data: {
-				...clientData,
+				reference,
+				clientType,
+				status,
+				notes,
 				organization: { connect: { id: validatedOrgId } },
+
+				// Créer le contact principal uniquement si c'est un client INDIVIDUAL
+				...(clientType === ClientType.INDIVIDUAL && {
+					contacts: {
+						create: [
+							{
+								civility,
+								firstName: firstname ?? "",
+								lastName: lastname ?? "",
+								function: contactFunction,
+								email,
+								phoneNumber,
+								mobileNumber,
+								faxNumber,
+								website,
+								isDefault: true,
+							},
+						],
+					},
+				}),
+
+				// Créer l'entreprise si c'est un client de type COMPANY
+				...(clientType === ClientType.COMPANY && {
+					company: {
+						create: {
+							companyName: companyName!,
+							legalForm: legalForm!,
+							siren: sirenNumber!,
+							siret: siretNumber!,
+							nafApeCode: nafApeCode!,
+							capital: capital!,
+							rcs: rcs!,
+							vatNumber: vatNumber!,
+							businessSector: businessSector!,
+							employeeCount: employeeCount!,
+						},
+					},
+				}),
 
 				// Créer l'adresse de facturation si des informations sont fournies
 				...(addressLine1 &&
@@ -171,8 +238,6 @@ export const createClient: ServerAction<
 							],
 						},
 					}),
-
-				// Gestion des relations si des données sont fournies
 			},
 		});
 
@@ -184,7 +249,7 @@ export const createClient: ServerAction<
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,
-			`Le client ${client.name} a été créé avec succès`
+			`Le client ${client.reference} a été créé avec succès`
 		);
 	} catch (error) {
 		console.error("[CREATE_CLIENT]", error);

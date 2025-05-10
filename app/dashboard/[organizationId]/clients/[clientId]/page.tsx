@@ -60,7 +60,7 @@ export default async function ClientPage({ params }: Props) {
 									<div>
 										<h3 className="text-sm font-semibold mb-2">Coordonnées</h3>
 										<ul className="space-y-3">
-											{client.email && (
+											{client.contacts[0]?.email && (
 												<li className="flex items-start gap-3">
 													<Mail className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
@@ -68,16 +68,16 @@ export default async function ClientPage({ params }: Props) {
 															Email
 														</p>
 														<a
-															href={`mailto:${client.email}`}
+															href={`mailto:${client.contacts[0].email}`}
 															className="text-sm hover:underline"
 														>
-															{client.email}
+															{client.contacts[0].email}
 														</a>
 													</div>
 												</li>
 											)}
 
-											{client.phone && (
+											{client.contacts[0]?.phoneNumber && (
 												<li className="flex items-start gap-3">
 													<Phone className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
@@ -85,16 +85,16 @@ export default async function ClientPage({ params }: Props) {
 															Téléphone
 														</p>
 														<a
-															href={`tel:${client.phone}`}
+															href={`tel:${client.contacts[0].phoneNumber}`}
 															className="text-sm hover:underline"
 														>
-															{client.phone}
+															{client.contacts[0].phoneNumber}
 														</a>
 													</div>
 												</li>
 											)}
 
-											{client.website && (
+											{client.contacts[0]?.website && (
 												<li className="flex items-start gap-3">
 													<Globe className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
@@ -102,12 +102,12 @@ export default async function ClientPage({ params }: Props) {
 															Site web
 														</p>
 														<a
-															href={client.website}
+															href={client.contacts[0].website}
 															target="_blank"
 															rel="noopener noreferrer"
 															className="text-sm hover:underline"
 														>
-															{client.website.replace(
+															{client.contacts[0].website.replace(
 																/^https?:\/\/(www\.)?/,
 																""
 															)}
@@ -145,45 +145,49 @@ export default async function ClientPage({ params }: Props) {
 											Informations fiscales
 										</h3>
 										<ul className="space-y-3">
-											{client.siren && (
+											{client.company?.siren && (
 												<li className="flex items-start gap-3">
 													<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
 														<p className="text-xs text-muted-foreground">
 															SIREN
 														</p>
-														<p className="text-sm">{client.siren}</p>
+														<p className="text-sm">{client.company.siren}</p>
 													</div>
 												</li>
 											)}
 
-											{client.siret && (
+											{client.company?.siret && (
 												<li className="flex items-start gap-3">
 													<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
 														<p className="text-xs text-muted-foreground">
 															SIRET
 														</p>
-														<p className="text-sm">{client.siret}</p>
+														<p className="text-sm">{client.company.siret}</p>
 													</div>
 												</li>
 											)}
 
-											{client.vatNumber && (
+											{client.company?.vatNumber && (
 												<li className="flex items-start gap-3">
 													<Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
 														<p className="text-xs text-muted-foreground">TVA</p>
-														<p className="text-sm">{client.vatNumber}</p>
+														<p className="text-sm">
+															{client.company.vatNumber}
+														</p>
 													</div>
 												</li>
 											)}
 
-											{!client.siren && !client.siret && !client.vatNumber && (
-												<li className="text-muted-foreground text-sm">
-													Aucune information fiscale renseignée
-												</li>
-											)}
+											{!client.company?.siren &&
+												!client.company?.siret &&
+												!client.company?.vatNumber && (
+													<li className="text-muted-foreground text-sm">
+														Aucune information fiscale renseignée
+													</li>
+												)}
 										</ul>
 									</div>
 								</div>
@@ -311,7 +315,7 @@ export default async function ClientPage({ params }: Props) {
 										{client.updatedAt
 											? format(new Date(client.updatedAt), "dd/MM/yyyy", {
 													locale: fr,
-											  })
+												})
 											: "Jamais"}
 									</span>
 								</div>

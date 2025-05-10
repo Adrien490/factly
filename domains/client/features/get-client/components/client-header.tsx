@@ -22,6 +22,12 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 		(option) => option.value === client.clientType
 	);
 
+	const defaultContact = client.contacts[0];
+	const displayName =
+		client.clientType === "COMPANY"
+			? client.company?.companyName
+			: `${defaultContact?.firstName} ${defaultContact?.lastName}`;
+
 	return (
 		<div>
 			<div className="flex flex-col gap-4">
@@ -29,7 +35,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 				<div>
 					<div className="flex flex-wrap items-center gap-3">
 						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-							{client.name}
+							{displayName}
 						</h1>
 						<div className="flex items-center gap-2">
 							<Badge

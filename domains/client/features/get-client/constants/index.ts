@@ -12,7 +12,25 @@ export const GET_CLIENT_DEFAULT_SELECT = {
 	status: true,
 	notes: true,
 	company: true,
-	contacts: true,
+
+	contacts: {
+		select: {
+			id: true,
+			civility: true,
+			firstName: true,
+			lastName: true,
+			function: true,
+			email: true,
+			phoneNumber: true,
+			mobileNumber: true,
+			faxNumber: true,
+			website: true,
+		},
+		where: {
+			isDefault: true,
+		},
+	},
+
 	addresses: true,
 	createdAt: true,
 	updatedAt: true,

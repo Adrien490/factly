@@ -185,8 +185,8 @@ model Contact {
   updatedAt    DateTime  @updatedAt
 
   // Relations
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  supplierId String
+  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplierId String?
 
   client   Client? @relation(fields: [clientId], references: [id])
   clientId String?
