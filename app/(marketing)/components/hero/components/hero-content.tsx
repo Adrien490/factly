@@ -1,5 +1,4 @@
 import { Button } from "@/shared/components/ui/button";
-import { Highlight } from "@/shared/components/ui/hero-highlight";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { advantages } from "../constants";
@@ -19,7 +18,9 @@ export function HeroContent() {
 						aria-label="Factly, gérez votre entreprise simplement."
 					>
 						Gérez votre entreprise{" "}
-						<Highlight className="text-foreground">simplement.</Highlight>
+						<span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+							simplement.
+						</span>
 					</h1>
 				</div>
 

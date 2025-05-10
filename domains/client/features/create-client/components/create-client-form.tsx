@@ -20,14 +20,13 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
-import { ACCOUNT_TYPES, LEGAL_FORMS } from "@/shared/constants";
+import { LEGAL_FORMS } from "@/shared/constants";
 import {
 	createToastCallbacks,
 	generateReference,
 	withCallbacks,
 } from "@/shared/utils";
 import {
-	AccountType,
 	AddressType,
 	Client,
 	ClientStatus,
@@ -108,8 +107,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			rcs: "",
 			employeeCount: EmployeeCount.ONE_TO_TWO,
 			companyName: "",
-			accountType: AccountType.CLIENTS as AccountType,
-			auxiliaryAccount: "",
+
 			// Adresse principale
 			addressType: AddressType.BILLING as AddressType,
 			addressLine1: "",
@@ -835,43 +833,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										label: status.label,
 									}))}
 									placeholder="Sélectionnez un statut"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				{/* Section 4: Données Comptables */}
-				<ContentCard
-					title="Données Comptables"
-					description="Informations comptables du client"
-				>
-					<div className="space-y-4">
-						<form.AppField
-							name="accountType"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "Le type de compte est requis";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.SelectField
-									label="Compte tiers"
-									disabled={isPending}
-									options={ACCOUNT_TYPES}
-									placeholder="Sélectionnez un compte tiers"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="auxiliaryAccount">
-							{(field) => (
-								<field.InputField
-									label="Compte auxiliaire"
-									disabled={isPending}
-									placeholder="Ex: CLI001"
 								/>
 							)}
 						</form.AppField>

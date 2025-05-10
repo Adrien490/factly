@@ -147,15 +147,10 @@ model Client {
   status     ClientStatus @default(LEAD)
 
   // Champs existants
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  company   Company?
-
-  // Données comptables
-  accountType      AccountType @default(CLIENTS)
-  auxiliaryAccount String?
-
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  company        Company?
   // Relations existantes
   addresses      Address[]
   contacts       Contact[]
@@ -567,11 +562,4 @@ enum BusinessSector {
   HEALTH // Santé humaine et action sociale
   ARTS // Arts, spectacles et activités récréatives
   OTHER // Autres activités de services
-}
-
-// Enum pour le type de compte
-enum AccountType {
-  CLIENTS // 411000 - Clients
-  SUPPLIERS // 401000 - Fournisseurs
-  PRODUCTS // 200000 - Produits
 }
