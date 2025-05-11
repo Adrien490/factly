@@ -81,10 +81,57 @@ export const deleteContact: ServerAction<
 					{ supplierId: validation.data.supplierId },
 				],
 			},
+			include: {
+				client: {
+					select: {
+						clientType: true,
+					},
+				},
+				supplier: {
+					select: {
+						supplierType: true,
+					},
+				},
+			},
 		});
 
 		if (!existingContact) {
 			return createErrorResponse(ActionStatus.NOT_FOUND, "Contact introuvable");
+		}
+
+		// Vérification si c'est le dernier contact d'un client particulier
+		if (
+			existingContact.clientId &&
+			existingContact.client?.clientType === "INDIVIDUAL"
+		) {
+			const contactCount = await db.contact.count({
+				where: {
+					clientId: existingContact.clientId,
+				},
+			});
+
+			if (contactCount <= 1) {
+				return createErrorResponse(
+					ActionStatus.FORBIDDEN,
+					"Impossible de supprimer le dernier contact d'un client particulier"
+				);
+			}
+		}
+
+		// Vérification si c'est le dernier contact d'un fournisseur particulier
+		if (existingContact.supplierId) {
+			const contactCount = await db.contact.count({
+				where: {
+					supplierId: existingContact.supplierId,
+				},
+			});
+
+			if (contactCount <= 1) {
+				return createErrorResponse(
+					ActionStatus.FORBIDDEN,
+					"Impossible de supprimer le dernier contact d'un fournisseur particulier"
+				);
+			}
 		}
 
 		// 6. Suppression
