@@ -1,22 +1,19 @@
 "use client";
 
-import { Button } from "@/shared/components";
-import {
-	FieldInfo,
-	FormErrors,
-	FormFooter,
-	FormLayout,
-	useAppForm,
-} from "@/shared/components/forms";
-import { FormLabel } from "@/shared/components/ui/form";
-import { Input } from "@/shared/components/ui/input";
-
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
 import { GetClientReturn } from "@/domains/client/features/get-client";
 import { ContentCard } from "@/shared/components/content-card";
-import { generateReference } from "@/shared/utils/generate-reference";
-import { ClientType } from "@prisma/client";
+import {
+	FieldInfo,
+	FormErrors,
+	FormLayout,
+	useAppForm,
+} from "@/shared/components/forms";
+import { FormFooter } from "@/shared/components/forms/form-footer";
+import { Button, FormLabel, Input } from "@/shared/components/ui";
+import { generateReference } from "@/shared/utils";
+import { ClientStatus } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -31,22 +28,14 @@ export function UpdateClientForm({ client }: Props) {
 	const organizationId = params.organizationId as string;
 	const { state, dispatch, isPending } = useUpdateClient();
 
-	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			id: state?.inputs?.id ?? client.id,
 			organizationId,
-			name: state?.inputs?.name ?? client.name,
+			id: client.id,
 			reference: state?.inputs?.reference ?? client.reference,
-			email: state?.inputs?.email ?? client.email,
-			phone: state?.inputs?.phone ?? client.phone,
-			website: state?.inputs?.website ?? client.website,
 			clientType: state?.inputs?.clientType ?? client.clientType,
 			status: state?.inputs?.status ?? client.status,
 			notes: state?.inputs?.notes ?? client.notes,
-			siren: state?.inputs?.siren ?? client.siren,
-			siret: state?.inputs?.siret ?? client.siret,
-			vatNumber: state?.inputs?.vatNumber ?? client.vatNumber,
 		},
 
 		transform: useTransform(
@@ -55,7 +44,6 @@ export function UpdateClientForm({ client }: Props) {
 		),
 	});
 
-	// Fonction pour générer une référence automatique
 	const handleGenerateReference = async () => {
 		try {
 			const reference = await generateReference({
@@ -66,12 +54,9 @@ export function UpdateClientForm({ client }: Props) {
 			});
 
 			form.setFieldValue("reference", reference);
-			const formData = new FormData();
-			formData.set("reference", reference);
-			formData.set("organizationId", organizationId);
-		} catch {
-			// Silencieusement gérer l'erreur sans afficher de toast
-			console.error("Erreur lors de la génération de référence");
+			form.validateField("reference", "change");
+		} catch (error) {
+			console.error("Erreur lors de la génération de référence", error);
 		}
 	};
 
@@ -81,38 +66,39 @@ export function UpdateClientForm({ client }: Props) {
 			className="space-y-6"
 			onSubmit={() => form.handleSubmit()}
 		>
-			{/* Erreurs globales du formulaire */}
 			<form.Subscribe selector={(state) => state.errors}>
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
 
-			{/* Champs cachés */}
-			<form.Field name="organizationId">
-				{(field) => (
-					<input
-						type="hidden"
-						name="organizationId"
-						value={field.state.value ?? ""}
-					/>
-				)}
-			</form.Field>
-			<form.Field name="id">
-				{(field) => (
-					<input type="hidden" name="id" value={field.state.value ?? ""} />
-				)}
-			</form.Field>
+			<input type="hidden" name="organizationId" value={organizationId} />
+			<input type="hidden" name="id" value={client.id} />
 
-			<FormLayout withDividers columns={2} className="">
-				{/* Section 1: Informations de base */}
+			<FormLayout withDividers columns={2} className="mt-6">
 				<ContentCard
-					title="Informations de base"
-					description="Renseignez les informations principales du client"
+					title="Informations générales"
+					description="Renseignez les informations générales du client"
 				>
 					<div className="space-y-4">
+						<form.AppField name="clientType">
+							{(field) => (
+								<div className="flex flex-col gap-3">
+									<input
+										type="hidden"
+										name="clientType"
+										value={field.state.value}
+									/>
+									<field.RadioGroupField
+										disabled={isPending}
+										label="Type de client"
+										options={CLIENT_TYPES}
+									/>
+								</div>
+							)}
+						</form.AppField>
+
 						<form.Field
 							name="reference"
 							validators={{
-								onChangeAsyncDebounceMs: 500,
 								onChange: ({ value }) => {
 									if (!value) return "La référence est requise";
 									if (value.length < 3)
@@ -128,9 +114,9 @@ export function UpdateClientForm({ client }: Props) {
 											<span className="text-destructive ml-1">*</span>
 										</FormLabel>
 										<Button
-											disabled={isPending}
 											type="button"
 											variant="ghost"
+											disabled={isPending}
 											size="sm"
 											onClick={handleGenerateReference}
 											title="Générer une référence unique"
@@ -143,128 +129,33 @@ export function UpdateClientForm({ client }: Props) {
 
 									<div className="relative">
 										<Input
-											disabled={isPending}
 											id="reference"
+											disabled={isPending}
 											name="reference"
 											placeholder="Référence unique (ex: CLI-001)"
 											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
 										/>
-										{/* Indicateurs de statut discrets */}
 									</div>
-
-									{/* Message de statut et d'aide */}
 
 									<FieldInfo field={field} />
 								</div>
 							)}
 						</form.Field>
 
-						<form.AppField
-							name="name"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "Le nom du client est requis";
-									if (value.length < 1) return "Le nom est requis";
-									return undefined;
-								},
-							}}
-						>
+						<form.AppField name="notes">
 							{(field) => (
-								<field.InputField
-									label="Nom"
+								<field.TextareaField
 									disabled={isPending}
-									placeholder="Nom du client ou de l'entreprise"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="clientType">
-							{(field) => (
-								<field.SelectField
-									label="Type de client"
-									disabled={isPending}
-									placeholder="Sélectionnez un type"
-									options={CLIENT_TYPES.map((type) => ({
-										label: type.label,
-										value: type.value,
-									}))}
+									label="Notes"
+									rows={6}
+									placeholder="Notes et informations complémentaires"
 								/>
 							)}
 						</form.AppField>
 					</div>
 				</ContentCard>
 
-				{/* Section 4: Informations fiscales */}
-				<ContentCard
-					title="Informations fiscales"
-					description="Identifiants fiscaux et réglementaires"
-				>
-					<div className="space-y-4">
-						<form.Subscribe selector={(state) => state.values.clientType}>
-							{(clientType) => (
-								<>
-									{clientType === ClientType.COMPANY ? (
-										<>
-											<form.AppField name="siren">
-												{(field) => (
-													<field.InputField
-														label="SIREN"
-														disabled={isPending}
-														placeholder="9 chiffres (ex: 123456789)"
-													/>
-												)}
-											</form.AppField>
-
-											<form.AppField name="siret">
-												{(field) => (
-													<field.InputField
-														label="SIRET"
-														disabled={isPending}
-														placeholder="14 chiffres (ex: 12345678900001)"
-													/>
-												)}
-											</form.AppField>
-										</>
-									) : (
-										<>
-											<form.Field name="siret">
-												{(field) => (
-													<input
-														type="hidden"
-														name="siret"
-														value={field.state.value ?? ""}
-													/>
-												)}
-											</form.Field>
-											<form.Field name="siren">
-												{(field) => (
-													<input
-														type="hidden"
-														name="siren"
-														value={field.state.value ?? ""}
-													/>
-												)}
-											</form.Field>
-										</>
-									)}
-								</>
-							)}
-						</form.Subscribe>
-
-						<form.AppField name="vatNumber">
-							{(field) => (
-								<field.InputField
-									label="Numéro de TVA"
-									disabled={isPending}
-									placeholder="Numéro de TVA (ex: FR1234567890)"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				{/* Section 3: Classification */}
 				<ContentCard
 					title="Classification"
 					description="Catégorisation et statut du client"
@@ -283,100 +174,13 @@ export function UpdateClientForm({ client }: Props) {
 								<field.SelectField
 									label="Statut"
 									disabled={isPending}
-									placeholder="Sélectionnez un statut"
-									options={CLIENT_STATUSES.map((status) => ({
-										label: status.label,
+									options={CLIENT_STATUSES.filter(
+										(status) => status.value !== ClientStatus.ARCHIVED
+									).map((status) => ({
 										value: status.value,
+										label: status.label,
 									}))}
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				{/* Section 2: Informations de contact */}
-				<ContentCard
-					title="Informations de contact"
-					description="Coordonnées du client"
-				>
-					<div className="space-y-4">
-						<form.AppField
-							name="email"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-										return "Format d'email invalide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Email"
-									disabled={isPending}
-									placeholder="contact@example.com"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="phone">
-							{(field) => (
-								<div className="space-y-1.5">
-									<FormLabel htmlFor="phone" className="flex items-center">
-										Téléphone
-									</FormLabel>
-									<Input
-										disabled={isPending}
-										id="phone"
-										name="phone"
-										placeholder="Ex: +33 1 23 45 67 89"
-										value={field.state.value ?? ""}
-										onChange={(e) => field.handleChange(e.target.value)}
-									/>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="website"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
-											value
-										)
-									) {
-										return "L'URL n'est pas valide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Site web"
-									disabled={isPending}
-									placeholder="https://www.example.com"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				<ContentCard
-					title="Suivi commercial"
-					description="Informations de suivi et qualification"
-				>
-					<div className="space-y-4">
-						<form.AppField name="notes">
-							{(field) => (
-								<field.TextareaField
-									label="Notes"
-									disabled={isPending}
-									placeholder="Notes et informations complémentaires"
+									placeholder="Sélectionnez un statut"
 								/>
 							)}
 						</form.AppField>
@@ -389,7 +193,6 @@ export function UpdateClientForm({ client }: Props) {
 					<FormFooter
 						disabled={!canSubmit || isPending}
 						submitLabel="Modifier le client"
-						isPending={isPending}
 					/>
 				)}
 			</form.Subscribe>

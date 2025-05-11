@@ -11,25 +11,44 @@ export const buildSearchConditions = (
 	if (!searchTerm.trim()) return [];
 
 	return [
-		{ name: { contains: searchTerm, mode: "insensitive" } },
+		// Recherche dans la référence
 		{ reference: { contains: searchTerm, mode: "insensitive" } },
-		{ email: { contains: searchTerm, mode: "insensitive" } },
-		{ siren: { contains: searchTerm, mode: "insensitive" } },
-		{ siret: { contains: searchTerm, mode: "insensitive" } },
-		{ phone: { contains: searchTerm, mode: "insensitive" } },
+		// Recherche dans les contacts
 		{
-			addresses: {
-				some: { city: { contains: searchTerm, mode: "insensitive" } },
+			contacts: {
+				some: {
+					OR: [
+						{ firstName: { contains: searchTerm, mode: "insensitive" } },
+						{ lastName: { contains: searchTerm, mode: "insensitive" } },
+						{ email: { contains: searchTerm, mode: "insensitive" } },
+						{ phoneNumber: { contains: searchTerm, mode: "insensitive" } },
+						{ mobileNumber: { contains: searchTerm, mode: "insensitive" } },
+						{ faxNumber: { contains: searchTerm, mode: "insensitive" } },
+					],
+				},
 			},
 		},
+		// Recherche dans l'entreprise
 		{
-			addresses: {
-				some: { postalCode: { contains: searchTerm, mode: "insensitive" } },
+			company: {
+				OR: [
+					{ companyName: { contains: searchTerm, mode: "insensitive" } },
+					{ siren: { contains: searchTerm, mode: "insensitive" } },
+					{ siret: { contains: searchTerm, mode: "insensitive" } },
+					{ vatNumber: { contains: searchTerm, mode: "insensitive" } },
+				],
 			},
 		},
+		// Recherche dans les adresses
 		{
 			addresses: {
-				some: { addressLine1: { contains: searchTerm, mode: "insensitive" } },
+				some: {
+					OR: [
+						{ city: { contains: searchTerm, mode: "insensitive" } },
+						{ postalCode: { contains: searchTerm, mode: "insensitive" } },
+						{ addressLine1: { contains: searchTerm, mode: "insensitive" } },
+					],
+				},
 			},
 		},
 	];

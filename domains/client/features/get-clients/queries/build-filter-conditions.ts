@@ -1,64 +1,43 @@
 import { ClientStatus, ClientType, Prisma } from "@prisma/client";
+import { z } from "zod";
+import { clientFiltersSchema } from "./../schemas/client-filters-schema";
 
 /**
  * Construit les conditions de filtrage pour les clients
- * @param filters - Objet contenant les filtres à appliquer
+ * @param filters - Filtres à appliquer
  * @returns Tableau de conditions Prisma à utiliser dans une clause AND
  */
 export const buildFilterConditions = (
-	filters: Record<string, unknown>
+	filters: z.infer<typeof clientFiltersSchema>
 ): Prisma.ClientWhereInput[] => {
 	const conditions: Prisma.ClientWhereInput[] = [];
 
-	if (!filters || Object.keys(filters).length === 0) {
-		return conditions;
+	// Filtre par statut
+	if (filters?.status) {
+		const statuses = Array.isArray(filters.status)
+			? filters.status
+			: [filters.status];
+		conditions.push({
+			status: {
+				in: statuses.filter(
+					(status): status is ClientStatus => status !== undefined
+				),
+			},
+		});
 	}
 
-	Object.entries(filters).forEach(([key, value]) => {
-		if (!value) return;
+	// Filtre par type de client
+	if (filters.clientType) {
+		conditions.push({
+			clientType: filters.clientType as ClientType,
+		});
+	}
 
-		switch (key) {
-			case "status":
-				if (
-					typeof value === "string" &&
-					Object.values(ClientStatus).includes(value as ClientStatus)
-				) {
-					conditions.push({ status: value as ClientStatus });
-				} else if (Array.isArray(value) && value.length > 0) {
-					// Gestion de la sélection multiple pour les statuts
-					const validStatuses = value.filter(
-						(v): v is ClientStatus =>
-							typeof v === "string" &&
-							Object.values(ClientStatus).includes(v as ClientStatus)
-					);
-
-					if (validStatuses.length > 0) {
-						conditions.push({ status: { in: validStatuses } });
-					}
-				}
-				break;
-
-			case "type":
-				if (
-					typeof value === "string" &&
-					Object.values(ClientType).includes(value as ClientType)
-				) {
-					conditions.push({ clientType: value as ClientType });
-				} else if (Array.isArray(value) && value.length > 0) {
-					// Gestion de la sélection multiple pour les types de client
-					const validTypes = value.filter(
-						(v): v is ClientType =>
-							typeof v === "string" &&
-							Object.values(ClientType).includes(v as ClientType)
-					);
-
-					if (validTypes.length > 0) {
-						conditions.push({ clientType: { in: validTypes } });
-					}
-				}
-				break;
-		}
-	});
+	if (filters.clientStatus) {
+		conditions.push({
+			status: filters.clientStatus as ClientStatus,
+		});
+	}
 
 	return conditions;
 };

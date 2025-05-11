@@ -7,6 +7,7 @@ import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
+import { CLIENT_TYPES } from "@/domains/client/constants";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
 import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
@@ -84,40 +85,41 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			reference: "",
-			email: "",
-			phoneNumber: "",
-			mobileNumber: "",
-			faxNumber: "",
-			civility: "",
-			firstname: "",
-			lastname: "",
-			contactFunction: "",
-			website: "",
-			legalForm: "",
+			reference: state?.inputs?.reference ?? "",
+			email: state?.inputs?.email ?? "",
+			phoneNumber: state?.inputs?.phoneNumber ?? "",
+			mobileNumber: state?.inputs?.mobileNumber ?? "",
+			faxNumber: state?.inputs?.faxNumber ?? "",
+			civility: state?.inputs?.civility ?? "",
+			firstname: state?.inputs?.firstname ?? "",
+			lastname: state?.inputs?.lastname ?? "",
+			contactFunction: state?.inputs?.contactFunction ?? "",
+			website: state?.inputs?.website ?? "",
+			legalForm: state?.inputs?.legalForm ?? "",
 			clientType: ClientType.INDIVIDUAL as ClientType,
 			status: ClientStatus.ACTIVE as ClientStatus,
-			notes: "",
-			sirenNumber: "",
-			siretNumber: "",
-			nafApeCode: "",
-			vatNumber: "",
-			businessSector: "",
-			capital: "",
-			rcs: "",
+			notes: state?.inputs?.notes ?? "",
+			sirenNumber: state?.inputs?.sirenNumber ?? "",
+			siretNumber: state?.inputs?.siretNumber ?? "",
+			nafApeCode: state?.inputs?.nafApeCode ?? "",
+			vatNumber: state?.inputs?.vatNumber ?? "",
+			businessSector: state?.inputs?.businessSector ?? "",
+			capital: state?.inputs?.capital ?? "",
+			rcs: state?.inputs?.rcs ?? "",
 			employeeCount: EmployeeCount.ONE_TO_TWO,
-			companyName: "",
+			companyName: state?.inputs?.companyName ?? "",
 
 			// Adresse principale
-			addressType: AddressType.BILLING as AddressType,
-			addressLine1: "",
-			addressLine2: "",
-			postalCode: "",
-			city: "",
+			addressType:
+				state?.inputs?.addressType ?? (AddressType.BILLING as AddressType),
+			addressLine1: state?.inputs?.addressLine1 ?? "",
+			addressLine2: state?.inputs?.addressLine2 ?? "",
+			postalCode: state?.inputs?.postalCode ?? "",
+			city: state?.inputs?.city ?? "",
 			country: Country.FRANCE as Country,
 			// Coordonnées géographiques
-			latitude: null as number | null,
-			longitude: null as number | null,
+			latitude: state?.inputs?.latitude ?? (null as number | null),
+			longitude: state?.inputs?.longitude ?? (null as number | null),
 		},
 
 		transform: useTransform(
@@ -197,7 +199,10 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		}
 	};
 
-	const clientType = useStore(form.store, (state) => state.values.clientType);
+	const clientType = useStore(
+		form.store,
+		(state) => state.values.clientType as ClientType
+	);
 
 	return (
 		<form
@@ -250,19 +255,15 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						<form.AppField name="clientType">
 							{(field) => (
 								<div className="flex flex-col gap-3">
-									<FormLabel htmlFor="clientType">
-										Type de client{" "}
-										<span className="text-destructive ml-1">*</span>
-									</FormLabel>
-									<field.CheckboxField
+									<input
+										type="hidden"
+										name="clientType"
+										value={field.state.value}
+									/>
+									<field.RadioGroupField
 										disabled={isPending}
-										label="Entreprise"
-										checked={field.state.value === ClientType.COMPANY}
-										onCheckedChange={(checked) => {
-											field.handleChange(
-												checked ? ClientType.COMPANY : ClientType.INDIVIDUAL
-											);
-										}}
+										label="Type de client"
+										options={CLIENT_TYPES}
 									/>
 								</div>
 							)}
@@ -367,14 +368,21 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					<div className="space-y-4">
 						<form.AppField name="civility">
 							{(field) => (
-								<field.RadioGroupField
-									disabled={isPending}
-									label="Civilité"
-									options={CIVILITIES.map((civility) => ({
-										value: civility.value,
-										label: civility.label,
-									}))}
-								/>
+								<>
+									<input
+										type="hidden"
+										name="civility"
+										value={field.state.value}
+									/>
+									<field.RadioGroupField
+										disabled={isPending}
+										label="Civilité"
+										options={CIVILITIES.map((civility) => ({
+											value: civility.value,
+											label: civility.label,
+										}))}
+									/>
+								</>
 							)}
 						</form.AppField>
 
@@ -845,15 +853,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				description="informations complémentaires sur le client"
 			>
 				<div className="space-y-4">
-					<form.AppField
-						name="notes"
-						validators={{
-							onChange: ({ value }) => {
-								if (!value) return "Les notes sont requises";
-								return undefined;
-							},
-						}}
-					>
+					<form.AppField name="notes">
 						{(field) => (
 							<field.TextareaField
 								label="Notes"

@@ -12,10 +12,14 @@ import {
 } from "@/shared/types/server-action";
 import {
 	AddressType,
+	BusinessSector,
+	Civility,
 	Client,
 	ClientStatus,
 	ClientType,
 	Country,
+	EmployeeCount,
+	LegalForm,
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -65,28 +69,41 @@ export const createClient: ServerAction<
 		// 4. Préparation et transformation des données brutes
 		const rawData = {
 			organizationId: organizationId.toString(),
-			name: formData.get("name") as string,
 			reference: formData.get("reference") as string,
-			email: formData.get("email") as string,
-			phone: formData.get("phone") as string,
-			website: formData.get("website") as string,
-			siren: formData.get("siren") as string,
-			siret: formData.get("siret") as string,
 			clientType: formData.get("clientType") as ClientType,
 			status: formData.get("status") as ClientStatus,
 			notes: formData.get("notes") as string,
-			userId: session.user.id,
-			vatNumber: formData.get("vatNumber") as string,
 
-			// Informations d'adresse (à traiter séparément)
+			// Informations de contact
+			civility: formData.get("civility") as Civility,
+			firstname: formData.get("firstname") as string,
+			lastname: formData.get("lastname") as string,
+			contactFunction: formData.get("contactFunction") as string,
+			email: formData.get("email") as string,
+			phoneNumber: formData.get("phoneNumber") as string,
+			mobileNumber: formData.get("mobileNumber") as string,
+			faxNumber: formData.get("faxNumber") as string,
+			website: formData.get("website") as string,
+
+			// Informations d'entreprise
+			companyName: formData.get("companyName") as string,
+			legalForm: formData.get("legalForm") as LegalForm,
+			sirenNumber: formData.get("sirenNumber") as string,
+			siretNumber: formData.get("siretNumber") as string,
+			nafApeCode: formData.get("nafApeCode") as string,
+			capital: formData.get("capital") as string,
+			rcs: formData.get("rcs") as string,
+			vatNumber: formData.get("vatNumber") as string,
+			businessSector: formData.get("businessSector") as BusinessSector,
+			employeeCount: formData.get("employeeCount") as EmployeeCount,
+
+			// Informations d'adresse
 			addressType: formData.get("addressType") as AddressType,
 			addressLine1: formData.get("addressLine1") as string,
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
 			city: formData.get("city") as string,
 			country: (formData.get("country") as Country) || Country.FRANCE,
-
-			// Coordonnées géographiques
 			latitude: formData.get("latitude")
 				? parseFloat(formData.get("latitude") as string)
 				: null,
@@ -107,7 +124,8 @@ export const createClient: ServerAction<
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				rawData,
-				"Veuillez remplir tous les champs obligatoires"
+				"Veuillez remplir tous les champs obligatoires",
+				rawData
 			);
 		}
 

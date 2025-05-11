@@ -28,7 +28,6 @@ export const buildWhereClause = (
 			params.filters as Record<string, unknown>
 		);
 		if (filterConditions.length > 0) {
-			// Combiner avec AND existant ou créer un nouveau tableau AND
 			whereClause.AND = filterConditions;
 		}
 	}

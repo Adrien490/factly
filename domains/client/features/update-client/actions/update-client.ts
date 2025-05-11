@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
-
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -17,7 +16,7 @@ import { headers } from "next/headers";
 import { updateClientSchema } from "../schemas";
 
 /**
- * Action serveur pour créer un nouveau client
+ * Action serveur pour mettre à jour un client existant
  * Validations :
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
@@ -35,7 +34,7 @@ export const updateClient: ServerAction<
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour créer un client"
+				"Vous devez être connecté pour modifier un client"
 			);
 		}
 
@@ -61,27 +60,19 @@ export const updateClient: ServerAction<
 		const rawData = {
 			id: formData.get("id") as string,
 			organizationId: organizationId.toString(),
-			name: formData.get("name") as string,
 			reference: formData.get("reference") as string,
-			email: formData.get("email") as string,
-			phone: formData.get("phone") as string,
-			website: formData.get("website") as string,
-			siren: formData.get("siren") as string,
-			siret: formData.get("siret") as string,
 			clientType: formData.get("clientType") as ClientType,
 			status: formData.get("status") as ClientStatus,
 			notes: formData.get("notes") as string,
-			userId: session.user.id,
-			vatNumber: formData.get("vatNumber") as string,
 		};
 
-		console.log("[CREATE_CLIENT] Raw data:", rawData);
+		console.log("[UPDATE_CLIENT] Raw data:", rawData);
 
 		// 5. Validation des données avec le schéma Zod
 		const validation = updateClientSchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(
-				"[CREATE_CLIENT] Validation errors:",
+				"[UPDATE_CLIENT] Validation errors:",
 				validation.error.flatten().fieldErrors
 			);
 			return createValidationErrorResponse(
@@ -111,22 +102,35 @@ export const updateClient: ServerAction<
 			);
 		}
 
-		// 7. Création du client dans la base de données
-		const { ...clientData } = validation.data;
+		// 7. Mise à jour du client dans la base de données
+		const {
+			id,
+			organizationId: validatedOrgId,
+			clientType,
+			status,
+			reference,
+			notes,
+		} = validation.data;
 
-		// Créer le client avec les relations appropriées
+		// Mettre à jour le client
 		const client = await db.client.update({
-			where: { id: clientData.id },
-			data: clientData,
+			where: { id },
+			data: {
+				reference,
+				clientType,
+				status,
+				notes,
+			},
 		});
-		revalidateTag(
-			`organizations:${clientData.organizationId}:clients:${clientData.id}`
-		);
-		revalidateTag(`organizations:${clientData.organizationId}:clients`);
+
+		// 8. Invalidation du cache pour forcer un rafraîchissement des données
+		revalidateTag(`organizations:${validatedOrgId}:clients:${id}`);
+		revalidateTag(`organizations:${validatedOrgId}:clients`);
+
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,
-			`Le client ${client.name} a été modifié avec succès`,
+			`Le client ${client.reference} a été modifié avec succès`,
 			rawData
 		);
 	} catch (error) {

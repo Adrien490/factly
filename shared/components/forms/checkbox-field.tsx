@@ -26,8 +26,9 @@ export const CheckboxField = ({
 				disabled={disabled}
 				name={field.name}
 				id={field.name}
-				checked={checked}
+				checked={checked ?? field.state.value ?? false}
 				onCheckedChange={(checked) => {
+					field.handleChange(Boolean(checked));
 					onCheckedChange?.(Boolean(checked));
 				}}
 				className="mt-1"

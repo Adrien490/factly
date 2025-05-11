@@ -1,18 +1,18 @@
 import { ClientStatus, ClientType } from "@prisma/client";
 import { z } from "zod";
 
+/**
+ * Schéma de validation pour la mise à jour d'un client
+ * Basé sur le modèle Prisma Client
+ */
 export const updateClientSchema = z.object({
+	// Identifiants
 	id: z.string().min(1, "L'ID du client est requis"),
-	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
-	reference: z.string().optional(),
-	name: z.string().optional(),
-	email: z.string().optional(),
-	phone: z.string().optional(),
-	website: z.string().optional(),
-	notes: z.string().optional(),
-	clientType: z.nativeEnum(ClientType).optional(),
-	status: z.nativeEnum(ClientStatus).optional(),
-	siren: z.string().optional(),
-	siret: z.string().optional(),
-	vatNumber: z.string().optional(),
+	organizationId: z.string().min(1, "L'organisation est requise"),
+	reference: z
+		.string()
+		.min(3, "La référence doit comporter au moins 3 caractères"),
+	clientType: z.nativeEnum(ClientType).default(ClientType.INDIVIDUAL),
+	status: z.nativeEnum(ClientStatus).default(ClientStatus.ACTIVE),
+	notes: z.string().optional().nullable(),
 });
