@@ -39,7 +39,7 @@ export function ContactActions({ contact }: ContactActionsProps) {
 				className="w-48"
 			>
 				<UpdateContactSheetForm contact={contact}>
-					<DropdownMenuItem>Modifier</DropdownMenuItem>
+					<DropdownMenuItem preventDefault>Modifier</DropdownMenuItem>
 				</UpdateContactSheetForm>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
