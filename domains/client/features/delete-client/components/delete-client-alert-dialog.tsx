@@ -12,14 +12,12 @@ import {
 import { DeleteClientButton } from "./delete-client-button";
 
 interface DeleteClientAlertDialogProps {
-	name: string;
 	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function DeleteClientAlertDialog({
-	name,
 	organizationId,
 	id,
 	children,
@@ -33,8 +31,7 @@ export function DeleteClientAlertDialog({
 						Êtes-vous sûr de vouloir supprimer définitivement ce client ?
 					</AlertDialogTitle>
 					<AlertDialogDescription>
-						Cette action va supprimer définitivement le client
-						{name && <strong> {name}</strong>}.
+						Cette action va supprimer définitivement le client.
 						<br />
 						Cette action est irréversible.
 					</AlertDialogDescription>

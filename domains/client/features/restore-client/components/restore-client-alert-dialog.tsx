@@ -14,7 +14,6 @@ import { UpdateClientStatusButton } from "../../update-client-status/components/
 
 interface RestoreClientAlertDialogProps {
 	status: ClientStatusOption;
-	name: string;
 	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
@@ -22,7 +21,6 @@ interface RestoreClientAlertDialogProps {
 
 export function RestoreClientAlertDialog({
 	status,
-	name,
 	organizationId,
 	id,
 	children,
@@ -36,8 +34,7 @@ export function RestoreClientAlertDialog({
 						Restaurer le client en {status.label.toLowerCase()}
 					</AlertDialogTitle>
 					<AlertDialogDescription>
-						Cette action va restaurer le client
-						{name && <strong> {name}</strong>} en statut{" "}
+						Cette action va restaurer le client en statut{" "}
 						{status.label.toLowerCase()}.
 						<br />
 						Cette action est réversible.

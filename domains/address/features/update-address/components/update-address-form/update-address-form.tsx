@@ -15,6 +15,7 @@ import {
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
 import { Autocomplete } from "@/shared/components/autocomplete";
+import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
 	FormErrors,
@@ -28,7 +29,7 @@ import {
 	useForm,
 	useTransform,
 } from "@tanstack/react-form";
-import { MapPin, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
 import { toast } from "sonner";
@@ -201,7 +202,6 @@ export function UpdateAddressForm({
 				<ContentCard
 					title="Informations d'adresse"
 					description="Modifiez les informations de l'adresse"
-					icon={MapPin}
 				>
 					<div className="space-y-4">
 						<form.Field name="addressType">
@@ -266,7 +266,6 @@ export function UpdateAddressForm({
 				<ContentCard
 					title="Détails de l'adresse"
 					description="Saisissez les détails de l'adresse"
-					icon={MapPin}
 				>
 					<div className="space-y-4">
 						<form.Field

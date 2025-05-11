@@ -70,7 +70,6 @@ export function ArchivedClientActions({ client }: ArchivedClientActionsProps) {
 							>
 								<RestoreClientAlertDialog
 									status={status}
-									name={client.name}
 									organizationId={client.organizationId}
 									id={client.id}
 								>
@@ -92,7 +91,6 @@ export function ArchivedClientActions({ client }: ArchivedClientActionsProps) {
 					preventDefault
 				>
 					<DeleteClientAlertDialog
-						name={client.name}
 						organizationId={client.organizationId}
 						id={client.id}
 					>

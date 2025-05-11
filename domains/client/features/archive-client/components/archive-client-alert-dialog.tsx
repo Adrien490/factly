@@ -12,14 +12,12 @@ import {
 import { ArchiveClientButton } from "./archive-client-button";
 
 interface ArchiveClientAlertDialogProps {
-	name: string;
 	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function ArchiveClientAlertDialog({
-	name,
 	organizationId,
 	id,
 	children,
@@ -31,8 +29,7 @@ export function ArchiveClientAlertDialog({
 				<AlertDialogHeader>
 					<AlertDialogTitle>Archiver le client</AlertDialogTitle>
 					<AlertDialogDescription>
-						Cette action va archiver le client
-						{name && <strong> {name}</strong>}.
+						Cette action va archiver le client.
 						<br />
 						Vous pourrez le restaurer ultérieurement.
 					</AlertDialogDescription>

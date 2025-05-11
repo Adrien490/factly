@@ -118,7 +118,6 @@ export function ClientActions({ client }: ClientActionsProps) {
 					className="text-destructive focus:text-destructive p-0"
 				>
 					<ArchiveClientAlertDialog
-						name={client.name}
 						organizationId={client.organizationId}
 						id={client.id}
 					>
