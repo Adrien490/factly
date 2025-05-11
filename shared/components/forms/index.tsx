@@ -8,7 +8,7 @@ import { InputField } from "./input-field";
 import { RadioGroupField } from "./radio-group-field";
 import { SelectField } from "./select-field";
 import { TextareaField } from "./textarea-field";
-
+import { UploadField } from "./upload-field";
 export { FieldInfo } from "./field-info";
 export { FormErrors } from "./form-errors";
 export { FormFooter } from "./form-footer";
@@ -22,6 +22,7 @@ export const { useAppForm } = createFormHook({
 		SelectField,
 		CheckboxField,
 		TextareaField,
+		UploadField,
 		ComboboxField,
 		RadioGroupField,
 	},

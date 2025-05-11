@@ -20,6 +20,7 @@ export const createClientSchema = z.object({
 	reference: z.string().optional(),
 	clientType: z.nativeEnum(ClientType),
 	status: z.nativeEnum(ClientStatus),
+	logoUrl: z.string().optional().nullable(),
 	notes: z.string().optional().nullable(),
 
 	// Champs du contact

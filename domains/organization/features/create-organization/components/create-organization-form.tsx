@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, FormLabel } from "@/shared/components";
+import { FormLabel } from "@/shared/components";
 
 import { COUNTRIES } from "@/domains/address/constants";
 import {
@@ -17,16 +17,13 @@ import {
 	FormLayout,
 	useAppForm,
 } from "@/shared/components/forms";
-import { DotsLoader } from "@/shared/components/loaders";
 import { LEGAL_FORMS } from "@/shared/constants/legal-forms";
-import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
+import { useUploadThing } from "@/shared/lib/uploadthing";
 import { LegalForm } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useTransition } from "react";
-import { toast } from "sonner";
 
 interface OrganizationFormProps {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -38,8 +35,8 @@ export function CreateOrganizationForm({
 	const response = use(searchAddressPromise);
 	const { state, dispatch, isPending } = useCreateOrganization();
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { isUploading, startUpload } = useUploadThing("organizationLogo");
 	const router = useRouter();
+	const { isUploading } = useUploadThing("organizationLogo");
 
 	// TanStack Form setup
 	const form = useAppForm({
@@ -130,87 +127,23 @@ export function CreateOrganizationForm({
 				)}
 			</form.Field>
 
-			<form.Field name="logoUrl">
-				{(field) => (
-					<input type="hidden" name="logoUrl" value={field.state.value ?? ""} />
-				)}
-			</form.Field>
-
 			<FormLayout columns={2} className="mt-6">
 				{/* Section Logo */}
 				<ContentCard
 					title="Identité visuelle"
 					description="Ajoutez un logo pour identifier votre organisation"
 				>
-					<form.Field name="logoUrl">
+					<form.AppField name="logoUrl">
 						{(field) => (
-							<div className="space-y-3">
-								<div className="flex items-center justify-between">
-									<FormLabel className="text-base">Logo</FormLabel>
-									{field.state.value && (
-										<Button
-											disabled={isPending}
-											type="button"
-											variant="ghost"
-											size="sm"
-											className="text-destructive"
-											onClick={() => field.handleChange("")}
-										>
-											Supprimer
-										</Button>
-									)}
-								</div>
-
-								{field.state.value ? (
-									<div className="flex items-center justify-center">
-										<div className="relative h-24 w-24 rounded-md overflow-hidden">
-											<Image
-												src={field.state.value}
-												alt="Logo de l'organisation"
-												fill
-												sizes="96px"
-												className="object-cover"
-												priority
-											/>
-										</div>
-									</div>
-								) : (
-									<div className="relative">
-										<UploadDropzone
-											endpoint="organizationLogo"
-											onChange={async (files) => {
-												const res = await startUpload(files);
-												const logoUrl = res?.[0]?.serverData?.url;
-												if (logoUrl) {
-													field.handleChange(logoUrl);
-												}
-											}}
-											onUploadError={(error) => {
-												console.error(error);
-												toast.error("Erreur lors de l'upload", {
-													description:
-														"Impossible de charger l'image. Veuillez réessayer.",
-												});
-											}}
-											className="border-2 border-dashed border-muted-foreground/25 h-44 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer ut-button:bg-primary ut-button:hover:bg-primary/90"
-										/>
-
-										{isUploading && (
-											<div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-[2px] rounded-lg transition-all duration-300">
-												<div className="flex items-center gap-3 flex-col">
-													<DotsLoader color="primary" size="xs" />
-												</div>
-											</div>
-										)}
-									</div>
-								)}
-								<p className="text-xs text-muted-foreground mt-2">
-									Formats acceptés: JPG, PNG ou SVG. Max. 2MB.
-								</p>
-								<FieldInfo field={field} />
-							</div>
+							<field.UploadField
+								label="Logo"
+								disabled={isPending}
+								endpoint="organizationLogo"
+								accept="JPG, PNG ou SVG"
+								maxSize="2MB"
+							/>
 						)}
-					</form.Field>
+					</form.AppField>
 				</ContentCard>
 
 				{/* Section 1: Informations de base */}

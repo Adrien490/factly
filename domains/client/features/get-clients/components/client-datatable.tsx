@@ -15,6 +15,7 @@ import {
 	TableRow,
 } from "@/shared/components";
 import { CircleDot, MapPin, Receipt, Tag } from "lucide-react";
+import Image from "next/image";
 import { use } from "react";
 
 import {
@@ -107,6 +108,18 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									<TableCell role="gridcell">
 										<div className="w-[200px] flex flex-col space-y-1">
 											<div className="flex items-center gap-2">
+												{client.clientType === "COMPANY" &&
+													client.company?.logoUrl && (
+														<div className="relative h-8 w-8 rounded-md overflow-hidden shrink-0">
+															<Image
+																src={client.company.logoUrl}
+																alt={`Logo de ${client.company.companyName}`}
+																fill
+																sizes="32px"
+																className="object-cover"
+															/>
+														</div>
+													)}
 												<div className="font-medium truncate">
 													{client.clientType === "COMPANY" ? (
 														client.company?.companyName

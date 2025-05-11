@@ -92,6 +92,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			faxNumber: state?.inputs?.faxNumber ?? "",
 			civility: state?.inputs?.civility ?? "",
 			firstname: state?.inputs?.firstname ?? "",
+			logoUrl: state?.inputs?.logoUrl ?? "",
 			lastname: state?.inputs?.lastname ?? "",
 			contactFunction: state?.inputs?.contactFunction ?? "",
 			website: state?.inputs?.website ?? "",
@@ -269,17 +270,31 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 						{clientType === ClientType.COMPANY && (
-							<form.AppField name="companyName">
-								{(field) => (
-									<field.InputField
-										disabled={isPending}
-										label="Nom de la société"
-										placeholder="Nom de l'entreprise"
-										required
-									/>
-								)}
-							</form.AppField>
+							<>
+								<form.AppField name="companyName">
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Nom de la société"
+											placeholder="Nom de l'entreprise"
+											required
+										/>
+									)}
+								</form.AppField>
+								<form.AppField name="logoUrl">
+									{(field) => (
+										<field.UploadField
+											label="Logo"
+											disabled={isPending}
+											endpoint="companyLogo"
+											accept="JPG, PNG ou SVG"
+											maxSize="2MB"
+										/>
+									)}
+								</form.AppField>
+							</>
 						)}
+
 						<form.Field name="reference">
 							{(field) => (
 								<div className="space-y-1.5">
@@ -429,53 +444,56 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								/>
 							)}
 						</form.AppField>
-
-						<form.AppField
-							name="phoneNumber"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
-											value
-										)
-									) {
-										return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Téléphone"
-									disabled={isPending}
-									placeholder="Ex: +33 1 23 45 67 89"
-								/>
-							)}
-						</form.AppField>
-						<form.AppField
-							name="mobileNumber"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(value)
-									) {
-										return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Mobile"
-									disabled={isPending}
-									placeholder="Ex: +33 6 12 34 56 78"
-								/>
-							)}
-						</form.AppField>
+						<div className="grid grid-cols-2 gap-4">
+							<form.AppField
+								name="phoneNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (
+											value &&
+											!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+												value
+											)
+										) {
+											return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Téléphone"
+										disabled={isPending}
+										placeholder="Ex: +33 1 23 45 67 89"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="mobileNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (
+											value &&
+											!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(
+												value
+											)
+										) {
+											return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Mobile"
+										disabled={isPending}
+										placeholder="Ex: +33 6 12 34 56 78"
+									/>
+								)}
+							</form.AppField>
+						</div>
 						<form.AppField
 							name="faxNumber"
 							validators={{

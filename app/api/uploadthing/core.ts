@@ -80,6 +80,33 @@ export const ourFileRouter = {
 			return { url: file.ufsUrl };
 		}),
 
+	companyLogo: f({
+		image: {
+			maxFileSize: "2MB",
+			maxFileCount: 1,
+			contentDisposition: "inline",
+		},
+	})
+		.middleware(async () => {
+			const user = await getUser();
+
+			if (!user)
+				throw new UploadThingError(
+					"Vous devez être connecté pour télécharger un logo"
+				);
+
+			return { userId: user.id };
+		})
+		.onUploadComplete(async ({ metadata, file }) => {
+			console.log(
+				"Upload de logo d'entreprise complété pour l'utilisateur:",
+				metadata.userId
+			);
+			console.log("URL du fichier:", file.ufsUrl);
+
+			return { url: file.ufsUrl };
+		}),
+
 	productImage: f({
 		image: {
 			maxFileSize: "2MB",
