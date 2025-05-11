@@ -23,7 +23,7 @@ import {
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { createClientSchema } from "../schemas";
+import { createClientSchema } from "../schemas/create-client-schema";
 
 /**
  * Action serveur pour créer un nouveau client
@@ -76,8 +76,8 @@ export const createClient: ServerAction<
 
 			// Informations de contact
 			civility: formData.get("civility") as Civility,
-			firstname: formData.get("firstname") as string,
-			lastname: formData.get("lastname") as string,
+			firstName: formData.get("firstName") as string,
+			lastName: formData.get("lastName") as string,
 			contactFunction: formData.get("contactFunction") as string,
 			email: formData.get("email") as string,
 			phoneNumber: formData.get("phoneNumber") as string,
@@ -128,20 +128,22 @@ export const createClient: ServerAction<
 			);
 		}
 
-		// 6. Vérification de l'existence de la référence
-		const existingClient = await db.client.findFirst({
-			where: {
-				reference: validation.data.reference,
-				organizationId: validation.data.organizationId,
-			},
-			select: { id: true },
-		});
+		// 6. Vérification de l'existence de la référence uniquement si elle est fournie
+		if (validation.data.reference) {
+			const existingClient = await db.client.findFirst({
+				where: {
+					reference: validation.data.reference,
+					organizationId: validation.data.organizationId,
+				},
+				select: { id: true },
+			});
 
-		if (existingClient) {
-			return createErrorResponse(
-				ActionStatus.CONFLICT,
-				"Un client avec cette référence existe déjà dans l'organisation"
-			);
+			if (existingClient) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					"Un client avec cette référence existe déjà dans l'organisation"
+				);
+			}
 		}
 
 		// 7. Création du client dans la base de données
@@ -154,8 +156,8 @@ export const createClient: ServerAction<
 
 			// Informations de contact
 			civility,
-			firstname,
-			lastname,
+			firstName,
+			lastName,
 			contactFunction,
 			email,
 			phoneNumber,
@@ -200,9 +202,9 @@ export const createClient: ServerAction<
 					contacts: {
 						create: [
 							{
-								civility,
-								firstName: firstname ?? "",
-								lastName: lastname ?? "",
+								civility: civility as Civility | null,
+								firstName: firstName ?? "",
+								lastName: lastName ?? "",
 								function: contactFunction,
 								email,
 								phoneNumber,

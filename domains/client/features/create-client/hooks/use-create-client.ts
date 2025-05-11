@@ -5,7 +5,7 @@ import { Client } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { createClient } from "../actions/create-client";
-import { createClientSchema } from "../schemas";
+import { createClientSchema } from "../schemas/create-client-schema";
 
 export function useCreateClient() {
 	const router = useRouter();

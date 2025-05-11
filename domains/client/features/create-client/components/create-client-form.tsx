@@ -41,7 +41,7 @@ import { useParams, useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
 import { createClient } from "../actions/create-client";
-import { createClientSchema } from "../schemas";
+import { createClientSchema } from "../schemas/create-client-schema";
 
 type Props = {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -91,8 +91,8 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			mobileNumber: state?.inputs?.mobileNumber ?? "",
 			faxNumber: state?.inputs?.faxNumber ?? "",
 			civility: state?.inputs?.civility ?? "",
-			firstname: state?.inputs?.firstname ?? "",
-			lastname: state?.inputs?.lastname ?? "",
+			firstName: state?.inputs?.firstName ?? "",
+			lastName: state?.inputs?.lastName ?? "",
 			contactFunction: state?.inputs?.contactFunction ?? "",
 			website: state?.inputs?.website ?? "",
 			legalForm: state?.inputs?.legalForm ?? "",
@@ -272,12 +272,31 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										disabled={isPending}
 										label="Type de client"
 										options={CLIENT_TYPES}
+										onValueChangeCallback={(value) => {
+											if (value === ClientType.INDIVIDUAL) {
+												form.resetField("companyName");
+											} else if (
+												value === ClientType.COMPANY &&
+												form.getFieldValue("companyName") === ""
+											) {
+												form.resetField("lastName");
+											}
+										}}
 									/>
 								</div>
 							)}
 						</form.AppField>
 						{clientType === ClientType.COMPANY && (
-							<form.AppField name="companyName">
+							<form.AppField
+								validators={{
+									onChange: ({ value }) => {
+										if (clientType === ClientType.COMPANY && !value) {
+											return "Le nom de la société est requis pour un client entreprise";
+										}
+									},
+								}}
+								name="companyName"
+							>
 								{(field) => (
 									<field.InputField
 										disabled={isPending}
@@ -289,7 +308,15 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 						)}
 
-						<form.Field name="reference">
+						<form.Field
+							validators={{
+								onChange: ({ value }) => {
+									if (value && value.length < 3)
+										return "La référence doit comporter au moins 3 caractères";
+								},
+							}}
+							name="reference"
+						>
 							{(field) => (
 								<div className="space-y-1.5">
 									<div className="flex items-center justify-between">
@@ -376,7 +403,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.RadioGroupField
 										disabled={isPending}
 										label="Civilité"
-										required={clientType === ClientType.INDIVIDUAL}
 										options={CIVILITIES.map((civility) => ({
 											value: civility.value,
 											label: civility.label,
@@ -387,7 +413,16 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						</form.AppField>
 
 						<div className="grid grid-cols-2 gap-4">
-							<form.AppField name="lastname">
+							<form.AppField
+								validators={{
+									onChange: ({ value }) => {
+										if (clientType === ClientType.INDIVIDUAL && !value) {
+											return "Le nom est obligatoire pour un client particulier";
+										}
+									},
+								}}
+								name="lastName"
+							>
 								{(field) => (
 									<field.InputField
 										label="Nom"
@@ -398,7 +433,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="firstname">
+							<form.AppField name="firstName">
 								{(field) => (
 									<field.InputField
 										label="Prénom"

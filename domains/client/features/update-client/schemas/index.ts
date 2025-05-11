@@ -26,8 +26,8 @@ export const updateClientSchema = z
 
 		// Champs du contact
 		civility: z.nativeEnum(Civility).optional().nullable(),
-		firstname: z.string().optional().nullable(),
-		lastname: z.string().optional().nullable(),
+		firstName: z.string().optional().nullable(),
+		lastName: z.string().optional().nullable(),
 		contactFunction: z.string().optional().nullable(),
 		email: z.string().email("Format d'email invalide").optional().nullable(),
 		phoneNumber: z
@@ -108,13 +108,13 @@ export const updateClientSchema = z
 	.refine(
 		(data) => {
 			if (data.clientType === ClientType.INDIVIDUAL) {
-				return !!data.lastname;
+				return !!data.lastName;
 			}
 			return true;
 		},
 		{
 			message: "Le nom est requis pour un client particulier",
-			path: ["lastname"],
+			path: ["lastName"],
 		}
 	)
 	.refine(

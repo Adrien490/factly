@@ -14,6 +14,8 @@ import {
 	BusinessSector,
 	Civility,
 	Client,
+	ClientStatus,
+	ClientType,
 	EmployeeCount,
 	LegalForm,
 } from "@prisma/client";
@@ -68,14 +70,14 @@ export const updateClient: ServerAction<
 			id: id.toString(),
 			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
-			clientType: formData.get("clientType") as string,
-			status: formData.get("status") as string,
+			clientType: formData.get("clientType") as ClientType,
+			status: formData.get("status") as ClientStatus,
 			notes: formData.get("notes") as string,
 
-			// Champs du contact
+			// Informations de contact
 			civility: formData.get("civility") as Civility,
-			firstname: formData.get("firstname") as string,
-			lastname: formData.get("lastname") as string,
+			firstName: formData.get("firstName") as string,
+			lastName: formData.get("lastName") as string,
 			contactFunction: formData.get("contactFunction") as string,
 			email: formData.get("email") as string,
 			phoneNumber: formData.get("phoneNumber") as string,
@@ -83,7 +85,7 @@ export const updateClient: ServerAction<
 			faxNumber: formData.get("faxNumber") as string,
 			website: formData.get("website") as string,
 
-			// Champs de l'entreprise
+			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
 			legalForm: formData.get("legalForm") as LegalForm,
 			siren: formData.get("siren") as string,
@@ -112,84 +114,116 @@ export const updateClient: ServerAction<
 			);
 		}
 
-		const data = validation.data;
+		const {
+			id: validatedId,
+			organizationId: validatedOrgId,
+			clientType,
+			status,
+			reference,
+			notes,
 
-		// 6. Vérification de l'existence de la référence
-		const existingClient = await db.client.findFirst({
-			where: {
-				reference: data.reference,
-				organizationId: data.organizationId,
-				id: {
-					not: data.id,
+			// Informations de contact
+			civility,
+			firstName,
+			lastName,
+			contactFunction,
+			email,
+			phoneNumber,
+			mobileNumber,
+			faxNumber,
+			website,
+
+			// Informations d'entreprise
+			companyName,
+			legalForm,
+			siren,
+			siret,
+			nafApeCode,
+			capital,
+			rcs,
+			vatNumber,
+			businessSector,
+			employeeCount,
+		} = validation.data;
+
+		// 6. Vérification de l'existence de la référence uniquement si elle est fournie
+		if (reference) {
+			const existingClient = await db.client.findFirst({
+				where: {
+					reference,
+					organizationId: validatedOrgId,
+					id: {
+						not: validatedId,
+					},
 				},
-			},
-			select: { id: true },
-		});
+				select: { id: true },
+			});
 
-		if (existingClient) {
-			return createErrorResponse(
-				ActionStatus.CONFLICT,
-				"Un client avec cette référence existe déjà dans l'organisation"
-			);
+			if (existingClient) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					"Un client avec cette référence existe déjà dans l'organisation"
+				);
+			}
 		}
 
 		// 7. Mise à jour du client dans la base de données
 		const client = await db.client.update({
 			where: {
-				id: data.id,
+				id: validatedId,
 			},
 			data: {
-				reference: data.reference,
-				clientType: data.clientType,
-				status: data.status,
-				notes: data.notes,
+				reference: reference ?? "",
+				clientType,
+				status,
+				notes,
 				// Mettre à jour le contact principal
 				contacts: {
 					updateMany: {
 						where: {
-							clientId: data.id,
+							clientId: validatedId,
 							isDefault: true,
 						},
 						data: {
-							civility: data.civility,
-							firstName: data.firstname ?? "",
-							lastName: data.lastname ?? "",
-							function: data.contactFunction,
-							email: data.email,
-							phoneNumber: data.phoneNumber,
-							mobileNumber: data.mobileNumber,
-							faxNumber: data.faxNumber,
-							website: data.website,
+							civility,
+							firstName: firstName ?? "",
+							lastName: lastName ?? "",
+							function: contactFunction,
+							email,
+							phoneNumber,
+							mobileNumber,
+							faxNumber,
+							website,
 						},
 					},
 				},
 				// Mettre à jour ou créer les informations de l'entreprise si le client est de type COMPANY
-				...(data.clientType === "COMPANY" && {
+				...(clientType === ClientType.COMPANY && {
 					company: {
 						upsert: {
 							create: {
-								companyName: data.companyName ?? "",
-								legalForm: data.legalForm,
-								siren: data.siren,
-								siret: data.siret,
-								nafApeCode: data.nafApeCode,
-								capital: data.capital,
-								rcs: data.rcs,
-								vatNumber: data.vatNumber,
-								businessSector: data.businessSector,
-								employeeCount: data.employeeCount,
+								companyName: companyName ?? "",
+								legalForm,
+								siren,
+								siret,
+								nafApeCode,
+								capital,
+								rcs,
+								vatNumber,
+								businessSector,
+								employeeCount,
 							},
 							update: {
-								companyName: data.companyName ?? "",
-								legalForm: data.legalForm,
-								siren: data.siren,
-								siret: data.siret,
-								nafApeCode: data.nafApeCode,
-								capital: data.capital,
-								rcs: data.rcs,
-								vatNumber: data.vatNumber,
-								businessSector: data.businessSector,
-								employeeCount: data.employeeCount,
+								companyName: companyName ?? "",
+								legalForm,
+								siren,
+								siret,
+								nafApeCode,
+								capital,
+								rcs,
+								vatNumber,
+								businessSector,
+								employeeCount,
 							},
 						},
 					},
@@ -206,8 +240,8 @@ export const updateClient: ServerAction<
 		});
 
 		// 8. Invalidation du cache
-		revalidateTag(`organizations:${data.organizationId}:clients`);
-		revalidateTag(`organizations:${data.organizationId}:clients:${data.id}`);
+		revalidateTag(`organizations:${validatedOrgId}:clients`);
+		revalidateTag(`organizations:${validatedOrgId}:clients:${validatedId}`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

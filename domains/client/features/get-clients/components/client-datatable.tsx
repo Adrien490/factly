@@ -14,8 +14,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components";
-import { MapPin, Tag } from "lucide-react";
-import { use } from "react";
+import { ClientStatus } from "@prisma/client";
+import { ArchivedClientActions } from "../../../components/archived-client-actions";
+import { ClientActions } from "../../../components/client-actions";
+import { GetClientsReturn } from "../types/index";
 
 import {
 	CLIENT_STATUS_COLORS,
@@ -25,10 +27,7 @@ import {
 	CLIENT_TYPE_COLORS,
 	CLIENT_TYPE_LABELS,
 } from "@/domains/client/constants/client-types";
-import { ClientStatus } from "@prisma/client";
-import { ArchivedClientActions } from "../../../components/archived-client-actions";
-import { ClientActions } from "../../../components/client-actions";
-import { GetClientsReturn } from "../types/index";
+import { use } from "react";
 
 export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;
@@ -127,10 +126,7 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									</TableCell>
 									<TableCell role="gridcell" className="hidden md:table-cell">
 										{client.reference ? (
-											<div className="flex items-center gap-1.5 text-sm">
-												<Tag className="h-3 w-3 shrink-0 text-muted-foreground" />
-												<span className="truncate">{client.reference}</span>
-											</div>
+											<span className="text-sm">{client.reference}</span>
 										) : (
 											<span className="text-sm text-muted-foreground italic">
 												Non renseignée
@@ -172,39 +168,26 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 											{client.addresses && client.addresses.length > 0 ? (
 												<>
 													{client.addresses.map((addr) => (
-														<div
-															key={addr.id}
-															className="flex items-start gap-2"
-														>
-															<MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-															<div className="flex flex-col">
-																<span className="text-xs font-medium">
-																	{addr.addressType === "BILLING"
-																		? "Facturation"
-																		: addr.addressType === "SHIPPING"
-																			? "Livraison"
-																			: "Autre"}
-																</span>
-																<span className="truncate text-muted-foreground">
-																	{[
-																		addr.addressLine1,
-																		addr.postalCode,
-																		addr.city,
-																	]
-																		.filter(Boolean)
-																		.join(", ")}
-																</span>
-															</div>
+														<div key={addr.id} className="flex flex-col">
+															<span className="text-xs font-medium">
+																{addr.addressType === "BILLING"
+																	? "Facturation"
+																	: addr.addressType === "SHIPPING"
+																		? "Livraison"
+																		: "Autre"}
+															</span>
+															<span className="truncate text-muted-foreground">
+																{[addr.addressLine1, addr.postalCode, addr.city]
+																	.filter(Boolean)
+																	.join(", ")}
+															</span>
 														</div>
 													))}
 												</>
 											) : (
-												<div className="flex items-center gap-2">
-													<MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-													<span className="text-muted-foreground italic">
-														Non renseignée
-													</span>
-												</div>
+												<span className="text-muted-foreground italic">
+													Non renseignée
+												</span>
 											)}
 										</div>
 									</TableCell>

@@ -1,8 +1,12 @@
 "use client";
 
+import { Button, FormLabel, Input } from "@/shared/components/ui";
+
+import { CLIENT_TYPES } from "@/domains/client/constants";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
-import { CLIENT_TYPES } from "@/domains/client/constants/client-types";
-import { GetClientReturn } from "@/domains/client/features/get-client";
+import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
+import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
+import { CIVILITIES } from "@/domains/contact/constants/civilities";
 import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
@@ -11,20 +15,27 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-
-import { BUSINESS_SECTORS, EMPLOYEE_COUNTS } from "@/domains/company/constants";
-import { CIVILITIES } from "@/domains/contact/constants/civilities";
-import { FormLabel } from "@/shared/components";
 import { LEGAL_FORMS } from "@/shared/constants";
-import { generateReference } from "@/shared/utils";
-import { ClientStatus, ClientType } from "@prisma/client";
+import {
+	createToastCallbacks,
+	generateReference,
+	withCallbacks,
+} from "@/shared/utils";
+import {
+	Civility,
+	Client,
+	ClientStatus,
+	ClientType,
+	EmployeeCount,
+} from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { Wand2 } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
-import { useUpdateClient } from "../hooks/use-update-client";
+import { useParams, useRouter } from "next/navigation";
+import { useActionState } from "react";
+import { toast } from "sonner";
+import { GetClientReturn } from "../../get-client";
+import { updateClient } from "../actions/update-client";
+import { updateClientSchema } from "../schemas";
 
 type Props = {
 	client: NonNullable<GetClientReturn>;
@@ -33,40 +44,64 @@ type Props = {
 export function UpdateClientForm({ client }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
-	const { state, dispatch, isPending } = useUpdateClient();
+	const router = useRouter();
+	const defaultContact = client.contacts[0];
 
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			updateClient,
+			createToastCallbacks<Client, typeof updateClientSchema>({
+				loadingMessage: "Mise à jour du client en cours...",
+				onSuccess: (result) => {
+					toast.success("Client mis à jour avec succès", {
+						description: `Le client a été mis à jour.`,
+						duration: 5000,
+						action: {
+							label: "Voir le client",
+							onClick: () => {
+								if (result.data?.id) {
+									router.push(
+										`/dashboard/${result.data.organizationId}/clients/${result.data.id}`
+									);
+								}
+							},
+						},
+					});
+					form.reset();
+				},
+			})
+		),
+		undefined
+	);
+
+	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
 			organizationId,
-			id: client.id,
 			reference: state?.inputs?.reference ?? client.reference,
-			clientType: state?.inputs?.clientType ?? client.clientType,
-			status: state?.inputs?.status ?? client.status,
-			notes: state?.inputs?.notes ?? client.notes,
-			website: state?.inputs?.website ?? client.company?.website,
-			companyName: state?.inputs?.companyName ?? client.company?.companyName,
-			legalForm: state?.inputs?.legalForm ?? client.company?.legalForm,
-			businessSector:
-				state?.inputs?.businessSector ?? client.company?.businessSector,
-			employeeCount:
-				state?.inputs?.employeeCount ?? client.company?.employeeCount,
-			siren: state?.inputs?.siren ?? client.company?.siren,
-			siret: state?.inputs?.siret ?? client.company?.siret,
-			nafApeCode: state?.inputs?.nafApeCode ?? client.company?.nafApeCode,
-			capital: state?.inputs?.capital ?? client.company?.capital,
-			rcs: state?.inputs?.rcs ?? client.company?.rcs,
-			vatNumber: state?.inputs?.vatNumber ?? client.company?.vatNumber,
-			civility: state?.inputs?.civility ?? client.contacts[0]?.civility,
-			firstname: state?.inputs?.firstname ?? client.contacts[0]?.firstName,
-			lastname: state?.inputs?.lastname ?? client.contacts[0]?.lastName,
+			email: state?.inputs?.email ?? defaultContact.email,
+			phoneNumber: state?.inputs?.phoneNumber ?? defaultContact.phoneNumber,
+			mobileNumber: state?.inputs?.mobileNumber ?? defaultContact.mobileNumber,
+			faxNumber: state?.inputs?.faxNumber ?? defaultContact.faxNumber,
+			civility: state?.inputs?.civility ?? defaultContact.civility,
+			firstName: state?.inputs?.firstName ?? defaultContact.firstName,
+			lastName: state?.inputs?.lastName ?? defaultContact.lastName,
 			contactFunction:
-				state?.inputs?.contactFunction ?? client.contacts[0]?.function,
-			email: state?.inputs?.email ?? client.contacts[0]?.email,
-			phoneNumber:
-				state?.inputs?.phoneNumber ?? client.contacts[0]?.phoneNumber,
-			mobileNumber:
-				state?.inputs?.mobileNumber ?? client.contacts[0]?.mobileNumber,
-			faxNumber: state?.inputs?.faxNumber ?? client.contacts[0]?.faxNumber,
+				state?.inputs?.contactFunction ?? defaultContact.function,
+			website: state?.inputs?.website ?? defaultContact.website,
+			legalForm: state?.inputs?.legalForm ?? client.company?.legalForm,
+			clientType: ClientType.INDIVIDUAL as ClientType,
+			status: ClientStatus.ACTIVE as ClientStatus,
+			notes: state?.inputs?.notes ?? "",
+			siren: state?.inputs?.siren ?? "",
+			siret: state?.inputs?.siret ?? "",
+			nafApeCode: state?.inputs?.nafApeCode ?? "",
+			vatNumber: state?.inputs?.vatNumber ?? "",
+			businessSector: state?.inputs?.businessSector ?? "",
+			capital: state?.inputs?.capital ?? "",
+			rcs: state?.inputs?.rcs ?? "",
+			employeeCount: EmployeeCount.ONE_TO_TWO,
+			companyName: state?.inputs?.companyName ?? "",
 		},
 
 		transform: useTransform(
@@ -75,11 +110,7 @@ export function UpdateClientForm({ client }: Props) {
 		),
 	});
 
-	const clientType = useStore(
-		form.store,
-		(state) => state.values.clientType as ClientType
-	);
-
+	// Fonction simplifiée pour générer une référence automatique (sans vérification)
 	const handleGenerateReference = async () => {
 		try {
 			const reference = await generateReference({
@@ -96,10 +127,10 @@ export function UpdateClientForm({ client }: Props) {
 		}
 	};
 
-	useEffect(() => {
-		form.validateField("companyName", "change");
-		form.validateField("lastname", "change");
-	}, [clientType, form]);
+	const clientType = useStore(
+		form.store,
+		(state) => state.values.clientType as ClientType
+	);
 
 	return (
 		<form
@@ -107,14 +138,24 @@ export function UpdateClientForm({ client }: Props) {
 			className="space-y-6"
 			onSubmit={() => form.handleSubmit()}
 		>
+			{/* Erreurs globales du formulaire */}
 			<form.Subscribe selector={(state) => state.errors}>
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
 
-			<input type="hidden" name="organizationId" value={organizationId} />
-			<input type="hidden" name="id" value={client.id} />
+			{/* Champs cachés */}
+			<form.Field name="organizationId">
+				{(field) => (
+					<input
+						type="hidden"
+						name="organizationId"
+						value={field.state.value}
+					/>
+				)}
+			</form.Field>
 
 			<FormLayout withDividers columns={2} className="mt-6">
+				{/* Section 1: Informations de base */}
 				<ContentCard
 					title="Informations générales"
 					description="Renseignez les informations générales du client"
@@ -132,21 +173,30 @@ export function UpdateClientForm({ client }: Props) {
 										disabled={isPending}
 										label="Type de client"
 										options={CLIENT_TYPES}
+										onValueChangeCallback={(value) => {
+											if (value === ClientType.INDIVIDUAL) {
+												form.resetField("companyName");
+											} else if (
+												value === ClientType.COMPANY &&
+												form.getFieldValue("companyName") === ""
+											) {
+												form.resetField("lastName");
+											}
+										}}
 									/>
 								</div>
 							)}
 						</form.AppField>
-
 						{clientType === ClientType.COMPANY && (
 							<form.AppField
-								name="companyName"
 								validators={{
 									onChange: ({ value }) => {
 										if (clientType === ClientType.COMPANY && !value) {
-											return "Le nom de l'entreprise est requis pour un client entreprise";
+											return "Le nom de la société est requis pour un client entreprise";
 										}
 									},
 								}}
+								name="companyName"
 							>
 								{(field) => (
 									<field.InputField
@@ -160,22 +210,18 @@ export function UpdateClientForm({ client }: Props) {
 						)}
 
 						<form.Field
-							name="reference"
 							validators={{
 								onChange: ({ value }) => {
-									if (!value) return "La référence est requise";
-									if (value.length < 3)
+									if (value && value.length < 3)
 										return "La référence doit comporter au moins 3 caractères";
 								},
 							}}
+							name="reference"
 						>
 							{(field) => (
 								<div className="space-y-1.5">
 									<div className="flex items-center justify-between">
-										<FormLabel htmlFor="reference">
-											Référence
-											<span className="text-destructive ml-1">*</span>
-										</FormLabel>
+										<FormLabel htmlFor="reference">Référence</FormLabel>
 										<Button
 											type="button"
 											variant="ghost"
@@ -230,9 +276,18 @@ export function UpdateClientForm({ client }: Props) {
 								/>
 							)}
 						</form.AppField>
+						<form.AppField name="notes">
+							{(field) => (
+								<field.TextareaField
+									disabled={isPending}
+									label="Notes"
+									rows={6}
+									placeholder="Notes et informations complémentaires"
+								/>
+							)}
+						</form.AppField>
 					</div>
 				</ContentCard>
-
 				<ContentCard
 					title={`${clientType === ClientType.COMPANY ? "Contact principal" : "Informations du contact"}`}
 					description={`Informations de contact`}
@@ -244,7 +299,7 @@ export function UpdateClientForm({ client }: Props) {
 									<input
 										type="hidden"
 										name="civility"
-										value={field.state.value ?? ""}
+										value={field.state.value as Civility}
 									/>
 									<field.RadioGroupField
 										disabled={isPending}
@@ -260,14 +315,14 @@ export function UpdateClientForm({ client }: Props) {
 
 						<div className="grid grid-cols-2 gap-4">
 							<form.AppField
-								name="lastname"
 								validators={{
 									onChange: ({ value }) => {
 										if (clientType === ClientType.INDIVIDUAL && !value) {
-											return "Le nom est requis pour un client particulier";
+											return "Le nom est obligatoire pour un client particulier";
 										}
 									},
 								}}
+								name="lastName"
 							>
 								{(field) => (
 									<field.InputField
@@ -279,7 +334,7 @@ export function UpdateClientForm({ client }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="firstname">
+							<form.AppField name="firstName">
 								{(field) => (
 									<field.InputField
 										label="Prénom"
@@ -319,53 +374,56 @@ export function UpdateClientForm({ client }: Props) {
 								/>
 							)}
 						</form.AppField>
-
-						<form.AppField
-							name="phoneNumber"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
-											value
-										)
-									) {
-										return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Téléphone"
-									disabled={isPending}
-									placeholder="Ex: +33 1 23 45 67 89"
-								/>
-							)}
-						</form.AppField>
-						<form.AppField
-							name="mobileNumber"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(value)
-									) {
-										return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Mobile"
-									disabled={isPending}
-									placeholder="Ex: +33 6 12 34 56 78"
-								/>
-							)}
-						</form.AppField>
+						<div className="grid grid-cols-2 gap-4">
+							<form.AppField
+								name="phoneNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (
+											value &&
+											!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+												value
+											)
+										) {
+											return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Téléphone"
+										disabled={isPending}
+										placeholder="Ex: +33 1 23 45 67 89"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="mobileNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (
+											value &&
+											!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(
+												value
+											)
+										) {
+											return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Mobile"
+										disabled={isPending}
+										placeholder="Ex: +33 6 12 34 56 78"
+									/>
+								)}
+							</form.AppField>
+						</div>
 						<form.AppField
 							name="faxNumber"
 							validators={{
@@ -393,7 +451,6 @@ export function UpdateClientForm({ client }: Props) {
 					</div>
 				</ContentCard>
 
-				{/* Section 3: Informations de l'entreprise (conditionnel) */}
 				{clientType === ClientType.COMPANY && (
 					<ContentCard
 						title="Informations légales"
@@ -554,6 +611,8 @@ export function UpdateClientForm({ client }: Props) {
 					</ContentCard>
 				)}
 
+				{/* Section 3: Classification */}
+
 				<ContentCard
 					title="Classification"
 					description="Catégorisation et statut du client"
@@ -585,7 +644,6 @@ export function UpdateClientForm({ client }: Props) {
 					</div>
 				</ContentCard>
 			</FormLayout>
-
 			<ContentCard
 				title="Notes"
 				description="informations complémentaires sur le client"
@@ -608,7 +666,8 @@ export function UpdateClientForm({ client }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						submitLabel="Modifier le client"
+						cancelHref={`/dashboard/${organizationId}/clients`}
+						submitLabel="Créer le client"
 					/>
 				)}
 			</form.Subscribe>

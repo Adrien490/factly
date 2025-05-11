@@ -11,11 +11,11 @@ export function FormLayout({
 	withDividers = false,
 }: Omit<FormLayoutProps, "spacing"> & { spacing?: never }) {
 	// Configuration simplifiée des colonnes
-	const gridCols = columns === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2";
+	const gridCols = columns === 1 ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2";
 
 	// Dividers simplifiés
 	const dividerClasses = withDividers
-		? "divide-y md:divide-y-0 md:divide-x divide-border"
+		? "divide-y lg:divide-y-0 lg:divide-x divide-border"
 		: "";
 
 	return (

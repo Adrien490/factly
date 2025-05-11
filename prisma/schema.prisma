@@ -142,7 +142,7 @@ model Organization {
 
 model Client {
   id         String       @id @default(cuid())
-  reference  String       @unique
+  reference  String
   clientType ClientType   @default(INDIVIDUAL)
   status     ClientStatus @default(LEAD)
 
