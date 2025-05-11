@@ -14,8 +14,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/shared/components";
-import { CircleDot, MapPin, Receipt, Tag } from "lucide-react";
-import Image from "next/image";
+import { MapPin, Tag } from "lucide-react";
 import { use } from "react";
 
 import {
@@ -63,6 +62,13 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 								Client
 							</TableHead>
 							<TableHead
+								key="reference"
+								role="columnheader"
+								className="hidden md:table-cell"
+							>
+								Référence
+							</TableHead>
+							<TableHead
 								key="clientType"
 								role="columnheader"
 								className="hidden md:table-cell"
@@ -75,13 +81,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 								className="hidden md:table-cell"
 							>
 								Statut
-							</TableHead>
-							<TableHead
-								key="fiscalInfo"
-								role="columnheader"
-								className="hidden lg:table-cell"
-							>
-								Infos fiscales
 							</TableHead>
 							<TableHead
 								key="address"
@@ -108,18 +107,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 									<TableCell role="gridcell">
 										<div className="w-[200px] flex flex-col space-y-1">
 											<div className="flex items-center gap-2">
-												{client.clientType === "COMPANY" &&
-													client.company?.logoUrl && (
-														<div className="relative h-8 w-8 rounded-md overflow-hidden shrink-0">
-															<Image
-																src={client.company.logoUrl}
-																alt={`Logo de ${client.company.companyName}`}
-																fill
-																sizes="32px"
-																className="object-cover"
-															/>
-														</div>
-													)}
 												<div className="font-medium truncate">
 													{client.clientType === "COMPANY" ? (
 														client.company?.companyName
@@ -136,13 +123,19 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 													)}
 												</div>
 											</div>
-											{client.reference && (
-												<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-													<Tag className="h-3 w-3 shrink-0" />
-													<span className="truncate">{client.reference}</span>
-												</div>
-											)}
 										</div>
+									</TableCell>
+									<TableCell role="gridcell" className="hidden md:table-cell">
+										{client.reference ? (
+											<div className="flex items-center gap-1.5 text-sm">
+												<Tag className="h-3 w-3 shrink-0 text-muted-foreground" />
+												<span className="truncate">{client.reference}</span>
+											</div>
+										) : (
+											<span className="text-sm text-muted-foreground italic">
+												Non renseignée
+											</span>
+										)}
 									</TableCell>
 									<TableCell role="gridcell" className="hidden md:table-cell">
 										<Badge
@@ -173,31 +166,6 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 										>
 											{CLIENT_STATUS_LABELS[client.status]}
 										</Badge>
-									</TableCell>
-									<TableCell role="gridcell" className="hidden lg:table-cell">
-										<div className="flex flex-col space-y-1 max-w-[150px]">
-											{client.company?.siret && (
-												<div className="flex items-center gap-1.5 text-xs">
-													<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
-													<span className="truncate">
-														{client.company.siret}
-													</span>
-												</div>
-											)}
-											{client.company?.vatNumber && (
-												<div className="flex items-center gap-1.5 text-xs">
-													<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
-													<span className="truncate">
-														{client.company.vatNumber}
-													</span>
-												</div>
-											)}
-											{!client.company?.siret && !client.company?.vatNumber && (
-												<span className="text-xs text-muted-foreground italic">
-													Non renseignées
-												</span>
-											)}
-										</div>
 									</TableCell>
 									<TableCell role="gridcell" className="hidden lg:table-cell">
 										<div className="flex flex-col space-y-2 max-w-[250px] text-sm">

@@ -148,7 +148,6 @@ export const createClient: ServerAction<
 		const {
 			organizationId: validatedOrgId,
 			clientType,
-			logoUrl,
 			status,
 			reference,
 			notes,
@@ -220,7 +219,6 @@ export const createClient: ServerAction<
 				...(clientType === ClientType.COMPANY && {
 					company: {
 						create: {
-							logoUrl,
 							companyName: companyName!,
 							legalForm: legalForm!,
 							siren: siren!,

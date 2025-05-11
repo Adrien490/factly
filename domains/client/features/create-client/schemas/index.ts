@@ -20,7 +20,6 @@ export const createClientSchema = z.object({
 	reference: z.string().optional(),
 	clientType: z.nativeEnum(ClientType),
 	status: z.nativeEnum(ClientStatus),
-	logoUrl: z.string().optional().nullable(),
 	notes: z.string().optional().nullable(),
 
 	// Champs du contact
@@ -31,73 +30,81 @@ export const createClientSchema = z.object({
 	email: z.string().email("Format d'email invalide").optional().nullable(),
 	phoneNumber: z
 		.string()
-		.regex(
-			/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
-			"Format de numéro de téléphone invalide"
-		)
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) =>
+				!val || /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(val),
+			"Format de numéro de téléphone invalide"
+		),
 	mobileNumber: z
 		.string()
-		.regex(
-			/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/,
-			"Format de numéro de mobile invalide"
-		)
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) =>
+				!val || /^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(val),
+			"Format de numéro de mobile invalide"
+		),
 	faxNumber: z
 		.string()
-		.regex(
-			/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
-			"Format de numéro de fax invalide"
-		)
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) =>
+				!val || /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(val),
+			"Format de numéro de fax invalide"
+		),
 	website: z
 		.string()
-		.url("Format d'URL invalide")
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) =>
+				!val ||
+				/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+					val
+				),
+			"Format d'URL invalide"
+		),
 
 	// Champs de l'entreprise (optionnels)
 	companyName: z.string().optional().nullable(),
 	legalForm: z.nativeEnum(LegalForm).optional().nullable(),
 	siren: z
 		.string()
-		.regex(/^\d{9}$/, "Le numéro SIREN doit comporter exactement 9 chiffres")
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) => !val || /^\d{9}$/.test(val),
+			"Le numéro SIREN doit comporter exactement 9 chiffres"
+		),
 	siret: z
 		.string()
-		.regex(/^\d{14}$/, "Le numéro SIRET doit comporter exactement 14 chiffres")
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) => !val || /^\d{14}$/.test(val),
+			"Le numéro SIRET doit comporter exactement 14 chiffres"
+		),
 	nafApeCode: z
 		.string()
-		.regex(
-			/^\d{4}[A-Z]$/,
-			"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
-		)
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) => !val || /^\d{4}[A-Z]$/.test(val),
+			"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
+		),
 	capital: z.string().optional().nullable(),
 	rcs: z.string().optional().nullable(),
 	vatNumber: z
 		.string()
-		.regex(
-			/^FR\d{2}\d{9}$/,
-			"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
-		)
-		.optional()
+		.transform((val) => (val === "" ? null : val))
 		.nullable()
-		.transform((val) => (val === "" ? null : val)),
+		.refine(
+			(val) => !val || /^FR\d{2}\d{9}$/.test(val),
+			"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
+		),
 	businessSector: z.nativeEnum(BusinessSector).optional().nullable(),
 	employeeCount: z.nativeEnum(EmployeeCount).optional().nullable(),
 

@@ -92,7 +92,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			faxNumber: state?.inputs?.faxNumber ?? "",
 			civility: state?.inputs?.civility ?? "",
 			firstname: state?.inputs?.firstname ?? "",
-			logoUrl: state?.inputs?.logoUrl ?? "",
 			lastname: state?.inputs?.lastname ?? "",
 			contactFunction: state?.inputs?.contactFunction ?? "",
 			website: state?.inputs?.website ?? "",
@@ -217,7 +216,15 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<input type="hidden" name="organizationId" value={organizationId} />
+			<form.Field name="organizationId">
+				{(field) => (
+					<input
+						type="hidden"
+						name="organizationId"
+						value={field.state.value}
+					/>
+				)}
+			</form.Field>
 			<form.Field name="latitude">
 				{(field) => (
 					<input
@@ -270,29 +277,16 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 						{clientType === ClientType.COMPANY && (
-							<>
-								<form.AppField name="companyName">
-									{(field) => (
-										<field.InputField
-											disabled={isPending}
-											label="Nom de la société"
-											placeholder="Nom de l'entreprise"
-											required
-										/>
-									)}
-								</form.AppField>
-								<form.AppField name="logoUrl">
-									{(field) => (
-										<field.UploadField
-											label="Logo"
-											disabled={isPending}
-											endpoint="companyLogo"
-											accept="JPG, PNG ou SVG"
-											maxSize="2MB"
-										/>
-									)}
-								</form.AppField>
-							</>
+							<form.AppField name="companyName">
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="Nom de la société"
+										placeholder="Nom de l'entreprise"
+										required
+									/>
+								)}
+							</form.AppField>
 						)}
 
 						<form.Field name="reference">
