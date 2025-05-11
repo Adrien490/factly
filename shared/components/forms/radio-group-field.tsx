@@ -14,6 +14,7 @@ interface RadioGroupFieldProps {
 	label?: string;
 	required?: boolean;
 	disabled?: boolean;
+	onValueChangeCallback?: (value: string) => void;
 }
 
 export const RadioGroupField = ({
@@ -21,6 +22,7 @@ export const RadioGroupField = ({
 	label,
 	required,
 	disabled,
+	onValueChangeCallback,
 }: RadioGroupFieldProps) => {
 	const field = useFieldContext<string>();
 
@@ -35,7 +37,10 @@ export const RadioGroupField = ({
 			<RadioGroup
 				disabled={disabled}
 				value={field.state.value}
-				onValueChange={field.handleChange}
+				onValueChange={(value) => {
+					field.handleChange(value);
+					onValueChangeCallback?.(value);
+				}}
 				className="flex gap-4 flex-wrap"
 			>
 				{options.map((option) => (

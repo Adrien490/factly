@@ -99,8 +99,8 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			clientType: ClientType.INDIVIDUAL as ClientType,
 			status: ClientStatus.ACTIVE as ClientStatus,
 			notes: state?.inputs?.notes ?? "",
-			sirenNumber: state?.inputs?.sirenNumber ?? "",
-			siretNumber: state?.inputs?.siretNumber ?? "",
+			siren: state?.inputs?.siren ?? "",
+			siret: state?.inputs?.siret ?? "",
 			nafApeCode: state?.inputs?.nafApeCode ?? "",
 			vatNumber: state?.inputs?.vatNumber ?? "",
 			businessSector: state?.inputs?.businessSector ?? "",
@@ -274,27 +274,17 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.InputField
 										disabled={isPending}
 										label="Nom de la société"
+										placeholder="Nom de l'entreprise"
+										required
 									/>
 								)}
 							</form.AppField>
 						)}
-						<form.Field
-							name="reference"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "La référence est requise";
-									if (value.length < 3)
-										return "La référence doit comporter au moins 3 caractères";
-								},
-							}}
-						>
+						<form.Field name="reference">
 							{(field) => (
 								<div className="space-y-1.5">
 									<div className="flex items-center justify-between">
-										<FormLabel htmlFor="reference">
-											Référence
-											<span className="text-destructive ml-1">*</span>
-										</FormLabel>
+										<FormLabel htmlFor="reference">Référence</FormLabel>
 										<Button
 											type="button"
 											variant="ghost"
@@ -377,6 +367,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.RadioGroupField
 										disabled={isPending}
 										label="Civilité"
+										required={clientType === ClientType.INDIVIDUAL}
 										options={CIVILITIES.map((civility) => ({
 											value: civility.value,
 											label: civility.label,
@@ -393,6 +384,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										label="Nom"
 										disabled={isPending}
 										placeholder="Nom du contact"
+										required={clientType === ClientType.INDIVIDUAL}
 									/>
 								)}
 							</form.AppField>
@@ -529,7 +521,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 
 							<form.AppField
-								name="siretNumber"
+								name="siret"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^\d{14}$/.test(value)) {
@@ -548,7 +540,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="sirenNumber"
+								name="siren"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^\d{9}$/.test(value)) {

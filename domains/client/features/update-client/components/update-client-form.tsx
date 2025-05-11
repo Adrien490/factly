@@ -11,12 +11,19 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
-import { Button, FormLabel, Input } from "@/shared/components/ui";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+
+import { BUSINESS_SECTORS, EMPLOYEE_COUNTS } from "@/domains/company/constants";
+import { CIVILITIES } from "@/domains/contact/constants/civilities";
+import { FormLabel } from "@/shared/components";
+import { LEGAL_FORMS } from "@/shared/constants";
 import { generateReference } from "@/shared/utils";
-import { ClientStatus } from "@prisma/client";
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { ClientStatus, ClientType } from "@prisma/client";
+import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { Wand2 } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
 import { useUpdateClient } from "../hooks/use-update-client";
 
 type Props = {
@@ -36,6 +43,30 @@ export function UpdateClientForm({ client }: Props) {
 			clientType: state?.inputs?.clientType ?? client.clientType,
 			status: state?.inputs?.status ?? client.status,
 			notes: state?.inputs?.notes ?? client.notes,
+			website: state?.inputs?.website ?? client.company?.website,
+			companyName: state?.inputs?.companyName ?? client.company?.companyName,
+			legalForm: state?.inputs?.legalForm ?? client.company?.legalForm,
+			businessSector:
+				state?.inputs?.businessSector ?? client.company?.businessSector,
+			employeeCount:
+				state?.inputs?.employeeCount ?? client.company?.employeeCount,
+			siren: state?.inputs?.siren ?? client.company?.siren,
+			siret: state?.inputs?.siret ?? client.company?.siret,
+			nafApeCode: state?.inputs?.nafApeCode ?? client.company?.nafApeCode,
+			capital: state?.inputs?.capital ?? client.company?.capital,
+			rcs: state?.inputs?.rcs ?? client.company?.rcs,
+			vatNumber: state?.inputs?.vatNumber ?? client.company?.vatNumber,
+			civility: state?.inputs?.civility ?? client.contacts[0]?.civility,
+			firstname: state?.inputs?.firstname ?? client.contacts[0]?.firstName,
+			lastname: state?.inputs?.lastname ?? client.contacts[0]?.lastName,
+			contactFunction:
+				state?.inputs?.contactFunction ?? client.contacts[0]?.function,
+			email: state?.inputs?.email ?? client.contacts[0]?.email,
+			phoneNumber:
+				state?.inputs?.phoneNumber ?? client.contacts[0]?.phoneNumber,
+			mobileNumber:
+				state?.inputs?.mobileNumber ?? client.contacts[0]?.mobileNumber,
+			faxNumber: state?.inputs?.faxNumber ?? client.contacts[0]?.faxNumber,
 		},
 
 		transform: useTransform(
@@ -43,6 +74,11 @@ export function UpdateClientForm({ client }: Props) {
 			[state]
 		),
 	});
+
+	const clientType = useStore(
+		form.store,
+		(state) => state.values.clientType as ClientType
+	);
 
 	const handleGenerateReference = async () => {
 		try {
@@ -59,6 +95,11 @@ export function UpdateClientForm({ client }: Props) {
 			console.error("Erreur lors de la génération de référence", error);
 		}
 	};
+
+	useEffect(() => {
+		form.validateField("companyName", "change");
+		form.validateField("lastname", "change");
+	}, [clientType, form]);
 
 	return (
 		<form
@@ -95,6 +136,28 @@ export function UpdateClientForm({ client }: Props) {
 								</div>
 							)}
 						</form.AppField>
+
+						{clientType === ClientType.COMPANY && (
+							<form.AppField
+								name="companyName"
+								validators={{
+									onChange: ({ value }) => {
+										if (clientType === ClientType.COMPANY && !value) {
+											return "Le nom de l'entreprise est requis pour un client entreprise";
+										}
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="Nom de la société"
+										placeholder="Nom de l'entreprise"
+										required
+									/>
+								)}
+							</form.AppField>
+						)}
 
 						<form.Field
 							name="reference"
@@ -143,18 +206,353 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.Field>
 
-						<form.AppField name="notes">
+						<form.AppField
+							name="website"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+											value
+										)
+									) {
+										return "Format d'URL invalide (ex: https://www.example.com)";
+									}
+									return undefined;
+								},
+							}}
+						>
 							{(field) => (
-								<field.TextareaField
+								<field.InputField
+									label="Site web"
 									disabled={isPending}
-									label="Notes"
-									rows={6}
-									placeholder="Notes et informations complémentaires"
+									placeholder="Ex: https://www.example.com"
 								/>
 							)}
 						</form.AppField>
 					</div>
 				</ContentCard>
+
+				<ContentCard
+					title={`${clientType === ClientType.COMPANY ? "Contact principal" : "Informations du contact"}`}
+					description={`Informations de contact`}
+				>
+					<div className="space-y-4">
+						<form.AppField name="civility">
+							{(field) => (
+								<>
+									<input
+										type="hidden"
+										name="civility"
+										value={field.state.value ?? ""}
+									/>
+									<field.RadioGroupField
+										disabled={isPending}
+										label="Civilité"
+										options={CIVILITIES.map((civility) => ({
+											value: civility.value,
+											label: civility.label,
+										}))}
+									/>
+								</>
+							)}
+						</form.AppField>
+
+						<div className="grid grid-cols-2 gap-4">
+							<form.AppField
+								name="lastname"
+								validators={{
+									onChange: ({ value }) => {
+										if (clientType === ClientType.INDIVIDUAL && !value) {
+											return "Le nom est requis pour un client particulier";
+										}
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Nom"
+										disabled={isPending}
+										placeholder="Nom du contact"
+										required={clientType === ClientType.INDIVIDUAL}
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="firstname">
+								{(field) => (
+									<field.InputField
+										label="Prénom"
+										disabled={isPending}
+										placeholder="Prénom du contact"
+									/>
+								)}
+							</form.AppField>
+						</div>
+
+						<form.AppField name="contactFunction">
+							{(field) => (
+								<field.InputField
+									label="Fonction"
+									disabled={isPending}
+									placeholder="Fonction du contact"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="email"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+										return "Format d'email invalide";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Email"
+									disabled={isPending}
+									placeholder="Ex: contact@example.com"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="phoneNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+						<form.AppField
+							name="mobileNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(value)
+									) {
+										return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Mobile"
+									disabled={isPending}
+									placeholder="Ex: +33 6 12 34 56 78"
+								/>
+							)}
+						</form.AppField>
+						<form.AppField
+							name="faxNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de fax invalide (ex: +33 1 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Fax"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</ContentCard>
+
+				{/* Section 3: Informations de l'entreprise (conditionnel) */}
+				{clientType === ClientType.COMPANY && (
+					<ContentCard
+						title="Informations légales"
+						description="Informations légales de l'entreprise"
+					>
+						<div className="space-y-4">
+							<form.AppField name="legalForm">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Forme juridique"
+										options={LEGAL_FORMS}
+										placeholder="Sélectionnez une forme juridique"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="siret"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^\d{14}$/.test(value)) {
+											return "Le numéro SIRET doit comporter exactement 14 chiffres";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIRET"
+										placeholder="14 chiffres (ex: 12345678900001)"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="siren"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^\d{9}$/.test(value)) {
+											return "Le numéro SIREN doit comporter exactement 9 chiffres";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIREN"
+										placeholder="9 chiffres (ex: 123456789)"
+									/>
+								)}
+							</form.AppField>
+
+							<div className="grid grid-cols-2 gap-4">
+								<form.AppField
+									name="nafApeCode"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
+												return "Le code APE doit être au format 4 chiffres + 1 lettre (ex: 6201Z)";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Code APE"
+											placeholder="Ex: 6201Z"
+										/>
+									)}
+								</form.AppField>
+
+								<form.AppField
+									name="capital"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
+												return "Le capital doit être un nombre avec maximum 2 décimales";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Capital social"
+											placeholder="Ex: 10000.00"
+										/>
+									)}
+								</form.AppField>
+							</div>
+							<form.AppField
+								name="rcs"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^[A-Z]\d{8}$/.test(value)) {
+											return "Le numéro RCS doit commencer par une lettre suivie de 8 chiffres (ex: B12345678)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="RCS"
+										placeholder="Ex: B12345678"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="vatNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^FR\d{2}\d{9}$/.test(value)) {
+											return "Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres (ex: FR12345678900)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="N° TVA"
+										placeholder="Ex: FR12345678900"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="businessSector">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Secteur d'activité"
+										options={BUSINESS_SECTORS}
+										placeholder="Sélectionnez un secteur d'activité"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField name="employeeCount">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Effectif"
+										options={EMPLOYEE_COUNTS}
+										placeholder="Sélectionnez l'effectif"
+									/>
+								)}
+							</form.AppField>
+						</div>
+					</ContentCard>
+				)}
 
 				<ContentCard
 					title="Classification"
@@ -187,6 +585,24 @@ export function UpdateClientForm({ client }: Props) {
 					</div>
 				</ContentCard>
 			</FormLayout>
+
+			<ContentCard
+				title="Notes"
+				description="informations complémentaires sur le client"
+			>
+				<div className="space-y-4">
+					<form.AppField name="notes">
+						{(field) => (
+							<field.TextareaField
+								label="Notes"
+								disabled={isPending}
+								rows={6}
+								placeholder="Notes et informations complémentaires"
+							/>
+						)}
+					</form.AppField>
+				</div>
+			</ContentCard>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (

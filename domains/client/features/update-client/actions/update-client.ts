@@ -9,8 +9,14 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
-} from "@/shared/types";
-import { Client, ClientStatus, ClientType } from "@prisma/client";
+} from "@/shared/types/server-action";
+import {
+	BusinessSector,
+	Civility,
+	Client,
+	EmployeeCount,
+	LegalForm,
+} from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateClientSchema } from "../schemas";
@@ -40,10 +46,11 @@ export const updateClient: ServerAction<
 
 		// 2. Vérification de base des données requises
 		const organizationId = formData.get("organizationId");
-		if (!organizationId) {
+		const id = formData.get("id");
+		if (!organizationId || !id) {
 			return createErrorResponse(
 				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
+				"L'ID de l'organisation et l'ID du client sont requis"
 			);
 		}
 
@@ -58,12 +65,35 @@ export const updateClient: ServerAction<
 
 		// 4. Préparation et transformation des données brutes
 		const rawData = {
-			id: formData.get("id") as string,
+			id: id.toString(),
 			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
-			clientType: formData.get("clientType") as ClientType,
-			status: formData.get("status") as ClientStatus,
+			clientType: formData.get("clientType") as string,
+			status: formData.get("status") as string,
 			notes: formData.get("notes") as string,
+
+			// Champs du contact
+			civility: formData.get("civility") as Civility,
+			firstname: formData.get("firstname") as string,
+			lastname: formData.get("lastname") as string,
+			contactFunction: formData.get("contactFunction") as string,
+			email: formData.get("email") as string,
+			phoneNumber: formData.get("phoneNumber") as string,
+			mobileNumber: formData.get("mobileNumber") as string,
+			faxNumber: formData.get("faxNumber") as string,
+			website: formData.get("website") as string,
+
+			// Champs de l'entreprise
+			companyName: formData.get("companyName") as string,
+			legalForm: formData.get("legalForm") as LegalForm,
+			siren: formData.get("siren") as string,
+			siret: formData.get("siret") as string,
+			nafApeCode: formData.get("nafApeCode") as string,
+			capital: formData.get("capital") as string,
+			rcs: formData.get("rcs") as string,
+			vatNumber: formData.get("vatNumber") as string,
+			businessSector: formData.get("businessSector") as BusinessSector,
+			employeeCount: formData.get("employeeCount") as EmployeeCount,
 		};
 
 		console.log("[UPDATE_CLIENT] Raw data:", rawData);
@@ -77,17 +107,20 @@ export const updateClient: ServerAction<
 			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Veuillez remplir tous les champs obligatoires"
+				"Veuillez remplir tous les champs obligatoires",
+				rawData
 			);
 		}
+
+		const data = validation.data;
 
 		// 6. Vérification de l'existence de la référence
 		const existingClient = await db.client.findFirst({
 			where: {
-				reference: validation.data.reference,
-				organizationId: validation.data.organizationId,
+				reference: data.reference,
+				organizationId: data.organizationId,
 				id: {
-					not: validation.data.id,
+					not: data.id,
 				},
 			},
 			select: { id: true },
@@ -96,35 +129,85 @@ export const updateClient: ServerAction<
 		if (existingClient) {
 			return createErrorResponse(
 				ActionStatus.CONFLICT,
-				"Un client avec cette référence existe déjà dans l'organisation",
-				rawData
+				"Un client avec cette référence existe déjà dans l'organisation"
 			);
 		}
 
 		// 7. Mise à jour du client dans la base de données
-		const {
-			id,
-			organizationId: validatedOrgId,
-			clientType,
-			status,
-			reference,
-			notes,
-		} = validation.data;
-
-		// Mettre à jour le client
 		const client = await db.client.update({
-			where: { id },
+			where: {
+				id: data.id,
+			},
 			data: {
-				reference,
-				clientType,
-				status,
-				notes,
+				reference: data.reference,
+				clientType: data.clientType,
+				status: data.status,
+				notes: data.notes,
+				// Mettre à jour le contact principal
+				contacts: {
+					updateMany: {
+						where: {
+							clientId: data.id,
+							isDefault: true,
+						},
+						data: {
+							civility: data.civility,
+							firstName: data.firstname ?? "",
+							lastName: data.lastname ?? "",
+							function: data.contactFunction,
+							email: data.email,
+							phoneNumber: data.phoneNumber,
+							mobileNumber: data.mobileNumber,
+							faxNumber: data.faxNumber,
+							website: data.website,
+						},
+					},
+				},
+				// Mettre à jour ou créer les informations de l'entreprise si le client est de type COMPANY
+				...(data.clientType === "COMPANY" && {
+					company: {
+						upsert: {
+							create: {
+								companyName: data.companyName ?? "",
+								legalForm: data.legalForm,
+								siren: data.siren,
+								siret: data.siret,
+								nafApeCode: data.nafApeCode,
+								capital: data.capital,
+								rcs: data.rcs,
+								vatNumber: data.vatNumber,
+								businessSector: data.businessSector,
+								employeeCount: data.employeeCount,
+							},
+							update: {
+								companyName: data.companyName ?? "",
+								legalForm: data.legalForm,
+								siren: data.siren,
+								siret: data.siret,
+								nafApeCode: data.nafApeCode,
+								capital: data.capital,
+								rcs: data.rcs,
+								vatNumber: data.vatNumber,
+								businessSector: data.businessSector,
+								employeeCount: data.employeeCount,
+							},
+						},
+					},
+				}),
+			},
+			include: {
+				company: true,
+				contacts: {
+					where: {
+						isDefault: true,
+					},
+				},
 			},
 		});
 
-		// 8. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`organizations:${validatedOrgId}:clients:${id}`);
-		revalidateTag(`organizations:${validatedOrgId}:clients`);
+		// 8. Invalidation du cache
+		revalidateTag(`organizations:${data.organizationId}:clients`);
+		revalidateTag(`organizations:${data.organizationId}:clients:${data.id}`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

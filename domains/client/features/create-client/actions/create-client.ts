@@ -88,8 +88,8 @@ export const createClient: ServerAction<
 			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
 			legalForm: formData.get("legalForm") as LegalForm,
-			sirenNumber: formData.get("sirenNumber") as string,
-			siretNumber: formData.get("siretNumber") as string,
+			siren: formData.get("siren") as string,
+			siret: formData.get("siret") as string,
 			nafApeCode: formData.get("nafApeCode") as string,
 			capital: formData.get("capital") as string,
 			rcs: formData.get("rcs") as string,
@@ -166,8 +166,8 @@ export const createClient: ServerAction<
 			// Informations d'entreprise
 			companyName,
 			legalForm,
-			sirenNumber,
-			siretNumber,
+			siren,
+			siret,
 			nafApeCode,
 			capital,
 			rcs,
@@ -189,7 +189,7 @@ export const createClient: ServerAction<
 		// Créer le client avec les relations appropriées
 		const client = await db.client.create({
 			data: {
-				reference,
+				reference: reference ?? "",
 				clientType,
 				status,
 				notes,
@@ -221,8 +221,8 @@ export const createClient: ServerAction<
 						create: {
 							companyName: companyName!,
 							legalForm: legalForm!,
-							siren: sirenNumber!,
-							siret: siretNumber!,
+							siren: siren!,
+							siret: siret!,
 							nafApeCode: nafApeCode!,
 							capital: capital!,
 							rcs: rcs!,
