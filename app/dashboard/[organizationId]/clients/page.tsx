@@ -110,10 +110,6 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				<SortingOptionsDropdown
 					sortFields={[
 						{
-							label: "Nom",
-							value: "name",
-						},
-						{
 							label: "Référence",
 							value: "reference",
 						},

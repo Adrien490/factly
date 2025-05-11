@@ -62,8 +62,4 @@ export const GET_CLIENTS_DEFAULT_SORT_BY = "createdAt";
 
 export const GET_CLIENTS_DEFAULT_SORT_ORDER = "desc";
 
-export const GET_CLIENTS_SORT_FIELDS = [
-	"name",
-	"createdAt",
-	"reference",
-] as const;
+export const GET_CLIENTS_SORT_FIELDS = ["createdAt", "reference"] as const;
