@@ -6,9 +6,9 @@ import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import {
-	DEFAULT_PER_PAGE,
+	GET_CLIENTS_DEFAULT_PER_PAGE,
 	GET_CLIENTS_DEFAULT_SELECT,
-	MAX_RESULTS_PER_PAGE,
+	GET_CLIENTS_MAX_RESULTS_PER_PAGE,
 } from "../constants";
 import { getClientsSchema } from "../schemas";
 import { GetClientsReturn } from "../types";
@@ -43,8 +43,8 @@ export async function fetchClients(
 	// Tag pour la pagination
 	const page = Math.max(1, Number(params.page) || 1);
 	const perPage = Math.min(
-		Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
-		MAX_RESULTS_PER_PAGE
+		Math.max(1, Number(params.perPage) || GET_CLIENTS_DEFAULT_PER_PAGE),
+		GET_CLIENTS_MAX_RESULTS_PER_PAGE
 	);
 	cacheTag(
 		`organizations:${params.organizationId}:page:${page}:perPage:${perPage}`
@@ -108,7 +108,7 @@ export async function fetchClients(
 			clients: [],
 			pagination: {
 				page: 1,
-				perPage: DEFAULT_PER_PAGE,
+				perPage: GET_CLIENTS_DEFAULT_PER_PAGE,
 				total: 0,
 				pageCount: 0,
 			},

@@ -1,7 +1,7 @@
 import { AddressType, Prisma } from "@prisma/client";
 
-export const MAX_RESULTS_PER_PAGE = 100;
-export const DEFAULT_PER_PAGE = 10;
+export const GET_CLIENTS_MAX_RESULTS_PER_PAGE = 100;
+export const GET_CLIENTS_DEFAULT_PER_PAGE = 10;
 
 /**
  * Sélection par défaut des champs pour les clients
