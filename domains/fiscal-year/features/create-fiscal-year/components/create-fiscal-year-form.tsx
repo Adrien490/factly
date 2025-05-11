@@ -1,5 +1,6 @@
 "use client";
 
+import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
 	FormErrors,
@@ -21,7 +22,7 @@ import { FiscalYear } from "@prisma/client";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
@@ -125,7 +126,6 @@ export function CreateFiscalYearForm() {
 				<ContentCard
 					title="Informations générales"
 					description="Renseignez les informations principales de l'année fiscale"
-					icon={CalendarIcon}
 				>
 					<div className="space-y-4">
 						<form.Field
@@ -189,7 +189,6 @@ export function CreateFiscalYearForm() {
 				<ContentCard
 					title="Période de l'année fiscale"
 					description="Définissez les dates de début et de fin de l'année fiscale"
-					icon={Clock}
 				>
 					<div className="space-y-4">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
