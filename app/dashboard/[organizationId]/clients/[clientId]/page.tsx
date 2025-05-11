@@ -5,7 +5,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Country } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, FileText, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Link from "next/link";
 import NotFound from "../../not-found";
 
@@ -38,7 +38,7 @@ export default async function ClientPage({ params }: Props) {
 						title={
 							isCompany
 								? "Informations de l'entreprise"
-								: "Informations du client"
+								: "Informations du contact"
 						}
 						description="Détails du client"
 					>
@@ -49,7 +49,7 @@ export default async function ClientPage({ params }: Props) {
 									<h3 className="text-sm font-semibold mb-2">Coordonnées</h3>
 									<ul className="space-y-3">
 										{client.contacts[0]?.email && (
-											<li className="flex items-start gap-3">
+											<li>
 												<div>
 													<p className="text-xs text-muted-foreground">Email</p>
 													<a
@@ -63,7 +63,7 @@ export default async function ClientPage({ params }: Props) {
 										)}
 
 										{client.contacts[0]?.phoneNumber && (
-											<li className="flex items-start gap-3">
+											<li>
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Téléphone
@@ -79,7 +79,7 @@ export default async function ClientPage({ params }: Props) {
 										)}
 
 										{client.contacts[0]?.website && (
-											<li className="flex items-start gap-3">
+											<li>
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Site web
@@ -100,8 +100,7 @@ export default async function ClientPage({ params }: Props) {
 										)}
 
 										{client.createdAt && (
-											<li className="flex items-start gap-3">
-												<Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
+											<li>
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Client depuis
@@ -121,66 +120,60 @@ export default async function ClientPage({ params }: Props) {
 							{/* Informations spécifiques selon le type de client */}
 							<div className="space-y-4">
 								{isCompany ? (
-									<>
-										<div>
-											<h3 className="text-sm font-semibold mb-2">
-												Informations légales
-											</h3>
-											<ul className="space-y-3">
-												{client.company?.siren && (
-													<li className="flex items-start gap-3">
-														<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
-														<div>
-															<p className="text-xs text-muted-foreground">
-																SIREN
-															</p>
-															<p className="text-sm">{client.company.siren}</p>
-														</div>
+									<div>
+										<h3 className="text-sm font-semibold mb-2">
+											Informations légales
+										</h3>
+										<ul className="space-y-3">
+											{client.company?.siren && (
+												<li>
+													<div>
+														<p className="text-xs text-muted-foreground">
+															SIREN
+														</p>
+														<p className="text-sm">{client.company.siren}</p>
+													</div>
+												</li>
+											)}
+
+											{client.company?.siret && (
+												<li>
+													<div>
+														<p className="text-xs text-muted-foreground">
+															SIRET
+														</p>
+														<p className="text-sm">{client.company.siret}</p>
+													</div>
+												</li>
+											)}
+
+											{client.company?.vatNumber && (
+												<li>
+													<div>
+														<p className="text-xs text-muted-foreground">TVA</p>
+														<p className="text-sm">
+															{client.company.vatNumber}
+														</p>
+													</div>
+												</li>
+											)}
+
+											{!client.company?.siren &&
+												!client.company?.siret &&
+												!client.company?.vatNumber && (
+													<li className="text-muted-foreground text-sm">
+														Aucune information légale renseignée
 													</li>
 												)}
-
-												{client.company?.siret && (
-													<li className="flex items-start gap-3">
-														<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
-														<div>
-															<p className="text-xs text-muted-foreground">
-																SIRET
-															</p>
-															<p className="text-sm">{client.company.siret}</p>
-														</div>
-													</li>
-												)}
-
-												{client.company?.vatNumber && (
-													<li className="flex items-start gap-3">
-														<div>
-															<p className="text-xs text-muted-foreground">
-																TVA
-															</p>
-															<p className="text-sm">
-																{client.company.vatNumber}
-															</p>
-														</div>
-													</li>
-												)}
-
-												{!client.company?.siren &&
-													!client.company?.siret &&
-													!client.company?.vatNumber && (
-														<li className="text-muted-foreground text-sm">
-															Aucune information légale renseignée
-														</li>
-													)}
-											</ul>
-										</div>
-									</>
+										</ul>
+									</div>
 								) : (
 									<div>
 										<h3 className="text-sm font-semibold mb-2">
 											Informations personnelles
 										</h3>
 										<ul className="space-y-3">
-											<li className="flex items-start gap-3">
+											<li>
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Nom complet
@@ -192,7 +185,7 @@ export default async function ClientPage({ params }: Props) {
 												</div>
 											</li>
 											{client.contacts[0]?.function && (
-												<li className="flex items-start gap-3">
+												<li>
 													<div>
 														<p className="text-xs text-muted-foreground">
 															Fonction
@@ -212,13 +205,11 @@ export default async function ClientPage({ params }: Props) {
 						{/* Notes du client si présentes */}
 						{client.notes && (
 							<div className="mt-6 pt-6 border-t border-dashed border-gray-200 dark:border-gray-800">
-								<div className="flex items-start gap-2">
-									<div>
-										<h3 className="text-sm font-semibold mb-1">Notes</h3>
-										<p className="text-sm text-gray-700 dark:text-gray-300">
-											{client.notes}
-										</p>
-									</div>
+								<div>
+									<h3 className="text-sm font-semibold mb-1">Notes</h3>
+									<p className="text-sm text-gray-700 dark:text-gray-300">
+										{client.notes}
+									</p>
 								</div>
 							</div>
 						)}
