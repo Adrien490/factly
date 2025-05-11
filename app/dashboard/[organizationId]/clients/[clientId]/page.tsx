@@ -1,12 +1,8 @@
-import { ADDRESS_TYPES } from "@/domains/address/constants";
 import { getClient } from "@/domains/client/features/get-client";
 import { ContentCard } from "@/shared/components/content-card";
-import { Button } from "@/shared/components/ui/button";
 import { Country } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { MapPin } from "lucide-react";
-import Link from "next/link";
 import NotFound from "../../not-found";
 
 type Props = {
@@ -29,6 +25,8 @@ export default async function ClientPage({ params }: Props) {
 
 	return (
 		<div className="space-y-6">
+			{/* En-tête avec informations principales */}
+
 			{/* Conteneur principal à deux colonnes */}
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				{/* Colonne principale (2/3) */}
@@ -40,7 +38,6 @@ export default async function ClientPage({ params }: Props) {
 								? "Informations de l'entreprise"
 								: "Informations du contact"
 						}
-						description="Détails du client"
 					>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{/* Informations de contact */}
@@ -95,21 +92,6 @@ export default async function ClientPage({ params }: Props) {
 															""
 														)}
 													</a>
-												</div>
-											</li>
-										)}
-
-										{client.createdAt && (
-											<li>
-												<div>
-													<p className="text-xs text-muted-foreground">
-														Client depuis
-													</p>
-													<p className="text-sm">
-														{format(new Date(client.createdAt), "d MMMM yyyy", {
-															locale: fr,
-														})}
-													</p>
 												</div>
 											</li>
 										)}
@@ -216,66 +198,109 @@ export default async function ClientPage({ params }: Props) {
 					</ContentCard>
 
 					{/* Adresses */}
-					<ContentCard
-						title="Adresses"
-						description="Liste des adresses du client"
-					>
+					<ContentCard title="Adresses">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-							{client.addresses.map((address) => {
-								const {
-									id,
-									addressType,
-									addressLine1,
-									addressLine2,
-									city,
-									postalCode,
-									country,
-									isDefault,
-								} = address;
-
-								const addressTypeLabel = ADDRESS_TYPES.find(
-									(type) => type.value === addressType
-								)?.label;
-
-								return (
-									<div key={id} className="p-3 border rounded-lg">
-										<div className="flex items-start gap-2">
-											<MapPin className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-
-											<div className="min-w-0 flex-1">
-												<div className="flex flex-wrap items-center gap-1.5 mb-0.5">
-													<p className="text-sm font-medium">{addressLine1}</p>
-													{isDefault && (
-														<span className="text-xs px-1.5 py-0.5 bg-primary/10 text-primary rounded">
-															Par défaut
-														</span>
-													)}
-												</div>
-
-												{addressLine2 && (
-													<p className="text-xs text-muted-foreground">
-														{addressLine2}
-													</p>
-												)}
-
-												<p className="text-xs text-muted-foreground mt-0.5">
-													{[
-														postalCode,
-														city,
-														country !== Country.FRANCE ? country : null,
-													]
-														.filter(Boolean)
-														.join(", ")}
-												</p>
-
-												<p className="text-xs mt-1.5 text-muted-foreground">
-													{addressTypeLabel}
-												</p>
-											</div>
+							{/* Adresse de facturation */}
+							{client.addresses.find(
+								(address) =>
+									address.isDefault && address.addressType === "BILLING"
+							) ? (
+								<div className="p-3 border rounded-lg">
+									<div>
+										<h3 className="text-sm font-semibold mb-2">
+											Adresse de facturation
+										</h3>
+										<div className="space-y-1">
+											{(() => {
+												const address = client.addresses.find(
+													(addr) =>
+														addr.isDefault && addr.addressType === "BILLING"
+												);
+												return (
+													<>
+														<p className="text-sm font-medium">
+															{address?.addressLine1}
+														</p>
+														{address?.addressLine2 && (
+															<p className="text-sm text-muted-foreground">
+																{address.addressLine2}
+															</p>
+														)}
+														<p className="text-sm text-muted-foreground">
+															{[
+																address?.postalCode,
+																address?.city,
+																address?.country !== Country.FRANCE
+																	? address?.country
+																	: null,
+															]
+																.filter(Boolean)
+																.join(", ")}
+														</p>
+													</>
+												);
+											})()}
 										</div>
 									</div>
-								);
-							})}
+								</div>
+							) : null}
+
+							{/* Adresse de livraison */}
+							{client.addresses.find(
+								(address) =>
+									address.isDefault && address.addressType === "SHIPPING"
+							) ? (
+								<div className="p-3 border rounded-lg">
+									<div>
+										<h3 className="text-sm font-semibold mb-2">
+											Adresse de livraison
+										</h3>
+										<div className="space-y-1">
+											{(() => {
+												const address = client.addresses.find(
+													(addr) =>
+														addr.isDefault && addr.addressType === "SHIPPING"
+												);
+												return (
+													<>
+														<p className="text-sm font-medium">
+															{address?.addressLine1}
+														</p>
+														{address?.addressLine2 && (
+															<p className="text-sm text-muted-foreground">
+																{address.addressLine2}
+															</p>
+														)}
+														<p className="text-sm text-muted-foreground">
+															{[
+																address?.postalCode,
+																address?.city,
+																address?.country !== Country.FRANCE
+																	? address?.country
+																	: null,
+															]
+																.filter(Boolean)
+																.join(", ")}
+														</p>
+													</>
+												);
+											})()}
+										</div>
+									</div>
+								</div>
+							) : null}
+
+							{/* Message si aucune adresse par défaut */}
+							{!client.addresses.find(
+								(address) =>
+									address.isDefault &&
+									(address.addressType === "BILLING" ||
+										address.addressType === "SHIPPING")
+							) && (
+								<div className="col-span-2 text-center text-muted-foreground">
+									Aucune adresse de facturation ou de livraison définie
+								</div>
+							)}
 						</div>
 					</ContentCard>
 				</div>
@@ -283,8 +308,8 @@ export default async function ClientPage({ params }: Props) {
 				{/* Colonne latérale (1/3) */}
 				<div className="space-y-6">
 					{/* Statistiques simples */}
-					<ContentCard title="Résumé" description="Aperçu des données client">
-						<div className="grid grid-cols-2 gap-4 mb-4">
+					<ContentCard title="Résumé">
+						<div className="grid grid-cols-2 gap-4">
 							<div className="bg-muted/40 rounded-lg p-4 flex flex-col items-center justify-center">
 								<span className="text-2xl font-bold">
 									{client.addresses.length || 0}
@@ -295,37 +320,16 @@ export default async function ClientPage({ params }: Props) {
 							</div>
 							<div className="bg-muted/40 rounded-lg p-4 flex flex-col items-center justify-center">
 								<span className="text-xs text-muted-foreground mb-1">
-									Dernière mise à jour
+									Client depuis
 								</span>
 								<span className="text-sm font-medium text-center">
-									{client.updatedAt
-										? format(new Date(client.updatedAt), "dd/MM/yyyy", {
+									{client.createdAt
+										? format(new Date(client.createdAt), "dd/MM/yyyy", {
 												locale: fr,
 											})
 										: "Jamais"}
 								</span>
 							</div>
-						</div>
-					</ContentCard>
-
-					{/* Actions rapides */}
-					<ContentCard
-						title="Actions rapides"
-						description="Actions disponibles pour ce client"
-					>
-						<div className="space-y-2">
-							<Button
-								asChild
-								variant="secondary"
-								className="w-full justify-start"
-							>
-								<Link
-									href={`/dashboard/${organizationId}/clients/${clientId}/addresses/new`}
-								>
-									<MapPin className="h-4 w-4 mr-2" />
-									Ajouter une adresse
-								</Link>
-							</Button>
 						</div>
 					</ContentCard>
 				</div>

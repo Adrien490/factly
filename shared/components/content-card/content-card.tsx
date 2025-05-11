@@ -10,7 +10,7 @@ import { ReactNode } from "react";
  */
 interface ContentCardProps {
 	title: string;
-	description: string;
+	description?: string;
 	children: ReactNode;
 	className?: string;
 }
