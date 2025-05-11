@@ -14,4 +14,16 @@ export const GET_CONTACT_DEFAULT_SELECT = {
 	updatedAt: true,
 	clientId: true,
 	supplierId: true,
+	client: {
+		select: {
+			id: true,
+			organizationId: true,
+		},
+	},
+	supplier: {
+		select: {
+			id: true,
+			organizationId: true,
+		},
+	},
 } as const;

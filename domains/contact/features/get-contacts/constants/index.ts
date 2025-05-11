@@ -16,6 +16,18 @@ export const GET_CONTACTS_DEFAULT_SELECT = {
 	updatedAt: true,
 	clientId: true,
 	supplierId: true,
+	client: {
+		select: {
+			id: true,
+			organizationId: true,
+		},
+	},
+	supplier: {
+		select: {
+			id: true,
+			organizationId: true,
+		},
+	},
 } satisfies Prisma.ContactSelect;
 
 export const GET_CONTACTS_DEFAULT_SORT_BY = "createdAt";

@@ -1,3 +1,4 @@
+import { ContactActions } from "@/domains/contact/components/contact-actions";
 import {
 	Badge,
 	Card,
@@ -134,10 +135,9 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 										</span>
 									)}
 								</TableCell>
-								<TableCell
-									role="gridcell"
-									className="flex justify-end w-12"
-								></TableCell>
+								<TableCell role="gridcell" className="flex justify-end w-12">
+									<ContactActions contact={contact} />
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
