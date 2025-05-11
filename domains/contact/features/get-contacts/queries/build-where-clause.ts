@@ -12,6 +12,8 @@ import { buildSearchConditions } from "./build-search-conditions";
 export const buildWhereClause = (
 	params: z.infer<typeof getContactsSchema>
 ): Prisma.ContactWhereInput => {
+	const whereClause: Prisma.ContactWhereInput = {};
+
 	// Condition de base qui doit toujours être respectée
 	const baseConditions: Prisma.ContactWhereInput[] = [
 		// Condition pour les contacts d'un client
@@ -38,16 +40,26 @@ export const buildWhereClause = (
 			: []),
 	];
 
-	const whereClause: Prisma.ContactWhereInput = {
-		OR: baseConditions,
-	};
+	// Ajouter les conditions de base
+	if (baseConditions.length > 0) {
+		whereClause.AND = [
+			{
+				OR: baseConditions,
+			},
+		];
+	}
 
 	// Ajouter les conditions de recherche textuelle
 	if (typeof params.search === "string" && params.search.trim()) {
-		whereClause.OR = [
-			...baseConditions,
-			...buildSearchConditions(params.search),
-		];
+		const searchConditions = buildSearchConditions(params.search);
+		if (searchConditions.length > 0) {
+			whereClause.AND = [
+				...(Array.isArray(whereClause.AND) ? whereClause.AND : []),
+				{
+					OR: searchConditions,
+				},
+			];
+		}
 	}
 
 	// Ajouter les filtres spécifiques
@@ -56,7 +68,10 @@ export const buildWhereClause = (
 			params.filters as Record<string, unknown>
 		);
 		if (filterConditions.length > 0) {
-			whereClause.AND = filterConditions;
+			whereClause.AND = [
+				...(Array.isArray(whereClause.AND) ? whereClause.AND : []),
+				...filterConditions,
+			];
 		}
 	}
 

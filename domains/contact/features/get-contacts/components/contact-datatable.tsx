@@ -23,8 +23,7 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 	if (contacts.length === 0) {
 		return (
 			<EmptyState
-				title="Aucun contact trouvé"
-				description="Aucun contact n'a été trouvé. Vous pouvez en créer un nouveau."
+				description="Aucun contact trouvé"
 				className="group-has-[[data-pending]]:animate-pulse py-12"
 			/>
 		);
