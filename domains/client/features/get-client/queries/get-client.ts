@@ -4,7 +4,7 @@ import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { getClientSchema } from "../schemas";
+import { getClientSchema } from "../schemas/get-client-schema";
 import { GetClientReturn } from "../types";
 import { fetchClient } from "./fetch-client";
 
@@ -40,5 +40,5 @@ export async function getClient(
 	}
 
 	// Appel à la fonction cacheable
-	return fetchClient(validatedParams, session.user.id);
+	return fetchClient(validatedParams);
 }

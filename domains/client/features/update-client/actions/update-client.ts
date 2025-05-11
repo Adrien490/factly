@@ -168,6 +168,14 @@ export const updateClient: ServerAction<
 		}
 
 		// 7. Mise à jour du client dans la base de données
+		const existingContact = await db.contact.findFirst({
+			where: {
+				clientId: validatedId,
+				isDefault: true,
+			},
+			select: { id: true },
+		});
+
 		const client = await db.client.update({
 			where: {
 				id: validatedId,
@@ -179,12 +187,23 @@ export const updateClient: ServerAction<
 				notes,
 				// Mettre à jour le contact principal
 				contacts: {
-					updateMany: {
+					upsert: {
 						where: {
-							clientId: validatedId,
+							id: existingContact?.id ?? "",
+						},
+						create: {
+							civility: civility as Civility | null,
+							firstName: firstName ?? "",
+							lastName: lastName ?? "",
+							function: contactFunction,
+							email,
+							phoneNumber,
+							mobileNumber,
+							faxNumber,
+							website,
 							isDefault: true,
 						},
-						data: {
+						update: {
 							civility: civility as Civility | null,
 							firstName: firstName ?? "",
 							lastName: lastName ?? "",

@@ -3,18 +3,13 @@ import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { z } from "zod";
 import { GET_CLIENT_DEFAULT_SELECT } from "../constants";
-import { getClientSchema } from "../schemas";
+import { getClientSchema } from "../schemas/get-client-schema";
 
 /**
  * Fonction interne cacheable qui récupère un client
  */
-export async function fetchClient(
-	params: z.infer<typeof getClientSchema>,
-	userId: string
-) {
+export async function fetchClient(params: z.infer<typeof getClientSchema>) {
 	"use cache";
-
-	console.log(userId);
 
 	// Tag de base pour tous les clients de l'organisation
 	cacheTag(`organizations:${params.organizationId}:clients:${params.id}`);

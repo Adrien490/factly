@@ -1,5 +1,10 @@
 import NotFound from "@/app/dashboard/[organizationId]/not-found";
-import { CLIENT_STATUSES, CLIENT_TYPES } from "@/domains/client/constants";
+import {
+	CLIENT_STATUS_COLORS,
+	CLIENT_STATUS_LABELS,
+	CLIENT_TYPE_COLORS,
+	CLIENT_TYPE_LABELS,
+} from "@/domains/client/constants";
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { use } from "react";
@@ -14,13 +19,6 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	if (!client) {
 		return <NotFound />;
 	}
-
-	const statusInfo = CLIENT_STATUSES.find(
-		(option) => option.value === client.status
-	);
-	const clientTypeInfo = CLIENT_TYPES.find(
-		(option) => option.value === client.clientType
-	);
 
 	const defaultContact = client.contacts[0];
 	const displayName =
@@ -41,22 +39,22 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 							<Badge
 								variant="outline"
 								style={{
-									backgroundColor: `${statusInfo?.color}20`,
-									color: statusInfo?.color,
-									borderColor: statusInfo?.color,
+									backgroundColor: `${CLIENT_STATUS_COLORS[client.status]}20`,
+									color: CLIENT_STATUS_COLORS[client.status],
+									borderColor: CLIENT_STATUS_COLORS[client.status],
 								}}
 							>
-								{statusInfo?.label}
+								{CLIENT_STATUS_LABELS[client.status]}
 							</Badge>
 							<Badge
 								style={{
-									backgroundColor: `${clientTypeInfo?.color}20`,
-									color: clientTypeInfo?.color,
-									borderColor: clientTypeInfo?.color,
+									backgroundColor: `${CLIENT_TYPE_COLORS[client.clientType]}20`,
+									color: CLIENT_TYPE_COLORS[client.clientType],
+									borderColor: CLIENT_TYPE_COLORS[client.clientType],
 								}}
 								variant="outline"
 							>
-								{clientTypeInfo?.label}
+								{CLIENT_TYPE_LABELS[client.clientType]}
 							</Badge>
 						</div>
 					</div>
