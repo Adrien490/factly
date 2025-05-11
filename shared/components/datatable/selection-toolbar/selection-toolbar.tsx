@@ -25,7 +25,7 @@ export function SelectionToolbar({ children }: SelectionToolbarProps) {
 
 	return (
 		<div
-			className={`flex items-center justify-between px-3 py-2 border-b transition-colors duration-200 ${
+			className={`rounded-t-md flex items-center justify-between px-3 py-2 border-b transition-colors duration-200 ${
 				hasSelection ? "bg-primary/5 border-b-primary/20" : "bg-background"
 			}`}
 			role="region"

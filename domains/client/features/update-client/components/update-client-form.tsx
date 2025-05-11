@@ -38,8 +38,6 @@ export function UpdateClientForm({ client }: Props) {
 	const organizationId = params.organizationId as string;
 	const clientId = params.clientId as string;
 
-	console.log(client);
-
 	const { dispatch, isPending, state } = useUpdateClient();
 
 	// TanStack Form setup

@@ -4,10 +4,6 @@ import {
 } from "@/domains/client/features/get-clients";
 import { getClientNavigation } from "@/domains/client/utils";
 
-import {
-	ArchivedClientSelectionActions,
-	ClientSelectionActions,
-} from "@/domains/client/components";
 import { ClientFilterSheet } from "@/domains/client/components/client-filter-sheet";
 import {
 	ClientDataTable,
@@ -20,7 +16,6 @@ import {
 	PageContainer,
 	PageHeader,
 	SearchForm,
-	SelectionToolbar,
 	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
@@ -153,21 +148,11 @@ export default async function ClientsPage({ searchParams, params }: PageProps) {
 				</Button>
 			</Toolbar>
 
-			<SelectionToolbar>
-				{isArchivedView ? (
-					<ArchivedClientSelectionActions
-						selectedClientIds={selectedClientIds}
-						organizationId={organizationId}
-					/>
-				) : (
-					<ClientSelectionActions
-						selectedClientIds={selectedClientIds}
-						organizationId={organizationId}
-					/>
-				)}
-			</SelectionToolbar>
 			<Suspense fallback={<ClientDataTableSkeleton />}>
 				<ClientDataTable
+					isArchivedView={isArchivedView}
+					organizationId={organizationId}
+					selectedClientIds={selectedClientIds}
 					clientsPromise={getClients({
 						organizationId,
 						perPage: Number(perPage) || 10,

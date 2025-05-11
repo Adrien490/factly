@@ -6,6 +6,7 @@ import {
 	ItemCheckbox,
 	Pagination,
 	SelectAllCheckbox,
+	SelectionToolbar,
 	Table,
 	TableBody,
 	TableCell,
@@ -20,6 +21,10 @@ import { ClientActions } from "../../../components/client-actions";
 import { GetClientsReturn } from "../types/index";
 
 import {
+	ArchivedClientSelectionActions,
+	ClientSelectionActions,
+} from "@/domains/client/components";
+import {
 	CLIENT_STATUS_COLORS,
 	CLIENT_STATUS_LABELS,
 } from "@/domains/client/constants/client-statuses";
@@ -31,9 +36,17 @@ import { use } from "react";
 
 export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;
+	selectedClientIds: string[];
+	isArchivedView: boolean;
+	organizationId: string;
 }
 
-export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
+export function ClientDataTable({
+	clientsPromise,
+	selectedClientIds,
+	isArchivedView,
+	organizationId,
+}: ClientDataTableProps) {
 	const response = use(clientsPromise);
 	const { clients, pagination } = response;
 	const clientIds = clients.map((client) => client.id);
@@ -51,6 +64,19 @@ export function ClientDataTable({ clientsPromise }: ClientDataTableProps) {
 	return (
 		<Card>
 			<CardContent>
+				<SelectionToolbar>
+					{isArchivedView ? (
+						<ArchivedClientSelectionActions
+							selectedClientIds={selectedClientIds}
+							organizationId={organizationId}
+						/>
+					) : (
+						<ClientSelectionActions
+							selectedClientIds={selectedClientIds}
+							organizationId={organizationId}
+						/>
+					)}
+				</SelectionToolbar>
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
 						<TableRow>

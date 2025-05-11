@@ -5,16 +5,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Country } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import {
-	Building2,
-	Calendar,
-	FileText,
-	Globe,
-	Mail,
-	MapPin,
-	Phone,
-	User,
-} from "lucide-react";
+import { Calendar, FileText, MapPin } from "lucide-react";
 import Link from "next/link";
 import NotFound from "../../not-found";
 
@@ -59,7 +50,6 @@ export default async function ClientPage({ params }: Props) {
 									<ul className="space-y-3">
 										{client.contacts[0]?.email && (
 											<li className="flex items-start gap-3">
-												<Mail className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div>
 													<p className="text-xs text-muted-foreground">Email</p>
 													<a
@@ -74,7 +64,6 @@ export default async function ClientPage({ params }: Props) {
 
 										{client.contacts[0]?.phoneNumber && (
 											<li className="flex items-start gap-3">
-												<Phone className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Téléphone
@@ -91,7 +80,6 @@ export default async function ClientPage({ params }: Props) {
 
 										{client.contacts[0]?.website && (
 											<li className="flex items-start gap-3">
-												<Globe className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Site web
@@ -165,7 +153,6 @@ export default async function ClientPage({ params }: Props) {
 
 												{client.company?.vatNumber && (
 													<li className="flex items-start gap-3">
-														<Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
 														<div>
 															<p className="text-xs text-muted-foreground">
 																TVA
@@ -194,7 +181,6 @@ export default async function ClientPage({ params }: Props) {
 										</h3>
 										<ul className="space-y-3">
 											<li className="flex items-start gap-3">
-												<User className="h-4 w-4 text-muted-foreground mt-0.5" />
 												<div>
 													<p className="text-xs text-muted-foreground">
 														Nom complet
@@ -207,7 +193,6 @@ export default async function ClientPage({ params }: Props) {
 											</li>
 											{client.contacts[0]?.function && (
 												<li className="flex items-start gap-3">
-													<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
 														<p className="text-xs text-muted-foreground">
 															Fonction
@@ -228,7 +213,6 @@ export default async function ClientPage({ params }: Props) {
 						{client.notes && (
 							<div className="mt-6 pt-6 border-t border-dashed border-gray-200 dark:border-gray-800">
 								<div className="flex items-start gap-2">
-									<FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
 									<div>
 										<h3 className="text-sm font-semibold mb-1">Notes</h3>
 										<p className="text-sm text-gray-700 dark:text-gray-300">
