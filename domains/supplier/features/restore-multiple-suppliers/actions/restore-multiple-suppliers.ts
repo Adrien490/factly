@@ -45,7 +45,6 @@ export const restoreMultipleSuppliers: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -126,8 +125,8 @@ export const restoreMultipleSuppliers: ServerAction<
 			validation.data.status === SupplierStatus.ACTIVE
 				? "actif"
 				: validation.data.status === SupplierStatus.INACTIVE
-				? "inactif"
-				: "autre statut";
+					? "inactif"
+					: "autre statut";
 
 		const message = `${suppliersToRestore.length} fournisseur(s) ont été restauré(s) en ${statusText} avec succès`;
 

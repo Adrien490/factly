@@ -78,7 +78,6 @@ export const createFiscalYear: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Veuillez corriger les erreurs dans le formulaire"
 			);
 		}

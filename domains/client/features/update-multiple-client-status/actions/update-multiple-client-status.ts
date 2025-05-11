@@ -46,7 +46,6 @@ export const updateMultipleClientStatus: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}

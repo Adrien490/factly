@@ -46,7 +46,6 @@ export const updateMultipleProductStatus: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -142,14 +141,14 @@ export const updateMultipleProductStatus: ServerAction<
 			validation.data.status === ProductStatus.ACTIVE
 				? "actifs"
 				: validation.data.status === ProductStatus.INACTIVE
-				? "inactifs"
-				: validation.data.status === ProductStatus.DRAFT
-				? "brouillons"
-				: validation.data.status === ProductStatus.DISCONTINUED
-				? "obsolètes"
-				: validation.data.status === ProductStatus.ARCHIVED
-				? "archivés"
-				: "autre statut";
+					? "inactifs"
+					: validation.data.status === ProductStatus.DRAFT
+						? "brouillons"
+						: validation.data.status === ProductStatus.DISCONTINUED
+							? "obsolètes"
+							: validation.data.status === ProductStatus.ARCHIVED
+								? "archivés"
+								: "autre statut";
 
 		const message = `${existingProducts.length} produit(s) ont été mis à jour en ${statusText} avec succès`;
 

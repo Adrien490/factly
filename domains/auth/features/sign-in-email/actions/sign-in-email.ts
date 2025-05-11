@@ -36,7 +36,6 @@ export const signInEmail: ServerAction<null, typeof signInEmailSchema> = async (
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				""
 			);
 		}

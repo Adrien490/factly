@@ -85,7 +85,6 @@ export const updateOrganization: ServerAction<
 			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Veuillez remplir tous les champs obligatoires"
 			);
 		}

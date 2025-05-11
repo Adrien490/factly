@@ -69,7 +69,6 @@ export const deleteClient: ServerAction<
 			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Validation échouée. Veuillez vérifier votre saisie."
 			);
 		}
@@ -100,7 +99,7 @@ export const deleteClient: ServerAction<
 
 		return createSuccessResponse(
 			existingClient,
-			`Client "${existingClient.name}" supprimé définitivement`
+			`Client "${existingClient.reference}" supprimé définitivement`
 		);
 	} catch (error) {
 		console.error("[HARD_DELETE_CLIENT]", error);

@@ -46,7 +46,6 @@ export const restoreMultipleClients: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -149,10 +148,10 @@ export const restoreMultipleClients: ServerAction<
 			validation.data.status === ClientStatus.ACTIVE
 				? "actif"
 				: validation.data.status === ClientStatus.LEAD
-				? "prospect"
-				: validation.data.status === ClientStatus.INACTIVE
-				? "inactif"
-				: "autre statut";
+					? "prospect"
+					: validation.data.status === ClientStatus.INACTIVE
+						? "inactif"
+						: "autre statut";
 
 		const message = `${clientsToRestore.length} client(s) ont été restauré(s) en ${statusText} avec succès`;
 

@@ -93,7 +93,6 @@ export const createAddress: ServerAction<
 			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Veuillez remplir tous les champs obligatoires"
 			);
 		}

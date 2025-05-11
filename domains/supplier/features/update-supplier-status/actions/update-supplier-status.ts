@@ -53,8 +53,8 @@ export const updateSupplierStatus: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
-				"Validation échouée. Veuillez vérifier votre saisie."
+				"Validation échouée. Veuillez vérifier votre saisie.",
+				rawData
 			);
 		}
 
@@ -104,8 +104,8 @@ export const updateSupplierStatus: ServerAction<
 			validation.data.status === SupplierStatus.ARCHIVED
 				? `Le fournisseur "${existingSupplier.name}" a été archivé avec succès`
 				: existingSupplier.status === SupplierStatus.ARCHIVED
-				? `Le fournisseur "${existingSupplier.name}" a été restauré avec succès`
-				: `Le statut du fournisseur "${existingSupplier.name}" a été mis à jour avec succès`;
+					? `Le fournisseur "${existingSupplier.name}" a été restauré avec succès`
+					: `Le statut du fournisseur "${existingSupplier.name}" a été mis à jour avec succès`;
 
 		return createSuccessResponse(updatedSupplier, message);
 	} catch (error) {

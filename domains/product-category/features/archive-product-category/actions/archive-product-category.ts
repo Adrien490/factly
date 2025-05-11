@@ -43,7 +43,6 @@ export const archiveProductCategory: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ id, organizationId },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}

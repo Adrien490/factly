@@ -106,7 +106,6 @@ export const updateFiscalYear: ServerAction<
 			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Veuillez vérifier les champs modifiés"
 			);
 		}

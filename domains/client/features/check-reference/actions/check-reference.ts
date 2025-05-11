@@ -35,7 +35,6 @@ export const checkReference: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Données invalides"
 			);
 		}

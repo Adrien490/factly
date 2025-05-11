@@ -46,7 +46,6 @@ export const restoreClient: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ id, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -69,7 +68,7 @@ export const restoreClient: ServerAction<
 			select: {
 				id: true,
 				status: true,
-				name: true,
+				reference: true,
 			},
 		});
 
@@ -122,12 +121,12 @@ export const restoreClient: ServerAction<
 			validation.data.status === ClientStatus.ACTIVE
 				? "actif"
 				: validation.data.status === ClientStatus.LEAD
-				? "prospect"
-				: validation.data.status === ClientStatus.INACTIVE
-				? "inactif"
-				: "autre statut";
+					? "prospect"
+					: validation.data.status === ClientStatus.INACTIVE
+						? "inactif"
+						: "autre statut";
 
-		const message = `Le client ${existingClient.name} a été restauré en ${statusText} avec succès`;
+		const message = `Le client ${existingClient.reference} a été restauré en ${statusText} avec succès`;
 
 		return createSuccessResponse(updatedClient, message);
 	} catch (error) {

@@ -69,7 +69,6 @@ export const deleteAddress: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ id: rawId, organizationId: rawOrganizationId },
 				"Types invalides"
 			);
 		}

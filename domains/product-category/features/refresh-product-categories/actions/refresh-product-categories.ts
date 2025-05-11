@@ -57,7 +57,6 @@ export const refreshProductCategories: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				null,
 				"Veuillez remplir tous les champs obligatoires"
 			);
 		}

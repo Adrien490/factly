@@ -123,7 +123,6 @@ export const createClient: ServerAction<
 			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Veuillez remplir tous les champs obligatoires",
 				rawData
 			);

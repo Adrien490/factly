@@ -66,7 +66,6 @@ export const deleteSupplier: ServerAction<
 			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Validation échouée. Veuillez vérifier votre saisie."
 			);
 		}

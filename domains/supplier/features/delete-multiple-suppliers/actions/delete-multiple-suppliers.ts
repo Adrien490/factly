@@ -66,7 +66,6 @@ export const deleteMultipleSuppliers: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ ids: supplierIds, organizationId },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}

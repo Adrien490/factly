@@ -38,7 +38,6 @@ export const signUpEmail: ServerAction<null, typeof signUpEmailSchema> = async (
 			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Données invalides"
 			);
 		}

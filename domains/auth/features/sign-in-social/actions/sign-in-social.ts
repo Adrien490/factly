@@ -47,7 +47,6 @@ export const signInSocial: ServerAction<
 			console.log("❌ Validation échec:", validation.error.flatten());
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				rawData,
 				"Données invalides"
 			);
 		}

@@ -46,7 +46,6 @@ export const updateClientStatus: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ id, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -112,8 +111,8 @@ export const updateClientStatus: ServerAction<
 			validation.data.status === ClientStatus.ARCHIVED
 				? "Le client a été archivé avec succès"
 				: existingClient.status === ClientStatus.ARCHIVED
-				? `Le client ${updatedClient.name} a été restauré avec succès`
-				: "Le statut du client a été mis à jour avec succès";
+					? `Le client ${updatedClient.reference} a été restauré avec succès`
+					: "Le statut du client a été mis à jour avec succès";
 
 		return createSuccessResponse(updatedClient, message);
 	} catch (error) {

@@ -46,7 +46,6 @@ export const updateProductStatus: ServerAction<
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				{ id, organizationId, status },
 				"Validation échouée. Veuillez vérifier votre sélection."
 			);
 		}
@@ -122,12 +121,12 @@ export const updateProductStatus: ServerAction<
 				validation.data.status === ProductStatus.ACTIVE
 					? "actif"
 					: validation.data.status === ProductStatus.INACTIVE
-					? "inactif"
-					: validation.data.status === ProductStatus.DRAFT
-					? "brouillon"
-					: validation.data.status === ProductStatus.DISCONTINUED
-					? "obsolète"
-					: "autre statut";
+						? "inactif"
+						: validation.data.status === ProductStatus.DRAFT
+							? "brouillon"
+							: validation.data.status === ProductStatus.DISCONTINUED
+								? "obsolète"
+								: "autre statut";
 			message = `Le produit ${updatedProduct.name} a été restauré en ${statusText} avec succès`;
 		}
 		// Pour les autres transitions
