@@ -27,15 +27,12 @@ export const buildFilterConditions = (
 	}
 
 	// Filtre par type de client
-	if (filters.clientType) {
+	if (filters.type) {
+		const types = Array.isArray(filters.type) ? filters.type : [filters.type];
 		conditions.push({
-			clientType: filters.clientType as ClientType,
-		});
-	}
-
-	if (filters.clientStatus) {
-		conditions.push({
-			status: filters.clientStatus as ClientStatus,
+			clientType: {
+				in: types.filter((type): type is ClientType => type !== undefined),
+			},
 		});
 	}
 
