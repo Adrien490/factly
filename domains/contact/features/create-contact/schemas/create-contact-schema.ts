@@ -4,9 +4,9 @@ export const createContactSchema = z.object({
 	organizationId: z.string(),
 	clientId: z.string().nullable(),
 	supplierId: z.string().nullable(),
-	firstName: z.string().min(1, "Le prénom est requis"),
+	firstName: z.string().optional(),
 	lastName: z.string().min(1, "Le nom est requis"),
-	civility: z.string().min(1, "La civilité est requise"),
+	civility: z.string().optional(),
 	function: z.string().optional(),
 	email: z
 		.string()

@@ -1,5 +1,6 @@
 "use client";
 
+import { CIVILITIES } from "@/domains/contact/constants/civilities";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
@@ -139,11 +140,10 @@ export function CreateContactSheetForm({
 								{(field) => (
 									<field.SelectField
 										label="Civilité"
-										options={[
-											{ value: "MR", label: "Monsieur" },
-											{ value: "MME", label: "Madame" },
-											{ value: "MLLE", label: "Mademoiselle" },
-										]}
+										options={CIVILITIES.map((civility) => ({
+											value: civility.value,
+											label: civility.label,
+										}))}
 										disabled={isPending}
 									/>
 								)}
@@ -170,20 +170,11 @@ export function CreateContactSheetForm({
 							</form.AppField>
 
 							{/* Prénom */}
-							<form.AppField
-								name="firstName"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value) return "Le prénom est requis";
-										return undefined;
-									},
-								}}
-							>
+							<form.AppField name="firstName">
 								{(field) => (
 									<field.InputField
 										label="Prénom"
 										placeholder="Prénom du contact"
-										required
 										disabled={isPending}
 									/>
 								)}

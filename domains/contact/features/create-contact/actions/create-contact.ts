@@ -61,7 +61,7 @@ export const createContact: ServerAction<
 			organizationId: organizationId.toString(),
 			firstName: formData.get("firstName") as string,
 			lastName: formData.get("lastName") as string,
-			civility: formData.get("civility"),
+			civility: formData.get("civility") as Civility,
 			function: formData.get("function") as string,
 			isDefault: formData.get("isDefault") === "true",
 
@@ -128,9 +128,9 @@ export const createContact: ServerAction<
 			// Création du nouveau contact
 			return await tx.contact.create({
 				data: {
-					firstName: validatedParams.firstName,
+					firstName: validatedParams.firstName || "",
 					lastName: validatedParams.lastName,
-					civility: validatedParams.civility as Civility,
+					civility: validatedParams.civility as Civility | null,
 					function: validatedParams.function,
 					email: validatedParams.email,
 					phoneNumber: validatedParams.phoneNumber,
