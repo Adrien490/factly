@@ -36,24 +36,32 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
 						<TableRow>
-							<TableHead key="name" role="columnheader" className="w-[400px]">
+							<TableHead
+								key="name"
+								role="columnheader"
+								className="min-w-[300px] max-w-[300px]"
+							>
 								Contact
 							</TableHead>
 							<TableHead
 								key="mobile"
 								role="columnheader"
-								className="hidden md:table-cell w-[150px]"
+								className="hidden md:table-cell min-w-[150px] max-w-[150px]"
 							>
 								Mobile
 							</TableHead>
 							<TableHead
 								key="website"
 								role="columnheader"
-								className="hidden xl:table-cell w-[200px]"
+								className="hidden xl:table-cell min-w-[200px] max-w-[200px]"
 							>
 								Site web
 							</TableHead>
-							<TableHead key="actions" role="columnheader" className="w-12">
+							<TableHead
+								key="actions"
+								role="columnheader"
+								className="min-w-[50px] max-w-[50px]"
+							>
 								<></>
 							</TableHead>
 						</TableRow>
@@ -61,7 +69,10 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 					<TableBody>
 						{contacts.map((contact) => (
 							<TableRow key={contact.id} role="row" tabIndex={0}>
-								<TableCell role="gridcell" className="w-[400px]">
+								<TableCell
+									role="gridcell"
+									className="min-w-[300px] max-w-[300px]"
+								>
 									<div className="flex flex-col space-y-1">
 										<div className="flex items-center gap-2">
 											<div className="font-medium truncate">
@@ -77,14 +88,14 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 											</div>
 										</div>
 										{contact.function && (
-											<span className="text-sm text-muted-foreground">
+											<span className="text-sm text-muted-foreground truncate">
 												{contact.function}
 											</span>
 										)}
 										{contact.email && (
 											<a
 												href={`mailto:${contact.email}`}
-												className="text-sm text-muted-foreground hover:underline"
+												className="text-sm text-muted-foreground hover:underline truncate"
 											>
 												{contact.email}
 											</a>
@@ -92,7 +103,7 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 										{contact.phoneNumber && (
 											<a
 												href={`tel:${contact.phoneNumber}`}
-												className="text-sm text-muted-foreground hover:underline"
+												className="text-sm text-muted-foreground hover:underline truncate"
 											>
 												{contact.phoneNumber}
 											</a>
@@ -101,12 +112,12 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 								</TableCell>
 								<TableCell
 									role="gridcell"
-									className="hidden md:table-cell w-[150px]"
+									className="hidden md:table-cell min-w-[150px] max-w-[150px]"
 								>
 									{contact.mobileNumber ? (
 										<a
 											href={`tel:${contact.mobileNumber}`}
-											className="text-sm hover:underline"
+											className="text-sm hover:underline truncate"
 										>
 											{contact.mobileNumber}
 										</a>
@@ -118,14 +129,14 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 								</TableCell>
 								<TableCell
 									role="gridcell"
-									className="hidden xl:table-cell w-[200px]"
+									className="hidden xl:table-cell min-w-[200px] max-w-[200px]"
 								>
 									{contact.website ? (
 										<a
 											href={contact.website}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="text-sm hover:underline"
+											className="text-sm hover:underline truncate"
 										>
 											{contact.website.replace(/^https?:\/\/(www\.)?/, "")}
 										</a>
@@ -135,7 +146,10 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 										</span>
 									)}
 								</TableCell>
-								<TableCell role="gridcell" className="flex justify-end w-12">
+								<TableCell
+									role="gridcell"
+									className="min-w-[50px] max-w-[50px]"
+								>
 									<ContactActions contact={contact} />
 								</TableCell>
 							</TableRow>

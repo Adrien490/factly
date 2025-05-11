@@ -58,10 +58,11 @@ export function CreateContactSheetForm({
 		defaultValues: {
 			organizationId,
 			clientId,
+
 			supplierId,
 			firstName: "",
 			lastName: "",
-			civility: "",
+			civility: CIVILITIES[0].value,
 			function: "",
 			email: "",
 			phoneNumber: "",
