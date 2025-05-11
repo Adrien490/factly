@@ -22,6 +22,11 @@ export const CheckboxField = ({
 
 	return (
 		<div className="flex items-center space-x-2">
+			<input
+				type="hidden"
+				name={field.name}
+				value={String(checked ?? field.state.value ?? false)}
+			/>
 			<Checkbox
 				disabled={disabled}
 				name={field.name}
