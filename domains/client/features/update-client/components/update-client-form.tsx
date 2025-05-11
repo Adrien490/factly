@@ -16,26 +16,18 @@ import {
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { LEGAL_FORMS } from "@/shared/constants";
-import {
-	createToastCallbacks,
-	generateReference,
-	withCallbacks,
-} from "@/shared/utils";
+import { generateReference } from "@/shared/utils";
 import {
 	Civility,
-	Client,
 	ClientStatus,
 	ClientType,
 	EmployeeCount,
 } from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { Wand2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useActionState } from "react";
-import { toast } from "sonner";
+import { useParams } from "next/navigation";
 import { GetClientReturn } from "../../get-client";
-import { updateClient } from "../actions/update-client";
-import { updateClientSchema } from "../schemas";
+import { useUpdateClient } from "../hooks/use-update-client";
 
 type Props = {
 	client: NonNullable<GetClientReturn>;
@@ -44,64 +36,48 @@ type Props = {
 export function UpdateClientForm({ client }: Props) {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
-	const router = useRouter();
-	const defaultContact = client.contacts[0];
+	const clientId = params.clientId as string;
 
-	const [state, dispatch, isPending] = useActionState(
-		withCallbacks(
-			updateClient,
-			createToastCallbacks<Client, typeof updateClientSchema>({
-				loadingMessage: "Mise à jour du client en cours...",
-				onSuccess: (result) => {
-					toast.success("Client mis à jour avec succès", {
-						description: `Le client a été mis à jour.`,
-						duration: 5000,
-						action: {
-							label: "Voir le client",
-							onClick: () => {
-								if (result.data?.id) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/clients/${result.data.id}`
-									);
-								}
-							},
-						},
-					});
-					form.reset();
-				},
-			})
-		),
-		undefined
-	);
+	const { dispatch, isPending, state } = useUpdateClient();
 
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
+			id: clientId,
 			organizationId,
-			reference: state?.inputs?.reference ?? client.reference,
-			email: state?.inputs?.email ?? defaultContact.email,
-			phoneNumber: state?.inputs?.phoneNumber ?? defaultContact.phoneNumber,
-			mobileNumber: state?.inputs?.mobileNumber ?? defaultContact.mobileNumber,
-			faxNumber: state?.inputs?.faxNumber ?? defaultContact.faxNumber,
-			civility: state?.inputs?.civility ?? defaultContact.civility,
-			firstName: state?.inputs?.firstName ?? defaultContact.firstName,
-			lastName: state?.inputs?.lastName ?? defaultContact.lastName,
+			reference: state?.inputs?.reference ?? client.reference ?? "",
+			email: state?.inputs?.email ?? client.contacts[0]?.email ?? "",
+			phoneNumber:
+				state?.inputs?.phoneNumber ?? client.contacts[0]?.phoneNumber ?? "",
+			mobileNumber:
+				state?.inputs?.mobileNumber ?? client.contacts[0]?.mobileNumber ?? "",
+			faxNumber:
+				state?.inputs?.faxNumber ?? client.contacts[0]?.faxNumber ?? "",
+			civility: state?.inputs?.civility ?? client.contacts[0]?.civility ?? "",
+			firstName:
+				state?.inputs?.firstName ?? client.contacts[0]?.firstName ?? "",
+			lastName: state?.inputs?.lastName ?? client.contacts[0]?.lastName ?? "",
 			contactFunction:
-				state?.inputs?.contactFunction ?? defaultContact.function,
-			website: state?.inputs?.website ?? defaultContact.website,
-			legalForm: state?.inputs?.legalForm ?? client.company?.legalForm,
-			clientType: ClientType.INDIVIDUAL as ClientType,
-			status: ClientStatus.ACTIVE as ClientStatus,
-			notes: state?.inputs?.notes ?? "",
-			siren: state?.inputs?.siren ?? "",
-			siret: state?.inputs?.siret ?? "",
-			nafApeCode: state?.inputs?.nafApeCode ?? "",
-			vatNumber: state?.inputs?.vatNumber ?? "",
-			businessSector: state?.inputs?.businessSector ?? "",
-			capital: state?.inputs?.capital ?? "",
-			rcs: state?.inputs?.rcs ?? "",
-			employeeCount: EmployeeCount.ONE_TO_TWO,
-			companyName: state?.inputs?.companyName ?? "",
+				state?.inputs?.contactFunction ?? client.contacts[0]?.function ?? "",
+			website: state?.inputs?.website ?? client.contacts[0]?.website ?? "",
+			legalForm: state?.inputs?.legalForm ?? client.company?.legalForm ?? "",
+			clientType: state?.inputs?.clientType ?? client.clientType,
+			status: state?.inputs?.status ?? client.status,
+			notes: state?.inputs?.notes ?? client.notes ?? "",
+			siren: state?.inputs?.siren ?? client.company?.siren ?? "",
+			siret: state?.inputs?.siret ?? client.company?.siret ?? "",
+			nafApeCode: state?.inputs?.nafApeCode ?? client.company?.nafApeCode ?? "",
+			vatNumber: state?.inputs?.vatNumber ?? client.company?.vatNumber ?? "",
+			businessSector:
+				state?.inputs?.businessSector ?? client.company?.businessSector ?? "",
+			capital: state?.inputs?.capital ?? client.company?.capital ?? "",
+			rcs: state?.inputs?.rcs ?? client.company?.rcs ?? "",
+			employeeCount:
+				state?.inputs?.employeeCount ??
+				client.company?.employeeCount ??
+				EmployeeCount.ONE_TO_TWO,
+			companyName:
+				state?.inputs?.companyName ?? client.company?.companyName ?? "",
 		},
 
 		transform: useTransform(
@@ -142,7 +118,9 @@ export function UpdateClientForm({ client }: Props) {
 			<form.Subscribe selector={(state) => state.errors}>
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
-
+			<form.Field name="id">
+				{(field) => <input type="hidden" name="id" value={field.state.value} />}
+			</form.Field>
 			{/* Champs cachés */}
 			<form.Field name="organizationId">
 				{(field) => (
@@ -667,7 +645,7 @@ export function UpdateClientForm({ client }: Props) {
 					<FormFooter
 						disabled={!canSubmit || isPending}
 						cancelHref={`/dashboard/${organizationId}/clients`}
-						submitLabel="Créer le client"
+						submitLabel="Enregistrer"
 					/>
 				)}
 			</form.Subscribe>

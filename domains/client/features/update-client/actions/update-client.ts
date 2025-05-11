@@ -67,8 +67,8 @@ export const updateClient: ServerAction<
 
 		// 4. Préparation et transformation des données brutes
 		const rawData = {
-			id: id.toString(),
-			organizationId: organizationId.toString(),
+			id: formData.get("id") as string,
+			organizationId: formData.get("organizationId") as string,
 			reference: formData.get("reference") as string,
 			clientType: formData.get("clientType") as ClientType,
 			status: formData.get("status") as ClientStatus,
@@ -185,7 +185,7 @@ export const updateClient: ServerAction<
 							isDefault: true,
 						},
 						data: {
-							civility,
+							civility: civility as Civility | null,
 							firstName: firstName ?? "",
 							lastName: lastName ?? "",
 							function: contactFunction,

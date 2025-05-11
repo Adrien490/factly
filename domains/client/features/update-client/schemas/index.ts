@@ -8,6 +8,12 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 
+const emptyToNull = (val: string) => (val === "" ? null : val);
+const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
+const mobileRegex = /^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/;
+const urlRegex =
+	/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
+
 /**
  * Schéma de validation pour la mise à jour d'un client
  * Basé sur le modèle Prisma Client
@@ -19,115 +25,125 @@ export const updateClientSchema = z
 		organizationId: z.string(),
 		reference: z
 			.string()
-			.min(3, "La référence doit comporter au moins 3 caractères"),
-		clientType: z.nativeEnum(ClientType).optional(),
-		status: z.nativeEnum(ClientStatus).optional(),
+			.transform(emptyToNull)
+			.nullable()
+			.refine(
+				(val) => !val || val.length >= 3,
+				"La référence doit contenir au moins 3 caractères"
+			),
+		clientType: z.nativeEnum(ClientType),
+		status: z.nativeEnum(ClientStatus),
 		notes: z.string().optional().nullable(),
 
 		// Champs du contact
-		civility: z.nativeEnum(Civility).optional().nullable(),
+		civility: z
+			.string()
+			.transform(emptyToNull)
+			.nullable()
+			.refine(
+				(val) => !val || Object.values(Civility).includes(val as Civility),
+				"Veuillez sélectionner une civilité valide"
+			),
 		firstName: z.string().optional().nullable(),
 		lastName: z.string().optional().nullable(),
 		contactFunction: z.string().optional().nullable(),
-		email: z.string().email("Format d'email invalide").optional().nullable(),
+		email: z
+			.string()
+			.transform(emptyToNull)
+			.nullable()
+			.refine(
+				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+				"Format d'email invalide"
+			),
 		phoneNumber: z
 			.string()
-			.regex(
-				/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
-				"Format de numéro de téléphone invalide"
-			)
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || phoneRegex.test(val),
+				"Format de numéro de téléphone invalide"
+			),
 		mobileNumber: z
 			.string()
-			.regex(
-				/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/,
-				"Format de numéro de mobile invalide"
-			)
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || mobileRegex.test(val),
+				"Format de numéro de mobile invalide"
+			),
 		faxNumber: z
 			.string()
-			.regex(
-				/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
-				"Format de numéro de fax invalide"
-			)
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || phoneRegex.test(val),
+				"Format de numéro de fax invalide"
+			),
 		website: z
 			.string()
-			.url("Format d'URL invalide")
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine((val) => !val || urlRegex.test(val), "Format d'URL invalide"),
 
 		// Champs de l'entreprise (optionnels)
 		companyName: z.string().optional().nullable(),
 		legalForm: z.nativeEnum(LegalForm).optional().nullable(),
 		siren: z
 			.string()
-			.regex(/^\d{9}$/, "Le numéro SIREN doit comporter exactement 9 chiffres")
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || /^\d{9}$/.test(val),
+				"Le numéro SIREN doit comporter exactement 9 chiffres"
+			),
 		siret: z
 			.string()
-			.regex(
-				/^\d{14}$/,
-				"Le numéro SIRET doit comporter exactement 14 chiffres"
-			)
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || /^\d{14}$/.test(val),
+				"Le numéro SIRET doit comporter exactement 14 chiffres"
+			),
 		nafApeCode: z
 			.string()
-			.regex(
-				/^\d{4}[A-Z]$/,
-				"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
-			)
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || /^\d{4}[A-Z]$/.test(val),
+				"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
+			),
 		capital: z.string().optional().nullable(),
 		rcs: z.string().optional().nullable(),
 		vatNumber: z
 			.string()
-			.regex(
-				/^FR\d{2}\d{9}$/,
-				"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
-			)
-			.optional()
+			.transform(emptyToNull)
 			.nullable()
-			.transform((val) => (val === "" ? null : val)),
+			.refine(
+				(val) => !val || /^FR\d{2}\d{9}$/.test(val),
+				"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
+			),
 		businessSector: z.nativeEnum(BusinessSector).optional().nullable(),
 		employeeCount: z.nativeEnum(EmployeeCount).optional().nullable(),
 	})
-	.refine(
-		(data) => {
-			if (data.clientType === ClientType.INDIVIDUAL) {
-				return !!data.lastName;
-			}
-			return true;
-		},
-		{
-			message: "Le nom est requis pour un client particulier",
-			path: ["lastName"],
+	.superRefine((data, ctx) => {
+		// Validation conditionnelle pour lastname si clientType est INDIVIDUAL
+		if (data.clientType === ClientType.INDIVIDUAL && !data.lastName) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: "Le nom est obligatoire pour un client particulier",
+				path: ["lastName"],
+			});
 		}
-	)
-	.refine(
-		(data) => {
-			if (data.clientType === ClientType.COMPANY) {
-				return !!data.companyName;
-			}
-			return true;
-		},
-		{
-			message: "Le nom de l'entreprise est requis pour un client entreprise",
-			path: ["companyName"],
+
+		// Validation conditionnelle pour companyName si clientType est COMPANY
+		if (data.clientType === ClientType.COMPANY && !data.companyName) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message:
+					"Le nom de l'entreprise est obligatoire pour un client entreprise",
+				path: ["companyName"],
+			});
 		}
-	);
+	});
 
 export type UpdateClientSchema = z.infer<typeof updateClientSchema>;
