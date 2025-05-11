@@ -3,12 +3,8 @@ import { FieldInfo } from "..";
 import { useFieldContext } from "../../lib/form-context";
 import { FormLabel } from "../ui";
 
-interface CheckboxFieldProps {
-	disabled?: boolean;
+interface CheckboxFieldProps extends React.ComponentProps<typeof Checkbox> {
 	label?: string;
-	required?: boolean;
-	onCheckedChange?: (checked: boolean) => void;
-	checked?: boolean;
 }
 
 export const CheckboxField = ({
