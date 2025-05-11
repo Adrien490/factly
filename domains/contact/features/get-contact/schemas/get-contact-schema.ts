@@ -1,18 +1,13 @@
 import { z } from "zod";
-import { contactFiltersSchema } from "./contact-filters-schema";
-import { contactSortBySchema } from "./contact-sort-by-schema";
 
-export const getContactsSchema = z
+export const getContactSchema = z
 	.object({
-		clientId: z.string().optional(),
-		supplierId: z.string().optional(),
+		id: z.string().min(1, "L'identifiant du contact est requis"),
 		organizationId: z
 			.string()
 			.min(1, "L'identifiant de l'organisation est requis"),
-		search: z.string().optional(),
-		sortBy: contactSortBySchema.optional(),
-		sortOrder: z.enum(["asc", "desc"]).optional(),
-		filters: contactFiltersSchema.optional(),
+		clientId: z.string().optional(),
+		supplierId: z.string().optional(),
 	})
 	.refine(
 		(data) => {

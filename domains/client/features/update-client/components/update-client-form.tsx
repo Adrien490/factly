@@ -132,7 +132,7 @@ export function UpdateClientForm({ client }: Props) {
 				)}
 			</form.Field>
 
-			<FormLayout withDividers columns={2} className="mt-6">
+			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
 				<ContentCard
 					title="Informations générales"
