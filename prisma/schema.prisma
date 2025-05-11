@@ -195,6 +195,7 @@ model Contact {
 model Company {
   id             String          @id @default(uuid())
   companyName    String
+  logoUrl        String?
   legalForm      LegalForm?
   siret          String?
   siren          String?
