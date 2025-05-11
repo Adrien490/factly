@@ -16,9 +16,9 @@ import {
 	TableRow,
 } from "@/shared/components";
 import { ClientStatus } from "@prisma/client";
-import { ArchivedClientActions } from "../../../components/archived-client-actions";
-import { ClientActions } from "../../../components/client-actions";
-import { GetClientsReturn } from "../types/index";
+import { GetClientsReturn } from "../../types/index";
+import { ArchivedClientActions } from "./components/archived-client-actions";
+import { ClientActions } from "./components/client-actions";
 
 import {
 	ArchivedClientSelectionActions,
