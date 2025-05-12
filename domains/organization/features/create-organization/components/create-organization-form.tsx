@@ -162,17 +162,28 @@ export function CreateOrganizationForm({
 									label="Nom de la société"
 									disabled={isPending}
 									placeholder="Ex: Mon entreprise"
+									required
 								/>
 							)}
 						</form.AppField>
 
-						<form.AppField name="legalForm">
+						<form.AppField
+							validators={{
+								onChange: ({ value }) => {
+									if (!value) return "La forme juridique est requise";
+									if (value.length < 1) return "La forme juridique est requise";
+									return undefined;
+								},
+							}}
+							name="legalForm"
+						>
 							{(field) => (
 								<field.SelectField
 									label="Forme juridique"
 									disabled={isPending}
 									placeholder="Sélectionnez une forme juridique"
 									options={LEGAL_FORM_OPTIONS}
+									required
 								/>
 							)}
 						</form.AppField>

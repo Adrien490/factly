@@ -23,21 +23,11 @@ import { headers } from "next/headers";
 import { createOrganizationSchema } from "../schemas";
 import { CreateOrganizationReturn } from "../types";
 
-/**
- * Action serveur pour créer une nouvelle organisation
- * Validations :
- * - L'utilisateur doit être authentifié
- * - Le SIREN/SIRET doit être unique s'il est fourni
- * - Le slug doit être unique
- *
- * Crée également automatiquement une première année fiscale pour l'organisation
- */
 export const createOrganization: ServerAction<
 	CreateOrganizationReturn,
 	typeof createOrganizationSchema
 > = async (_, formData) => {
 	try {
-		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
@@ -48,7 +38,6 @@ export const createOrganization: ServerAction<
 			);
 		}
 
-		// 2. Préparation et transformation des données brutes
 		const rawData = {
 			companyName: formData.get("companyName") as string,
 			legalForm: formData.get("legalForm") as LegalForm,

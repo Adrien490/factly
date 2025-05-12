@@ -23,10 +23,7 @@ export const createOrganizationSchema = z
 	.object({
 		// Informations de base
 		companyName: z.string().min(1, "Le nom de l'entreprise est requis"),
-		legalForm: z
-			.string()
-			.transform(emptyToNull)
-			.pipe(z.nativeEnum(LegalForm).optional()),
+		legalForm: z.nativeEnum(LegalForm),
 		logoUrl: z.string().transform(emptyToNull).optional(),
 
 		// Contact
