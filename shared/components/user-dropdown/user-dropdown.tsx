@@ -1,7 +1,7 @@
+import { LogoutButton } from "@/domains/auth/features/logout/components";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
@@ -10,7 +10,6 @@ import { SidebarMenuButton } from "@/shared/components/ui/sidebar";
 import { User } from "better-auth/types";
 import { LogOut, MoreVertical, User as UserIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { use } from "react";
 
 interface UserDropdownProps {
@@ -63,13 +62,10 @@ export function UserDropdown({ userPromise }: UserDropdownProps) {
 					Mon compte
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-
-				<DropdownMenuItem asChild className="gap-2 p-2 text-muted-foreground">
-					<Link href="/auth/signout" className="flex items-center">
-						<LogOut className="size-4" />
-						<span>Déconnexion</span>
-					</Link>
-				</DropdownMenuItem>
+				<LogoutButton>
+					<LogOut className="size-4" />
+					<span>Déconnexion</span>
+				</LogoutButton>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
