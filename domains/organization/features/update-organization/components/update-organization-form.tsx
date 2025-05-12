@@ -671,7 +671,7 @@ export function UpdateOrganizationForm({
 					<FormFooter
 						disabled={!canSubmit || isPending || isUploading}
 						cancelHref="/dashboard"
-						submitLabel={"Créer l'organisation"}
+						submitLabel={"Enregistrer les modifications"}
 					/>
 				)}
 			</form.Subscribe>
