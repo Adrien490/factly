@@ -20,6 +20,7 @@ import {
 	SidebarProvider,
 	SidebarRail,
 	SidebarTrigger,
+	ThemeToggleButton,
 } from "@/shared/components";
 import { UserDropdown } from "@/shared/components/user-dropdown";
 import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
@@ -68,9 +69,12 @@ export default async function OrganizationLayout({
 					<NavMain />
 				</SidebarContent>
 
-				<SidebarFooter className="border-t border-border/30">
+				<SidebarFooter>
 					<SidebarMenu>
 						<SidebarMenuItem>
+							<ThemeToggleButton />
+						</SidebarMenuItem>
+						<SidebarMenuItem className="border-t border-border/30 pt-1">
 							<Suspense fallback={<UserDropdownSkeleton />}>
 								<UserDropdown
 									userPromise={auth.api
