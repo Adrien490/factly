@@ -3,6 +3,7 @@ import {
 	MOBILE_REGEX,
 	PHONE_REGEX,
 } from "@/shared/constants/regex";
+import { emptyToNull } from "@/shared/utils";
 import {
 	BusinessSector,
 	Country,
@@ -10,8 +11,6 @@ import {
 	LegalForm,
 } from "@prisma/client";
 import { z } from "zod";
-
-const emptyToUndefined = (val: string) => (val === "" ? undefined : val);
 
 const urlRegex =
 	/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
@@ -26,20 +25,20 @@ export const createOrganizationSchema = z
 		companyName: z.string().min(1, "Le nom de l'entreprise est requis"),
 		legalForm: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.pipe(z.nativeEnum(LegalForm).optional()),
-		logoUrl: z.string().transform(emptyToUndefined).optional(),
+		logoUrl: z.string().transform(emptyToNull).optional(),
 
 		// Contact
 		email: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine((val) => !val || EMAIL_REGEX.test(val), "Format d'email invalide")
 			.optional(),
 
 		phoneNumber: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || PHONE_REGEX.test(val),
 				"Format de numéro de téléphone invalide"
@@ -48,7 +47,7 @@ export const createOrganizationSchema = z
 
 		mobileNumber: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || MOBILE_REGEX.test(val),
 				"Format de numéro de mobile invalide"
@@ -57,7 +56,7 @@ export const createOrganizationSchema = z
 
 		faxNumber: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || PHONE_REGEX.test(val),
 				"Format de numéro de fax invalide"
@@ -66,35 +65,35 @@ export const createOrganizationSchema = z
 
 		website: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine((val) => !val || urlRegex.test(val), "Format d'URL invalide")
 			.optional(),
 
 		// Informations de l'entreprise
 		nafApeCode: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || /^\d{4}[A-Z]$/.test(val),
 				"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
 			)
 			.optional(),
 
-		capital: z.string().transform(emptyToUndefined).optional(),
-		rcs: z.string().transform(emptyToUndefined).optional(),
+		capital: z.string().transform(emptyToNull).optional(),
+		rcs: z.string().transform(emptyToNull).optional(),
 		businessSector: z
 			.nativeEnum(BusinessSector)
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.optional(),
 		employeeCount: z
 			.nativeEnum(EmployeeCount)
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.optional(),
 
 		// Informations fiscales
 		siren: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || /^\d{9}$/.test(val),
 				"Le numéro SIREN doit comporter exactement 9 chiffres"
@@ -103,7 +102,7 @@ export const createOrganizationSchema = z
 
 		siret: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || /^\d{14}$/.test(val),
 				"Le numéro SIRET doit comporter exactement 14 chiffres"
@@ -112,7 +111,7 @@ export const createOrganizationSchema = z
 
 		vatNumber: z
 			.string()
-			.transform(emptyToUndefined)
+			.transform(emptyToNull)
 			.refine(
 				(val) => !val || /^FR\d{2}\d{9}$/.test(val),
 				"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
@@ -120,10 +119,10 @@ export const createOrganizationSchema = z
 			.optional(),
 
 		// Adresse
-		addressLine1: z.string().transform(emptyToUndefined).optional(),
-		addressLine2: z.string().transform(emptyToUndefined).optional(),
-		postalCode: z.string().transform(emptyToUndefined).optional(),
-		city: z.string().transform(emptyToUndefined).optional(),
+		addressLine1: z.string().transform(emptyToNull).optional(),
+		addressLine2: z.string().transform(emptyToNull).optional(),
+		postalCode: z.string().transform(emptyToNull).optional(),
+		city: z.string().transform(emptyToNull).optional(),
 		country: z.nativeEnum(Country).default(Country.FRANCE),
 
 		// Champs système

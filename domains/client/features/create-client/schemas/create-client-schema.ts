@@ -1,4 +1,5 @@
 import { MOBILE_REGEX, PHONE_REGEX, URL_REGEX } from "@/shared/constants/regex";
+import { emptyToNull } from "@/shared/utils";
 import {
 	AddressType,
 	BusinessSector,
@@ -10,8 +11,6 @@ import {
 	LegalForm,
 } from "@prisma/client";
 import { z } from "zod";
-
-const emptyToNull = (val: string) => (val === "" ? null : val);
 
 export const createClientSchema = z
 	.object({
