@@ -142,10 +142,16 @@ export const setDefaultContact: ServerAction<
 
 		// 6. Revalidation du cache
 		if (clientId) {
-			revalidateTag(`org-${organizationId}-client-${clientId}-contacts`);
+			revalidateTag(`organizations:${organizationId}:clients`);
+			revalidateTag(
+				`organizations:${organizationId}:clients:${clientId}:contacts`
+			);
 		}
 		if (supplierId) {
-			revalidateTag(`org-${organizationId}-supplier-${supplierId}-contacts`);
+			revalidateTag(`organizations:${organizationId}:suppliers`);
+			revalidateTag(
+				`organizations:${organizationId}:suppliers:${supplierId}:contacts`
+			);
 		}
 
 		return createSuccessResponse(
