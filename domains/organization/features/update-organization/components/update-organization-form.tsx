@@ -540,9 +540,12 @@ export function UpdateOrganizationForm({
 
 										if (!isSubmitting) {
 											startAddressTransition(() => {
-												router.push(`/dashboard/new?${url.toString()}`, {
-													scroll: false,
-												});
+												router.push(
+													`/dashboard/${organization.id}/edit?${url.toString()}`,
+													{
+														scroll: false,
+													}
+												);
 											});
 										}
 									}
