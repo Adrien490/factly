@@ -75,7 +75,7 @@ export const createClient: ServerAction<
 			notes: formData.get("notes") as string,
 
 			// Informations de contact
-			contactCivility: formData.get("contactCivility") as Civility,
+			contactCivility: formData.get("contactCivility") as Civility | null,
 			contactFirstName: formData.get("contactFirstName") as string,
 			contactLastName: formData.get("contactLastName") as string,
 			contactFunction: formData.get("contactFunction") as string,

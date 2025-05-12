@@ -12,6 +12,7 @@ import {
 	Separator,
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarHeader,
 	SidebarInset,
 	SidebarMenu,
@@ -19,11 +20,9 @@ import {
 	SidebarProvider,
 	SidebarRail,
 	SidebarTrigger,
-	UserAvatar,
-	UserAvatarSkeleton,
 } from "@/shared/components";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { UserDropdown } from "@/shared/components/user-dropdown";
+import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -45,11 +44,6 @@ export default async function OrganizationLayout({
 	if (!hasAccess) {
 		forbidden();
 	}
-
-	// Formater la date d'aujourd'hui en français
-	const dateToday = format(new Date(), "EEEE d MMMM yyyy", { locale: fr });
-	// Première lettre en majuscule
-	const formattedDate = dateToday.charAt(0).toUpperCase() + dateToday.slice(1);
 
 	return (
 		<SidebarProvider>
@@ -73,6 +67,21 @@ export default async function OrganizationLayout({
 				<SidebarContent className="pt-2">
 					<NavMain />
 				</SidebarContent>
+
+				<SidebarFooter className="border-t border-border/30">
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<Suspense fallback={<UserDropdownSkeleton />}>
+								<UserDropdown
+									userPromise={auth.api
+										.getSession({ headers: await headers() })
+										.then((session) => session?.user ?? null)}
+								/>
+							</Suspense>
+						</SidebarMenuItem>
+					</SidebarMenu>
+				</SidebarFooter>
+
 				<SidebarRail className="bg-muted/10" />
 			</Sidebar>
 
@@ -81,19 +90,6 @@ export default async function OrganizationLayout({
 					<div className="flex items-center gap-2 px-3">
 						<SidebarTrigger />
 						<Separator orientation="vertical" className="mr-2 h-4" />
-						<span className="text-sm text-muted-foreground font-medium">
-							{formattedDate}
-						</span>
-					</div>
-					<div className="ml-auto px-4">
-						<Suspense fallback={<UserAvatarSkeleton />}>
-							<UserAvatar
-								userPromise={auth.api
-									.getSession({ headers: await headers() })
-									.then((session) => session?.user ?? null)}
-								size="sm"
-							/>
-						</Suspense>
 					</div>
 				</header>
 				{children}
