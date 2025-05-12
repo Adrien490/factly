@@ -31,24 +31,20 @@ export async function getOrganization(
 		if (!validation.success) {
 			throw new Error("Invalid parameters");
 		}
+		const { id, slug } = validation.data;
+		const identifier = id ?? slug;
 
-		const validatedParams = validation.data;
-
-		if (!validatedParams.id && !validatedParams.slug) {
+		if (!identifier) {
 			throw new Error("Invalid parameters");
 		}
 
-		if (
-			!hasOrganizationAccess(
-				(validatedParams.id ?? validatedParams.slug) as string
-			)
-		) {
+		if (!hasOrganizationAccess(identifier)) {
 			throw new Error("Unauthorized");
 		}
 
 		// Récupération de l'organisation avec timeout
 		const organization = await fetchOrganization(
-			validatedParams,
+			validation.data,
 			session.user.id
 		);
 
