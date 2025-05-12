@@ -2,6 +2,7 @@ import { getClientNavigation } from "@/domains/client/utils";
 import { getProductNavigation } from "@/domains/product/utils";
 import { getSupplierNavigation } from "@/domains/supplier/utils";
 import {
+	Building2,
 	CalendarClock,
 	LayoutDashboard,
 	Package,
@@ -107,62 +108,22 @@ export const getSidebarNav = (organizationId: string) => [
 			},*/
 		],
 	},
-	/*{
-		title: "Comptabilité",
-		icon: Calculator,
-		items: [
-			/*{
-				title: "Rapports financiers",
-				url: `/dashboard/${organizationId}/accounting/reports`,
-			},*/
-	/*{
-				title: "Gestion TVA",
-				url: `/dashboard/${organizationId}/accounting/vat`,
-			},
-			{
-				title: "Export comptable",
-				url: `/dashboard/${organizationId}/accounting/export`,
-			},
-		],
-	},*/
-	/*{
-		title: "Analytique",
-		icon: BarChart3,
-		items: [
-			{
-				title: "Tableaux de bord",
-				url: `/dashboard/${organizationId}/analytics/dashboards`,
-			},
-			{
-				title: "Analyse des ventes",
-				url: `/dashboard/${organizationId}/analytics/sales`,
-			},
-			{
-				title: "Analyse clients",
-				url: `/dashboard/${organizationId}/analytics/clients`,
-			},
-			{
-				title: "Analyse fournisseurs",
-				url: `/dashboard/${organizationId}/analytics/suppliers`,
-			},
-		],
-	},
 	{
 		title: "Organisation",
 		icon: Building2,
 		items: [
-			/*{
-				title: "Informations légales",
-				url: `/dashboard/${organizationId}/legal`,
-			},
 			{
-				title: "Membres",
+				title: "Modifier l'organisation",
+				url: `/dashboard/${organizationId}/edit`,
+			},
+			/*{
+				title: "Gestion des membres",
 				url: `/dashboard/${organizationId}/members`,
 			},
 			{
 				title: "Invitations",
 				url: `/dashboard/${organizationId}/invitations`,
-			},
+			},*/
 		],
 	},
 	/*{
