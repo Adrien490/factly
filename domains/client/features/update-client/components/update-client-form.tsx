@@ -91,6 +91,7 @@ export function UpdateClientForm({ client }: Props) {
 				client.company?.employeeCount ??
 				EmployeeCount.ONE_TO_TWO,
 			companyName: state?.inputs?.companyName ?? client.company?.name ?? "",
+			companyEmail: state?.inputs?.companyEmail ?? client.company?.email ?? "",
 		},
 
 		transform: useTransform(
@@ -179,25 +180,46 @@ export function UpdateClientForm({ client }: Props) {
 							)}
 						</form.AppField>
 						{clientType === ClientType.COMPANY && (
-							<form.AppField
-								validators={{
-									onChange: ({ value }) => {
-										if (clientType === ClientType.COMPANY && !value) {
-											return "Le nom de la société est requis pour un client entreprise";
-										}
-									},
-								}}
-								name="companyName"
-							>
-								{(field) => (
-									<field.InputField
-										disabled={isPending}
-										label="Nom de la société"
-										placeholder="Nom de l'entreprise"
-										required
-									/>
-								)}
-							</form.AppField>
+							<>
+								<form.AppField
+									validators={{
+										onChange: ({ value }) => {
+											if (clientType === ClientType.COMPANY && !value) {
+												return "Le nom de la société est requis pour un client entreprise";
+											}
+										},
+									}}
+									name="companyName"
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Nom de la société"
+											placeholder="Nom de l'entreprise"
+											required
+										/>
+									)}
+								</form.AppField>
+								<form.AppField
+									name="companyEmail"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+												return "Format d'email invalide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Email de la société"
+											disabled={isPending}
+											placeholder="Ex: contact@example.com"
+										/>
+									)}
+								</form.AppField>
+							</>
 						)}
 
 						<form.Field

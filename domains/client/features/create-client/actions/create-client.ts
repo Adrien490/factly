@@ -75,28 +75,32 @@ export const createClient: ServerAction<
 			notes: formData.get("notes") as string,
 
 			// Informations de contact
-			civility: formData.get("contactCivility") as Civility,
-			firstName: formData.get("contactFirstName") as string,
-			lastName: formData.get("contactLastName") as string,
+			contactCivility: formData.get("contactCivility") as Civility,
+			contactFirstName: formData.get("contactFirstName") as string,
+			contactLastName: formData.get("contactLastName") as string,
 			contactFunction: formData.get("contactFunction") as string,
-			email: formData.get("contactEmail") as string,
-			phoneNumber: formData.get("contactPhoneNumber") as string,
-			mobileNumber: formData.get("contactMobileNumber") as string,
-			faxNumber: formData.get("contactFaxNumber") as string,
-			website: formData.get("contactWebsite") as string,
+			contactEmail: formData.get("contactEmail") as string,
+			contactPhoneNumber: formData.get("contactPhoneNumber") as string,
+			contactMobileNumber: formData.get("contactMobileNumber") as string,
+			contactFaxNumber: formData.get("contactFaxNumber") as string,
+			contactWebsite: formData.get("contactWebsite") as string,
 
 			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
 			companyEmail: formData.get("companyEmail") as string,
-			legalForm: formData.get("companyLegalForm") as LegalForm,
-			siren: formData.get("companySiren") as string,
-			siret: formData.get("companySiret") as string,
-			nafApeCode: formData.get("companyNafApeCode") as string,
-			capital: formData.get("companyCapital") as string,
-			rcs: formData.get("companyRcs") as string,
-			vatNumber: formData.get("companyVatNumber") as string,
-			businessSector: formData.get("companyBusinessSector") as BusinessSector,
-			employeeCount: formData.get("companyEmployeeCount") as EmployeeCount,
+			companyLegalForm: formData.get("companyLegalForm") as LegalForm,
+			companySiren: formData.get("companySiren") as string,
+			companySiret: formData.get("companySiret") as string,
+			companyNafApeCode: formData.get("companyNafApeCode") as string,
+			companyCapital: formData.get("companyCapital") as string,
+			companyRcs: formData.get("companyRcs") as string,
+			companyVatNumber: formData.get("companyVatNumber") as string,
+			companyBusinessSector: formData.get(
+				"companyBusinessSector"
+			) as BusinessSector,
+			companyEmployeeCount: formData.get(
+				"companyEmployeeCount"
+			) as EmployeeCount,
 
 			// Informations d'adresse
 			addressType: formData.get("addressType") as AddressType,
