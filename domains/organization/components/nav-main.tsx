@@ -98,7 +98,7 @@ export function NavMain() {
 								<CollapsibleTrigger asChild>
 									<SidebarMenuButton tooltip={item.title} asChild>
 										<Link
-											href={isCollapsed ? item.url ?? "" : ""}
+											href={isCollapsed ? (item.url ?? "") : ""}
 											className={cn(
 												(isActive && !hasSubItems) || (isActive && isCollapsed)
 													? "bg-sidebar-accent"
