@@ -146,6 +146,7 @@ export const createOrganization: ServerAction<
 						faxNumber: validation.data.faxNumber || null,
 						website: validation.data.website || null,
 						logoUrl: validation.data.logoUrl || null,
+						email: validation.data.email || null,
 					},
 				},
 				address: {
