@@ -25,7 +25,6 @@ export function useCreateOrganization({
 			>({
 				loadingMessage: "Création de l'organisation en cours...",
 				onSuccess: (result) => {
-					onSuccessCallback?.();
 					toast.success(result.message, {
 						action: {
 							label: "Accéder au tableau de bord",
@@ -36,6 +35,8 @@ export function useCreateOrganization({
 							},
 						},
 					});
+					onSuccessCallback?.();
+					router.push(`/dashboard`);
 				},
 			})
 		),
