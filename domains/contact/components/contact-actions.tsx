@@ -46,6 +46,7 @@ export function ContactActions({ contact }: ContactActionsProps) {
 				{!contact.isDefault && (
 					<>
 						<DropdownMenuSeparator />
+
 						<DropdownMenuItem preventDefault asChild>
 							<SetDefaultContactButton
 								id={contact.id}

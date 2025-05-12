@@ -18,7 +18,7 @@ import { setDefaultContactSchema } from "../schemas/set-default-contact-schema";
 export const setDefaultContact: ServerAction<
 	Contact,
 	typeof setDefaultContactSchema
-> = async (formData) => {
+> = async (_, formData) => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -32,10 +32,20 @@ export const setDefaultContact: ServerAction<
 			);
 		}
 
+		const rawData = {
+			id: formData.get("id") as string,
+			organizationId: formData.get("organizationId") as string,
+			clientId: formData.get("clientId") as string | null,
+			supplierId: formData.get("supplierId") as string | null,
+		};
+
+		console.log("[SET_DEFAULT_CONTACT] Raw Data:", rawData);
+
 		// 2. Validation des données
-		const validation = setDefaultContactSchema.safeParse(formData);
+		const validation = setDefaultContactSchema.safeParse(rawData);
 
 		if (!validation.success) {
+			console.log("[SET_DEFAULT_CONTACT] Validation Error:", validation.error);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				"Données invalides"
@@ -77,6 +87,14 @@ export const setDefaultContact: ServerAction<
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
 				"Le contact n'existe pas"
+			);
+		}
+
+		// 4.1 Vérification si le contact est déjà par défaut
+		if (existingContact.isDefault) {
+			return createErrorResponse(
+				ActionStatus.VALIDATION_ERROR,
+				"Ce contact est déjà défini comme contact par défaut"
 			);
 		}
 
