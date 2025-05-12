@@ -1,8 +1,5 @@
-import { MOBILE_REGEX, PHONE_REGEX, URL_REGEX } from "@/shared/constants/regex";
-import { emptyToNull } from "@/shared/utils";
 import {
 	BusinessSector,
-	Civility,
 	ClientStatus,
 	ClientType,
 	EmployeeCount,
@@ -15,113 +12,32 @@ export const updateClientSchema = z
 		// Identifiants
 		id: z.string(),
 		organizationId: z.string(),
-		reference: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || val.length >= 3,
-				"La référence doit contenir au moins 3 caractères"
-			),
+		reference: z.string().optional(),
 		clientType: z.nativeEnum(ClientType),
 		status: z.nativeEnum(ClientStatus),
-		notes: z.string().optional().nullable(),
+		notes: z.string().optional(),
 
 		// Champs du contact
-		contactCivility: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || Object.values(Civility).includes(val as Civility),
-				"Veuillez sélectionner une civilité valide"
-			),
-		contactFirstName: z.string().optional().nullable(),
-		contactLastName: z.string().optional().nullable(),
-		contactFunction: z.string().optional().nullable(),
-		contactEmail: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-				"Format d'email invalide"
-			),
-		contactPhoneNumber: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || PHONE_REGEX.test(val),
-				"Format de numéro de téléphone invalide"
-			),
-		contactMobileNumber: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || MOBILE_REGEX.test(val),
-				"Format de numéro de mobile invalide"
-			),
-		contactFaxNumber: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || PHONE_REGEX.test(val),
-				"Format de numéro de fax invalide"
-			),
-		contactWebsite: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine((val) => !val || URL_REGEX.test(val), "Format d'URL invalide"),
+		contactCivility: z.string().optional(),
+		contactFirstName: z.string().optional(),
+		contactLastName: z.string().optional(),
+		contactFunction: z.string().optional(),
+		contactEmail: z.string().optional(),
+		contactPhoneNumber: z.string().optional(),
+		contactMobileNumber: z.string().optional(),
+		contactFaxNumber: z.string().optional(),
+		contactWebsite: z.string().optional(),
 
 		// Champs de l'entreprise (optionnels)
 		companyName: z.string().optional().nullable(),
 		companyLegalForm: z.nativeEnum(LegalForm).optional().nullable(),
-		companySiren: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || /^\d{9}$/.test(val),
-				"Le numéro SIREN doit comporter exactement 9 chiffres"
-			),
-		companySiret: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || /^\d{14}$/.test(val),
-				"Le numéro SIRET doit comporter exactement 14 chiffres"
-			),
-		companyEmail: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-				"Format d'email invalide"
-			),
-		companyNafApeCode: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || /^\d{4}[A-Z]$/.test(val),
-				"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
-			),
+		companySiren: z.string().optional().nullable(),
+		companySiret: z.string().optional().nullable(),
+		companyEmail: z.string().optional().nullable(),
+		companyNafApeCode: z.string().optional().nullable(),
 		companyCapital: z.string().optional().nullable(),
 		companyRcs: z.string().optional().nullable(),
-		companyVatNumber: z
-			.string()
-			.transform(emptyToNull)
-			.nullable()
-			.refine(
-				(val) => !val || /^FR\d{2}\d{9}$/.test(val),
-				"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
-			),
+		companyVatNumber: z.string().optional().nullable(),
 		companyBusinessSector: z.nativeEnum(BusinessSector).optional().nullable(),
 		companyEmployeeCount: z.nativeEnum(EmployeeCount).optional().nullable(),
 	})
