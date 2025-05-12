@@ -30,7 +30,7 @@ export const GET_CONTACTS_DEFAULT_SELECT = {
 	},
 } satisfies Prisma.ContactSelect;
 
-export const GET_CONTACTS_DEFAULT_SORT_BY = "createdAt";
+export const GET_CONTACTS_DEFAULT_SORT_BY = "lastName";
 
 export const GET_CONTACTS_DEFAULT_SORT_ORDER = "desc";
 
