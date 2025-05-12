@@ -187,9 +187,10 @@ model Company {
   client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId String? @unique
 
-  // Relation to organization
+  // Relation to supplier
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String?       @unique
+  Supplier       Supplier?
 }
 
 model FiscalYear {
@@ -237,29 +238,19 @@ model Member {
 }
 
 model Supplier {
-  id        String  @id @default(cuid())
-  name      String // Nom commercial
-  legalName String? // Raison sociale
-  email     String?
-  phone     String?
-  website   String?
-  logoUrl   String?
-
-  // Informations fiscales et légales
-  siren              String?
-  siret              String?
-  vatNumber          String?
-  registrationNumber String? // N° d'immatriculation
+  id String @id @default(cuid())
 
   // Classification et évaluation
-  supplierType SupplierType   @default(MANUFACTURER)
-  status       SupplierStatus @default(ACTIVE)
+  type   SupplierType   @default(MANUFACTURER)
+  status SupplierStatus @default(ACTIVE)
 
   notes String? // Notes sur le fournisseur
 
   // Métadonnées
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String?  @unique
 
   // Relations
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -268,9 +259,8 @@ model Supplier {
   contacts       Contact[]
   products       Product[] // Relation avec les produits fournis
 
-  @@index([name])
   @@index([status, organizationId])
-  @@index([supplierType, organizationId])
+  @@index([type, organizationId])
 }
 
 model Address {

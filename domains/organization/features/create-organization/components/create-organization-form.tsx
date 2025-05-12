@@ -23,7 +23,7 @@ import {
 } from "@/shared/components/forms";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { useUploadThing } from "@/shared/lib/uploadthing";
-import { AddressType, Country, LegalForm } from "@prisma/client";
+import { AddressType, Country } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -37,7 +37,11 @@ export function CreateOrganizationForm({
 	searchAddressPromise,
 }: OrganizationFormProps) {
 	const response = use(searchAddressPromise);
-	const { state, dispatch, isPending } = useCreateOrganization();
+	const { state, dispatch, isPending } = useCreateOrganization({
+		onSuccessCallback: () => {
+			form.reset();
+		},
+	});
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const { isUploading, startUpload } = useUploadThing("companyLogo");
 	const router = useRouter();
@@ -45,23 +49,22 @@ export function CreateOrganizationForm({
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			companyName: state?.data?.company?.name ?? "",
-			legalForm:
-				state?.data?.company?.legalForm ?? (undefined as LegalForm | undefined),
-			email: state?.data?.company?.email ?? "",
-			phoneNumber: state?.data?.company?.phoneNumber ?? "",
-			mobileNumber: state?.data?.company?.mobileNumber ?? "",
-			faxNumber: state?.data?.company?.faxNumber ?? "",
-			website: state?.data?.company?.website ?? "",
-			siren: state?.data?.company?.siren ?? "",
-			siret: state?.data?.company?.siret ?? "",
-			nafApeCode: state?.data?.company?.nafApeCode ?? "",
-			capital: state?.data?.company?.capital ?? "",
-			rcs: state?.data?.company?.rcs ?? "",
-			vatNumber: state?.data?.company?.vatNumber ?? "",
-			businessSector: state?.data?.company?.businessSector ?? "",
-			employeeCount: state?.data?.company?.employeeCount ?? "",
-			logoUrl: state?.data?.company?.logoUrl ?? "",
+			companyName: "",
+			legalForm: "",
+			email: "",
+			phoneNumber: "",
+			mobileNumber: "",
+			faxNumber: "",
+			website: "",
+			siren: "",
+			siret: "",
+			nafApeCode: "",
+			capital: "",
+			rcs: "",
+			vatNumber: "",
+			businessSector: "",
+			employeeCount: "",
+			logoUrl: "",
 
 			// Adresse principale
 			addressType: AddressType.HEADQUARTERS,

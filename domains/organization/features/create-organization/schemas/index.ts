@@ -42,9 +42,6 @@ export const createOrganizationSchema = z
 		postalCode: z.string().optional(),
 		city: z.string().optional(),
 		country: z.nativeEnum(Country).default(Country.FRANCE),
-
-		// Champs système
-		userId: z.string().optional(),
 	})
 	.superRefine((data, ctx) => {
 		// Validation du SIRET si SIREN est fourni

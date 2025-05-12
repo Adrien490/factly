@@ -1,5 +1,3 @@
-"use server";
-
 import db from "@/shared/lib/db";
 import { Prisma } from "@prisma/client";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
@@ -102,8 +100,7 @@ export async function fetchClients(
 				pageCount: totalPages,
 			},
 		};
-	} catch (error) {
-		console.error("[FETCH_CLIENTS]", error);
+	} catch {
 		return {
 			clients: [],
 			pagination: {

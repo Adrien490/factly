@@ -8,7 +8,13 @@ import { createOrganization } from "../actions/create-organization";
 import { createOrganizationSchema } from "../schemas";
 import { CreateOrganizationReturn } from "../types";
 
-export function useCreateOrganization() {
+interface UseCreateOrganizationProps {
+	onSuccessCallback?: () => void;
+}
+
+export function useCreateOrganization({
+	onSuccessCallback,
+}: UseCreateOrganizationProps) {
 	const router = useRouter();
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
@@ -19,6 +25,7 @@ export function useCreateOrganization() {
 			>({
 				loadingMessage: "Création de l'organisation en cours...",
 				onSuccess: (result) => {
+					onSuccessCallback?.();
 					toast.success(result.message, {
 						action: {
 							label: "Accéder au tableau de bord",
