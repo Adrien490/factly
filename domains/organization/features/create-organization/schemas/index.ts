@@ -9,6 +9,7 @@ import { z } from "zod";
 const emptyToNull = (val: string) => (val === "" ? null : val);
 const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
 const mobileRegex = /^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const urlRegex =
 	/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
 
@@ -20,16 +21,16 @@ export const createOrganizationSchema = z
 	.object({
 		// Informations de base
 		companyName: z.string().min(1, "Le nom de l'entreprise est requis"),
-		legalForm: z.nativeEnum(LegalForm, {
-			errorMap: () => ({ message: "La forme juridique est requise" }),
-		}),
+		legalForm: z.nativeEnum(LegalForm).optional().nullable(),
 		logoUrl: z.string().optional().nullable(),
 
 		// Contact
 		email: z
 			.string()
-			.email("Format d'email invalide")
-			.min(1, "L'email est requis"),
+			.transform(emptyToNull)
+			.nullable()
+			.refine((val) => !val || emailRegex.test(val), "Format d'email invalide"),
+
 		phoneNumber: z
 			.string()
 			.transform(emptyToNull)

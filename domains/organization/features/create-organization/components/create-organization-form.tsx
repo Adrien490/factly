@@ -157,22 +157,15 @@ export function CreateOrganizationForm({
 						>
 							{(field) => (
 								<field.InputField
-									label="Nom commercial"
+									label="Nom de la société"
 									disabled={isPending}
-									placeholder="Nom utilisé au quotidien"
+									placeholder="Ex: Mon entreprise"
+									required
 								/>
 							)}
 						</form.AppField>
 
-						<form.AppField
-							name="legalForm"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "La forme juridique est requise";
-									return undefined;
-								},
-							}}
-						>
+						<form.AppField name="legalForm">
 							{(field) => (
 								<field.SelectField
 									label="Forme juridique"
@@ -186,18 +179,7 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 
-						<form.AppField
-							name="email"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "L'email est requis";
-									if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-										return "Format d'email invalide";
-									}
-									return undefined;
-								},
-							}}
-						>
+						<form.AppField name="email">
 							{(field) => (
 								<field.InputField
 									label="Email"
@@ -647,7 +629,6 @@ export function CreateOrganizationForm({
 						disabled={!canSubmit || isPending || isUploading}
 						cancelHref="/dashboard"
 						submitLabel={"Créer l'organisation"}
-						isPending={isUploading}
 					/>
 				)}
 			</form.Subscribe>
