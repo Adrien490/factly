@@ -104,6 +104,14 @@ export const updateClientSchema = z
 				(val) => !val || /^\d{14}$/.test(val),
 				"Le numéro SIRET doit comporter exactement 14 chiffres"
 			),
+		companyEmail: z
+			.string()
+			.transform(emptyToNull)
+			.nullable()
+			.refine(
+				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+				"Format d'email invalide"
+			),
 		companyNafApeCode: z
 			.string()
 			.transform(emptyToNull)

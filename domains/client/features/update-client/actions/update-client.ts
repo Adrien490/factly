@@ -87,6 +87,7 @@ export const updateClient: ServerAction<
 
 			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
+			companyEmail: formData.get("companyEmail") as string,
 			companyLegalForm: formData.get("companyLegalForm") as LegalForm,
 			companySiren: formData.get("companySiren") as string,
 			companySiret: formData.get("companySiret") as string,
@@ -139,6 +140,7 @@ export const updateClient: ServerAction<
 
 			// Informations d'entreprise
 			companyName,
+			companyEmail,
 			companyLegalForm,
 			companySiren,
 			companySiret,
@@ -235,6 +237,7 @@ export const updateClient: ServerAction<
 								vatNumber: companyVatNumber,
 								businessSector: companyBusinessSector,
 								employeeCount: companyEmployeeCount,
+								email: companyEmail,
 							},
 							update: {
 								name: companyName ?? "",
@@ -247,6 +250,7 @@ export const updateClient: ServerAction<
 								vatNumber: companyVatNumber,
 								businessSector: companyBusinessSector,
 								employeeCount: companyEmployeeCount,
+								email: companyEmail,
 							},
 						},
 					},

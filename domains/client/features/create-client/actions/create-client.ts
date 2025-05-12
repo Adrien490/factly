@@ -87,6 +87,7 @@ export const createClient: ServerAction<
 
 			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
+			companyEmail: formData.get("companyEmail") as string,
 			legalForm: formData.get("companyLegalForm") as LegalForm,
 			siren: formData.get("companySiren") as string,
 			siret: formData.get("companySiret") as string,
@@ -167,6 +168,7 @@ export const createClient: ServerAction<
 
 			// Informations d'entreprise
 			companyName,
+			companyEmail,
 			companyLegalForm,
 			companySiren,
 			companySiret,
@@ -231,7 +233,7 @@ export const createClient: ServerAction<
 							vatNumber: companyVatNumber!,
 							businessSector: companyBusinessSector!,
 							employeeCount: companyEmployeeCount!,
-							email: validation.data.companyEmail || null,
+							email: companyEmail || null,
 						},
 					},
 				}),

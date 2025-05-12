@@ -321,7 +321,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								>
 									{(field) => (
 										<field.InputField
-											label="Email de l'entreprise"
+											label="Email de la société"
 											disabled={isPending}
 											placeholder="Ex: contact@example.com"
 										/>
