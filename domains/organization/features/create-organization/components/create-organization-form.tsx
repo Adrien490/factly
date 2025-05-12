@@ -7,6 +7,8 @@ import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features";
+import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
+import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
 import { useCreateOrganization } from "@/domains/organization/features";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { ContentCard } from "@/shared/components/content-card";
@@ -137,26 +139,9 @@ export function CreateOrganizationForm({
 			</form.Field>
 
 			<FormLayout withDividers columns={2} className="mt-6">
-				{/* Section Logo */}
-				<ContentCard
-					title="Identité visuelle"
-					description="Ajoutez un logo pour identifier votre organisation"
-				>
-					<form.AppField name="logoUrl">
-						{(field) => (
-							<field.UploadField
-								label="Logo"
-								disabled={isPending}
-								accept="image/*"
-								endpoint="companyLogo"
-							/>
-						)}
-					</form.AppField>
-				</ContentCard>
-
 				{/* Section 1: Informations de base */}
 				<ContentCard
-					title="Informations de base"
+					title="Informations générales"
 					description="Renseignez les informations principales de l'organisation"
 				>
 					<div className="space-y-4">
@@ -221,13 +206,55 @@ export function CreateOrganizationForm({
 								/>
 							)}
 						</form.AppField>
+
+						<form.AppField
+							name="website"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+											value
+										)
+									) {
+										return "Format d'URL invalide (ex: https://www.example.com)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Site web"
+									disabled={isPending}
+									placeholder="Ex: https://www.example.com"
+								/>
+							)}
+						</form.AppField>
 					</div>
 				</ContentCard>
 
-				{/* Section 2: Identifiants fiscaux */}
+				{/* Section 2: Identité visuelle */}
 				<ContentCard
-					title="Identifiants fiscaux"
-					description="Renseignez les identifiants fiscaux de l'organisation"
+					title="Identité visuelle"
+					description="Ajoutez un logo pour identifier votre organisation"
+				>
+					<form.AppField name="logoUrl">
+						{(field) => (
+							<field.UploadField
+								label="Logo"
+								disabled={isPending}
+								accept="image/*"
+								endpoint="companyLogo"
+							/>
+						)}
+					</form.AppField>
+				</ContentCard>
+
+				{/* Section 3: Informations légales */}
+				<ContentCard
+					title="Informations légales"
+					description="Renseignez les informations légales de l'organisation"
 				>
 					<div className="space-y-4">
 						<form.AppField
@@ -291,29 +318,186 @@ export function CreateOrganizationForm({
 								/>
 							)}
 						</form.AppField>
+
+						<form.AppField
+							name="rcs"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[A-Z]\d{8}$/.test(value)) {
+										return "Le numéro RCS doit commencer par une lettre suivie de 8 chiffres (ex: B12345678)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="RCS"
+									disabled={isPending}
+									placeholder="Ex: B12345678"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="nafApeCode"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
+										return "Le code APE doit être au format 4 chiffres + 1 lettre (ex: 6201Z)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Code APE"
+									disabled={isPending}
+									placeholder="Ex: 6201Z"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="capital"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
+										return "Le capital doit être un nombre avec maximum 2 décimales";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Capital social"
+									disabled={isPending}
+									placeholder="Ex: 10000.00"
+								/>
+							)}
+						</form.AppField>
 					</div>
 				</ContentCard>
 
-				{/* Section 3: Adresse */}
+				{/* Section 4: Classification */}
+				<ContentCard
+					title="Classification"
+					description="Catégorisation de l'organisation"
+				>
+					<div className="space-y-4">
+						<form.AppField name="businessSector">
+							{(field) => (
+								<field.SelectField
+									label="Secteur d'activité"
+									disabled={isPending}
+									options={BUSINESS_SECTORS}
+									placeholder="Sélectionnez un secteur d'activité"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="employeeCount">
+							{(field) => (
+								<field.SelectField
+									label="Effectif"
+									disabled={isPending}
+									options={EMPLOYEE_COUNTS}
+									placeholder="Sélectionnez l'effectif"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</ContentCard>
+
+				{/* Section 5: Contact */}
+				<ContentCard
+					title="Contact"
+					description="Informations de contact de l'organisation"
+				>
+					<div className="space-y-4">
+						<form.AppField
+							name="phoneNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de téléphone invalide (ex: +33 6 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Téléphone"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="mobileNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(value)
+									) {
+										return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Mobile"
+									disabled={isPending}
+									placeholder="Ex: +33 6 12 34 56 78"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="faxNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de fax invalide (ex: +33 1 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Fax"
+									disabled={isPending}
+									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</ContentCard>
+
+				{/* Section 6: Adresse */}
 				<ContentCard
 					title="Adresse"
 					description="Indiquez l'adresse de l'organisation"
 				>
 					<div className="space-y-4">
-						<form.AppField name="country">
-							{(field) => (
-								<field.SelectField
-									label="Pays"
-									disabled={isPending}
-									placeholder="Sélectionnez un pays"
-									options={COUNTRIES.map((country) => ({
-										label: country.label,
-										value: country.value,
-									}))}
-								/>
-							)}
-						</form.AppField>
-
 						<form.Field
 							name="addressLine1"
 							validators={{
@@ -439,46 +623,17 @@ export function CreateOrganizationForm({
 								)}
 							</form.AppField>
 						</div>
-					</div>
-				</ContentCard>
 
-				{/* Section 4: Informations complémentaires */}
-				<ContentCard
-					title="Informations complémentaires"
-					description="Renseignez les informations complémentaires"
-				>
-					<div className="space-y-4">
-						<form.AppField name="phoneNumber">
+						<form.AppField name="country">
 							{(field) => (
-								<field.InputField
-									label="Téléphone"
+								<field.SelectField
+									label="Pays"
 									disabled={isPending}
-									placeholder="Ex: +33 1 23 45 67 89"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="website"
-							validators={{
-								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
-											value
-										)
-									) {
-										return "L'URL n'est pas valide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Site web"
-									disabled={isPending}
-									placeholder="Ex: https://www.example.com"
+									placeholder="Sélectionnez un pays"
+									options={COUNTRIES.map((country) => ({
+										label: country.label,
+										value: country.value,
+									}))}
 								/>
 							)}
 						</form.AppField>

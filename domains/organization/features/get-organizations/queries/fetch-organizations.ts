@@ -33,11 +33,21 @@ export async function fetchOrganizations(
 		// Validation des paramètres
 		const where = buildWhereClause(params, userId);
 
+		// Construction de l'orderBy en fonction du champ de tri
+		const orderBy =
+			params.sortBy === "companyName"
+				? {
+						company: {
+							name: params.sortOrder,
+						},
+					}
+				: { [params.sortBy]: params.sortOrder };
+
 		// Récupération des organisations
 		const organizations = await db.organization.findMany({
 			where,
 			select: GET_ORGANIZATIONS_DEFAULT_SELECT,
-			orderBy: { [params.sortBy]: params.sortOrder },
+			orderBy,
 		});
 
 		return organizations;

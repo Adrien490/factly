@@ -10,6 +10,6 @@ export const getOrganizationsSchema = z.object({
 	sortBy: z
 		.enum(ORGANIZATION_SORTABLE_FIELDS)
 		.optional()
-		.default("company.name"),
+		.default("companyName"),
 	sortOrder: z.enum(["asc", "desc"]).optional().default("asc"),
 });

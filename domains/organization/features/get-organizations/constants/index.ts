@@ -17,7 +17,7 @@ export const GET_ORGANIZATIONS_DEFAULT_SELECT = {
 } satisfies Prisma.OrganizationSelect;
 
 export const ORGANIZATION_SORTABLE_FIELDS = [
-	"company.name",
+	"companyName",
 	"createdAt",
 ] as const;
 
@@ -26,7 +26,7 @@ export const ORGANIZATION_SORT_OPTIONS = ORGANIZATION_SORTABLE_FIELDS.map(
 		label:
 			field === "createdAt"
 				? "Date de création"
-				: field === "company.name"
+				: field === "companyName"
 					? "Nom"
 					: field,
 		value: field,
