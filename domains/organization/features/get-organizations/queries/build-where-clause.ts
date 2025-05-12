@@ -32,13 +32,21 @@ export const buildWhereClause = (
 			baseWhere,
 			{
 				OR: [
-					{ name: { contains: searchTerm, mode: "insensitive" } },
-					{ legalName: { contains: searchTerm, mode: "insensitive" } },
-					{ siren: { contains: searchTerm, mode: "insensitive" } },
-					{ siret: { contains: searchTerm, mode: "insensitive" } },
-					{ vatNumber: { contains: searchTerm, mode: "insensitive" } },
-					{ email: { contains: searchTerm, mode: "insensitive" } },
-					{ city: { contains: searchTerm, mode: "insensitive" } },
+					{
+						company: {
+							companyName: { contains: searchTerm, mode: "insensitive" },
+						},
+					},
+
+					{ company: { siren: { contains: searchTerm, mode: "insensitive" } } },
+					{ company: { siret: { contains: searchTerm, mode: "insensitive" } } },
+					{
+						company: {
+							vatNumber: { contains: searchTerm, mode: "insensitive" },
+						},
+					},
+					{ company: { email: { contains: searchTerm, mode: "insensitive" } } },
+					{ address: { city: { contains: searchTerm, mode: "insensitive" } } },
 				],
 			},
 		],

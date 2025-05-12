@@ -9,10 +9,19 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
-import { Country, FiscalYearStatus, Organization } from "@prisma/client";
+import { generateSlug } from "@/shared/utils";
+import {
+	AddressType,
+	BusinessSector,
+	Country,
+	EmployeeCount,
+	FiscalYearStatus,
+	LegalForm,
+} from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { createOrganizationSchema } from "../schemas";
+import { CreateOrganizationReturn } from "../types";
 
 /**
  * Action serveur pour créer une nouvelle organisation
@@ -23,7 +32,7 @@ import { createOrganizationSchema } from "../schemas";
  * Crée également automatiquement une première année fiscale pour l'organisation
  */
 export const createOrganization: ServerAction<
-	Organization,
+	CreateOrganizationReturn,
 	typeof createOrganizationSchema
 > = async (_, formData) => {
 	try {
@@ -40,11 +49,10 @@ export const createOrganization: ServerAction<
 
 		// 2. Préparation et transformation des données brutes
 		const rawData = {
-			name: formData.get("name") as string,
-			legalName: formData.get("legalName") as string,
+			companyName: formData.get("companyName") as string,
 			legalForm: formData.get("legalForm") as string,
 			email: formData.get("email") as string,
-			phone: formData.get("phone") as string,
+			phoneNumber: formData.get("phoneNumber") as string,
 			website: formData.get("website") as string,
 			siren:
 				((formData.get("siren") as string) || "").trim() === ""
@@ -64,7 +72,14 @@ export const createOrganization: ServerAction<
 			city: formData.get("city") as string,
 			country: formData.get("country") as Country,
 			logoUrl: formData.get("logoUrl") as string,
-			creatorId: session.user.id,
+			slug: formData.get("slug") as string,
+			nafApeCode: formData.get("nafApeCode") as string,
+			capital: formData.get("capital") as string,
+			rcs: formData.get("rcs") as string,
+			businessSector: formData.get("businessSector") as string,
+			employeeCount: formData.get("employeeCount") as string,
+			mobileNumber: formData.get("mobileNumber") as string,
+			faxNumber: formData.get("faxNumber") as string,
 		};
 
 		// 3. Validation des données avec le schéma Zod
@@ -80,23 +95,8 @@ export const createOrganization: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'unicité du SIREN/SIRET s'ils sont fournis
-		if (validation.data.siren) {
-			const existingOrgBySiren = await db.organization.findFirst({
-				where: { siren: validation.data.siren },
-				select: { id: true },
-			});
-
-			if (existingOrgBySiren) {
-				return createErrorResponse(
-					ActionStatus.CONFLICT,
-					"Une organisation avec ce SIREN existe déjà"
-				);
-			}
-		}
-
 		if (validation.data.siret) {
-			const existingOrgBySiret = await db.organization.findFirst({
+			const existingOrgBySiret = await db.company.findFirst({
 				where: { siret: validation.data.siret },
 				select: { id: true },
 			});
@@ -109,9 +109,8 @@ export const createOrganization: ServerAction<
 			}
 		}
 
-		// Vérification de l'unicité du numéro de TVA s'il est fourni
 		if (validation.data.vatNumber) {
-			const existingOrgByVatNumber = await db.organization.findFirst({
+			const existingOrgByVatNumber = await db.company.findFirst({
 				where: { vatNumber: validation.data.vatNumber },
 				select: { id: true },
 			});
@@ -124,19 +123,52 @@ export const createOrganization: ServerAction<
 			}
 		}
 
-		// 5. Création de l'organisation dans la base de données
-		const { creatorId, ...dataWithoutCreatorId } = validation.data;
+		// 5. Création de l'organisation dans la base de donnée
 
 		const organization = await db.organization.create({
 			data: {
-				...dataWithoutCreatorId,
-				// Relations
-				creator: { connect: { id: creatorId } },
+				slug: generateSlug(validation.data.companyName),
+				user: { connect: { id: session.user.id } },
 				members: {
 					create: {
-						user: { connect: { id: creatorId } },
+						user: { connect: { id: session.user.id } },
 					},
 				},
+				company: {
+					create: {
+						companyName: validation.data.companyName,
+						legalForm: validation.data.legalForm as LegalForm,
+						siren: validation.data.siren || null,
+						siret: validation.data.siret || null,
+						nafApeCode: validation.data.nafApeCode || null,
+						capital: validation.data.capital || null,
+						rcs: validation.data.rcs || null,
+						vatNumber: validation.data.vatNumber || null,
+						businessSector:
+							(validation.data.businessSector as BusinessSector) || null,
+						employeeCount:
+							(validation.data.employeeCount as EmployeeCount) || null,
+						phoneNumber: validation.data.phoneNumber || null,
+						mobileNumber: validation.data.mobileNumber || null,
+						faxNumber: validation.data.faxNumber || null,
+						website: validation.data.website || null,
+						logoUrl: validation.data.logoUrl || null,
+					},
+				},
+				address: {
+					create: {
+						addressType: AddressType.HEADQUARTERS,
+						addressLine1: validation.data.addressLine1 || "",
+						addressLine2: validation.data.addressLine2 || "",
+						postalCode: validation.data.postalCode || "",
+						city: validation.data.city || "",
+						country: validation.data.country,
+						isDefault: true,
+					},
+				},
+			},
+			include: {
+				company: true,
 			},
 		});
 
@@ -144,30 +176,24 @@ export const createOrganization: ServerAction<
 		const currentDate = new Date();
 		const currentYear = currentDate.getFullYear();
 
-		// Année fiscale du 1er janvier au 31 décembre de l'année courante
-		const startDate = new Date(currentYear, 0, 1); // 1er janvier de l'année courante
-		const endDate = new Date(currentYear, 11, 31); // 31 décembre de l'année courante
-
 		await db.fiscalYear.create({
 			data: {
 				organizationId: organization.id,
 				name: `Année fiscale ${currentYear}`,
-				description: `Année fiscale initiale pour ${organization.name}`,
-				startDate: startDate,
-				endDate: endDate,
+				description: `Année fiscale initiale pour ${organization.company?.companyName || "l'organisation"}`,
+				startDate: new Date(currentYear, 0, 1),
+				endDate: new Date(currentYear, 11, 31),
 				status: FiscalYearStatus.ACTIVE,
 				isCurrent: true,
 			},
 		});
 
 		// Revalidation des tags de cache
-		// Tag principal pour toutes les organisations
 		revalidateTag("organizations");
 
-		// 7. Retour de la réponse de succès
 		return createSuccessResponse(
 			organization,
-			`L'organisation ${organization.name} a été créée avec succès`
+			`L'organisation ${organization.company?.companyName || "a été créée avec succès"}`
 		);
 	} catch (error) {
 		console.error("[CREATE_ORGANIZATION]", error);

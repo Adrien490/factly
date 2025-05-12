@@ -85,14 +85,15 @@ export function DeleteOrganizationForm({
 									htmlFor="confirm"
 									className="text-sm font-medium text-destructive"
 								>
-									Pour continuer, écrivez &quot;{organization.name}&quot;
+									Pour continuer, écrivez &quot;
+									{organization.company?.companyName}&quot;
 								</Label>
 								<Input
 									id="confirm"
 									name="confirm"
 									aria-describedby="confirm-description"
 									className={cn("border-destructive/50")}
-									placeholder={organization.name}
+									placeholder={organization.company?.companyName}
 									autoComplete="off"
 								/>
 							</div>
@@ -115,7 +116,9 @@ export function DeleteOrganizationForm({
 			<AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Supprimer {organization.name} ?</AlertDialogTitle>
+						<AlertDialogTitle>
+							Supprimer {organization.company?.companyName} ?
+						</AlertDialogTitle>
 						<AlertDialogDescription>
 							Cette action est permanente et ne peut pas être annulée. Toutes
 							les données de l&apos;organisation seront définitivement
@@ -126,7 +129,11 @@ export function DeleteOrganizationForm({
 						<AlertDialogCancel>Annuler</AlertDialogCancel>
 						<form action={dispatch}>
 							<input type="hidden" name="id" value={organization.id} />
-							<input type="hidden" name="confirm" value={organization.name} />
+							<input
+								type="hidden"
+								name="confirm"
+								value={organization.company?.companyName}
+							/>
 							<Button type="submit" variant="destructive" disabled={isPending}>
 								{isPending ? "Suppression..." : "Confirmer la suppression"}
 							</Button>

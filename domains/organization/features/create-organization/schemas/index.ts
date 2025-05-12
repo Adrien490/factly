@@ -1,4 +1,9 @@
-import { Country, LegalForm } from "@prisma/client";
+import {
+	BusinessSector,
+	Country,
+	EmployeeCount,
+	LegalForm,
+} from "@prisma/client";
 import { z } from "zod";
 
 /**
@@ -7,8 +12,7 @@ import { z } from "zod";
  */
 export const createOrganizationSchema = z.object({
 	// Informations de base
-	name: z.string().min(1, "Le nom est requis"),
-	legalName: z.string().min(1, "La dénomination sociale est requise"),
+	companyName: z.string().min(1, "Le nom est requis"),
 	legalForm: z.nativeEnum(LegalForm, {
 		errorMap: () => ({ message: "La forme juridique est requise" }),
 	}),
@@ -19,8 +23,15 @@ export const createOrganizationSchema = z.object({
 		.string()
 		.email("Format d'email invalide")
 		.min(1, "L'email est requis"),
-	phone: z.string().optional().nullable(),
+	phoneNumber: z.string().optional().nullable(),
+	mobileNumber: z.string().optional().nullable(),
+	faxNumber: z.string().optional().nullable(),
 	website: z.string().optional().nullable(),
+	nafApeCode: z.string().optional().nullable(),
+	capital: z.string().optional().nullable(),
+	rcs: z.string().optional().nullable(),
+	businessSector: z.nativeEnum(BusinessSector).optional().nullable(),
+	employeeCount: z.nativeEnum(EmployeeCount).optional().nullable(),
 
 	// Informations fiscales
 	siren: z
@@ -47,5 +58,5 @@ export const createOrganizationSchema = z.object({
 	country: z.nativeEnum(Country).default(Country.FRANCE),
 
 	// Champs système
-	creatorId: z.string().optional(),
+	userId: z.string().optional(),
 });

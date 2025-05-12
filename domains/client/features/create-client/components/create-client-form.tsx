@@ -86,6 +86,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		defaultValues: {
 			organizationId,
 			reference: state?.inputs?.reference ?? "",
+			companyEmail: state?.inputs?.companyEmail ?? "",
 			email: state?.inputs?.email ?? "",
 			phoneNumber: state?.inputs?.phoneNumber ?? "",
 			mobileNumber: state?.inputs?.mobileNumber ?? "",
@@ -455,7 +456,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						</form.AppField>
 
 						<form.AppField
-							name="email"
+							name="companyEmail"
 							validators={{
 								onChange: ({ value }) => {
 									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -467,7 +468,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						>
 							{(field) => (
 								<field.InputField
-									label="Email"
+									label="Email de l'entreprise"
 									disabled={isPending}
 									placeholder="Ex: contact@example.com"
 								/>

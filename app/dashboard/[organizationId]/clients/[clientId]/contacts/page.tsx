@@ -3,7 +3,12 @@ import { CreateContactSheetForm } from "@/domains/contact/features/create-contac
 import { getContacts } from "@/domains/contact/features/get-contacts";
 import { ContactDataTable } from "@/domains/contact/features/get-contacts/components/contact-datatable";
 import { GetContactsSortBy } from "@/domains/contact/features/get-contacts/types";
-import { FilterSelect, SearchForm, Toolbar } from "@/shared/components";
+import {
+	FilterSelect,
+	SearchForm,
+	SortingOptionsDropdown,
+	Toolbar,
+} from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { Civility } from "@prisma/client";
 import { Suspense } from "react";
@@ -32,8 +37,6 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 		isDefault,
 	};
 
-	console.log(filters);
-
 	return (
 		<div className="space-y-6">
 			{/* Barre de recherche et filtres */}
@@ -49,14 +52,28 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 				</span>
 
 				<FilterSelect
-					filterKey="type"
-					label="Type"
+					filterKey="civility"
+					label="Civilité"
 					options={CIVILITIES.map((civility) => ({
 						value: civility.value,
 						label: civility.label,
 					}))}
 				/>
-
+				<SortingOptionsDropdown
+					sortFields={[
+						{
+							label: "Nom",
+							value: "lastName",
+						},
+						{
+							label: "Prénom",
+							value: "firstName",
+						},
+					]}
+					defaultSortBy="lastName"
+					defaultSortOrder="asc"
+					className="w-[200px] shrink-0"
+				/>
 				<CreateContactSheetForm />
 			</Toolbar>
 

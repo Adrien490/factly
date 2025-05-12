@@ -90,52 +90,24 @@ model Passkey {
 }
 
 model Organization {
-  id        String  @id @default(cuid())
-  name      String
-  legalName String?
-  logoUrl   String?
-  email     String?
-  phone     String?
-  website   String?
-  siren     String? @unique
-  siret     String? @unique
-  vatNumber String? @unique
-
-  // Adresse intégrée
-  addressLine1 String? // Ligne principale de l'adresse
-  addressLine2 String? // Informations complémentaires
-  city         String? // Ville
-  postalCode   String? // Code postal
-  region       String? // Région, département
-  country      Country @default(FRANCE) // Pays
-
-  // Informations légales françaises
-  legalForm         LegalForm? // Forme juridique (SARL, SAS, etc.)
-  nafCode           String? // Code NAF/APE
-  rcsNumber         String? // Numéro RCS
-  rcsCity           String? // Ville du greffe d'immatriculation
-  capitalAmount     Float? // Capital social
-  intracomVatNumber String? // Numéro de TVA intracommunautaire
-
-  // Mentions légales obligatoires pour factures
-  invoiceFooter String? // Texte en pied de page des factures
-
+  id        String   @id @default(cuid())
+  slug      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  members     Member[]
-  clients     Client[]
-  fiscalYears FiscalYear[] // Relation avec les années fiscales
-
-  // Relations pour la gestion commerciale
+  company           Company?
+  address           Address?
+  members           Member[]
+  clients           Client[]
+  fiscalYears       FiscalYear[]
   suppliers         Supplier[]
-  products          Product[] // Relation avec les produits
-  productCategories ProductCategory[] // Relation avec les catégories de produits
+  products          Product[]
+  productCategories ProductCategory[]
 
   // Relation avec User (créateur)
-  creator   User?   @relation("UserOrganizations", fields: [creatorId], references: [id])
-  creatorId String?
+  user   User?   @relation("UserOrganizations", fields: [userId], references: [id])
+  userId String?
 }
 
 // Modifications du modèle Client existant
@@ -196,6 +168,7 @@ model Company {
   id             String          @id @default(uuid())
   companyName    String
   logoUrl        String?
+  email          String?
   legalForm      LegalForm?
   siret          String?
   siren          String?
@@ -211,8 +184,12 @@ model Company {
   employeeCount  EmployeeCount?
 
   // Relation to client
-  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId String @unique
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String? @unique
+
+  // Relation to organization
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String?       @unique
 }
 
 model FiscalYear {
@@ -310,10 +287,12 @@ model Address {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
-  supplier   Supplier? @relation(fields: [supplierId], references: [id])
-  supplierId String?
-  client     Client?   @relation(fields: [clientId], references: [id])
-  clientId   String?
+  supplier       Supplier?     @relation(fields: [supplierId], references: [id])
+  supplierId     String?
+  client         Client?       @relation(fields: [clientId], references: [id])
+  clientId       String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String?       @unique
 
   @@index([supplierId])
 }

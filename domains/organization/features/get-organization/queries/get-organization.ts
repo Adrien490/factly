@@ -1,11 +1,12 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { id } from "date-fns/locale";
 import { headers } from "next/headers";
 import { fetchOrganization } from ".";
 import { hasOrganizationAccess } from "../../has-organization-access";
 import { getOrganizationSchema } from "../schemas";
-import { GetOrganizationReturn } from "../types";
+import { GetOrganizationParams, GetOrganizationReturn } from "../types";
 
 /**
  * Récupère une organisation par son ID
@@ -13,7 +14,7 @@ import { GetOrganizationReturn } from "../types";
  * @returns Détails de l'organisation
  */
 export async function getOrganization(
-	id: string
+	params: GetOrganizationParams
 ): Promise<GetOrganizationReturn> {
 	try {
 		// Vérification de l'authentification
@@ -25,17 +26,25 @@ export async function getOrganization(
 			throw new Error("Unauthorized");
 		}
 
-		if (!hasOrganizationAccess(id)) {
-			throw new Error("Unauthorized");
-		}
-
-		const validation = getOrganizationSchema.safeParse({ id });
+		const validation = getOrganizationSchema.safeParse(params);
 
 		if (!validation.success) {
 			throw new Error("Invalid parameters");
 		}
 
 		const validatedParams = validation.data;
+
+		if (!validatedParams.id && !validatedParams.slug) {
+			throw new Error("Invalid parameters");
+		}
+
+		if (
+			!hasOrganizationAccess(
+				(validatedParams.id ?? validatedParams.slug) as string
+			)
+		) {
+			throw new Error("Unauthorized");
+		}
 
 		// Récupération de l'organisation avec timeout
 		const organization = await fetchOrganization(

@@ -89,6 +89,14 @@ export const createClientSchema = z
 		// Champs de l'entreprise (optionnels)
 		companyName: z.string().optional().nullable(),
 		legalForm: z.nativeEnum(LegalForm).optional().nullable(),
+		companyEmail: z
+			.string()
+			.transform(emptyToNull)
+			.nullable()
+			.refine(
+				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+				"Format d'email invalide"
+			),
 		siren: z
 			.string()
 			.transform(emptyToNull)

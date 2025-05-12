@@ -27,9 +27,8 @@ export function OrganizationList({
 			>
 				{/* Mapping des organisations avec le paramètre view pour adaptation */}
 				{organizations.map((organization) => {
-					const { id, name, legalName, logoUrl, legalForm, city } =
-						organization;
-					const initial = name.charAt(0).toUpperCase();
+					const { id, slug, company, address } = organization;
+					const initial = slug.charAt(0).toUpperCase();
 					if (viewType === "list") {
 						return (
 							<Link key={id} href={`/dashboard/${id}`} className="block">
@@ -37,11 +36,11 @@ export function OrganizationList({
 									<div className="flex items-center gap-3">
 										{/* Logo */}
 										<div className="h-10 w-10 shrink-0 flex items-center justify-center">
-											{logoUrl ? (
+											{company?.logoUrl ? (
 												<div className="h-10 w-10 relative rounded-md overflow-hidden">
 													<Image
-														src={logoUrl}
-														alt={name}
+														src={company.logoUrl}
+														alt={company.companyName}
 														fill
 														sizes="40px"
 														className="object-cover"
@@ -58,11 +57,15 @@ export function OrganizationList({
 
 										{/* Nom et détails */}
 										<div className="min-w-0 flex-1">
-											<h3 className="font-medium truncate">{name}</h3>
+											<h3 className="font-medium truncate">
+												{company?.companyName}
+											</h3>
 											<p className="text-xs text-muted-foreground truncate">
-												{legalForm && <span>{legalForm}</span>}
-												{legalForm && city && <span> · </span>}
-												{city && <span>{city}</span>}
+												{company?.legalForm && <span>{company.legalForm}</span>}
+												{company?.legalForm && address?.city && (
+													<span> · </span>
+												)}
+												{address?.city && <span>{address.city}</span>}
 											</p>
 										</div>
 
@@ -82,11 +85,11 @@ export function OrganizationList({
 									<div className="flex items-start gap-3">
 										{/* Logo */}
 										<div className="h-12 w-12 shrink-0 flex items-center justify-center">
-											{logoUrl ? (
+											{company?.logoUrl ? (
 												<div className="h-12 w-12 relative rounded-md overflow-hidden">
 													<Image
-														src={logoUrl}
-														alt={name}
+														src={company.logoUrl}
+														alt={company.companyName}
 														fill
 														sizes="48px"
 														className="object-cover"
@@ -103,12 +106,15 @@ export function OrganizationList({
 
 										{/* Nom et sous-titre */}
 										<div className="flex-1 min-w-0">
-											<h3 className="font-medium truncate">{name}</h3>
-											{legalName && legalName !== name && (
-												<p className="text-xs text-muted-foreground truncate mt-0.5">
-													{legalName}
-												</p>
-											)}
+											<h3 className="font-medium truncate">
+												{company?.companyName}
+											</h3>
+											{company?.legalForm &&
+												company?.legalForm !== company?.companyName && (
+													<p className="text-xs text-muted-foreground truncate mt-0.5">
+														{company?.legalForm}
+													</p>
+												)}
 										</div>
 
 										{/* Menu d'actions */}
@@ -117,8 +123,8 @@ export function OrganizationList({
 
 									{/* Informations secondaires */}
 									<div className="pt-3 text-xs text-muted-foreground flex flex-wrap gap-x-2 gap-y-1 mt-2">
-										{legalForm && <span>{legalForm}</span>}
-										{city && <span>{city}</span>}
+										{company?.legalForm && <span>{company?.legalForm}</span>}
+										{address?.city && <span>{address?.city}</span>}
 									</div>
 								</CardContent>
 							</Card>

@@ -7,32 +7,9 @@ import { Prisma } from "@prisma/client";
 export const GET_ORGANIZATIONS_DEFAULT_SELECT = {
 	// Identifiants et informations de base
 	id: true,
-	name: true,
-	legalName: true,
-	logoUrl: true,
-	legalForm: true,
-
-	// Informations fiscales
-	siren: true,
-	siret: true,
-	vatNumber: true,
-	intracomVatNumber: true,
-
-	// Informations financières
-	capitalAmount: true,
-
-	// Informations de contact
-	email: true,
-	phone: true,
-	website: true,
-
-	// Adresse complète
-	addressLine1: true,
-	addressLine2: true,
-	city: true,
-	postalCode: true,
-	region: true,
-	country: true,
+	slug: true,
+	company: true,
+	address: true,
 
 	// Métadonnées
 	createdAt: true,
@@ -47,8 +24,8 @@ export const ORGANIZATION_SORT_OPTIONS = ORGANIZATION_SORTABLE_FIELDS.map(
 			field === "createdAt"
 				? "Date de création"
 				: field === "name"
-				? "Nom"
-				: field,
+					? "Nom"
+					: field,
 		value: field,
 	})
 );

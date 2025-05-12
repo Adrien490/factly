@@ -78,7 +78,7 @@ export const deleteOrganization: ServerAction<
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(
 			organization,
-			`L'organisation ${organization.name} a été supprimée avec succès`
+			`L'organisation a été supprimée avec succès`
 		);
 	} catch (error) {
 		console.error("[DELETE_ORGANIZATION]", error);

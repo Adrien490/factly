@@ -41,6 +41,8 @@ export function OrganizationSwitcher({
 		return null;
 	}
 
+	const company = currentOrganization.company;
+
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -51,10 +53,10 @@ export function OrganizationSwitcher({
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary">
-								{currentOrganization.logoUrl ? (
+								{company?.logoUrl ? (
 									<Image
-										src={currentOrganization.logoUrl}
-										alt={currentOrganization.name}
+										src={company.logoUrl}
+										alt={company.companyName}
 										width={32}
 										height={32}
 										className="object-cover w-full h-full"
@@ -65,7 +67,7 @@ export function OrganizationSwitcher({
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-semibold">
-									{currentOrganization.name}
+									{company?.companyName}
 								</span>
 								<span className="truncate text-xs text-muted-foreground">
 									Changer d&apos;organisation
@@ -96,10 +98,10 @@ export function OrganizationSwitcher({
 							>
 								<Link href={`/dashboard/${organization.id}`}>
 									<div className="flex size-6 items-center justify-center rounded-sm border">
-										{organization.logoUrl ? (
+										{organization.company?.logoUrl ? (
 											<Image
-												src={organization.logoUrl}
-												alt={organization.name}
+												src={organization.company.logoUrl}
+												alt={organization.company.companyName}
 												width={24}
 												height={24}
 												className="object-cover w-full h-full"
@@ -108,7 +110,9 @@ export function OrganizationSwitcher({
 											<div className="size-2 rounded-full bg-primary/10" />
 										)}
 									</div>
-									<span className="flex-1 truncate">{organization.name}</span>
+									<span className="flex-1 truncate">
+										{organization.company?.companyName}
+									</span>
 									{organization.id === organizationId && (
 										<Check className="ml-2 size-4 shrink-0" />
 									)}

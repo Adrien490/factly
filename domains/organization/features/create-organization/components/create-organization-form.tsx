@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, FormLabel } from "@/shared/components";
+import { FormLabel } from "@/shared/components";
 
 import { COUNTRIES } from "@/domains/address/constants";
 import {
@@ -17,16 +17,13 @@ import {
 	FormLayout,
 	useAppForm,
 } from "@/shared/components/forms";
-import { DotsLoader } from "@/shared/components/loaders";
 import { LEGAL_FORMS } from "@/shared/constants/legal-forms";
-import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
-import { LegalForm } from "@prisma/client";
+import { useUploadThing } from "@/shared/lib/uploadthing";
+import { AddressType, Country, LegalForm } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useTransition } from "react";
-import { toast } from "sonner";
 
 interface OrganizationFormProps {
 	searchAddressPromise: Promise<SearchAddressReturn>;
@@ -38,28 +35,37 @@ export function CreateOrganizationForm({
 	const response = use(searchAddressPromise);
 	const { state, dispatch, isPending } = useCreateOrganization();
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { isUploading, startUpload } = useUploadThing("organizationLogo");
+	const { isUploading } = useUploadThing("companyLogo");
 	const router = useRouter();
 
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			id: state?.data?.id ?? "",
-			name: state?.data?.name ?? "",
-			legalName: state?.data?.legalName ?? "",
-			legalForm: state?.data?.legalForm ?? (undefined as LegalForm | undefined),
-			email: state?.data?.email ?? "",
-			siren: state?.data?.siren ?? "",
-			siret: state?.data?.siret ?? "",
-			vatNumber: state?.data?.vatNumber ?? "",
-			addressLine1: state?.data?.addressLine1 ?? "",
-			addressLine2: state?.data?.addressLine2 ?? "",
-			postalCode: state?.data?.postalCode ?? "",
-			city: state?.data?.city ?? "",
-			country: state?.data?.country ?? "",
-			phone: state?.data?.phone ?? "",
-			website: state?.data?.website ?? "",
-			logoUrl: state?.data?.logoUrl ?? "",
+			companyName: state?.data?.company?.companyName ?? "",
+			legalForm:
+				state?.data?.company?.legalForm ?? (undefined as LegalForm | undefined),
+			email: state?.data?.company?.email ?? "",
+			phoneNumber: state?.data?.company?.phoneNumber ?? "",
+			mobileNumber: state?.data?.company?.mobileNumber ?? "",
+			faxNumber: state?.data?.company?.faxNumber ?? "",
+			website: state?.data?.company?.website ?? "",
+			siren: state?.data?.company?.siren ?? "",
+			siret: state?.data?.company?.siret ?? "",
+			nafApeCode: state?.data?.company?.nafApeCode ?? "",
+			capital: state?.data?.company?.capital ?? "",
+			rcs: state?.data?.company?.rcs ?? "",
+			vatNumber: state?.data?.company?.vatNumber ?? "",
+			businessSector: state?.data?.company?.businessSector ?? "",
+			employeeCount: state?.data?.company?.employeeCount ?? "",
+			logoUrl: state?.data?.company?.logoUrl ?? "",
+
+			// Adresse principale
+			addressType: AddressType.HEADQUARTERS,
+			addressLine1: "",
+			addressLine2: "",
+			postalCode: "",
+			city: "",
+			country: Country.FRANCE as Country,
 		},
 
 		transform: useTransform(
@@ -124,93 +130,28 @@ export function CreateOrganizationForm({
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<form.Field name="id">
-				{(field) => (
-					<input type="hidden" name="id" value={field.state.value ?? ""} />
-				)}
-			</form.Field>
-
 			<form.Field name="logoUrl">
 				{(field) => (
 					<input type="hidden" name="logoUrl" value={field.state.value ?? ""} />
 				)}
 			</form.Field>
 
-			<FormLayout columns={2} className="mt-6">
+			<FormLayout withDividers columns={2} className="mt-6">
 				{/* Section Logo */}
 				<ContentCard
 					title="Identité visuelle"
 					description="Ajoutez un logo pour identifier votre organisation"
 				>
-					<form.Field name="logoUrl">
+					<form.AppField name="logoUrl">
 						{(field) => (
-							<div className="space-y-3">
-								<div className="flex items-center justify-between">
-									<FormLabel className="text-base">Logo</FormLabel>
-									{field.state.value && (
-										<Button
-											disabled={isPending}
-											type="button"
-											variant="ghost"
-											size="sm"
-											className="text-destructive"
-											onClick={() => field.handleChange("")}
-										>
-											Supprimer
-										</Button>
-									)}
-								</div>
-
-								{field.state.value ? (
-									<div className="flex items-center justify-center">
-										<div className="relative h-24 w-24 rounded-md overflow-hidden">
-											<Image
-												src={field.state.value}
-												alt="Logo de l'organisation"
-												fill
-												sizes="96px"
-												className="object-cover"
-												priority
-											/>
-										</div>
-									</div>
-								) : (
-									<div className="relative">
-										<UploadDropzone
-											endpoint="organizationLogo"
-											onChange={async (files) => {
-												const res = await startUpload(files);
-												const logoUrl = res?.[0]?.serverData?.url;
-												if (logoUrl) {
-													field.handleChange(logoUrl);
-												}
-											}}
-											onUploadError={(error) => {
-												console.error(error);
-												toast.error("Erreur lors de l'upload", {
-													description:
-														"Impossible de charger l'image. Veuillez réessayer.",
-												});
-											}}
-											className="border-2 border-dashed border-muted-foreground/25 h-44 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer ut-button:bg-primary ut-button:hover:bg-primary/90"
-										/>
-
-										{isUploading && (
-											<div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-[2px] rounded-lg transition-all duration-300">
-												<div className="flex items-center gap-3 flex-col">
-													<DotsLoader color="primary" size="xs" />
-												</div>
-											</div>
-										)}
-									</div>
-								)}
-								<p className="text-xs text-muted-foreground mt-2">
-									Formats acceptés: JPG, PNG ou SVG. Max. 2MB.
-								</p>
-								<FieldInfo field={field} />
-							</div>
+							<field.UploadField
+								label="Logo"
+								disabled={isPending}
+								accept="image/*"
+								endpoint="companyLogo"
+							/>
 						)}
-					</form.Field>
+					</form.AppField>
 				</ContentCard>
 
 				{/* Section 1: Informations de base */}
@@ -220,7 +161,7 @@ export function CreateOrganizationForm({
 				>
 					<div className="space-y-4">
 						<form.AppField
-							name="name"
+							name="companyName"
 							validators={{
 								onChange: ({ value }) => {
 									if (!value) return "Le nom est requis";
@@ -234,24 +175,6 @@ export function CreateOrganizationForm({
 									label="Nom commercial"
 									disabled={isPending}
 									placeholder="Nom utilisé au quotidien"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="legalName"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "La dénomination sociale est requise";
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Dénomination sociale"
-									disabled={isPending}
-									placeholder="Dénomination sociale"
 								/>
 							)}
 						</form.AppField>
@@ -404,15 +327,6 @@ export function CreateOrganizationForm({
 										const url = new URLSearchParams();
 										url.set("q", value);
 
-										// Ajouter des paramètres supplémentaires si nécessaire
-										// Par exemple, si on connaît déjà le code postal
-										/*	const postalCode = form.getFieldValue("postalCode");
-										if (postalCode) {
-											url.set("postcode", postalCode);
-										}*/
-
-										// Utiliser un flag pour indiquer si on est dans un onChange manuel
-										// ou dans une validation de soumission
 										const isSubmitting = form.state.isSubmitting;
 
 										if (!isSubmitting) {
@@ -534,7 +448,7 @@ export function CreateOrganizationForm({
 					description="Renseignez les informations complémentaires"
 				>
 					<div className="space-y-4">
-						<form.AppField name="phone">
+						<form.AppField name="phoneNumber">
 							{(field) => (
 								<field.InputField
 									label="Téléphone"

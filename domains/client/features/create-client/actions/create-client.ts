@@ -231,6 +231,7 @@ export const createClient: ServerAction<
 							vatNumber: vatNumber!,
 							businessSector: businessSector!,
 							employeeCount: employeeCount!,
+							email: validation.data.companyEmail || null,
 						},
 					},
 				}),
