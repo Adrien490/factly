@@ -37,6 +37,7 @@ export const UploadField = ({
 	isUploading,
 }: UploadFieldProps) => {
 	const field = useFieldContext<string>();
+	const imageUrl = field.state.value;
 
 	const previewSizes = {
 		sm: "h-8 w-8",
@@ -51,7 +52,7 @@ export const UploadField = ({
 					{label}
 					{required && <span className="text-destructive ml-1">*</span>}
 				</FormLabel>
-				{field.state.value && (
+				{imageUrl && (
 					<Button
 						disabled={disabled}
 						type="button"
@@ -65,13 +66,13 @@ export const UploadField = ({
 				)}
 			</div>
 
-			{field.state.value ? (
+			{imageUrl ? (
 				<div className="flex items-center justify-center">
 					<div
 						className={`relative ${previewSizes[previewSize]} rounded-md overflow-hidden`}
 					>
 						<Image
-							src={field.state.value}
+							src={imageUrl}
 							alt={`${label || "Image"}`}
 							fill
 							sizes={`${previewSize === "sm" ? "32px" : previewSize === "md" ? "96px" : "128px"}`}

@@ -45,6 +45,8 @@ export function UpdateOrganizationForm({
 	const { isUploading, startUpload } = useUploadThing("companyLogo");
 	const router = useRouter();
 
+	console.log("[UPDATE_ORGANIZATION] State:", organization);
+
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {

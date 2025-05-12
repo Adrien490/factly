@@ -136,7 +136,7 @@ export const updateOrganization: ServerAction<
 
 		// Revalidation des tags de cache
 		revalidateTag("organizations");
-		revalidateTag(`organization-${organization.id}`);
+		revalidateTag(`organizations:${organization.id}`);
 
 		return createSuccessResponse(
 			organization,
