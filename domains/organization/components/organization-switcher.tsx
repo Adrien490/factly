@@ -56,7 +56,7 @@ export function OrganizationSwitcher({
 								{company?.logoUrl ? (
 									<Image
 										src={company.logoUrl}
-										alt={company.companyName}
+										alt={company.name}
 										width={32}
 										height={32}
 										className="object-cover w-full h-full"
@@ -66,9 +66,7 @@ export function OrganizationSwitcher({
 								)}
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-semibold">
-									{company?.companyName}
-								</span>
+								<span className="truncate font-semibold">{company?.name}</span>
 								<span className="truncate text-xs text-muted-foreground">
 									Changer d&apos;organisation
 								</span>
@@ -101,7 +99,7 @@ export function OrganizationSwitcher({
 										{organization.company?.logoUrl ? (
 											<Image
 												src={organization.company.logoUrl}
-												alt={organization.company.companyName}
+												alt={organization.company.name}
 												width={24}
 												height={24}
 												className="object-cover w-full h-full"
@@ -111,7 +109,7 @@ export function OrganizationSwitcher({
 										)}
 									</div>
 									<span className="flex-1 truncate">
-										{organization.company?.companyName}
+										{organization.company?.name}
 									</span>
 									{organization.id === organizationId && (
 										<Check className="ml-2 size-4 shrink-0" />

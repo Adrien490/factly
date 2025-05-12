@@ -166,7 +166,7 @@ model Contact {
 
 model Company {
   id             String          @id @default(uuid())
-  companyName    String
+  name           String
   logoUrl        String?
   email          String?
   legalForm      LegalForm?

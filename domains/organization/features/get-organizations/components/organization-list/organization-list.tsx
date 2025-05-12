@@ -40,7 +40,7 @@ export function OrganizationList({
 												<div className="h-10 w-10 relative rounded-md overflow-hidden">
 													<Image
 														src={company.logoUrl}
-														alt={company.companyName}
+														alt={company.name}
 														fill
 														sizes="40px"
 														className="object-cover"
@@ -57,9 +57,7 @@ export function OrganizationList({
 
 										{/* Nom et détails */}
 										<div className="min-w-0 flex-1">
-											<h3 className="font-medium truncate">
-												{company?.companyName}
-											</h3>
+											<h3 className="font-medium truncate">{company?.name}</h3>
 											<p className="text-xs text-muted-foreground truncate">
 												{company?.legalForm && <span>{company.legalForm}</span>}
 												{company?.legalForm && address?.city && (
@@ -89,7 +87,7 @@ export function OrganizationList({
 												<div className="h-12 w-12 relative rounded-md overflow-hidden">
 													<Image
 														src={company.logoUrl}
-														alt={company.companyName}
+														alt={company.name}
 														fill
 														sizes="48px"
 														className="object-cover"
@@ -106,11 +104,9 @@ export function OrganizationList({
 
 										{/* Nom et sous-titre */}
 										<div className="flex-1 min-w-0">
-											<h3 className="font-medium truncate">
-												{company?.companyName}
-											</h3>
+											<h3 className="font-medium truncate">{company?.name}</h3>
 											{company?.legalForm &&
-												company?.legalForm !== company?.companyName && (
+												company?.legalForm !== company?.name && (
 													<p className="text-xs text-muted-foreground truncate mt-0.5">
 														{company?.legalForm}
 													</p>

@@ -76,8 +76,7 @@ export function UpdateClientForm({ client }: Props) {
 				state?.inputs?.employeeCount ??
 				client.company?.employeeCount ??
 				EmployeeCount.ONE_TO_TWO,
-			companyName:
-				state?.inputs?.companyName ?? client.company?.companyName ?? "",
+			companyName: state?.inputs?.companyName ?? client.company?.name ?? "",
 		},
 
 		transform: useTransform(

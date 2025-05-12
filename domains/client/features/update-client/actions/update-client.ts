@@ -221,7 +221,7 @@ export const updateClient: ServerAction<
 					company: {
 						upsert: {
 							create: {
-								companyName: companyName ?? "",
+								name: companyName ?? "",
 								legalForm,
 								siren,
 								siret,
@@ -233,7 +233,7 @@ export const updateClient: ServerAction<
 								employeeCount,
 							},
 							update: {
-								companyName: companyName ?? "",
+								name: companyName ?? "",
 								legalForm,
 								siren,
 								siret,

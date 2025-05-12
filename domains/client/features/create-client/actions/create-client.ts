@@ -221,7 +221,7 @@ export const createClient: ServerAction<
 				...(clientType === ClientType.COMPANY && {
 					company: {
 						create: {
-							companyName: companyName!,
+							name: companyName!,
 							legalForm: legalForm!,
 							siren: siren!,
 							siret: siret!,

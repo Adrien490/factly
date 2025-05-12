@@ -61,7 +61,7 @@ export default async function OrganizationLayout({
 								<OrganizationSwitcher
 									organizationId={organizationId}
 									organizationsPromise={getOrganizations({
-										sortBy: "name",
+										sortBy: "company.name",
 										sortOrder: "asc",
 									})}
 								/>

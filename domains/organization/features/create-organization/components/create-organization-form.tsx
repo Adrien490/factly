@@ -41,7 +41,7 @@ export function CreateOrganizationForm({
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			companyName: state?.data?.company?.companyName ?? "",
+			companyName: state?.data?.company?.name ?? "",
 			legalForm:
 				state?.data?.company?.legalForm ?? (undefined as LegalForm | undefined),
 			email: state?.data?.company?.email ?? "",

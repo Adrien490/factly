@@ -32,7 +32,7 @@ export const buildSearchConditions = (
 		{
 			company: {
 				OR: [
-					{ companyName: { contains: searchTerm, mode: "insensitive" } },
+					{ name: { contains: searchTerm, mode: "insensitive" } },
 					{ siren: { contains: searchTerm, mode: "insensitive" } },
 					{ siret: { contains: searchTerm, mode: "insensitive" } },
 					{ vatNumber: { contains: searchTerm, mode: "insensitive" } },

@@ -23,7 +23,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	const defaultContact = client.contacts[0];
 	const displayName =
 		client.clientType === "COMPANY"
-			? client.company?.companyName
+			? client.company?.name
 			: `${defaultContact?.firstName} ${defaultContact?.lastName}`;
 
 	return (

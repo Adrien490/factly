@@ -34,7 +34,7 @@ export const buildWhereClause = (
 				OR: [
 					{
 						company: {
-							companyName: { contains: searchTerm, mode: "insensitive" },
+							name: { contains: searchTerm, mode: "insensitive" },
 						},
 					},
 
@@ -45,7 +45,9 @@ export const buildWhereClause = (
 							vatNumber: { contains: searchTerm, mode: "insensitive" },
 						},
 					},
-					{ company: { email: { contains: searchTerm, mode: "insensitive" } } },
+					{
+						company: { email: { contains: searchTerm, mode: "insensitive" } },
+					},
 					{ address: { city: { contains: searchTerm, mode: "insensitive" } } },
 				],
 			},

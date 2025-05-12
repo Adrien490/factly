@@ -134,7 +134,7 @@ export function ClientDataTable({
 											<div className="flex items-center gap-2">
 												<div className="font-medium truncate">
 													{client.clientType === "COMPANY" ? (
-														client.company?.companyName
+														client.company?.name
 													) : (
 														<>
 															{client.contacts[0]?.civility && (

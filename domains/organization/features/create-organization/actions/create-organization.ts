@@ -9,7 +9,7 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
-import { generateSlug } from "@/shared/utils";
+import { generateUniqueSlug } from "@/shared/utils";
 import {
 	AddressType,
 	BusinessSector,
@@ -28,6 +28,7 @@ import { CreateOrganizationReturn } from "../types";
  * Validations :
  * - L'utilisateur doit être authentifié
  * - Le SIREN/SIRET doit être unique s'il est fourni
+ * - Le slug doit être unique
  *
  * Crée également automatiquement une première année fiscale pour l'organisation
  */
@@ -72,7 +73,6 @@ export const createOrganization: ServerAction<
 			city: formData.get("city") as string,
 			country: formData.get("country") as Country,
 			logoUrl: formData.get("logoUrl") as string,
-			slug: formData.get("slug") as string,
 			nafApeCode: formData.get("nafApeCode") as string,
 			capital: formData.get("capital") as string,
 			rcs: formData.get("rcs") as string,
@@ -95,6 +95,7 @@ export const createOrganization: ServerAction<
 			);
 		}
 
+		// 4. Vérification des doublons (SIRET, TVA)
 		if (validation.data.siret) {
 			const existingOrgBySiret = await db.company.findFirst({
 				where: { siret: validation.data.siret },
@@ -123,11 +124,12 @@ export const createOrganization: ServerAction<
 			}
 		}
 
-		// 5. Création de l'organisation dans la base de donnée
+		const uniqueSlug = generateUniqueSlug(validation.data.companyName);
 
+		// 6. Création de l'organisation dans la base de donnée
 		const organization = await db.organization.create({
 			data: {
-				slug: generateSlug(validation.data.companyName),
+				slug: uniqueSlug,
 				user: { connect: { id: session.user.id } },
 				members: {
 					create: {
@@ -136,7 +138,7 @@ export const createOrganization: ServerAction<
 				},
 				company: {
 					create: {
-						companyName: validation.data.companyName,
+						name: validation.data.companyName,
 						legalForm: validation.data.legalForm as LegalForm,
 						siren: validation.data.siren || null,
 						siret: validation.data.siret || null,
@@ -172,7 +174,7 @@ export const createOrganization: ServerAction<
 			},
 		});
 
-		// 6. Création automatique d'une année fiscale initiale
+		// 7. Création automatique d'une année fiscale initiale
 		const currentDate = new Date();
 		const currentYear = currentDate.getFullYear();
 
@@ -180,7 +182,7 @@ export const createOrganization: ServerAction<
 			data: {
 				organizationId: organization.id,
 				name: `Année fiscale ${currentYear}`,
-				description: `Année fiscale initiale pour ${organization.company?.companyName || "l'organisation"}`,
+				description: `Année fiscale initiale pour ${organization.company?.name || "l'organisation"}`,
 				startDate: new Date(currentYear, 0, 1),
 				endDate: new Date(currentYear, 11, 31),
 				status: FiscalYearStatus.ACTIVE,
@@ -193,7 +195,7 @@ export const createOrganization: ServerAction<
 
 		return createSuccessResponse(
 			organization,
-			`L'organisation ${organization.company?.companyName || "a été créée avec succès"}`
+			`L'organisation ${organization.company?.name || "a été créée avec succès"}`
 		);
 	} catch (error) {
 		console.error("[CREATE_ORGANIZATION]", error);

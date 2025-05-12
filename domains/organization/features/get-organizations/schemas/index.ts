@@ -7,6 +7,9 @@ import { ORGANIZATION_SORTABLE_FIELDS } from "../constants";
  */
 export const getOrganizationsSchema = z.object({
 	search: z.string().optional(),
-	sortBy: z.enum(ORGANIZATION_SORTABLE_FIELDS).optional().default("name"),
+	sortBy: z
+		.enum(ORGANIZATION_SORTABLE_FIELDS)
+		.optional()
+		.default("company.name"),
 	sortOrder: z.enum(["asc", "desc"]).optional().default("asc"),
 });
