@@ -20,7 +20,10 @@ export const createClientSchema = z
 		notes: z.string().optional(),
 
 		// Champs du contact
-		contactCivility: z.nativeEnum(Civility).optional(),
+		contactCivility: z
+			.string()
+			.transform((val) => (val === "" ? null : val))
+			.pipe(z.nativeEnum(Civility).optional().nullable()),
 		contactFirstName: z.string().optional(),
 		contactLastName: z.string().optional(),
 		contactFunction: z.string().optional(),
