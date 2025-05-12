@@ -1,4 +1,9 @@
 import {
+	EMAIL_REGEX,
+	MOBILE_REGEX,
+	PHONE_REGEX,
+} from "@/shared/constants/regex";
+import {
 	BusinessSector,
 	Country,
 	EmployeeCount,
@@ -7,9 +12,7 @@ import {
 import { z } from "zod";
 
 const emptyToUndefined = (val: string) => (val === "" ? undefined : val);
-const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
-const mobileRegex = /^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const urlRegex =
 	/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
 
@@ -31,14 +34,14 @@ export const createOrganizationSchema = z
 		email: z
 			.string()
 			.transform(emptyToUndefined)
-			.refine((val) => !val || emailRegex.test(val), "Format d'email invalide")
+			.refine((val) => !val || EMAIL_REGEX.test(val), "Format d'email invalide")
 			.optional(),
 
 		phoneNumber: z
 			.string()
 			.transform(emptyToUndefined)
 			.refine(
-				(val) => !val || phoneRegex.test(val),
+				(val) => !val || PHONE_REGEX.test(val),
 				"Format de numéro de téléphone invalide"
 			)
 			.optional(),
@@ -47,7 +50,7 @@ export const createOrganizationSchema = z
 			.string()
 			.transform(emptyToUndefined)
 			.refine(
-				(val) => !val || mobileRegex.test(val),
+				(val) => !val || MOBILE_REGEX.test(val),
 				"Format de numéro de mobile invalide"
 			)
 			.optional(),
@@ -56,7 +59,7 @@ export const createOrganizationSchema = z
 			.string()
 			.transform(emptyToUndefined)
 			.refine(
-				(val) => !val || phoneRegex.test(val),
+				(val) => !val || PHONE_REGEX.test(val),
 				"Format de numéro de fax invalide"
 			)
 			.optional(),
@@ -135,13 +138,5 @@ export const createOrganizationSchema = z
 				path: ["siret"],
 			});
 		}
-
 		// Validation que le SIRET commence par le SIREN si les deux sont fournis
-		if (data.siren && data.siret && !data.siret.startsWith(data.siren)) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: "Le SIRET doit commencer par le SIREN",
-				path: ["siret"],
-			});
-		}
 	});

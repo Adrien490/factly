@@ -1,3 +1,4 @@
+import { MOBILE_REGEX, PHONE_REGEX, URL_REGEX } from "@/shared/constants/regex";
 import {
 	BusinessSector,
 	Civility,
@@ -9,15 +10,7 @@ import {
 import { z } from "zod";
 
 const emptyToNull = (val: string) => (val === "" ? null : val);
-const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
-const mobileRegex = /^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/;
-const urlRegex =
-	/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
 
-/**
- * Schéma de validation pour la mise à jour d'un client
- * Basé sur le modèle Prisma Client
- */
 export const updateClientSchema = z
 	.object({
 		// Identifiants
@@ -60,7 +53,7 @@ export const updateClientSchema = z
 			.transform(emptyToNull)
 			.nullable()
 			.refine(
-				(val) => !val || phoneRegex.test(val),
+				(val) => !val || PHONE_REGEX.test(val),
 				"Format de numéro de téléphone invalide"
 			),
 		contactMobileNumber: z
@@ -68,7 +61,7 @@ export const updateClientSchema = z
 			.transform(emptyToNull)
 			.nullable()
 			.refine(
-				(val) => !val || mobileRegex.test(val),
+				(val) => !val || MOBILE_REGEX.test(val),
 				"Format de numéro de mobile invalide"
 			),
 		contactFaxNumber: z
@@ -76,14 +69,14 @@ export const updateClientSchema = z
 			.transform(emptyToNull)
 			.nullable()
 			.refine(
-				(val) => !val || phoneRegex.test(val),
+				(val) => !val || PHONE_REGEX.test(val),
 				"Format de numéro de fax invalide"
 			),
 		contactWebsite: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
-			.refine((val) => !val || urlRegex.test(val), "Format d'URL invalide"),
+			.refine((val) => !val || URL_REGEX.test(val), "Format d'URL invalide"),
 
 		// Champs de l'entreprise (optionnels)
 		companyName: z.string().optional().nullable(),

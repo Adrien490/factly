@@ -160,6 +160,7 @@ export function CreateOrganizationForm({
 									label="Nom de la société"
 									disabled={isPending}
 									placeholder="Ex: Mon entreprise"
+									required
 								/>
 							)}
 						</form.AppField>
