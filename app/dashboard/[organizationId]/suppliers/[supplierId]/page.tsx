@@ -109,10 +109,12 @@ export default async function SupplierPage({ params }: Props) {
 															rel="noopener noreferrer"
 															className="text-sm hover:underline"
 														>
-															{supplier.website.replace(
-																/^https?:\/\/(www\.)?/,
-																""
-															)}
+															{typeof supplier.website === "string"
+																? supplier.website.replace(
+																		/^https?:\/\/(www\.)?/,
+																		""
+																	)
+																: supplier.website}
 														</a>
 													</div>
 												</li>
