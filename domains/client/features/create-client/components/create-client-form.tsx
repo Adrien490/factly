@@ -87,27 +87,27 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			organizationId,
 			reference: state?.inputs?.reference ?? "",
 			companyEmail: state?.inputs?.companyEmail ?? "",
-			email: state?.inputs?.email ?? "",
-			phoneNumber: state?.inputs?.phoneNumber ?? "",
-			mobileNumber: state?.inputs?.mobileNumber ?? "",
-			faxNumber: state?.inputs?.faxNumber ?? "",
-			civility: state?.inputs?.civility ?? "",
-			firstName: state?.inputs?.firstName ?? "",
-			lastName: state?.inputs?.lastName ?? "",
+			contactEmail: state?.inputs?.contactEmail ?? "",
+			contactPhoneNumber: state?.inputs?.contactPhoneNumber ?? "",
+			contactMobileNumber: state?.inputs?.contactMobileNumber ?? "",
+			contactFaxNumber: state?.inputs?.contactFaxNumber ?? "",
+			contactCivility: state?.inputs?.contactCivility ?? "",
+			contactFirstName: state?.inputs?.contactFirstName ?? "",
+			contactLastName: state?.inputs?.contactLastName ?? "",
 			contactFunction: state?.inputs?.contactFunction ?? "",
-			website: state?.inputs?.website ?? "",
-			legalForm: state?.inputs?.legalForm ?? "",
+			contactWebsite: state?.inputs?.contactWebsite ?? "",
+			companyLegalForm: state?.inputs?.companyLegalForm ?? "",
 			clientType: ClientType.INDIVIDUAL as ClientType,
 			status: ClientStatus.ACTIVE as ClientStatus,
 			notes: state?.inputs?.notes ?? "",
-			siren: state?.inputs?.siren ?? "",
-			siret: state?.inputs?.siret ?? "",
-			nafApeCode: state?.inputs?.nafApeCode ?? "",
-			vatNumber: state?.inputs?.vatNumber ?? "",
-			businessSector: state?.inputs?.businessSector ?? "",
-			capital: state?.inputs?.capital ?? "",
-			rcs: state?.inputs?.rcs ?? "",
-			employeeCount: EmployeeCount.ONE_TO_TWO,
+			companySiren: state?.inputs?.companySiren ?? "",
+			companySiret: state?.inputs?.companySiret ?? "",
+			companyNafApeCode: state?.inputs?.companyNafApeCode ?? "",
+			companyVatNumber: state?.inputs?.companyVatNumber ?? "",
+			companyBusinessSector: state?.inputs?.companyBusinessSector ?? "",
+			companyCapital: state?.inputs?.companyCapital ?? "",
+			companyRcs: state?.inputs?.companyRcs ?? "",
+			companyEmployeeCount: EmployeeCount.ONE_TO_TWO,
 			companyName: state?.inputs?.companyName ?? "",
 
 			// Adresse principale
@@ -280,7 +280,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 												value === ClientType.COMPANY &&
 												form.getFieldValue("companyName") === ""
 											) {
-												form.resetField("lastName");
+												form.resetField("contactLastName");
 											}
 										}}
 									/>
@@ -288,25 +288,46 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 						{clientType === ClientType.COMPANY && (
-							<form.AppField
-								validators={{
-									onChange: ({ value }) => {
-										if (clientType === ClientType.COMPANY && !value) {
-											return "Le nom de la société est requis pour un client entreprise";
-										}
-									},
-								}}
-								name="companyName"
-							>
-								{(field) => (
-									<field.InputField
-										disabled={isPending}
-										label="Nom de la société"
-										placeholder="Nom de l'entreprise"
-										required
-									/>
-								)}
-							</form.AppField>
+							<>
+								<form.AppField
+									validators={{
+										onChange: ({ value }) => {
+											if (clientType === ClientType.COMPANY && !value) {
+												return "Le nom de la société est requis pour un client entreprise";
+											}
+										},
+									}}
+									name="companyName"
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Nom de la société"
+											placeholder="Nom de l'entreprise"
+											required
+										/>
+									)}
+								</form.AppField>
+								<form.AppField
+									name="companyEmail"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+												return "Format d'email invalide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Email de l'entreprise"
+											disabled={isPending}
+											placeholder="Ex: contact@example.com"
+										/>
+									)}
+								</form.AppField>
+							</>
 						)}
 
 						<form.Field
@@ -353,7 +374,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						</form.Field>
 
 						<form.AppField
-							name="website"
+							name="contactWebsite"
 							validators={{
 								onChange: ({ value }) => {
 									if (
@@ -393,12 +414,12 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					description={`Informations de contact`}
 				>
 					<div className="space-y-4">
-						<form.AppField name="civility">
+						<form.AppField name="contactCivility">
 							{(field) => (
 								<>
 									<input
 										type="hidden"
-										name="civility"
+										name="contactCivility"
 										value={field.state.value}
 									/>
 									<field.RadioGroupField
@@ -422,7 +443,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										}
 									},
 								}}
-								name="lastName"
+								name="contactLastName"
 							>
 								{(field) => (
 									<field.InputField
@@ -434,7 +455,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="firstName">
+							<form.AppField name="contactFirstName">
 								{(field) => (
 									<field.InputField
 										label="Prénom"
@@ -454,9 +475,8 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								/>
 							)}
 						</form.AppField>
-
 						<form.AppField
-							name="companyEmail"
+							name="contactEmail"
 							validators={{
 								onChange: ({ value }) => {
 									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -468,7 +488,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						>
 							{(field) => (
 								<field.InputField
-									label="Email de l'entreprise"
+									label="Email"
 									disabled={isPending}
 									placeholder="Ex: contact@example.com"
 								/>
@@ -476,7 +496,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						</form.AppField>
 						<div className="grid grid-cols-2 gap-4">
 							<form.AppField
-								name="phoneNumber"
+								name="contactPhoneNumber"
 								validators={{
 									onChange: ({ value }) => {
 										if (
@@ -500,7 +520,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="mobileNumber"
+								name="contactMobileNumber"
 								validators={{
 									onChange: ({ value }) => {
 										if (
@@ -525,7 +545,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 						</div>
 						<form.AppField
-							name="faxNumber"
+							name="contactFaxNumber"
 							validators={{
 								onChange: ({ value }) => {
 									if (
@@ -557,7 +577,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 						description="Informations légales de l'entreprise"
 					>
 						<div className="space-y-4">
-							<form.AppField name="legalForm">
+							<form.AppField name="companyLegalForm">
 								{(field) => (
 									<field.SelectField
 										disabled={isPending}
@@ -569,7 +589,27 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							</form.AppField>
 
 							<form.AppField
-								name="siret"
+								name="companyEmail"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+											return "Format d'email invalide";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Email de l'entreprise"
+										disabled={isPending}
+										placeholder="Ex: contact@example.com"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="companySiret"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^\d{14}$/.test(value)) {
@@ -588,7 +628,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="siren"
+								name="companySiren"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^\d{9}$/.test(value)) {
@@ -609,7 +649,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 
 							<div className="grid grid-cols-2 gap-4">
 								<form.AppField
-									name="nafApeCode"
+									name="companyNafApeCode"
 									validators={{
 										onChange: ({ value }) => {
 											if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
@@ -629,7 +669,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								</form.AppField>
 
 								<form.AppField
-									name="capital"
+									name="companyCapital"
 									validators={{
 										onChange: ({ value }) => {
 											if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
@@ -649,7 +689,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								</form.AppField>
 							</div>
 							<form.AppField
-								name="rcs"
+								name="companyRcs"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^[A-Z]\d{8}$/.test(value)) {
@@ -668,7 +708,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="vatNumber"
+								name="companyVatNumber"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^FR\d{2}\d{9}$/.test(value)) {
@@ -687,7 +727,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="businessSector">
+							<form.AppField name="companyBusinessSector">
 								{(field) => (
 									<field.SelectField
 										disabled={isPending}
@@ -697,7 +737,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									/>
 								)}
 							</form.AppField>
-							<form.AppField name="employeeCount">
+							<form.AppField name="companyEmployeeCount">
 								{(field) => (
 									<field.SelectField
 										disabled={isPending}

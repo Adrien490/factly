@@ -51,22 +51,13 @@ export const createOrganization: ServerAction<
 		// 2. Préparation et transformation des données brutes
 		const rawData = {
 			companyName: formData.get("companyName") as string,
-			legalForm: formData.get("legalForm") as string,
+			legalForm: formData.get("legalForm") as LegalForm,
 			email: formData.get("email") as string,
 			phoneNumber: formData.get("phoneNumber") as string,
 			website: formData.get("website") as string,
-			siren:
-				((formData.get("siren") as string) || "").trim() === ""
-					? null
-					: (formData.get("siren") as string),
-			siret:
-				((formData.get("siret") as string) || "").trim() === ""
-					? null
-					: (formData.get("siret") as string),
-			vatNumber:
-				((formData.get("vatNumber") as string) || "").trim() === ""
-					? null
-					: (formData.get("vatNumber") as string),
+			siren: formData.get("siren") as string,
+			siret: formData.get("siret") as string,
+			vatNumber: formData.get("vatNumber") as string,
 			addressLine1: formData.get("addressLine1") as string,
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,

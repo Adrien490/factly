@@ -37,7 +37,7 @@ export const createClientSchema = z
 		notes: z.string().optional().nullable(),
 
 		// Champs du contact
-		civility: z
+		contactCivility: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -45,10 +45,10 @@ export const createClientSchema = z
 				(val) => !val || Object.values(Civility).includes(val as Civility),
 				"Veuillez sélectionner une civilité valide"
 			),
-		firstName: z.string().optional().nullable(),
-		lastName: z.string().optional().nullable(),
+		contactFirstName: z.string().optional().nullable(),
+		contactLastName: z.string().optional().nullable(),
 		contactFunction: z.string().optional().nullable(),
-		email: z
+		contactEmail: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -56,7 +56,7 @@ export const createClientSchema = z
 				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
 				"Format d'email invalide"
 			),
-		phoneNumber: z
+		contactPhoneNumber: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -64,7 +64,7 @@ export const createClientSchema = z
 				(val) => !val || phoneRegex.test(val),
 				"Format de numéro de téléphone invalide"
 			),
-		mobileNumber: z
+		contactMobileNumber: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -72,7 +72,7 @@ export const createClientSchema = z
 				(val) => !val || mobileRegex.test(val),
 				"Format de numéro de mobile invalide"
 			),
-		faxNumber: z
+		contactFaxNumber: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -80,7 +80,7 @@ export const createClientSchema = z
 				(val) => !val || phoneRegex.test(val),
 				"Format de numéro de fax invalide"
 			),
-		website: z
+		contactWebsite: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -88,7 +88,7 @@ export const createClientSchema = z
 
 		// Champs de l'entreprise (optionnels)
 		companyName: z.string().optional().nullable(),
-		legalForm: z.nativeEnum(LegalForm).optional().nullable(),
+		companyLegalForm: z.nativeEnum(LegalForm).optional().nullable(),
 		companyEmail: z
 			.string()
 			.transform(emptyToNull)
@@ -97,7 +97,7 @@ export const createClientSchema = z
 				(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
 				"Format d'email invalide"
 			),
-		siren: z
+		companySiren: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -105,7 +105,7 @@ export const createClientSchema = z
 				(val) => !val || /^\d{9}$/.test(val),
 				"Le numéro SIREN doit comporter exactement 9 chiffres"
 			),
-		siret: z
+		companySiret: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -113,7 +113,7 @@ export const createClientSchema = z
 				(val) => !val || /^\d{14}$/.test(val),
 				"Le numéro SIRET doit comporter exactement 14 chiffres"
 			),
-		nafApeCode: z
+		companyNafApeCode: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -121,9 +121,9 @@ export const createClientSchema = z
 				(val) => !val || /^\d{4}[A-Z]$/.test(val),
 				"Le code NAF/APE doit être au format 4 chiffres suivis d'une lettre"
 			),
-		capital: z.string().optional().nullable(),
-		rcs: z.string().optional().nullable(),
-		vatNumber: z
+		companyCapital: z.string().optional().nullable(),
+		companyRcs: z.string().optional().nullable(),
+		companyVatNumber: z
 			.string()
 			.transform(emptyToNull)
 			.nullable()
@@ -131,8 +131,8 @@ export const createClientSchema = z
 				(val) => !val || /^FR\d{2}\d{9}$/.test(val),
 				"Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres"
 			),
-		businessSector: z.nativeEnum(BusinessSector).optional().nullable(),
-		employeeCount: z.nativeEnum(EmployeeCount).optional().nullable(),
+		companyBusinessSector: z.nativeEnum(BusinessSector).optional().nullable(),
+		companyEmployeeCount: z.nativeEnum(EmployeeCount).optional().nullable(),
 
 		// Adresse
 		addressType: z.nativeEnum(AddressType),
@@ -146,11 +146,11 @@ export const createClientSchema = z
 	})
 	.superRefine((data, ctx) => {
 		// Validation conditionnelle pour lastname si clientType est INDIVIDUAL
-		if (data.clientType === ClientType.INDIVIDUAL && !data.lastName) {
+		if (data.clientType === ClientType.INDIVIDUAL && !data.contactLastName) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: "Le nom est obligatoire pour un client particulier",
-				path: ["lastName"],
+				path: ["contactLastName"],
 			});
 		}
 

@@ -46,34 +46,48 @@ export function UpdateClientForm({ client }: Props) {
 			id: clientId,
 			organizationId,
 			reference: state?.inputs?.reference ?? client.reference ?? "",
-			email: state?.inputs?.email ?? client.contacts[0]?.email ?? "",
-			phoneNumber:
-				state?.inputs?.phoneNumber ?? client.contacts[0]?.phoneNumber ?? "",
-			mobileNumber:
-				state?.inputs?.mobileNumber ?? client.contacts[0]?.mobileNumber ?? "",
-			faxNumber:
-				state?.inputs?.faxNumber ?? client.contacts[0]?.faxNumber ?? "",
-			civility: state?.inputs?.civility ?? client.contacts[0]?.civility ?? "",
-			firstName:
-				state?.inputs?.firstName ?? client.contacts[0]?.firstName ?? "",
-			lastName: state?.inputs?.lastName ?? client.contacts[0]?.lastName ?? "",
+			contactEmail:
+				state?.inputs?.contactEmail ?? client.contacts[0]?.email ?? "",
+			contactPhoneNumber:
+				state?.inputs?.contactPhoneNumber ??
+				client.contacts[0]?.phoneNumber ??
+				"",
+			contactMobileNumber:
+				state?.inputs?.contactMobileNumber ??
+				client.contacts[0]?.mobileNumber ??
+				"",
+			contactFaxNumber:
+				state?.inputs?.contactFaxNumber ?? client.contacts[0]?.faxNumber ?? "",
+			contactCivility:
+				state?.inputs?.contactCivility ?? client.contacts[0]?.civility ?? "",
+			contactFirstName:
+				state?.inputs?.contactFirstName ?? client.contacts[0]?.firstName ?? "",
+			contactLastName:
+				state?.inputs?.contactLastName ?? client.contacts[0]?.lastName ?? "",
 			contactFunction:
 				state?.inputs?.contactFunction ?? client.contacts[0]?.function ?? "",
-			website: state?.inputs?.website ?? client.contacts[0]?.website ?? "",
-			legalForm: state?.inputs?.legalForm ?? client.company?.legalForm ?? "",
+			contactWebsite:
+				state?.inputs?.contactWebsite ?? client.contacts[0]?.website ?? "",
+			companyLegalForm:
+				state?.inputs?.companyLegalForm ?? client.company?.legalForm ?? "",
 			clientType: state?.inputs?.clientType ?? client.clientType,
 			status: state?.inputs?.status ?? client.status,
 			notes: state?.inputs?.notes ?? client.notes ?? "",
-			siren: state?.inputs?.siren ?? client.company?.siren ?? "",
-			siret: state?.inputs?.siret ?? client.company?.siret ?? "",
-			nafApeCode: state?.inputs?.nafApeCode ?? client.company?.nafApeCode ?? "",
-			vatNumber: state?.inputs?.vatNumber ?? client.company?.vatNumber ?? "",
-			businessSector:
-				state?.inputs?.businessSector ?? client.company?.businessSector ?? "",
-			capital: state?.inputs?.capital ?? client.company?.capital ?? "",
-			rcs: state?.inputs?.rcs ?? client.company?.rcs ?? "",
-			employeeCount:
-				state?.inputs?.employeeCount ??
+			companySiren: state?.inputs?.companySiren ?? client.company?.siren ?? "",
+			companySiret: state?.inputs?.companySiret ?? client.company?.siret ?? "",
+			companyNafApeCode:
+				state?.inputs?.companyNafApeCode ?? client.company?.nafApeCode ?? "",
+			companyVatNumber:
+				state?.inputs?.companyVatNumber ?? client.company?.vatNumber ?? "",
+			companyBusinessSector:
+				state?.inputs?.companyBusinessSector ??
+				client.company?.businessSector ??
+				"",
+			companyCapital:
+				state?.inputs?.companyCapital ?? client.company?.capital ?? "",
+			companyRcs: state?.inputs?.companyRcs ?? client.company?.rcs ?? "",
+			companyEmployeeCount:
+				state?.inputs?.companyEmployeeCount ??
 				client.company?.employeeCount ??
 				EmployeeCount.ONE_TO_TWO,
 			companyName: state?.inputs?.companyName ?? client.company?.name ?? "",
@@ -157,7 +171,7 @@ export function UpdateClientForm({ client }: Props) {
 												value === ClientType.COMPANY &&
 												form.getFieldValue("companyName") === ""
 											) {
-												form.resetField("lastName");
+												form.resetField("contactLastName");
 											}
 										}}
 									/>
@@ -230,7 +244,7 @@ export function UpdateClientForm({ client }: Props) {
 						</form.Field>
 
 						<form.AppField
-							name="website"
+							name="contactWebsite"
 							validators={{
 								onChange: ({ value }) => {
 									if (
@@ -270,12 +284,12 @@ export function UpdateClientForm({ client }: Props) {
 					description={`Informations de contact`}
 				>
 					<div className="space-y-4">
-						<form.AppField name="civility">
+						<form.AppField name="contactCivility">
 							{(field) => (
 								<>
 									<input
 										type="hidden"
-										name="civility"
+										name="contactCivility"
 										value={field.state.value as Civility}
 									/>
 									<field.RadioGroupField
@@ -299,7 +313,7 @@ export function UpdateClientForm({ client }: Props) {
 										}
 									},
 								}}
-								name="lastName"
+								name="contactLastName"
 							>
 								{(field) => (
 									<field.InputField
@@ -311,7 +325,7 @@ export function UpdateClientForm({ client }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="firstName">
+							<form.AppField name="contactFirstName">
 								{(field) => (
 									<field.InputField
 										label="Prénom"
@@ -333,7 +347,7 @@ export function UpdateClientForm({ client }: Props) {
 						</form.AppField>
 
 						<form.AppField
-							name="email"
+							name="contactEmail"
 							validators={{
 								onChange: ({ value }) => {
 									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -353,7 +367,7 @@ export function UpdateClientForm({ client }: Props) {
 						</form.AppField>
 						<div className="grid grid-cols-2 gap-4">
 							<form.AppField
-								name="phoneNumber"
+								name="contactPhoneNumber"
 								validators={{
 									onChange: ({ value }) => {
 										if (
@@ -377,7 +391,7 @@ export function UpdateClientForm({ client }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="mobileNumber"
+								name="contactMobileNumber"
 								validators={{
 									onChange: ({ value }) => {
 										if (
@@ -402,7 +416,7 @@ export function UpdateClientForm({ client }: Props) {
 							</form.AppField>
 						</div>
 						<form.AppField
-							name="faxNumber"
+							name="contactFaxNumber"
 							validators={{
 								onChange: ({ value }) => {
 									if (
@@ -434,7 +448,7 @@ export function UpdateClientForm({ client }: Props) {
 						description="Informations légales de l'entreprise"
 					>
 						<div className="space-y-4">
-							<form.AppField name="legalForm">
+							<form.AppField name="companyLegalForm">
 								{(field) => (
 									<field.SelectField
 										disabled={isPending}
@@ -446,7 +460,7 @@ export function UpdateClientForm({ client }: Props) {
 							</form.AppField>
 
 							<form.AppField
-								name="siret"
+								name="companySiret"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^\d{14}$/.test(value)) {
@@ -465,7 +479,7 @@ export function UpdateClientForm({ client }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="siren"
+								name="companySiren"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^\d{9}$/.test(value)) {
@@ -486,7 +500,7 @@ export function UpdateClientForm({ client }: Props) {
 
 							<div className="grid grid-cols-2 gap-4">
 								<form.AppField
-									name="nafApeCode"
+									name="companyNafApeCode"
 									validators={{
 										onChange: ({ value }) => {
 											if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
@@ -506,7 +520,7 @@ export function UpdateClientForm({ client }: Props) {
 								</form.AppField>
 
 								<form.AppField
-									name="capital"
+									name="companyCapital"
 									validators={{
 										onChange: ({ value }) => {
 											if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
@@ -526,7 +540,7 @@ export function UpdateClientForm({ client }: Props) {
 								</form.AppField>
 							</div>
 							<form.AppField
-								name="rcs"
+								name="companyRcs"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^[A-Z]\d{8}$/.test(value)) {
@@ -545,7 +559,7 @@ export function UpdateClientForm({ client }: Props) {
 								)}
 							</form.AppField>
 							<form.AppField
-								name="vatNumber"
+								name="companyVatNumber"
 								validators={{
 									onChange: ({ value }) => {
 										if (value && !/^FR\d{2}\d{9}$/.test(value)) {
@@ -564,7 +578,7 @@ export function UpdateClientForm({ client }: Props) {
 								)}
 							</form.AppField>
 
-							<form.AppField name="businessSector">
+							<form.AppField name="companyBusinessSector">
 								{(field) => (
 									<field.SelectField
 										disabled={isPending}
@@ -574,7 +588,7 @@ export function UpdateClientForm({ client }: Props) {
 									/>
 								)}
 							</form.AppField>
-							<form.AppField name="employeeCount">
+							<form.AppField name="companyEmployeeCount">
 								{(field) => (
 									<field.SelectField
 										disabled={isPending}
