@@ -2,6 +2,7 @@ import { LogoutButton } from "@/domains/auth/features/logout/components";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
@@ -63,8 +64,10 @@ export function UserDropdown({ userPromise }: UserDropdownProps) {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<LogoutButton>
-					<LogOut className="size-4" />
-					<span>Déconnexion</span>
+					<DropdownMenuItem className="gap-2 p-2 text-muted-foreground">
+						<LogOut className="size-4" />
+						<span>Déconnexion</span>
+					</DropdownMenuItem>
 				</LogoutButton>
 			</DropdownMenuContent>
 		</DropdownMenu>
