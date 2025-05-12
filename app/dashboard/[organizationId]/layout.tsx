@@ -20,8 +20,8 @@ import {
 	SidebarProvider,
 	SidebarRail,
 	SidebarTrigger,
-	ThemeToggleButton,
 } from "@/shared/components";
+import { ThemeToggleSwitch } from "@/shared/components/theme-toggle-switch";
 import { UserDropdown } from "@/shared/components/user-dropdown";
 import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
 import { headers } from "next/headers";
@@ -72,7 +72,7 @@ export default async function OrganizationLayout({
 				<SidebarFooter>
 					<SidebarMenu>
 						<SidebarMenuItem>
-							<ThemeToggleButton />
+							<ThemeToggleSwitch />
 						</SidebarMenuItem>
 						<SidebarMenuItem className="border-t border-border/30 pt-1">
 							<Suspense fallback={<UserDropdownSkeleton />}>
