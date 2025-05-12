@@ -264,13 +264,13 @@ model Supplier {
 }
 
 model Address {
-  supplierTid  String      @id @default(cuid())
-  addressType  AddressType @default(BILLING)
+  id           String      @id @default(cuid())
   addressLine1 String
   addressLine2 String?
   postalCode   String
   city         String
   country      Country     @default(FRANCE)
+  addressType  AddressType @default(BILLING)
   latitude     Float?
   longitude    Float?
   isDefault    Boolean     @default(false)
