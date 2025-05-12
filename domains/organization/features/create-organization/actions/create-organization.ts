@@ -195,7 +195,7 @@ export const createOrganization: ServerAction<
 
 		return createSuccessResponse(
 			organization,
-			`L'organisation ${organization.company?.name || "a été créée avec succès"}`
+			`L'organisation a été créée avec succès`
 		);
 	} catch (error) {
 		console.error("[CREATE_ORGANIZATION]", error);

@@ -49,27 +49,19 @@ export function generateSlug(
 }
 
 /**
- * Génère un slug unique avec un timestamp et une chaîne aléatoire
+ * Génère un slug unique avec un identifiant court
  *
  * @param text - Le texte de base pour le slug
  * @param options - Options de configuration
  * @returns Le slug unique généré
  *
  * @example
- * generateUniqueSlug("Mon Entreprise") // "mon-entreprise-ln7x2k-abc123"
+ * generateUniqueSlug("Mon Entreprise") // "mon-entreprise-x7k2"
  */
-export function generateUniqueSlug(
-	text: string,
-	options: {
-		separator?: string;
-		lowercase?: boolean;
-		removeSpecialChars?: boolean;
-	} = {}
-): string {
+export function generateUniqueSlug(text: string, options = {}): string {
 	const baseSlug = generateSlug(text, options);
-	const timestamp = Date.now().toString(36);
-	const randomString = Math.random().toString(36).substring(2, 8);
-	const separator = options.separator || "-";
+	const separator = (options as { separator?: string }).separator || "-";
+	const unique = Math.random().toString(36).slice(2, 6);
 
-	return `${baseSlug}${separator}${timestamp}${separator}${randomString}`;
+	return `${baseSlug}${separator}${unique}`;
 }
