@@ -37,7 +37,7 @@ export function CreateOrganizationForm({
 	const response = use(searchAddressPromise);
 	const { state, dispatch, isPending } = useCreateOrganization();
 	const [isAddressLoading, startAddressTransition] = useTransition();
-	const { isUploading } = useUploadThing("companyLogo");
+	const { isUploading, startUpload } = useUploadThing("companyLogo");
 	const router = useRouter();
 
 	// TanStack Form setup
@@ -160,7 +160,6 @@ export function CreateOrganizationForm({
 									label="Nom de la société"
 									disabled={isPending}
 									placeholder="Ex: Mon entreprise"
-									required
 								/>
 							)}
 						</form.AppField>
@@ -225,7 +224,15 @@ export function CreateOrganizationForm({
 						{(field) => (
 							<field.UploadField
 								label="Logo"
+								onChange={async (files) => {
+									const res = await startUpload(files);
+									const url = res?.[0]?.serverData?.url;
+									if (url) {
+										field.handleChange(url);
+									}
+								}}
 								disabled={isPending}
+								isUploading={isUploading}
 								accept="image/*"
 								endpoint="companyLogo"
 							/>

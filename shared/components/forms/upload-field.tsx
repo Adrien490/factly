@@ -1,6 +1,6 @@
 import { DotsLoader } from "@/shared/components";
 import { Button, FormLabel } from "@/shared/components/ui";
-import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
+import { UploadDropzone } from "@/shared/lib/uploadthing";
 import Image from "next/image";
 import { toast } from "sonner";
 import { FieldInfo } from "..";
@@ -9,6 +9,7 @@ import { useFieldContext } from "../../lib/form-context";
 interface UploadFieldProps {
 	disabled?: boolean;
 	label?: string;
+	onChange?: (files: File[]) => void;
 	required?: boolean;
 	endpoint:
 		| "groupImage"
@@ -20,6 +21,7 @@ interface UploadFieldProps {
 	accept?: string;
 	maxSize?: string;
 	onUploadError?: (error: Error) => void;
+	isUploading?: boolean;
 }
 
 export const UploadField = ({
@@ -31,9 +33,10 @@ export const UploadField = ({
 	accept,
 	maxSize,
 	onUploadError,
+	onChange,
+	isUploading,
 }: UploadFieldProps) => {
 	const field = useFieldContext<string>();
-	const { isUploading, startUpload } = useUploadThing(endpoint);
 
 	const previewSizes = {
 		sm: "h-8 w-8",
@@ -81,13 +84,7 @@ export const UploadField = ({
 				<div className="relative">
 					<UploadDropzone
 						endpoint={endpoint}
-						onChange={async (files) => {
-							const res = await startUpload(files);
-							const url = res?.[0]?.serverData?.url;
-							if (url) {
-								field.handleChange(url);
-							}
-						}}
+						onChange={onChange}
 						onUploadError={(error) => {
 							console.error(error);
 							toast.error("Erreur lors de l'upload", {
