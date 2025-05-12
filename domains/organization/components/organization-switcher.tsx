@@ -50,9 +50,9 @@ export function OrganizationSwitcher({
 					<DropdownMenuTrigger asChild>
 						<SidebarMenuButton
 							size="lg"
-							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground max-w-[240px]"
 						>
-							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary">
+							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary shrink-0">
 								{company?.logoUrl ? (
 									<Image
 										src={company.logoUrl}
@@ -65,11 +65,9 @@ export function OrganizationSwitcher({
 									<GalleryVerticalEnd className="size-4" />
 								)}
 							</div>
-							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-semibold max-w-[180px]">
-									{company?.name}
-								</span>
-								<span className="truncate text-xs text-muted-foreground max-w-[180px]">
+							<div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+								<span className="truncate font-semibold">{company?.name}</span>
+								<span className="truncate text-xs text-muted-foreground">
 									Changer d&apos;organisation
 								</span>
 							</div>
