@@ -66,8 +66,10 @@ export function OrganizationSwitcher({
 								)}
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-semibold">{company?.name}</span>
-								<span className="truncate text-xs text-muted-foreground">
+								<span className="truncate font-semibold max-w-[180px]">
+									{company?.name}
+								</span>
+								<span className="truncate text-xs text-muted-foreground max-w-[180px]">
 									Changer d&apos;organisation
 								</span>
 							</div>
@@ -75,7 +77,7 @@ export function OrganizationSwitcher({
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
-						className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+						className="w-60 min-w-56 rounded-lg"
 						align="start"
 						side="bottom"
 						sideOffset={4}
@@ -108,7 +110,7 @@ export function OrganizationSwitcher({
 											<div className="size-2 rounded-full bg-primary/10" />
 										)}
 									</div>
-									<span className="flex-1 truncate">
+									<span className="flex-1 truncate max-w-[200px]">
 										{organization.company?.name}
 									</span>
 									{organization.id === organizationId && (
