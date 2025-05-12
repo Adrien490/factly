@@ -1,5 +1,6 @@
 import { DeleteContactAlertDialog } from "@/domains/contact/features/delete-contact/components/delete-contact-alert-dialog";
 import { GetContactReturn } from "@/domains/contact/features/get-contact";
+import { SetDefaultContactButton } from "@/domains/contact/features/set-default-contact/components/set-default-contact-button";
 import { UpdateContactSheetForm } from "@/domains/contact/features/update-contact/components/update-contact-sheet-form";
 import {
 	Button,
@@ -41,6 +42,27 @@ export function ContactActions({ contact }: ContactActionsProps) {
 				<UpdateContactSheetForm contact={contact}>
 					<DropdownMenuItem preventDefault>Modifier</DropdownMenuItem>
 				</UpdateContactSheetForm>
+
+				{!contact.isDefault && (
+					<>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem preventDefault asChild>
+							<SetDefaultContactButton
+								id={contact.id}
+								organizationId={
+									(contact.client?.organizationId ||
+										contact.supplier?.organizationId) ??
+									""
+								}
+								clientId={contact.clientId ?? undefined}
+								supplierId={contact.supplierId ?? undefined}
+							>
+								Définir par défaut
+							</SetDefaultContactButton>
+						</DropdownMenuItem>
+					</>
+				)}
+
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					preventDefault
