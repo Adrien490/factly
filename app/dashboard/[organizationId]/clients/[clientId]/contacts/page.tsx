@@ -1,4 +1,4 @@
-import { CIVILITIES } from "@/domains/contact/constants/civilities";
+import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
 import { CreateContactSheetForm } from "@/domains/contact/features/create-contact/components/create-contact-sheet-form";
 import { getContacts } from "@/domains/contact/features/get-contacts";
 import { ContactDataTable } from "@/domains/contact/features/get-contacts/components/contact-datatable";
@@ -54,10 +54,7 @@ export default async function AddressesPage({ searchParams, params }: Props) {
 				<FilterSelect
 					filterKey="civility"
 					label="Civilité"
-					options={CIVILITIES.map((civility) => ({
-						value: civility.value,
-						label: civility.label,
-					}))}
+					options={CIVILITY_OPTIONS}
 				/>
 				<SortingOptionsDropdown
 					sortFields={[

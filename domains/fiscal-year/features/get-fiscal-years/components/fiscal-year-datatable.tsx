@@ -1,6 +1,6 @@
 "use client";
 
-import { FISCAL_YEAR_STATUS_MAP } from "@/domains/fiscal-year/constants/fiscal-year-statuses/constants";
+import { FISCAL_YEAR_STATUS_MAP } from "@/domains/fiscal-year/constants";
 import {
 	AlertDialog,
 	AlertDialogAction,

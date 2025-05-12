@@ -2,16 +2,20 @@
 
 import { Button, FormLabel, Input } from "@/shared/components/ui";
 
-import { COUNTRIES } from "@/domains/address/constants";
+import { COUNTRY_OPTIONS } from "@/domains/address/constants/country-options";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
-import { CLIENT_TYPES } from "@/domains/client/constants";
-import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
-import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
-import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
-import { CIVILITIES } from "@/domains/contact/constants/civilities";
+import {
+	CLIENT_STATUS_OPTIONS,
+	CLIENT_TYPE_OPTIONS,
+} from "@/domains/client/constants";
+import {
+	BUSINESS_SECTOR_OPTIONS,
+	EMPLOYEE_COUNT_OPTIONS,
+} from "@/domains/company/constants";
+import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { ContentCard } from "@/shared/components/content-card";
 import {
@@ -21,7 +25,7 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
-import { LEGAL_FORMS } from "@/shared/constants";
+import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import {
 	createToastCallbacks,
 	generateReference,
@@ -272,7 +276,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.RadioGroupField
 										disabled={isPending}
 										label="Type de client"
-										options={CLIENT_TYPES}
+										options={CLIENT_TYPE_OPTIONS}
 										onValueChangeCallback={(value) => {
 											if (value === ClientType.INDIVIDUAL) {
 												form.resetField("companyName");
@@ -425,10 +429,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.RadioGroupField
 										disabled={isPending}
 										label="Civilité"
-										options={CIVILITIES.map((civility) => ({
-											value: civility.value,
-											label: civility.label,
-										}))}
+										options={CIVILITY_OPTIONS}
 									/>
 								</>
 							)}
@@ -582,7 +583,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Forme juridique"
-										options={LEGAL_FORMS}
+										options={LEGAL_FORM_OPTIONS}
 										placeholder="Sélectionnez une forme juridique"
 									/>
 								)}
@@ -732,7 +733,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Secteur d'activité"
-										options={BUSINESS_SECTORS}
+										options={BUSINESS_SECTOR_OPTIONS}
 										placeholder="Sélectionnez un secteur d'activité"
 									/>
 								)}
@@ -742,7 +743,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Effectif"
-										options={EMPLOYEE_COUNTS}
+										options={EMPLOYEE_COUNT_OPTIONS}
 										placeholder="Sélectionnez l'effectif"
 									/>
 								)}
@@ -887,7 +888,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								<field.SelectField
 									disabled={isPending}
 									label="Pays"
-									options={COUNTRIES}
+									options={COUNTRY_OPTIONS}
 									placeholder="Sélectionnez un pays"
 								/>
 							)}
@@ -915,12 +916,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								<field.SelectField
 									label="Statut"
 									disabled={isPending}
-									options={CLIENT_STATUSES.filter(
+									options={CLIENT_STATUS_OPTIONS.filter(
 										(status) => status.value !== ClientStatus.ARCHIVED
-									).map((status) => ({
-										value: status.value,
-										label: status.label,
-									}))}
+									)}
 									placeholder="Sélectionnez un statut"
 								/>
 							)}

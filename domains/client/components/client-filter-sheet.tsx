@@ -17,7 +17,7 @@ import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { ClientStatus } from "@prisma/client";
 import { Filter } from "lucide-react";
-import { CLIENT_STATUSES, CLIENT_TYPES } from "../constants";
+import { CLIENT_STATUS_OPTIONS, CLIENT_TYPE_OPTIONS } from "../constants";
 
 interface ClientFilterSheetProps {
 	activeFiltersCount: number;
@@ -60,7 +60,7 @@ export function ClientFilterSheet({
 							</div>
 
 							<div className="space-y-2">
-								{CLIENT_TYPES.map((type) => (
+								{CLIENT_TYPE_OPTIONS.map((type) => (
 									<div key={type.value} className="flex items-center space-x-2">
 										<CheckboxFilter
 											filterKey="type"
@@ -88,7 +88,7 @@ export function ClientFilterSheet({
 							<div className="space-y-4">
 								<FormLabel className="text-base font-medium">Statut</FormLabel>
 								<div className="space-y-2">
-									{CLIENT_STATUSES.filter(
+									{CLIENT_STATUS_OPTIONS.filter(
 										(status) => status.value !== ClientStatus.ARCHIVED
 									).map((status) => (
 										<div

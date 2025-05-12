@@ -1,4 +1,4 @@
-import { ADDRESS_TYPES } from "@/domains/address/constants/address-types";
+import { ADDRESS_TYPE_OPTIONS } from "@/domains/address/constants";
 import {
 	Card,
 	DropdownMenu,
@@ -76,8 +76,9 @@ export function AddressList({ addressesPromise }: AddressListProps) {
 
 								<p className="text-xs mt-1.5 text-muted-foreground">
 									{
-										ADDRESS_TYPES.find((type) => type.value === addressType)
-											?.label
+										ADDRESS_TYPE_OPTIONS.find(
+											(type) => type.value === addressType
+										)?.label
 									}
 								</p>
 							</div>

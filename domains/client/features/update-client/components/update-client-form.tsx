@@ -1,13 +1,15 @@
 "use client";
 
-import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
+import { CLIENT_STATUS_OPTIONS } from "@/domains/client/constants";
 import {
 	CLIENT_TYPE_COLORS,
 	CLIENT_TYPE_LABELS,
-} from "@/domains/client/constants/client-types";
-import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
-import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
-import { CIVILITIES } from "@/domains/contact/constants/civilities";
+} from "@/domains/client/constants/client-type-options";
+import {
+	BUSINESS_SECTOR_OPTIONS,
+	EMPLOYEE_COUNT_OPTIONS,
+} from "@/domains/company/constants";
+import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
 import { Badge } from "@/shared/components";
 import { ContentCard } from "@/shared/components/content-card";
 import {
@@ -18,7 +20,7 @@ import {
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { Button, FormLabel, Input } from "@/shared/components/ui";
-import { LEGAL_FORMS } from "@/shared/constants";
+import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { generateReference } from "@/shared/utils";
 import {
 	Civility,
@@ -318,10 +320,7 @@ export function UpdateClientForm({ client }: Props) {
 									<field.RadioGroupField
 										disabled={isPending}
 										label="Civilité"
-										options={CIVILITIES.map((civility) => ({
-											value: civility.value,
-											label: civility.label,
-										}))}
+										options={CIVILITY_OPTIONS}
 									/>
 								</>
 							)}
@@ -476,7 +475,7 @@ export function UpdateClientForm({ client }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Forme juridique"
-										options={LEGAL_FORMS}
+										options={LEGAL_FORM_OPTIONS}
 										placeholder="Sélectionnez une forme juridique"
 									/>
 								)}
@@ -606,7 +605,7 @@ export function UpdateClientForm({ client }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Secteur d'activité"
-										options={BUSINESS_SECTORS}
+										options={BUSINESS_SECTOR_OPTIONS}
 										placeholder="Sélectionnez un secteur d'activité"
 									/>
 								)}
@@ -616,7 +615,7 @@ export function UpdateClientForm({ client }: Props) {
 									<field.SelectField
 										disabled={isPending}
 										label="Effectif"
-										options={EMPLOYEE_COUNTS}
+										options={EMPLOYEE_COUNT_OPTIONS}
 										placeholder="Sélectionnez l'effectif"
 									/>
 								)}
@@ -645,12 +644,9 @@ export function UpdateClientForm({ client }: Props) {
 								<field.SelectField
 									label="Statut"
 									disabled={isPending}
-									options={CLIENT_STATUSES.filter(
+									options={CLIENT_STATUS_OPTIONS.filter(
 										(status) => status.value !== ClientStatus.ARCHIVED
-									).map((status) => ({
-										value: status.value,
-										label: status.label,
-									}))}
+									)}
 									placeholder="Sélectionnez un statut"
 								/>
 							)}

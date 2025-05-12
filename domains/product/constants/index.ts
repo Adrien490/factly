@@ -1,3 +1,3 @@
+export * from "./product-status-options";
 export * from "./product-status-transitions";
-export * from "./product-statuses";
-export * from "./vat-rates";
+export * from "./vat-rate-options";

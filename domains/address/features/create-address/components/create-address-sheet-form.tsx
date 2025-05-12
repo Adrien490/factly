@@ -1,6 +1,7 @@
 "use client";
 
-import { AddressTypeOption, COUNTRIES } from "@/domains/address/constants";
+import { AddressTypeOption } from "@/domains/address/constants/address-type-options";
+import { COUNTRY_OPTIONS } from "@/domains/address/constants/country-options";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -422,10 +423,7 @@ export function CreateAddressSheetForm({
 									label="Pays"
 									required
 									disabled={isPending}
-									options={COUNTRIES.map((country) => ({
-										value: country.value,
-										label: country.label,
-									}))}
+									options={COUNTRY_OPTIONS}
 								/>
 							)}
 						</form.AppField>

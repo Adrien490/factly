@@ -20,7 +20,7 @@ import {
 } from "@/shared/components";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
-import { SUPPLIER_STATUSES } from "../constants";
+import { SUPPLIER_STATUS_OPTIONS } from "../constants";
 import { ArchiveMultipleSuppliersButton } from "../features/archive-multiple-suppliers";
 import { UpdateMultipleSupplierStatusButton } from "../features/update-multiple-supplier-status";
 
@@ -60,7 +60,7 @@ export function SupplierSelectionActions({
 						<span>Changer le statut</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{SUPPLIER_STATUSES.map((status) => (
+						{SUPPLIER_STATUS_OPTIONS.map((status) => (
 							<AlertDialog key={status.value}>
 								<AlertDialogTrigger asChild>
 									<DropdownMenuItem preventDefault>

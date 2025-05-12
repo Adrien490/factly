@@ -20,7 +20,7 @@ import {
 import { Button } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Trash, Undo } from "lucide-react";
-import { SUPPLIER_STATUSES } from "../constants";
+import { SUPPLIER_STATUS_OPTIONS } from "../constants";
 import { DeleteMultipleSuppliersButton } from "../features/delete-multiple-suppliers";
 import { RestoreMultipleSuppliersButton } from "../features/restore-multiple-suppliers";
 
@@ -60,7 +60,7 @@ export function ArchivedSupplierSelectionActions({
 						<span>Restaurer</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{SUPPLIER_STATUSES.map((status) => (
+						{SUPPLIER_STATUS_OPTIONS.map((status) => (
 							<AlertDialog key={status.value}>
 								<AlertDialogTrigger asChild>
 									<DropdownMenuItem preventDefault>

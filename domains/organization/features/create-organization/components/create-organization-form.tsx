@@ -2,13 +2,15 @@
 
 import { FormLabel } from "@/shared/components";
 
-import { COUNTRIES } from "@/domains/address/constants";
+import { COUNTRY_OPTIONS } from "@/domains/address/constants/country-options";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features";
-import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
-import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
+import {
+	BUSINESS_SECTOR_OPTIONS,
+	EMPLOYEE_COUNT_OPTIONS,
+} from "@/domains/company/constants";
 import { useCreateOrganization } from "@/domains/organization/features";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { ContentCard } from "@/shared/components/content-card";
@@ -19,7 +21,7 @@ import {
 	FormLayout,
 	useAppForm,
 } from "@/shared/components/forms";
-import { LEGAL_FORMS } from "@/shared/constants/legal-forms";
+import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { useUploadThing } from "@/shared/lib/uploadthing";
 import { AddressType, Country, LegalForm } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
@@ -170,10 +172,7 @@ export function CreateOrganizationForm({
 									label="Forme juridique"
 									disabled={isPending}
 									placeholder="Sélectionnez une forme juridique"
-									options={LEGAL_FORMS.map((option) => ({
-										label: option.label,
-										value: option.value,
-									}))}
+									options={LEGAL_FORM_OPTIONS}
 								/>
 							)}
 						</form.AppField>
@@ -381,7 +380,7 @@ export function CreateOrganizationForm({
 								<field.SelectField
 									label="Secteur d'activité"
 									disabled={isPending}
-									options={BUSINESS_SECTORS}
+									options={BUSINESS_SECTOR_OPTIONS}
 									placeholder="Sélectionnez un secteur d'activité"
 								/>
 							)}
@@ -392,7 +391,7 @@ export function CreateOrganizationForm({
 								<field.SelectField
 									label="Effectif"
 									disabled={isPending}
-									options={EMPLOYEE_COUNTS}
+									options={EMPLOYEE_COUNT_OPTIONS}
 									placeholder="Sélectionnez l'effectif"
 								/>
 							)}
@@ -619,7 +618,7 @@ export function CreateOrganizationForm({
 									label="Pays"
 									disabled={isPending}
 									placeholder="Sélectionnez un pays"
-									options={COUNTRIES.map((country) => ({
+									options={COUNTRY_OPTIONS.map((country) => ({
 										label: country.label,
 										value: country.value,
 									}))}

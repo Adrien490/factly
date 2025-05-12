@@ -9,7 +9,7 @@ import {
 } from "@/shared/components";
 import { FormLabel, Input } from "@/shared/components/ui";
 
-import { ADDRESS_TYPES } from "@/domains/address/constants";
+import { ADDRESS_TYPE_OPTIONS } from "@/domains/address/constants/address-type-options";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
@@ -225,7 +225,7 @@ export function UpdateAddressForm({
 											<SelectValue placeholder="Sélectionnez un type" />
 										</SelectTrigger>
 										<SelectContent>
-											{ADDRESS_TYPES.map((addressType) => (
+											{ADDRESS_TYPE_OPTIONS.map((addressType) => (
 												<SelectItem
 													key={addressType.value}
 													value={addressType.value}

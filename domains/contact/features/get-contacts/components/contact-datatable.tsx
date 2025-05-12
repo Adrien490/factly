@@ -96,9 +96,6 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 													</span>
 												)}
 												{contact.lastName} {contact.firstName}
-												{contact.isDefault && (
-													<Badge className="ml-2">Par défaut</Badge>
-												)}
 											</div>
 										</div>
 										{contact.function && (

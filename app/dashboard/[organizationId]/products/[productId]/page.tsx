@@ -1,4 +1,4 @@
-import { VAT_RATE_LABELS } from "@/domains/product/constants/vat-rates";
+import { VAT_RATE_LABELS } from "@/domains/product";
 import { getProduct } from "@/domains/product/features/get-product";
 import {
 	Card,
@@ -304,7 +304,7 @@ export default async function ProductPage({ params }: Props) {
 									{product.updatedAt
 										? format(new Date(product.updatedAt), "dd/MM/yyyy", {
 												locale: fr,
-										  })
+											})
 										: "Jamais"}
 								</span>
 							</div>

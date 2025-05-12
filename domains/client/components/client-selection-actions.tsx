@@ -20,7 +20,7 @@ import {
 import { Button } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
-import { CLIENT_STATUSES } from "../constants";
+import { CLIENT_STATUS_OPTIONS } from "../constants";
 import { ArchiveMultipleClientsButton } from "../features/archive-multiple-clients";
 import { RestoreMultipleClientsButton } from "../features/restore-multiple-clients";
 
@@ -61,7 +61,7 @@ export function ClientSelectionActions({
 						<span>Changer le statut</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{CLIENT_STATUSES.map((status) => (
+						{CLIENT_STATUS_OPTIONS.map((status) => (
 							<AlertDialog key={status.value}>
 								<AlertDialogTrigger asChild>
 									<DropdownMenuItem preventDefault>

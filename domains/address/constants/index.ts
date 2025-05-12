@@ -37,5 +37,5 @@ export const addressSortableFields = [
 
 export const entityType = ["client", "supplier"] as const;
 
-export * from "./address-types";
-export * from "./countries";
+export * from "./address-type-options";
+export * from "./country-options";

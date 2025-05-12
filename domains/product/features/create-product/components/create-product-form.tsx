@@ -13,7 +13,7 @@ import { Product, ProductStatus, VatRate } from "@prisma/client";
 
 import { mergeForm, useTransform } from "@tanstack/react-form";
 
-import { VAT_RATES } from "@/domains/product/constants/vat-rates";
+import { VAT_RATE_OPTIONS } from "@/domains/product/constants";
 import { ContentCard } from "@/shared/components/content-card";
 import { FormErrors } from "@/shared/components/forms/form-errors";
 import {
@@ -352,7 +352,7 @@ export function CreateProductForm() {
 									label="Taux de TVA*"
 									disabled={isPending}
 									placeholder="Sélectionner un taux..."
-									options={VAT_RATES}
+									options={VAT_RATE_OPTIONS}
 								/>
 							)}
 						</form.AppField>

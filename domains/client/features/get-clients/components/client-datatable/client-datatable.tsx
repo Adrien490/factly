@@ -27,11 +27,11 @@ import {
 import {
 	CLIENT_STATUS_COLORS,
 	CLIENT_STATUS_LABELS,
-} from "@/domains/client/constants/client-statuses";
+} from "@/domains/client/constants/client-status-options";
 import {
 	CLIENT_TYPE_COLORS,
 	CLIENT_TYPE_LABELS,
-} from "@/domains/client/constants/client-types";
+} from "@/domains/client/constants/client-type-options";
 import { use } from "react";
 
 export interface ClientDataTableProps {

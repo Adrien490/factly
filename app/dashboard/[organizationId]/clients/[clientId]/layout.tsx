@@ -15,7 +15,7 @@ export default async function ClientLayout({ children, params }: Props) {
 	const { clientId, organizationId } = await params;
 
 	return (
-		<PageContainer className="pt-4 pb-12">
+		<PageContainer className="pt-4">
 			<Suspense fallback={<ClientHeaderSkeleton />}>
 				<ClientHeader
 					clientPromise={getClient({ id: clientId, organizationId })}

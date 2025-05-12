@@ -1,4 +1,4 @@
-import { ADDRESS_TYPES } from "@/domains/address/constants";
+import { ADDRESS_TYPE_OPTIONS } from "@/domains/address/constants";
 import { getSupplier } from "@/domains/supplier/features/get-supplier";
 import {
 	Card,
@@ -252,7 +252,7 @@ export default async function SupplierPage({ params }: Props) {
 												isDefault,
 											} = address;
 
-											const addressTypeLabel = ADDRESS_TYPES.find(
+											const addressTypeLabel = ADDRESS_TYPE_OPTIONS.find(
 												(type) => type.value === addressType
 											)?.label;
 
@@ -421,7 +421,7 @@ export default async function SupplierPage({ params }: Props) {
 									{supplier.updatedAt
 										? format(new Date(supplier.updatedAt), "dd/MM/yyyy", {
 												locale: fr,
-										  })
+											})
 										: "Jamais"}
 								</span>
 							</div>

@@ -1,4 +1,4 @@
-import { SUPPLIER_STATUSES } from "@/domains/supplier/constants";
+import { SUPPLIER_STATUS_OPTIONS } from "@/domains/supplier/constants";
 import { DeleteSupplierButton } from "@/domains/supplier/features/delete-supplier/components/delete-supplier-button";
 import { RestoreSupplierButton } from "@/domains/supplier/features/restore-supplier";
 import {
@@ -72,7 +72,7 @@ export function ArchivedSupplierActions({
 						<span>Restaurer</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{SUPPLIER_STATUSES.filter(
+						{SUPPLIER_STATUS_OPTIONS.filter(
 							(status) => status.value !== SupplierStatus.ARCHIVED
 						).map((status) => (
 							<DropdownMenuItem

@@ -1,6 +1,6 @@
 "use client";
 
-import { CIVILITIES } from "@/domains/contact/constants/civilities";
+import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
 import { FormErrors, useAppForm } from "@/shared/components/forms";
 import {
 	Button,
@@ -137,10 +137,7 @@ export function UpdateContactSheetForm({
 								{(field) => (
 									<field.SelectField
 										label="Civilité"
-										options={CIVILITIES.map((civility) => ({
-											value: civility.value,
-											label: civility.label,
-										}))}
+										options={CIVILITY_OPTIONS}
 										disabled={isPending}
 									/>
 								)}

@@ -1,1 +1,1 @@
-export * from "./legal-forms";
+export * from "./legal-form-options";

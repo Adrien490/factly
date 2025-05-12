@@ -1,6 +1,6 @@
 import {
+	CLIENT_STATUS_OPTIONS,
 	CLIENT_STATUS_TRANSITIONS,
-	CLIENT_STATUSES,
 } from "@/domains/client/constants";
 import { ArchiveClientAlertDialog } from "@/domains/client/features/archive-client/components/archive-client-alert-dialog";
 import { UpdateClientStatusButton } from "@/domains/client/features/update-client-status/components/udpate-client-status-button";
@@ -88,7 +88,7 @@ export function ClientActions({ client }: ClientActionsProps) {
 						<span>Changer le statut</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{CLIENT_STATUSES.filter(
+						{CLIENT_STATUS_OPTIONS.filter(
 							(status) =>
 								status.value !== ClientStatus.ARCHIVED &&
 								CLIENT_STATUS_TRANSITIONS[client.status].includes(status.value)

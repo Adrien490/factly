@@ -1,4 +1,4 @@
-import { CLIENT_STATUSES } from "@/domains/client/constants";
+import { CLIENT_STATUS_OPTIONS } from "@/domains/client/constants";
 import { DeleteClientAlertDialog } from "@/domains/client/features/delete-client/components/delete-client-alert-dialog";
 import { RestoreClientAlertDialog } from "@/domains/client/features/restore-client/components/restore-client-alert-dialog";
 import {
@@ -60,7 +60,7 @@ export function ArchivedClientActions({ client }: ArchivedClientActionsProps) {
 						<span>Restaurer</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{CLIENT_STATUSES.filter(
+						{CLIENT_STATUS_OPTIONS.filter(
 							(status) => status.value !== ClientStatus.ARCHIVED
 						).map((status) => (
 							<DropdownMenuItem

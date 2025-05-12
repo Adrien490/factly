@@ -8,8 +8,8 @@ import {
 } from "@/shared/components/forms";
 
 import {
-	SUPPLIER_STATUSES,
-	SUPPLIER_TYPES,
+	SUPPLIER_STATUS_OPTIONS,
+	SUPPLIER_TYPE_OPTIONS,
 } from "@/domains/supplier/constants";
 import { GetSupplierReturn } from "@/domains/supplier/features/get-supplier";
 import { ContentCard } from "@/shared/components/content-card";
@@ -115,7 +115,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 						>
 							{(field) => (
 								<field.SelectField
-									options={SUPPLIER_TYPES.map((type) => ({
+									options={SUPPLIER_TYPE_OPTIONS.map((type) => ({
 										label: type.label,
 										value: type.value,
 									}))}
@@ -129,7 +129,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 						<form.AppField name="status">
 							{(field) => (
 								<field.SelectField
-									options={SUPPLIER_STATUSES.map((status) => ({
+									options={SUPPLIER_STATUS_OPTIONS.map((status) => ({
 										label: status.label,
 										value: status.value,
 									}))}

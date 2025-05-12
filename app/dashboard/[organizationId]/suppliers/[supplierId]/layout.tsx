@@ -1,6 +1,6 @@
 import { ClientHeaderSkeleton } from "@/domains/client/features/get-client/components/client-header-skeleton";
 import { getSupplier } from "@/domains/supplier/features/get-supplier";
-import { SupplierHeader } from "@/domains/supplier/features/get-supplier/components/supplier-header/supplier-header";
+import { SupplierHeader } from "@/domains/supplier/features/get-supplier/components/supplier-header";
 
 import { PageContainer } from "@/shared/components";
 import { ReactNode, Suspense } from "react";

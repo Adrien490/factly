@@ -24,9 +24,7 @@ export const buildWhereClause = (
 
 	// Ajouter les filtres spécifiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
-		const filterConditions = buildFilterConditions(
-			params.filters as Record<string, unknown>
-		);
+		const filterConditions = buildFilterConditions(params.filters);
 		if (filterConditions.length > 0) {
 			whereClause.AND = filterConditions;
 		}

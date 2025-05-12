@@ -1,4 +1,4 @@
-import { SUPPLIER_STATUSES } from "@/domains/supplier/constants";
+import { SUPPLIER_STATUS_OPTIONS } from "@/domains/supplier/constants";
 import { SUPPLIER_STATUS_TRANSITIONS } from "@/domains/supplier/constants/supplier-status-transitions";
 import { ArchiveSupplierButton } from "@/domains/supplier/features/archive-supplier";
 import { UpdateSupplierStatusButton } from "@/domains/supplier/features/update-supplier-status/components/update-supplier-status-button";
@@ -87,7 +87,7 @@ export function SupplierActions({ supplier }: SupplierActionsProps) {
 						<span>Changer le statut</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{SUPPLIER_STATUSES.filter(
+						{SUPPLIER_STATUS_OPTIONS.filter(
 							(status) =>
 								status.value !== SupplierStatus.ARCHIVED &&
 								SUPPLIER_STATUS_TRANSITIONS[supplier.status].includes(

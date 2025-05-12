@@ -1,5 +1,8 @@
 import NotFound from "@/app/dashboard/[organizationId]/not-found";
-import { FISCAL_YEAR_STATUSES } from "@/domains/fiscal-year/constants/fiscal-year-statuses";
+import {
+	FISCAL_YEAR_STATUS_COLORS,
+	FISCAL_YEAR_STATUS_LABELS,
+} from "@/domains/fiscal-year/constants";
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { use } from "react";
@@ -16,11 +19,6 @@ export function FiscalYearHeader({ fiscalYearPromise }: FiscalYearHeaderProps) {
 		return <NotFound />;
 	}
 
-	// Recherche du statut dans la liste des statuts prédéfinis
-	const statusInfo = FISCAL_YEAR_STATUSES.find(
-		(option) => option.value === fiscalYear.status
-	);
-
 	return (
 		<div>
 			<div className="flex flex-col gap-4">
@@ -31,12 +29,12 @@ export function FiscalYearHeader({ fiscalYearPromise }: FiscalYearHeaderProps) {
 							<Badge
 								variant="outline"
 								style={{
-									backgroundColor: `${statusInfo?.color}20`,
-									color: statusInfo?.color,
-									borderColor: statusInfo?.color,
+									backgroundColor: `${FISCAL_YEAR_STATUS_COLORS[fiscalYear.status]}20`,
+									color: FISCAL_YEAR_STATUS_COLORS[fiscalYear.status],
+									borderColor: FISCAL_YEAR_STATUS_COLORS[fiscalYear.status],
 								}}
 							>
-								{statusInfo?.label}
+								{FISCAL_YEAR_STATUS_LABELS[fiscalYear.status]}
 							</Badge>
 							{fiscalYear.isCurrent && <Badge variant="outline">Courant</Badge>}
 						</div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { FISCAL_YEAR_STATUSES } from "@/domains/fiscal-year/constants/fiscal-year-statuses/constants";
 import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
@@ -293,35 +292,6 @@ export function UpdateFiscalYearForm({
 									</div>
 								)}
 							</form.Field>
-						</div>
-
-						{/* Note informative sur le statut */}
-						<div className="rounded-md bg-muted p-3 mt-2">
-							<div className="flex">
-								<p className="text-sm text-muted-foreground">
-									<span className="font-medium">Statut actuel:</span>{" "}
-									<span
-										style={{
-											color:
-												FISCAL_YEAR_STATUSES.find(
-													(s) => s.value === fiscalYear.status
-												)?.color || "inherit",
-										}}
-									>
-										{FISCAL_YEAR_STATUSES.find(
-											(s) => s.value === fiscalYear.status
-										)?.label || fiscalYear.status}
-									</span>
-									<br />
-									<span className="text-xs">
-										Pour modifier le statut d&apos;une année fiscale, utilisez
-										les options dédiées depuis la vue principale des années
-										fiscales. Cette séparation permet de garantir
-										l&apos;application correcte des règles de transition entre
-										les différents statuts.
-									</span>
-								</p>
-							</div>
 						</div>
 					</div>
 				</ContentCard>

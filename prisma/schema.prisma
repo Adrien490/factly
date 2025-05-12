@@ -373,9 +373,6 @@ enum Civility {
   MR // Monsieur
   MRS // Madame
   MS // Mademoiselle
-  DR // Docteur
-  PROF // Professeur
-  MASTER // Maître (pour avocats, notaires)
 }
 
 // Enums

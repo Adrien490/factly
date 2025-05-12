@@ -19,7 +19,7 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Trash, Undo } from "lucide-react";
-import { PRODUCT_STATUSES } from "../constants";
+import { PRODUCT_STATUS_OPTIONS } from "../constants";
 import { DeleteMultipleProductsButton } from "../features/delete-multiple-products";
 import { RestoreMultipleProductsButton } from "../features/restore-multiple-products";
 
@@ -59,7 +59,7 @@ export function ArchivedProductSelectionActions({
 						<span>Restaurer</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{PRODUCT_STATUSES.map((status) => (
+						{PRODUCT_STATUS_OPTIONS.map((status) => (
 							<AlertDialog key={status.value}>
 								<AlertDialogTrigger asChild>
 									<DropdownMenuItem preventDefault>

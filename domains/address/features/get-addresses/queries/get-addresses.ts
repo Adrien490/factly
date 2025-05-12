@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
-import db from "@/shared/lib/db";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getAddressesSchema } from "../schemas";
@@ -35,41 +34,9 @@ export async function getAddresses(
 
 		const validatedParams = validation.data;
 
-		// Vérification du droit d'accès
-		// Pour déterminer l'organization, nous devons vérifier si c'est un client ou fournisseur
-		let organizationId: string;
-
-		// Pour un client
-		if (validatedParams.clientId) {
-			const client = await db.client.findUnique({
-				where: { id: validatedParams.clientId },
-				select: { organizationId: true },
-			});
-
-			if (!client) {
-				throw new Error("Client not found");
-			}
-
-			organizationId = client.organizationId;
-		}
-		// Pour un fournisseur
-		else if (validatedParams.supplierId) {
-			const supplier = await db.supplier.findUnique({
-				where: { id: validatedParams.supplierId },
-				select: { organizationId: true },
-			});
-
-			if (!supplier) {
-				throw new Error("Supplier not found");
-			}
-
-			organizationId = supplier.organizationId;
-		} else {
-			throw new Error("Either clientId or supplierId must be provided");
-		}
-
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
+		const hasAccess = await hasOrganizationAccess(
+			validatedParams.organizationId
+		);
 		if (!hasAccess) {
 			throw new Error("Access denied");
 		}

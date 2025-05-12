@@ -17,7 +17,7 @@ import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { SupplierStatus } from "@prisma/client";
 import { Filter } from "lucide-react";
-import { SUPPLIER_STATUSES, SUPPLIER_TYPES } from "../constants";
+import { SUPPLIER_STATUS_OPTIONS, SUPPLIER_TYPE_OPTIONS } from "../constants";
 
 interface SupplierFilterSheetProps {
 	activeFiltersCount: number;
@@ -60,7 +60,7 @@ export function SupplierFilterSheet({
 							</div>
 
 							<div className="space-y-2">
-								{SUPPLIER_TYPES.map((type) => (
+								{SUPPLIER_TYPE_OPTIONS.map((type) => (
 									<div key={type.value} className="flex items-center space-x-2">
 										<CheckboxFilter
 											filterKey="supplierType"
@@ -88,7 +88,7 @@ export function SupplierFilterSheet({
 							<div className="space-y-4">
 								<FormLabel className="text-base font-medium">Statut</FormLabel>
 								<div className="space-y-2">
-									{SUPPLIER_STATUSES.filter(
+									{SUPPLIER_STATUS_OPTIONS.filter(
 										(status) => status.value !== SupplierStatus.ARCHIVED
 									).map((status) => (
 										<div

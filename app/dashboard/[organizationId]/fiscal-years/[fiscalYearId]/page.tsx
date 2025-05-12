@@ -1,4 +1,7 @@
-import { FISCAL_YEAR_STATUSES } from "@/domains/fiscal-year/constants/fiscal-year-statuses/constants";
+import {
+	FISCAL_YEAR_STATUS_COLORS,
+	FISCAL_YEAR_STATUS_LABELS,
+} from "@/domains/fiscal-year/constants";
 import { getFiscalYear } from "@/domains/fiscal-year/features/get-fiscal-year/queries";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -29,10 +32,6 @@ export default async function FiscalYearPage({ params }: Props) {
 	if (!fiscalYear) {
 		return <NotFound />;
 	}
-
-	const status = FISCAL_YEAR_STATUSES.find(
-		(status) => status.value === fiscalYear.status
-	);
 
 	return (
 		<div className="space-y-6">
@@ -118,9 +117,12 @@ export default async function FiscalYearPage({ params }: Props) {
 													</p>
 													<p
 														className="text-sm font-medium"
-														style={{ color: status?.color }}
+														style={{
+															color:
+																FISCAL_YEAR_STATUS_COLORS[fiscalYear.status],
+														}}
 													>
-														{status?.label}
+														{FISCAL_YEAR_STATUS_LABELS[fiscalYear.status]}
 													</p>
 												</div>
 											</li>

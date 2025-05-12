@@ -1,4 +1,4 @@
-import { PRODUCT_STATUSES } from "@/domains/product/constants";
+import { PRODUCT_STATUS_OPTIONS } from "@/domains/product/constants";
 import { DeleteProductAlertDialog } from "@/domains/product/features/delete-product/components/delete-product-alert-dialog";
 import { RestoreProductAlertDialog } from "@/domains/product/features/restore-product/components/restore-product-alert-dialog";
 import {
@@ -62,7 +62,7 @@ export function ArchivedProductActions({
 						<span>Restaurer</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{PRODUCT_STATUSES.filter(
+						{PRODUCT_STATUS_OPTIONS.filter(
 							(status) => status.value !== ProductStatus.ARCHIVED
 						).map((status) => (
 							<DropdownMenuItem

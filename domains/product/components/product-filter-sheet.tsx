@@ -17,8 +17,7 @@ import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { ProductStatus } from "@prisma/client";
 import { Filter } from "lucide-react";
-import { PRODUCT_STATUSES } from "../constants/product-statuses";
-import { VAT_RATES } from "../constants/vat-rates";
+import { PRODUCT_STATUS_OPTIONS, VAT_RATE_OPTIONS } from "../constants";
 
 interface ProductFilterSheetProps {
 	activeFiltersCount: number;
@@ -57,7 +56,7 @@ export function ProductFilterSheet({
 							<div className="space-y-4">
 								<FormLabel className="text-base font-medium">Statut</FormLabel>
 								<div className="space-y-2">
-									{PRODUCT_STATUSES.filter(
+									{PRODUCT_STATUS_OPTIONS.filter(
 										(status) => status.value !== ProductStatus.ARCHIVED
 									).map((status) => (
 										<div
@@ -93,7 +92,7 @@ export function ProductFilterSheet({
 								Taux de TVA
 							</FormLabel>
 							<div className="space-y-2">
-								{VAT_RATES.map((rate) => (
+								{VAT_RATE_OPTIONS.map((rate) => (
 									<div key={rate.value} className="flex items-center space-x-2">
 										<CheckboxFilter
 											filterKey="vatRate"

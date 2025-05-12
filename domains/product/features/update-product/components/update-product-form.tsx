@@ -15,7 +15,7 @@ import { GetProductReturn } from "../../get-product/types";
 
 import { mergeForm, useTransform } from "@tanstack/react-form";
 
-import { VAT_RATES } from "@/domains/product/constants/vat-rates";
+import { VAT_RATE_OPTIONS } from "@/domains/product/constants";
 import { ContentCard } from "@/shared/components/content-card";
 import { generateReference } from "@/shared/utils";
 import { Wand2 } from "lucide-react";
@@ -331,7 +331,7 @@ export function UpdateProductForm({ product }: UpdateProductFormProps) {
 									label="Taux de TVA*"
 									disabled={isPending}
 									placeholder="Sélectionner un taux..."
-									options={VAT_RATES}
+									options={VAT_RATE_OPTIONS}
 								/>
 							)}
 						</form.AppField>

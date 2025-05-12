@@ -1,6 +1,6 @@
 import {
+	PRODUCT_STATUS_OPTIONS,
 	PRODUCT_STATUS_TRANSITIONS,
-	PRODUCT_STATUSES,
 } from "@/domains/product/constants";
 import { ArchiveProductAlertDialog } from "@/domains/product/features/archive-product/components/archive-product-alert-dialog";
 import { UpdateProductStatusButton } from "@/domains/product/features/update-product-status/components/update-product-status-button";
@@ -72,7 +72,7 @@ export function ProductActions({ product }: ProductActionsProps) {
 						<span>Changer le statut</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{PRODUCT_STATUSES.filter(
+						{PRODUCT_STATUS_OPTIONS.filter(
 							(status) =>
 								status.value !== ProductStatus.ARCHIVED &&
 								PRODUCT_STATUS_TRANSITIONS[product.status].includes(

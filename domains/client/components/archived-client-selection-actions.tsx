@@ -19,7 +19,7 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Trash, Undo } from "lucide-react";
-import { CLIENT_STATUSES } from "../constants";
+import { CLIENT_STATUS_OPTIONS } from "../constants";
 import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients";
 import { RestoreMultipleClientsButton } from "../features/restore-multiple-clients";
 
@@ -59,7 +59,7 @@ export function ArchivedClientSelectionActions({
 						<span>Restaurer</span>
 					</DropdownMenuSubTrigger>
 					<DropdownMenuSubContent>
-						{CLIENT_STATUSES.map((status) => (
+						{CLIENT_STATUS_OPTIONS.map((status) => (
 							<AlertDialog key={status.value}>
 								<AlertDialogTrigger asChild>
 									<DropdownMenuItem preventDefault>

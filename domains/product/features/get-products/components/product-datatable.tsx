@@ -17,11 +17,11 @@ import {
 import { Box, ImageIcon, Tag } from "lucide-react";
 import { use } from "react";
 
-import { PRODUCT_STATUSES } from "@/domains/product/constants/product-statuses";
 import {
+	PRODUCT_STATUS_OPTIONS,
 	VAT_RATE_COLORS,
 	VAT_RATE_LABELS,
-} from "@/domains/product/constants/vat-rates";
+} from "@/domains/product/constants";
 import { formatPrice } from "@/shared/utils";
 import { ProductStatus } from "@prisma/client";
 import Image from "next/image";
@@ -96,7 +96,7 @@ export function ProductDataTable({ productsPromise }: ProductDataTableProps) {
 					<TableBody>
 						{products.map((product) => {
 							const isArchived = product.status === ProductStatus.ARCHIVED;
-							const statusInfo = PRODUCT_STATUSES.find(
+							const statusInfo = PRODUCT_STATUS_OPTIONS.find(
 								(status) => status.value === product.status
 							);
 

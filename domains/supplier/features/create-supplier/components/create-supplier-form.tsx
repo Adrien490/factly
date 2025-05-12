@@ -2,12 +2,14 @@
 
 import { FormLabel } from "@/shared/components/ui";
 
-import { COUNTRIES } from "@/domains/address/constants";
+import { COUNTRY_OPTIONS } from "@/domains/address/constants";
 import {
 	FormattedAddressResult,
 	SearchAddressReturn,
 } from "@/domains/address/features/search-address";
-import { SUPPLIER_ADDRESS_TYPES } from "@/domains/supplier/constants";
+import { SUPPLIER_ADDRESS_TYPE_OPTIONS } from "@/domains/supplier/constants";
+import { SUPPLIER_STATUS_OPTIONS } from "@/domains/supplier/constants/supplier-status-options";
+import { SUPPLIER_TYPE_OPTIONS } from "@/domains/supplier/constants/supplier-type-options";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { ContentCard } from "@/shared/components/content-card";
 import {
@@ -17,8 +19,6 @@ import {
 	FormLayout,
 	useAppForm,
 } from "@/shared/components/forms";
-import { SUPPLIER_STATUSES } from "@/domains/supplier/constants/supplier-statuses";
-import { SUPPLIER_TYPES } from "@/domains/supplier/constants/supplier-types";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import {
 	AddressType,
@@ -243,7 +243,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									label="Type de fournisseur"
 									disabled={isPending}
 									placeholder="Sélectionnez un type de fournisseur"
-									options={SUPPLIER_TYPES.map((type) => ({
+									options={SUPPLIER_TYPE_OPTIONS.map((type) => ({
 										label: type.label,
 										value: type.value,
 									}))}
@@ -257,7 +257,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									label="Statut"
 									disabled={isPending}
 									placeholder="Sélectionnez un statut"
-									options={SUPPLIER_STATUSES.map((status) => ({
+									options={SUPPLIER_STATUS_OPTIONS.map((status) => ({
 										label: status.label,
 										value: status.value,
 									}))}
@@ -279,10 +279,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									label="Pays"
 									disabled={isPending}
 									placeholder="Sélectionnez un pays"
-									options={COUNTRIES.map((country) => ({
-										label: country.label,
-										value: country.value,
-									}))}
+									options={COUNTRY_OPTIONS}
 								/>
 							)}
 						</form.AppField>
@@ -293,10 +290,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 									label="Type d'adresse"
 									disabled={isPending}
 									placeholder="Sélectionnez un type d'adresse"
-									options={SUPPLIER_ADDRESS_TYPES.map((type) => ({
-										label: type.label,
-										value: type.value,
-									}))}
+									options={SUPPLIER_ADDRESS_TYPE_OPTIONS}
 								/>
 							)}
 						</form.AppField>
