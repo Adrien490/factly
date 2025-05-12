@@ -1,11 +1,14 @@
 "use client";
 
-import { Button, FormLabel, Input } from "@/shared/components/ui";
-
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
+import {
+	CLIENT_TYPE_COLORS,
+	CLIENT_TYPE_LABELS,
+} from "@/domains/client/constants/client-types";
 import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
 import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
 import { CIVILITIES } from "@/domains/contact/constants/civilities";
+import { Badge } from "@/shared/components";
 import { ContentCard } from "@/shared/components/content-card";
 import {
 	FieldInfo,
@@ -14,6 +17,7 @@ import {
 	useAppForm,
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
+import { Button, FormLabel, Input } from "@/shared/components/ui";
 import { LEGAL_FORMS } from "@/shared/constants";
 import { generateReference } from "@/shared/utils";
 import {
@@ -162,11 +166,16 @@ export function UpdateClientForm({ client }: Props) {
 									/>
 									<div className="space-y-1.5">
 										<FormLabel>Type de client</FormLabel>
-										<div className="text-sm text-muted-foreground">
-											{clientType === ClientType.COMPANY
-												? "Entreprise"
-												: "Particulier"}
-										</div>
+										<Badge
+											variant="outline"
+											style={{
+												backgroundColor: `${CLIENT_TYPE_COLORS[clientType]}20`,
+												color: CLIENT_TYPE_COLORS[clientType],
+												borderColor: `${CLIENT_TYPE_COLORS[clientType]}40`,
+											}}
+										>
+											{CLIENT_TYPE_LABELS[clientType]}
+										</Badge>
 									</div>
 								</div>
 							)}

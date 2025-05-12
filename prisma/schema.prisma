@@ -144,7 +144,7 @@ model Client {
 model Contact {
   id           String    @id @default(cuid())
   civility     Civility?
-  firstName    String
+  firstName    String?
   lastName     String
   function     String? // Nouveau champ pour "Fonction"
   email        String?
