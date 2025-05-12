@@ -188,7 +188,6 @@ export const updateClient: ServerAction<
 			},
 			data: {
 				reference: reference ?? "",
-				clientType,
 				status,
 				notes,
 				// Mettre à jour le contact principal
@@ -222,36 +221,21 @@ export const updateClient: ServerAction<
 						},
 					},
 				},
-				// Mettre à jour ou créer les informations de l'entreprise si le client est de type COMPANY
+				// Mettre à jour les informations de l'entreprise si le client est de type COMPANY
 				...(clientType === ClientType.COMPANY && {
 					company: {
-						upsert: {
-							create: {
-								name: companyName ?? "",
-								legalForm: companyLegalForm,
-								siren: companySiren,
-								siret: companySiret,
-								nafApeCode: companyNafApeCode,
-								capital: companyCapital,
-								rcs: companyRcs,
-								vatNumber: companyVatNumber,
-								businessSector: companyBusinessSector,
-								employeeCount: companyEmployeeCount,
-								email: companyEmail,
-							},
-							update: {
-								name: companyName ?? "",
-								legalForm: companyLegalForm,
-								siren: companySiren,
-								siret: companySiret,
-								nafApeCode: companyNafApeCode,
-								capital: companyCapital,
-								rcs: companyRcs,
-								vatNumber: companyVatNumber,
-								businessSector: companyBusinessSector,
-								employeeCount: companyEmployeeCount,
-								email: companyEmail,
-							},
+						update: {
+							name: companyName ?? "",
+							legalForm: companyLegalForm,
+							siren: companySiren,
+							siret: companySiret,
+							nafApeCode: companyNafApeCode,
+							capital: companyCapital,
+							rcs: companyRcs,
+							vatNumber: companyVatNumber,
+							businessSector: companyBusinessSector,
+							employeeCount: companyEmployeeCount,
+							email: companyEmail,
 						},
 					},
 				}),

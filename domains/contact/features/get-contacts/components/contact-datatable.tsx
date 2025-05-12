@@ -51,11 +51,25 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 								Mobile
 							</TableHead>
 							<TableHead
+								key="fax"
+								role="columnheader"
+								className="hidden lg:table-cell min-w-[150px] max-w-[150px]"
+							>
+								Fax
+							</TableHead>
+							<TableHead
 								key="website"
 								role="columnheader"
 								className="hidden xl:table-cell min-w-[200px] max-w-[200px]"
 							>
 								Site web
+							</TableHead>
+							<TableHead
+								key="status"
+								role="columnheader"
+								className="hidden lg:table-cell min-w-[100px] max-w-[100px]"
+							>
+								Statut
 							</TableHead>
 							<TableHead
 								key="actions"
@@ -129,6 +143,23 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 								</TableCell>
 								<TableCell
 									role="gridcell"
+									className="hidden lg:table-cell min-w-[150px] max-w-[150px]"
+								>
+									{contact.faxNumber ? (
+										<a
+											href={`tel:${contact.faxNumber}`}
+											className="text-sm hover:underline truncate"
+										>
+											{contact.faxNumber}
+										</a>
+									) : (
+										<span className="text-sm text-muted-foreground italic">
+											Non renseigné
+										</span>
+									)}
+								</TableCell>
+								<TableCell
+									role="gridcell"
 									className="hidden xl:table-cell min-w-[200px] max-w-[200px]"
 								>
 									{contact.website ? (
@@ -144,6 +175,16 @@ export function ContactDataTable({ contactsPromise }: ContactDataTableProps) {
 										<span className="text-sm text-muted-foreground italic">
 											Non renseigné
 										</span>
+									)}
+								</TableCell>
+								<TableCell
+									role="gridcell"
+									className="hidden lg:table-cell min-w-[100px] max-w-[100px]"
+								>
+									{contact.isDefault ? (
+										<Badge variant="default">Principal</Badge>
+									) : (
+										<Badge variant="secondary">Secondaire</Badge>
 									)}
 								</TableCell>
 								<TableCell

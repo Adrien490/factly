@@ -2,7 +2,6 @@
 
 import { Button, FormLabel, Input } from "@/shared/components/ui";
 
-import { CLIENT_TYPES } from "@/domains/client/constants";
 import { CLIENT_STATUSES } from "@/domains/client/constants/client-statuses";
 import { BUSINESS_SECTORS } from "@/domains/company/constants/business-sectors";
 import { EMPLOYEE_COUNTS } from "@/domains/company/constants/employee-counts";
@@ -161,21 +160,14 @@ export function UpdateClientForm({ client }: Props) {
 										name="clientType"
 										value={field.state.value}
 									/>
-									<field.RadioGroupField
-										disabled={isPending}
-										label="Type de client"
-										options={CLIENT_TYPES}
-										onValueChangeCallback={(value) => {
-											if (value === ClientType.INDIVIDUAL) {
-												form.resetField("companyName");
-											} else if (
-												value === ClientType.COMPANY &&
-												form.getFieldValue("companyName") === ""
-											) {
-												form.resetField("contactLastName");
-											}
-										}}
-									/>
+									<div className="space-y-1.5">
+										<FormLabel>Type de client</FormLabel>
+										<div className="text-sm text-muted-foreground">
+											{clientType === ClientType.COMPANY
+												? "Entreprise"
+												: "Particulier"}
+										</div>
+									</div>
 								</div>
 							)}
 						</form.AppField>
