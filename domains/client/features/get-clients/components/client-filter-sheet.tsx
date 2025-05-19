@@ -18,7 +18,7 @@ import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { ClientStatus } from "@prisma/client";
 import { Filter } from "lucide-react";
-import { CLIENT_STATUS_OPTIONS, CLIENT_TYPE_OPTIONS } from "../constants";
+import { CLIENT_STATUS_OPTIONS, CLIENT_TYPE_OPTIONS } from "../../../constants";
 
 interface ClientFilterSheetProps {
 	activeFiltersCount: number;

@@ -17,7 +17,6 @@ import {
 } from "@/shared/components";
 import { ClientStatus } from "@prisma/client";
 import { GetClientsReturn } from "../../types/index";
-import { ArchivedClientActions } from "./components/archived-client-actions";
 import { ClientActions } from "./components/client-actions";
 
 import {
@@ -214,11 +213,7 @@ export function ClientDataTable({
 										</div>
 									</TableCell>
 									<TableCell role="gridcell" className="flex justify-end">
-										{isArchived ? (
-											<ArchivedClientActions client={client} />
-										) : (
-											<ClientActions client={client} />
-										)}
+										<ClientActions client={client} isArchived={isArchived} />
 									</TableCell>
 								</TableRow>
 							);

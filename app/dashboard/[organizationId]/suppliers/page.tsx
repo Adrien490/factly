@@ -1,4 +1,3 @@
-import { SupplierFilterSheet } from "@/domains/supplier/components";
 import {
 	GET_SUPPLIERS_SORT_FIELDS,
 	getSuppliers,
@@ -6,6 +5,7 @@ import {
 import {
 	SupplierDataTable,
 	SupplierDataTableSkeleton,
+	SupplierFilterSheet,
 } from "@/domains/supplier/features/get-suppliers/components";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers/components";
 import { getSupplierNavigation } from "@/domains/supplier/utils";

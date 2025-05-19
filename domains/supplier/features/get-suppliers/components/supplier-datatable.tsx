@@ -18,7 +18,6 @@ import {
 import { CircleDot, MapPin, Receipt } from "lucide-react";
 import { use } from "react";
 
-import { ArchivedSupplierSelectionActions } from "@/domains/supplier/components/archived-supplier-selection-actions";
 import { SupplierSelectionActions } from "@/domains/supplier/components/supplier-selection-actions";
 import {
 	SUPPLIER_STATUS_COLORS,
@@ -27,7 +26,6 @@ import {
 	SUPPLIER_TYPE_LABELS,
 } from "@/domains/supplier/constants";
 import { SupplierStatus } from "@prisma/client";
-import { ArchivedSupplierActions } from "../../../components/archived-supplier-actions";
 import { SupplierActions } from "../../../components/supplier-actions";
 import { GetSuppliersReturn } from "../types";
 
@@ -62,17 +60,11 @@ export function SupplierDataTable({
 		<Card>
 			<CardContent>
 				<SelectionToolbar>
-					{isArchivedView ? (
-						<ArchivedSupplierSelectionActions
-							selectedSupplierIds={selectedSupplierIds}
-							organizationId={organizationId}
-						/>
-					) : (
-						<SupplierSelectionActions
-							selectedSupplierIds={selectedSupplierIds}
-							organizationId={organizationId}
-						/>
-					)}
+					<SupplierSelectionActions
+						selectedSupplierIds={selectedSupplierIds}
+						organizationId={organizationId}
+						isArchived={isArchivedView}
+					/>
 				</SelectionToolbar>
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
@@ -235,11 +227,10 @@ export function SupplierDataTable({
 										role="gridcell"
 										className="flex justify-end w-[80px]"
 									>
-										{isArchived ? (
-											<ArchivedSupplierActions supplier={supplier} />
-										) : (
-											<SupplierActions supplier={supplier} />
-										)}
+										<SupplierActions
+											supplier={supplier}
+											isArchived={isArchived}
+										/>
 									</TableCell>
 								</TableRow>
 							);

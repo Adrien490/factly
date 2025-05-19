@@ -18,7 +18,10 @@ import { Button } from "@/shared/components/ui/button";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { SupplierStatus } from "@prisma/client";
 import { Filter } from "lucide-react";
-import { SUPPLIER_STATUS_OPTIONS, SUPPLIER_TYPE_OPTIONS } from "../constants";
+import {
+	SUPPLIER_STATUS_OPTIONS,
+	SUPPLIER_TYPE_OPTIONS,
+} from "../../../constants";
 
 interface SupplierFilterSheetProps {
 	activeFiltersCount: number;

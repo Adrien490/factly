@@ -4,10 +4,10 @@ import {
 } from "@/domains/client/features/get-clients";
 import { getClientNavigation } from "@/domains/client/utils";
 
-import { ClientFilterSheet } from "@/domains/client/components";
 import {
 	ClientDataTable,
 	ClientDataTableSkeleton,
+	ClientFilterSheet,
 } from "@/domains/client/features/get-clients/components";
 import { RefreshClientsButton } from "@/domains/client/features/refresh-clients/components";
 import {
