@@ -1,5 +1,3 @@
-"use server";
-
 import db from "@/shared/lib/db";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { GET_ORGANIZATIONS_DEFAULT_SELECT } from "../constants";

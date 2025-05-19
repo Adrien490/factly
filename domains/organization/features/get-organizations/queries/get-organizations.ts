@@ -3,10 +3,10 @@
 import { auth } from "@/domains/auth";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { fetchOrganizations } from ".";
 import { hasOrganizationAccess } from "../../has-organization-access";
 import { getOrganizationsSchema } from "../schemas";
 import { GetOrganizationsReturn } from "../types";
+import { fetchOrganizations } from "./fetch-organizations";
 
 /**
  * Récupère la liste des organisations d'un utilisateur avec filtrage et recherche

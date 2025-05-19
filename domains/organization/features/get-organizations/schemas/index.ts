@@ -12,9 +12,5 @@ export const getOrganizationsSchema = z.object({
 		.optional()
 		.default("companyName"),
 	sortOrder: z.enum(["asc", "desc"]).optional().default("asc"),
-	status: z
-		.nativeEnum(OrganizationStatus)
-		.optional()
-		.nullable()
-		.default(OrganizationStatus.ACTIVE),
+	status: z.nativeEnum(OrganizationStatus).default(OrganizationStatus.ACTIVE),
 });
