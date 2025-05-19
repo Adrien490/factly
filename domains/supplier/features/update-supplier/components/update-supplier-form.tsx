@@ -6,7 +6,12 @@ import {
 } from "@/domains/company/constants";
 import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
 import { SUPPLIER_STATUS_OPTIONS } from "@/domains/supplier/constants/supplier-status-options";
+import {
+	SUPPLIER_TYPE_COLORS,
+	SUPPLIER_TYPE_LABELS,
+} from "@/domains/supplier/constants/supplier-type-options";
 import { GetSupplierReturn } from "@/domains/supplier/features/get-supplier";
+import { Badge } from "@/shared/components";
 import { ContentCard } from "@/shared/components/content-card";
 import { FormErrors, FormLayout, useAppForm } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
@@ -127,14 +132,33 @@ export function UpdateSupplierForm({ supplier }: Props) {
 				{(field) => <input type="hidden" name="id" value={field.state.value} />}
 			</form.Field>
 
-			<FormLayout withDividers columns={2} className="mt-6">
+			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
 				<ContentCard
 					title="Informations générales"
 					description="Renseignez les informations principales du fournisseur"
 				>
 					<div className="space-y-4">
-						{/* Suppression du champ type */}
+						<form.AppField name="type">
+							{(field) => (
+								<div className="flex flex-col gap-3">
+									<input type="hidden" name="type" value={field.state.value} />
+									<div className="space-y-1.5">
+										<FormLabel>Type de fournisseur</FormLabel>
+										<Badge
+											variant="outline"
+											style={{
+												backgroundColor: `${SUPPLIER_TYPE_COLORS[supplierType]}20`,
+												color: SUPPLIER_TYPE_COLORS[supplierType],
+												borderColor: `${SUPPLIER_TYPE_COLORS[supplierType]}40`,
+											}}
+										>
+											{SUPPLIER_TYPE_LABELS[supplierType]}
+										</Badge>
+									</div>
+								</div>
+							)}
+						</form.AppField>
 
 						{supplierType === SupplierType.COMPANY && (
 							<>
