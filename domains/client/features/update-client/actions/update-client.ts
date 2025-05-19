@@ -72,7 +72,6 @@ export const updateClient: ServerAction<
 			reference: formData.get("reference") as string,
 			clientType: formData.get("clientType") as ClientType,
 			status: formData.get("status") as ClientStatus,
-			notes: formData.get("notes") as string,
 
 			// Informations de contact
 			contactCivility: formData.get("contactCivility") as Civility,
@@ -84,6 +83,7 @@ export const updateClient: ServerAction<
 			contactMobileNumber: formData.get("contactMobileNumber") as string,
 			contactFaxNumber: formData.get("contactFaxNumber") as string,
 			contactWebsite: formData.get("contactWebsite") as string,
+			contactNotes: formData.get("contactNotes") as string,
 
 			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
@@ -125,7 +125,7 @@ export const updateClient: ServerAction<
 			clientType,
 			status,
 			reference,
-			notes,
+			contactNotes,
 
 			// Informations de contact
 			contactCivility,
@@ -189,7 +189,6 @@ export const updateClient: ServerAction<
 			data: {
 				reference: reference ?? "",
 				status,
-				notes,
 				// Mettre à jour le contact principal
 				contacts: {
 					upsert: {
@@ -202,6 +201,7 @@ export const updateClient: ServerAction<
 							lastName: contactLastName ?? "",
 							function: contactFunction,
 							email: contactEmail,
+							notes: contactNotes,
 							phoneNumber: contactPhoneNumber,
 							mobileNumber: contactMobileNumber,
 							faxNumber: contactFaxNumber,
@@ -213,6 +213,7 @@ export const updateClient: ServerAction<
 							firstName: contactFirstName ?? "",
 							lastName: contactLastName ?? "",
 							function: contactFunction,
+							notes: contactNotes,
 							email: contactEmail,
 							phoneNumber: contactPhoneNumber,
 							mobileNumber: contactMobileNumber,

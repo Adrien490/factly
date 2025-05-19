@@ -1,6 +1,8 @@
-import { SupplierFilterSheet } from "@/domains/supplier/components";
-import { ArchivedSupplierSelectionActions } from "@/domains/supplier/components/archived-supplier-selection-actions";
-import { SupplierSelectionActions } from "@/domains/supplier/components/supplier-selection-actions";
+import {
+	ArchivedSupplierSelectionActions,
+	SupplierFilterSheet,
+	SupplierSelectionActions,
+} from "@/domains/supplier/components";
 import {
 	GET_SUPPLIERS_SORT_FIELDS,
 	getSuppliers,

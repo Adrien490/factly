@@ -42,6 +42,7 @@ export const updateContact: ServerAction<
 			civility: formData.get("civility") as string,
 			function: formData.get("function") as string,
 			email: formData.get("email") as string,
+			notes: formData.get("notes") as string,
 			phoneNumber: formData.get("phoneNumber") as string,
 			mobileNumber: formData.get("mobileNumber") as string,
 			faxNumber: formData.get("faxNumber") as string,

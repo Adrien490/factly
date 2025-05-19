@@ -10,7 +10,6 @@ export const GET_CLIENT_DEFAULT_SELECT = {
 	reference: true,
 	clientType: true,
 	status: true,
-	notes: true,
 	company: true,
 
 	contacts: {
@@ -20,6 +19,7 @@ export const GET_CLIENT_DEFAULT_SELECT = {
 			firstName: true,
 			lastName: true,
 			function: true,
+			notes: true,
 			email: true,
 			phoneNumber: true,
 			mobileNumber: true,

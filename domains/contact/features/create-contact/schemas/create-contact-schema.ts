@@ -8,6 +8,7 @@ export const createContactSchema = z.object({
 	lastName: z.string().min(1, "Le nom est requis"),
 	civility: z.string().optional(),
 	function: z.string().optional(),
+	notes: z.string().optional(),
 	email: z
 		.string()
 		.email("L'email n'est pas valide")

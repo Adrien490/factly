@@ -71,6 +71,7 @@ export const createContact: ServerAction<
 			mobileNumber: formData.get("mobileNumber") as string,
 			faxNumber: formData.get("faxNumber") as string,
 			website: formData.get("website") as string,
+			notes: formData.get("notes") as string,
 
 			// Relations
 			clientId: formData.get("clientId") as string,
@@ -137,6 +138,7 @@ export const createContact: ServerAction<
 					mobileNumber: validatedParams.mobileNumber,
 					faxNumber: validatedParams.faxNumber,
 					website: validatedParams.website,
+					notes: validatedParams.notes,
 					isDefault: validatedParams.isDefault,
 					clientId: validatedParams.clientId,
 					supplierId: validatedParams.supplierId,

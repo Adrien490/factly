@@ -62,6 +62,7 @@ export function UpdateContactSheetForm({
 			clientId,
 			supplierId,
 			firstName: contact.firstName,
+			notes: contact.notes || "",
 			lastName: contact.lastName,
 			civility: contact.civility,
 			function: contact.function || "",
@@ -290,6 +291,17 @@ export function UpdateContactSheetForm({
 										label="Site web"
 										placeholder="https://www.exemple.com"
 										type="url"
+										disabled={isPending}
+									/>
+								)}
+							</form.AppField>
+
+							{/* Notes */}
+							<form.AppField name="notes">
+								{(field) => (
+									<field.TextareaField
+										label="Notes"
+										placeholder="Notes sur le contact"
 										disabled={isPending}
 									/>
 								)}

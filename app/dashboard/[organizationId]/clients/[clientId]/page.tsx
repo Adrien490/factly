@@ -183,18 +183,6 @@ export default async function ClientPage({ params }: Props) {
 								)}
 							</div>
 						</div>
-
-						{/* Notes du client si présentes */}
-						{client.notes && (
-							<div className="mt-6 pt-6 border-t border-dashed border-gray-200 dark:border-gray-800">
-								<div>
-									<h3 className="text-sm font-semibold mb-1">Notes</h3>
-									<p className="text-sm text-gray-700 dark:text-gray-300">
-										{client.notes}
-									</p>
-								</div>
-							</div>
-						)}
 					</ContentCard>
 
 					{/* Adresses */}

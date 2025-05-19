@@ -15,7 +15,6 @@ export default async function DashboardPage({ params }: Props) {
 			<PageHeader
 				title="Tableau de bord"
 				description="Aperçu de votre activité commerciale"
-				className="mb-6"
 			/>
 
 			<div className="rounded-lg border bg-card shadow-sm p-8 flex flex-col items-center justify-center min-h-[50vh]">

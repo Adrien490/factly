@@ -58,7 +58,7 @@ export function CreateContactSheetForm({
 		defaultValues: {
 			organizationId,
 			clientId,
-
+			notes: "",
 			supplierId,
 			firstName: "",
 			lastName: "",
@@ -298,7 +298,15 @@ export function CreateContactSheetForm({
 									/>
 								)}
 							</form.AppField>
-
+							<form.AppField name="notes">
+								{(field) => (
+									<field.TextareaField
+										label="Notes"
+										placeholder="Notes sur le contact"
+										disabled={isPending}
+									/>
+								)}
+							</form.AppField>
 							{/* Contact par défaut */}
 							<form.AppField name="isDefault">
 								{(field) => (

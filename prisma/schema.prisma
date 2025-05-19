@@ -118,12 +118,9 @@ model Client {
   clientType ClientType   @default(INDIVIDUAL)
   status     ClientStatus @default(LEAD)
 
-  // Champs existants
-  notes          String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   company        Company?
-  // Relations existantes
   addresses      Address[]
   contacts       Contact[]
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -148,6 +145,7 @@ model Contact {
   lastName     String
   function     String? // Nouveau champ pour "Fonction"
   email        String?
+  notes        String?
   phoneNumber  String? // Champ existant pour "Tél"
   mobileNumber String? // Nouveau champ pour "Mobile"
   faxNumber    String? // Nouveau champ pour "Fax"

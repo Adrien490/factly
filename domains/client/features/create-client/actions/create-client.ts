@@ -72,7 +72,6 @@ export const createClient: ServerAction<
 			reference: formData.get("reference") as string,
 			clientType: formData.get("clientType") as ClientType,
 			status: formData.get("status") as ClientStatus,
-			notes: formData.get("notes") as string,
 
 			// Informations de contact
 			contactCivility: formData.get("contactCivility") as Civility | null,
@@ -157,7 +156,6 @@ export const createClient: ServerAction<
 			clientType,
 			status,
 			reference,
-			notes,
 
 			// Informations de contact
 			contactCivility,
@@ -169,6 +167,7 @@ export const createClient: ServerAction<
 			contactMobileNumber,
 			contactFaxNumber,
 			contactWebsite,
+			contactNotes,
 
 			// Informations d'entreprise
 			companyName,
@@ -200,7 +199,6 @@ export const createClient: ServerAction<
 				reference: reference ?? "",
 				clientType,
 				status,
-				notes,
 				organization: { connect: { id: validatedOrgId } },
 
 				// Créer le contact principal uniquement si c'est un client INDIVIDUAL
@@ -212,6 +210,7 @@ export const createClient: ServerAction<
 								firstName: contactFirstName ?? "",
 								lastName: contactLastName ?? "",
 								function: contactFunction,
+								notes: contactNotes,
 								email: contactEmail,
 								phoneNumber: contactPhoneNumber,
 								mobileNumber: contactMobileNumber,

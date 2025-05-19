@@ -9,6 +9,7 @@ export const GET_CONTACT_DEFAULT_SELECT = {
 	mobileNumber: true,
 	faxNumber: true,
 	website: true,
+	notes: true,
 	isDefault: true,
 	createdAt: true,
 	updatedAt: true,

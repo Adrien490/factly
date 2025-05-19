@@ -77,7 +77,8 @@ export function UpdateClientForm({ client }: Props) {
 				state?.inputs?.companyLegalForm ?? client.company?.legalForm ?? "",
 			clientType: state?.inputs?.clientType ?? client.clientType,
 			status: state?.inputs?.status ?? client.status,
-			notes: state?.inputs?.notes ?? client.notes ?? "",
+			contactNotes:
+				state?.inputs?.contactNotes ?? client.contacts[0]?.notes ?? "",
 			companySiren: state?.inputs?.companySiren ?? client.company?.siren ?? "",
 			companySiret: state?.inputs?.companySiret ?? client.company?.siret ?? "",
 			companyNafApeCode:
@@ -292,7 +293,7 @@ export function UpdateClientForm({ client }: Props) {
 								/>
 							)}
 						</form.AppField>
-						<form.AppField name="notes">
+						<form.AppField name="contactNotes">
 							{(field) => (
 								<field.TextareaField
 									disabled={isPending}
@@ -458,6 +459,16 @@ export function UpdateClientForm({ client }: Props) {
 									label="Fax"
 									disabled={isPending}
 									placeholder="Ex: +33 1 23 45 67 89"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="contactNotes">
+							{(field) => (
+								<field.TextareaField
+									label="Notes"
+									disabled={isPending}
+									placeholder="Notes de contact"
 								/>
 							)}
 						</form.AppField>
@@ -654,23 +665,6 @@ export function UpdateClientForm({ client }: Props) {
 					</div>
 				</ContentCard>
 			</FormLayout>
-			<ContentCard
-				title="Notes"
-				description="informations complémentaires sur le client"
-			>
-				<div className="space-y-4">
-					<form.AppField name="notes">
-						{(field) => (
-							<field.TextareaField
-								label="Notes"
-								disabled={isPending}
-								rows={6}
-								placeholder="Notes et informations complémentaires"
-							/>
-						)}
-					</form.AppField>
-				</div>
-			</ContentCard>
 
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (

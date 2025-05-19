@@ -4,7 +4,7 @@ import {
 } from "@/domains/client/features/get-clients";
 import { getClientNavigation } from "@/domains/client/utils";
 
-import { ClientFilterSheet } from "@/domains/client/components/client-filter-sheet";
+import { ClientFilterSheet } from "@/domains/client/components";
 import {
 	ClientDataTable,
 	ClientDataTableSkeleton,

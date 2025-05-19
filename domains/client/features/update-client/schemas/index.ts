@@ -1,5 +1,6 @@
 import {
 	BusinessSector,
+	Civility,
 	ClientStatus,
 	ClientType,
 	EmployeeCount,
@@ -15,10 +16,12 @@ export const updateClientSchema = z
 		reference: z.string().optional(),
 		clientType: z.nativeEnum(ClientType),
 		status: z.nativeEnum(ClientStatus),
-		notes: z.string().optional(),
 
 		// Champs du contact
-		contactCivility: z.string().optional(),
+		contactCivility: z
+			.string()
+			.transform((val) => (val === "" ? null : val))
+			.pipe(z.nativeEnum(Civility).optional().nullable()),
 		contactFirstName: z.string().optional(),
 		contactLastName: z.string().optional(),
 		contactFunction: z.string().optional(),
@@ -27,6 +30,7 @@ export const updateClientSchema = z
 		contactMobileNumber: z.string().optional(),
 		contactFaxNumber: z.string().optional(),
 		contactWebsite: z.string().optional(),
+		contactNotes: z.string().optional(),
 
 		// Champs de l'entreprise (optionnels)
 		companyName: z.string().optional().nullable(),
