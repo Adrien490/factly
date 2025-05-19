@@ -193,7 +193,7 @@ export const createSupplier: ServerAction<
 		// Créer le fournisseur avec les relations appropriées
 		const supplier = await db.supplier.create({
 			data: {
-				reference,
+				reference: reference ?? "",
 				type,
 				status,
 				organization: { connect: { id: validatedOrgId } },

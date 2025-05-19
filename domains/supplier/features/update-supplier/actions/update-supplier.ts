@@ -23,7 +23,7 @@ import {
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { updateSupplierSchema } from "../schemas";
+import { updateSupplierSchema } from "../schemas/update-supplier-schema";
 
 /**
  * Action serveur pour mettre à jour un fournisseur existant

@@ -4,7 +4,7 @@ import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { Supplier } from "@prisma/client";
 import { useActionState } from "react";
 import { updateSupplier } from "../actions/update-supplier";
-import { updateSupplierSchema } from "../schemas";
+import { updateSupplierSchema } from "../schemas/update-supplier-schema";
 
 export function useUpdateSupplier() {
 	const [state, dispatch, isPending] = useActionState(

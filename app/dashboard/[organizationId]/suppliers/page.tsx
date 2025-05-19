@@ -114,13 +114,13 @@ export default async function SuppliersPage({
 				<SortingOptionsDropdown
 					sortFields={[
 						{
-							label: "Nom",
-							value: "name",
+							label: "Référence",
+							value: "reference",
 						},
 
 						{
 							label: "Type de fournisseur",
-							value: "supplierType",
+							value: "type",
 						},
 						{
 							label: "Statut",
