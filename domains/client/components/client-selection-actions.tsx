@@ -24,6 +24,7 @@ import { CLIENT_STATUS_OPTIONS } from "../constants";
 import { ArchiveMultipleClientsButton } from "../features/archive-multiple-clients";
 import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients";
 import { RestoreMultipleClientsButton } from "../features/restore-multiple-clients";
+import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
 
 interface ClientSelectionActionsProps {
 	selectedClientIds: string[];
@@ -95,13 +96,13 @@ export function ClientSelectionActions({
 											</AlertDialogHeader>
 											<AlertDialogFooter>
 												<AlertDialogCancel>Annuler</AlertDialogCancel>
-												<RestoreMultipleClientsButton
+												<UpdateMultipleClientStatusButton
 													organizationId={organizationId}
 													ids={selectedClientIds}
 													status={status.value}
 												>
 													<AlertDialogAction>Confirmer</AlertDialogAction>
-												</RestoreMultipleClientsButton>
+												</UpdateMultipleClientStatusButton>
 											</AlertDialogFooter>
 										</AlertDialogContent>
 									</AlertDialog>

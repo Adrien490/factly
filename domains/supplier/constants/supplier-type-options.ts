@@ -27,8 +27,8 @@ export const SUPPLIER_TYPE_DESCRIPTIONS: Record<SupplierType, string> = {
  * Couleurs pour chaque type de fournisseur (palette professionnelle)
  */
 export const SUPPLIER_TYPE_COLORS: Record<SupplierType, string> = {
-	[SupplierType.INDIVIDUAL]: "#6366f1", // Indigo
-	[SupplierType.COMPANY]: "#f59e0b", // Ambre
+	[SupplierType.INDIVIDUAL]: "#3b82f6", // blue-500
+	[SupplierType.COMPANY]: "#10b981", // emerald-500
 };
 
 /**
