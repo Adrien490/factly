@@ -21,7 +21,7 @@ import {
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { updateClientSchema } from "../schemas";
+import { updateClientSchema } from "../schemas/update-client-schema";
 
 /**
  * Action serveur pour mettre à jour un client existant

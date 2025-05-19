@@ -13,7 +13,7 @@ import { FormErrors, FormLayout, useAppForm } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { FormLabel } from "@/shared/components/ui";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
-import { SupplierType } from "@prisma/client";
+import { SupplierStatus, SupplierType } from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { useParams } from "next/navigation";
 import { useUpdateSupplier } from "../hooks/use-update-supplier";
@@ -33,8 +33,8 @@ export function UpdateSupplierForm({ supplier }: Props) {
 			id: state?.inputs?.id ?? supplier.id,
 			organizationId: state?.inputs?.organizationId ?? supplier.organizationId,
 			reference: state?.inputs?.reference ?? supplier.reference ?? "",
-			type: state?.inputs?.type ?? supplier.type,
-			status: state?.inputs?.status ?? supplier.status,
+			type: state?.inputs?.type ?? supplier.type ?? SupplierType.INDIVIDUAL,
+			status: state?.inputs?.status ?? supplier.status ?? SupplierStatus.ACTIVE,
 
 			// Champs du contact
 			contactCivility:
