@@ -13,7 +13,8 @@ import { FormErrors, FormLayout, useAppForm } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { FormLabel } from "@/shared/components/ui";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { SupplierType } from "@prisma/client";
+import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { useParams } from "next/navigation";
 import { useUpdateSupplier } from "../hooks/use-update-supplier";
 
@@ -101,7 +102,10 @@ export function UpdateSupplierForm({ supplier }: Props) {
 		),
 	});
 
-	// Fonction pour sélectionner une adresse dans l'autocomplétion
+	const supplierType = useStore(
+		form.store,
+		(state) => state.values.type as SupplierType
+	);
 
 	return (
 		<form
@@ -135,6 +139,72 @@ export function UpdateSupplierForm({ supplier }: Props) {
 					description="Renseignez les informations principales du fournisseur"
 				>
 					<div className="space-y-4">
+						<form.AppField name="type">
+							{(field) => (
+								<div className="flex flex-col gap-3">
+									<input type="hidden" name="type" value={field.state.value} />
+									<field.RadioGroupField
+										disabled={isPending}
+										label="Type de fournisseur"
+										options={SUPPLIER_TYPE_OPTIONS}
+										onValueChangeCallback={(value) => {
+											if (value === SupplierType.INDIVIDUAL) {
+												form.resetField("companyName");
+											} else if (
+												value === SupplierType.COMPANY &&
+												form.getFieldValue("companyName") === ""
+											) {
+												form.resetField("contactLastName");
+											}
+										}}
+									/>
+								</div>
+							)}
+						</form.AppField>
+
+						{supplierType === SupplierType.COMPANY && (
+							<>
+								<form.AppField
+									validators={{
+										onChange: ({ value }) => {
+											if (supplierType === SupplierType.COMPANY && !value) {
+												return "Le nom de la société est requis pour un fournisseur entreprise";
+											}
+										},
+									}}
+									name="companyName"
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Nom de la société"
+											placeholder="Nom de l'entreprise"
+											required
+										/>
+									)}
+								</form.AppField>
+								<form.AppField
+									name="companyEmail"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+												return "Format d'email invalide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Email de la société"
+											disabled={isPending}
+											placeholder="Ex: contact@example.com"
+										/>
+									)}
+								</form.AppField>
+							</>
+						)}
+
 						<form.AppField
 							validators={{
 								onChange: ({ value }) => {
@@ -155,243 +225,63 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 
-						<form.AppField name="type">
+						<form.AppField
+							name="contactWebsite"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+											value
+										)
+									) {
+										return "Format d'URL invalide (ex: https://www.example.com)";
+									}
+									return undefined;
+								},
+							}}
+						>
 							{(field) => (
-								<field.SelectField
+								<field.InputField
+									label="Site web"
 									disabled={isPending}
-									label="Type de fournisseur"
-									options={SUPPLIER_TYPE_OPTIONS}
-									placeholder="Sélectionnez un type"
+									placeholder="Ex: https://www.example.com"
 								/>
 							)}
 						</form.AppField>
-
-						<form.AppField name="status">
+						<form.AppField name="contactNotes">
 							{(field) => (
-								<field.SelectField
+								<field.TextareaField
 									disabled={isPending}
-									label="Statut"
-									options={SUPPLIER_STATUS_OPTIONS}
-									placeholder="Sélectionnez un statut"
+									label="Notes"
+									rows={6}
+									placeholder="Notes et informations complémentaires"
 								/>
 							)}
 						</form.AppField>
 					</div>
 				</ContentCard>
 
-				{/* Section 2: Informations de l'entreprise */}
+				{/* Section 2: Informations du contact */}
 				<ContentCard
-					title="Informations de l'entreprise"
-					description="Renseignez les informations légales de l'entreprise"
-				>
-					<div className="space-y-4">
-						<form.AppField
-							validators={{
-								onChange: ({ value }) => {
-									if (!value)
-										return "Le nom de l&apos;entreprise est obligatoire";
-								},
-							}}
-							name="companyName"
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="Nom de l'entreprise"
-									placeholder="Nom de l'entreprise"
-									required
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="companyLegalForm">
-							{(field) => (
-								<field.SelectField
-									disabled={isPending}
-									label="Forme juridique"
-									options={LEGAL_FORM_OPTIONS}
-									placeholder="Sélectionnez une forme juridique"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companyEmail"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-										return "Format d&apos;email invalide";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									label="Email de l'entreprise"
-									disabled={isPending}
-									placeholder="Ex: contact@example.com"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companySiren"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^\d{9}$/.test(value)) {
-										return "Le numéro SIREN doit comporter exactement 9 chiffres";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="SIREN"
-									placeholder="9 chiffres (ex: 123456789)"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companySiret"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^\d{14}$/.test(value)) {
-										return "Le numéro SIRET doit comporter exactement 14 chiffres";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="SIRET"
-									placeholder="14 chiffres (ex: 12345678900001)"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companyNafApeCode"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
-										return "Le code APE doit être au format 4 chiffres + 1 lettre (ex: 6201Z)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="Code APE"
-									placeholder="Ex: 6201Z"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companyCapital"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
-										return "Le capital doit être un nombre avec maximum 2 décimales";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="Capital social"
-									placeholder="Ex: 10000.00"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companyRcs"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^[A-Z]\d{8}$/.test(value)) {
-										return "Le numéro RCS doit commencer par une lettre suivie de 8 chiffres (ex: B12345678)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="RCS"
-									placeholder="Ex: B12345678"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="companyVatNumber"
-							validators={{
-								onChange: ({ value }) => {
-									if (value && !/^FR\d{2}\d{9}$/.test(value)) {
-										return "Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres (ex: FR12345678900)";
-									}
-									return undefined;
-								},
-							}}
-						>
-							{(field) => (
-								<field.InputField
-									disabled={isPending}
-									label="N° TVA"
-									placeholder="Ex: FR12345678900"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="companyBusinessSector">
-							{(field) => (
-								<field.SelectField
-									disabled={isPending}
-									label="Secteur d'activité"
-									options={BUSINESS_SECTOR_OPTIONS}
-									placeholder="Sélectionnez un secteur d'activité"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="companyEmployeeCount">
-							{(field) => (
-								<field.SelectField
-									disabled={isPending}
-									label="Effectif"
-									options={EMPLOYEE_COUNT_OPTIONS}
-									placeholder="Sélectionnez l'effectif"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				{/* Section 3: Informations du contact */}
-				<ContentCard
-					title="Informations du contact"
-					description="Renseignez les informations du contact principal"
+					title={`${supplierType === SupplierType.COMPANY ? "Contact principal" : "Informations du contact"}`}
+					description={`Informations de contact`}
 				>
 					<div className="space-y-4">
 						<form.AppField name="contactCivility">
 							{(field) => (
-								<field.RadioGroupField
-									disabled={isPending}
-									label="Civilité"
-									options={CIVILITY_OPTIONS}
-								/>
+								<>
+									<input
+										type="hidden"
+										name="contactCivility"
+										value={field.state.value?.toString() ?? ""}
+									/>
+									<field.RadioGroupField
+										disabled={isPending}
+										label="Civilité"
+										options={CIVILITY_OPTIONS}
+									/>
+								</>
 							)}
 						</form.AppField>
 
@@ -399,7 +289,9 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							<form.AppField
 								validators={{
 									onChange: ({ value }) => {
-										if (!value) return "Le nom est obligatoire";
+										if (supplierType === SupplierType.INDIVIDUAL && !value) {
+											return "Le nom est obligatoire pour un fournisseur particulier";
+										}
 									},
 								}}
 								name="contactLastName"
@@ -409,7 +301,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 										label="Nom"
 										disabled={isPending}
 										placeholder="Nom du contact"
-										required
+										required={supplierType === SupplierType.INDIVIDUAL}
 									/>
 								)}
 							</form.AppField>
@@ -440,7 +332,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							validators={{
 								onChange: ({ value }) => {
 									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-										return "Format d&apos;email invalide";
+										return "Format d'email invalide";
 									}
 									return undefined;
 								},
@@ -531,39 +423,196 @@ export function UpdateSupplierForm({ supplier }: Props) {
 								/>
 							)}
 						</form.AppField>
+					</div>
+				</ContentCard>
 
+				{supplierType === SupplierType.COMPANY && (
+					<ContentCard
+						title="Informations légales"
+						description="Informations légales de l'entreprise"
+					>
+						<div className="space-y-4">
+							<form.AppField name="companyLegalForm">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Forme juridique"
+										options={LEGAL_FORM_OPTIONS}
+										placeholder="Sélectionnez une forme juridique"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="companySiren"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^\d{9}$/.test(value)) {
+											return "Le numéro SIREN doit comporter exactement 9 chiffres";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIREN"
+										placeholder="9 chiffres (ex: 123456789)"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="companySiret"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^\d{14}$/.test(value)) {
+											return "Le numéro SIRET doit comporter exactement 14 chiffres";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="SIRET"
+										placeholder="14 chiffres (ex: 12345678900001)"
+									/>
+								)}
+							</form.AppField>
+
+							<div className="grid grid-cols-2 gap-4">
+								<form.AppField
+									name="companyNafApeCode"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
+												return "Le code APE doit être au format 4 chiffres + 1 lettre (ex: 6201Z)";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Code APE"
+											placeholder="Ex: 6201Z"
+										/>
+									)}
+								</form.AppField>
+
+								<form.AppField
+									name="companyCapital"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
+												return "Le capital doit être un nombre avec maximum 2 décimales";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											disabled={isPending}
+											label="Capital social"
+											placeholder="Ex: 10000.00"
+										/>
+									)}
+								</form.AppField>
+							</div>
+
+							<form.AppField
+								name="companyRcs"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^[A-Z]\d{8}$/.test(value)) {
+											return "Le numéro RCS doit commencer par une lettre suivie de 8 chiffres (ex: B12345678)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="RCS"
+										placeholder="Ex: B12345678"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="companyVatNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (value && !/^FR\d{2}\d{9}$/.test(value)) {
+											return "Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres (ex: FR12345678900)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										disabled={isPending}
+										label="N° TVA"
+										placeholder="Ex: FR12345678900"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="companyBusinessSector">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Secteur d'activité"
+										options={BUSINESS_SECTOR_OPTIONS}
+										placeholder="Sélectionnez un secteur d'activité"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="companyEmployeeCount">
+								{(field) => (
+									<field.SelectField
+										disabled={isPending}
+										label="Effectif"
+										options={EMPLOYEE_COUNT_OPTIONS}
+										placeholder="Sélectionnez l'effectif"
+									/>
+								)}
+							</form.AppField>
+						</div>
+					</ContentCard>
+				)}
+
+				{/* Section 3: Classification */}
+				<ContentCard
+					title="Classification"
+					description="Catégorisation et statut du fournisseur"
+				>
+					<div className="space-y-4">
 						<form.AppField
-							name="contactWebsite"
+							name="status"
 							validators={{
 								onChange: ({ value }) => {
-									if (
-										value &&
-										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
-											value
-										)
-									) {
-										return "Format d&apos;URL invalide (ex: https://www.example.com)";
-									}
+									if (!value) return "Le statut est requis";
 									return undefined;
 								},
 							}}
 						>
 							{(field) => (
-								<field.InputField
-									label="Site web"
+								<field.SelectField
+									label="Statut"
 									disabled={isPending}
-									placeholder="Ex: https://www.example.com"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="contactNotes">
-							{(field) => (
-								<field.TextareaField
-									label="Notes"
-									disabled={isPending}
-									rows={6}
-									placeholder="Notes et informations complémentaires"
+									options={SUPPLIER_STATUS_OPTIONS.filter(
+										(status) => status.value !== "ARCHIVED"
+									)}
+									placeholder="Sélectionnez un statut"
 								/>
 							)}
 						</form.AppField>

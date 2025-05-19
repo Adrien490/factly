@@ -104,7 +104,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			companyLegalForm: state?.inputs?.companyLegalForm ?? "",
 			type: ClientType.INDIVIDUAL as ClientType,
 			status: ClientStatus.ACTIVE as ClientStatus,
-			notes: state?.inputs?.notes ?? "",
 			companySiren: state?.inputs?.companySiren ?? "",
 			companySiret: state?.inputs?.companySiret ?? "",
 			companyNafApeCode: state?.inputs?.companyNafApeCode ?? "",
@@ -398,7 +397,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 								/>
 							)}
 						</form.AppField>
-						<form.AppField name="notes">
+						<form.AppField name="contactNotes">
 							{(field) => (
 								<field.TextareaField
 									disabled={isPending}
