@@ -30,7 +30,7 @@ export const buildFilterConditions = (
 	if (filters.type) {
 		const types = Array.isArray(filters.type) ? filters.type : [filters.type];
 		conditions.push({
-			clientType: {
+			type: {
 				in: types.filter((type): type is ClientType => type !== undefined),
 			},
 		});

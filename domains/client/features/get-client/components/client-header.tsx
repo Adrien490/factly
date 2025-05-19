@@ -22,7 +22,7 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 
 	const defaultContact = client.contacts[0];
 	const displayName =
-		client.clientType === "COMPANY"
+		client.type === "COMPANY"
 			? client.company?.name
 			: `${defaultContact?.firstName} ${defaultContact?.lastName}`;
 
@@ -48,13 +48,13 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 							</Badge>
 							<Badge
 								style={{
-									backgroundColor: `${CLIENT_TYPE_COLORS[client.clientType]}20`,
-									color: CLIENT_TYPE_COLORS[client.clientType],
-									borderColor: CLIENT_TYPE_COLORS[client.clientType],
+									backgroundColor: `${CLIENT_TYPE_COLORS[client.type]}20`,
+									color: CLIENT_TYPE_COLORS[client.type],
+									borderColor: CLIENT_TYPE_COLORS[client.type],
 								}}
 								variant="outline"
 							>
-								{CLIENT_TYPE_LABELS[client.clientType]}
+								{CLIENT_TYPE_LABELS[client.type]}
 							</Badge>
 						</div>
 					</div>

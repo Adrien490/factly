@@ -70,7 +70,7 @@ export const createClient: ServerAction<
 		const rawData = {
 			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
-			clientType: formData.get("clientType") as ClientType,
+			type: formData.get("type") as ClientType,
 			status: formData.get("status") as ClientStatus,
 
 			// Informations de contact
@@ -153,7 +153,7 @@ export const createClient: ServerAction<
 		// 7. Création du client dans la base de données
 		const {
 			organizationId: validatedOrgId,
-			clientType,
+			type,
 			status,
 			reference,
 
@@ -197,12 +197,12 @@ export const createClient: ServerAction<
 		const client = await db.client.create({
 			data: {
 				reference: reference ?? "",
-				clientType,
+				type: type,
 				status,
 				organization: { connect: { id: validatedOrgId } },
 
 				// Créer le contact principal uniquement si c'est un client INDIVIDUAL
-				...(clientType === ClientType.INDIVIDUAL && {
+				...(type === ClientType.INDIVIDUAL && {
 					contacts: {
 						create: [
 							{
@@ -223,7 +223,7 @@ export const createClient: ServerAction<
 				}),
 
 				// Créer l'entreprise si c'est un client de type COMPANY
-				...(clientType === ClientType.COMPANY && {
+				...(type === ClientType.COMPANY && {
 					company: {
 						create: {
 							name: companyName!,

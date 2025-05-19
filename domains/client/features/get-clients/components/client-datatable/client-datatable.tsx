@@ -133,7 +133,7 @@ export function ClientDataTable({
 										<div className="w-[200px] flex flex-col space-y-1">
 											<div className="flex items-center gap-2">
 												<div className="font-medium truncate">
-													{client.clientType === "COMPANY" ? (
+													{client.type === "COMPANY" ? (
 														client.company?.name
 													) : (
 														<>
@@ -163,16 +163,12 @@ export function ClientDataTable({
 										<Badge
 											variant="outline"
 											style={{
-												backgroundColor: `${
-													CLIENT_TYPE_COLORS[client.clientType]
-												}20`, // Couleur avec opacity 20%
-												color: CLIENT_TYPE_COLORS[client.clientType],
-												borderColor: `${
-													CLIENT_TYPE_COLORS[client.clientType]
-												}40`, // Couleur avec opacity 40%
+												backgroundColor: `${CLIENT_TYPE_COLORS[client.type]}20`, // Couleur avec opacity 20%
+												color: CLIENT_TYPE_COLORS[client.type],
+												borderColor: `${CLIENT_TYPE_COLORS[client.type]}40`, // Couleur avec opacity 40%
 											}}
 										>
-											{CLIENT_TYPE_LABELS[client.clientType]}
+											{CLIENT_TYPE_LABELS[client.type]}
 										</Badge>
 									</TableCell>
 									<TableCell role="gridcell" className="hidden md:table-cell">

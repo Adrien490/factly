@@ -113,10 +113,10 @@ model Organization {
 // Modifications du modèle Client existant
 
 model Client {
-  id         String       @id @default(cuid())
-  reference  String
-  clientType ClientType   @default(INDIVIDUAL)
-  status     ClientStatus @default(LEAD)
+  id        String       @id @default(cuid())
+  reference String
+  type      ClientType   @default(INDIVIDUAL)
+  status    ClientStatus @default(LEAD)
 
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -134,7 +134,7 @@ model Client {
   // Courant
   // via @@unique
   @@index([status])
-  @@index([organizationId, clientType])
+  @@index([organizationId, type])
   @@index([reference])
 }
 

@@ -75,7 +75,7 @@ export function UpdateClientForm({ client }: Props) {
 				state?.inputs?.contactWebsite ?? client.contacts[0]?.website ?? "",
 			companyLegalForm:
 				state?.inputs?.companyLegalForm ?? client.company?.legalForm ?? "",
-			clientType: state?.inputs?.clientType ?? client.clientType,
+			type: state?.inputs?.type ?? client.type,
 			status: state?.inputs?.status ?? client.status,
 			contactNotes:
 				state?.inputs?.contactNotes ?? client.contacts[0]?.notes ?? "",
@@ -125,7 +125,7 @@ export function UpdateClientForm({ client }: Props) {
 
 	const clientType = useStore(
 		form.store,
-		(state) => state.values.clientType as ClientType
+		(state) => state.values.type as ClientType
 	);
 
 	return (
@@ -159,14 +159,10 @@ export function UpdateClientForm({ client }: Props) {
 					description="Renseignez les informations générales du client"
 				>
 					<div className="space-y-4">
-						<form.AppField name="clientType">
+						<form.AppField name="type">
 							{(field) => (
 								<div className="flex flex-col gap-3">
-									<input
-										type="hidden"
-										name="clientType"
-										value={field.state.value}
-									/>
+									<input type="hidden" name="type" value={field.state.value} />
 									<div className="space-y-1.5">
 										<FormLabel>Type de client</FormLabel>
 										<Badge

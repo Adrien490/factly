@@ -84,7 +84,7 @@ export const deleteContact: ServerAction<
 			include: {
 				client: {
 					select: {
-						clientType: true,
+						type: true,
 					},
 				},
 				supplier: {
@@ -102,7 +102,7 @@ export const deleteContact: ServerAction<
 		// Vérification si c'est le dernier contact d'un client particulier
 		if (
 			existingContact.clientId &&
-			existingContact.client?.clientType === "INDIVIDUAL"
+			existingContact.client?.type === "INDIVIDUAL"
 		) {
 			const contactCount = await db.contact.count({
 				where: {

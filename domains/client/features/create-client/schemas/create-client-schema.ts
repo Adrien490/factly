@@ -15,7 +15,7 @@ export const createClientSchema = z
 		// Identifiants
 		organizationId: z.string(),
 		reference: z.string().optional(),
-		clientType: z.nativeEnum(ClientType),
+		type: z.nativeEnum(ClientType),
 		status: z.nativeEnum(ClientStatus),
 		notes: z.string().optional(),
 
@@ -59,7 +59,7 @@ export const createClientSchema = z
 	})
 	.superRefine((data, ctx) => {
 		// Validation conditionnelle pour lastname si clientType est INDIVIDUAL
-		if (data.clientType === ClientType.INDIVIDUAL && !data.contactLastName) {
+		if (data.type === ClientType.INDIVIDUAL && !data.contactLastName) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: "Le nom est obligatoire pour un client particulier",
@@ -68,7 +68,7 @@ export const createClientSchema = z
 		}
 
 		// Validation conditionnelle pour companyName si clientType est COMPANY
-		if (data.clientType === ClientType.COMPANY && !data.companyName) {
+		if (data.type === ClientType.COMPANY && !data.companyName) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				message:

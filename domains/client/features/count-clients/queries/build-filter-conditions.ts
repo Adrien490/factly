@@ -35,10 +35,10 @@ export function buildFilterConditions(
 					typeof value === "string" &&
 					Object.values(ClientType).includes(value as ClientType)
 				) {
-					conditions.push({ clientType: value as ClientType });
+					conditions.push({ type: value as ClientType });
 				} else if (Array.isArray(value) && value.length > 0) {
 					conditions.push({
-						clientType: {
+						type: {
 							in: value.filter(
 								(v): v is ClientType =>
 									typeof v === "string" &&

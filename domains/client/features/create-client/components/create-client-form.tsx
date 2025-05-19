@@ -102,7 +102,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			contactWebsite: state?.inputs?.contactWebsite ?? "",
 			contactNotes: state?.inputs?.contactNotes ?? "",
 			companyLegalForm: state?.inputs?.companyLegalForm ?? "",
-			clientType: ClientType.INDIVIDUAL as ClientType,
+			type: ClientType.INDIVIDUAL as ClientType,
 			status: ClientStatus.ACTIVE as ClientStatus,
 			notes: state?.inputs?.notes ?? "",
 			companySiren: state?.inputs?.companySiren ?? "",
@@ -207,7 +207,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 
 	const clientType = useStore(
 		form.store,
-		(state) => state.values.clientType as ClientType
+		(state) => state.values.type as ClientType
 	);
 
 	return (
@@ -266,14 +266,10 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 					description="Renseignez les informations générales du client"
 				>
 					<div className="space-y-4">
-						<form.AppField name="clientType">
+						<form.AppField name="type">
 							{(field) => (
 								<div className="flex flex-col gap-3">
-									<input
-										type="hidden"
-										name="clientType"
-										value={field.state.value}
-									/>
+									<input type="hidden" name="type" value={field.state.value} />
 									<field.RadioGroupField
 										disabled={isPending}
 										label="Type de client"

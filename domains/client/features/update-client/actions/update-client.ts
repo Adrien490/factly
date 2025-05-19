@@ -70,7 +70,7 @@ export const updateClient: ServerAction<
 			id: formData.get("id") as string,
 			organizationId: formData.get("organizationId") as string,
 			reference: formData.get("reference") as string,
-			clientType: formData.get("clientType") as ClientType,
+			type: formData.get("type") as ClientType,
 			status: formData.get("status") as ClientStatus,
 
 			// Informations de contact
@@ -122,7 +122,7 @@ export const updateClient: ServerAction<
 		const {
 			id: validatedId,
 			organizationId: validatedOrgId,
-			clientType,
+			type,
 			status,
 			reference,
 			contactNotes,
@@ -223,7 +223,7 @@ export const updateClient: ServerAction<
 					},
 				},
 				// Mettre à jour les informations de l'entreprise si le client est de type COMPANY
-				...(clientType === ClientType.COMPANY && {
+				...(type === ClientType.COMPANY && {
 					company: {
 						update: {
 							name: companyName ?? "",

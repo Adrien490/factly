@@ -8,7 +8,7 @@ export const GET_CLIENT_DEFAULT_SELECT = {
 	id: true,
 	organizationId: true,
 	reference: true,
-	clientType: true,
+	type: true,
 	status: true,
 	company: true,
 

@@ -13,7 +13,7 @@ export const GET_CLIENTS_DEFAULT_SELECT = {
 	organizationId: true,
 	id: true,
 	reference: true,
-	clientType: true,
+	type: true,
 	status: true,
 	// Métadonnées
 	createdAt: true,

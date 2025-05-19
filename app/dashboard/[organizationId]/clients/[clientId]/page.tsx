@@ -21,7 +21,7 @@ export default async function ClientPage({ params }: Props) {
 		return <NotFound />;
 	}
 
-	const isCompany = client.clientType === "COMPANY";
+	const isCompany = client.type === "COMPANY";
 
 	return (
 		<div className="space-y-6">
