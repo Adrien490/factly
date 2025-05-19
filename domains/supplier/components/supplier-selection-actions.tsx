@@ -19,7 +19,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/shared/components";
 import { cn } from "@/shared/utils";
-import { MoreVerticalIcon, Tag, Trash, Undo } from "lucide-react";
+import { MoreVerticalIcon } from "lucide-react";
 import { SUPPLIER_STATUS_OPTIONS } from "../constants";
 import { ArchiveMultipleSuppliersButton } from "../features/archive-multiple-suppliers";
 import { DeleteMultipleSuppliersButton } from "../features/delete-multiple-suppliers";
@@ -62,7 +62,6 @@ export function SupplierSelectionActions({
 					<>
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger>
-								<Tag className="h-4 w-4 mr-2" />
 								<span>Changer le statut</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuSubContent>
@@ -116,7 +115,6 @@ export function SupplierSelectionActions({
 									preventDefault
 									className="text-destructive focus:text-destructive"
 								>
-									<Trash className="text-destructive h-4 w-4 mr-2" />
 									<span>Archiver</span>
 								</DropdownMenuItem>
 							</AlertDialogTrigger>
@@ -148,7 +146,6 @@ export function SupplierSelectionActions({
 					<>
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger>
-								<Undo className="h-4 w-4 mr-2" />
 								<span>Restaurer</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuSubContent>
@@ -201,7 +198,6 @@ export function SupplierSelectionActions({
 									preventDefault
 									className="text-destructive focus:text-destructive"
 								>
-									<Trash className="text-destructive h-4 w-4 mr-2" />
 									<span>Supprimer définitivement</span>
 								</DropdownMenuItem>
 							</AlertDialogTrigger>
