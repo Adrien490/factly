@@ -178,13 +178,13 @@ export const updateSupplier: ServerAction<
 						not: validatedId,
 					},
 				},
-				select: { id: true },
+				select: { id: true, reference: true },
 			});
 
 			if (existingSupplier) {
 				return createErrorResponse(
 					ActionStatus.CONFLICT,
-					"Un fournisseur avec cette référence existe déjà dans l'organisation"
+					`Un fournisseur avec la référence "${existingSupplier.reference}" existe déjà dans cette organisation`
 				);
 			}
 		}

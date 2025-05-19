@@ -129,6 +129,24 @@ export const createSupplier: ServerAction<
 			);
 		}
 
+		// 6. Vérification de l'existence de la référence
+		if (validation.data.reference) {
+			const existingSupplier = await db.supplier.findFirst({
+				where: {
+					reference: validation.data.reference,
+					organizationId: validation.data.organizationId,
+				},
+				select: { id: true, reference: true },
+			});
+
+			if (existingSupplier) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					`Un fournisseur avec la référence "${existingSupplier.reference}" existe déjà dans cette organisation`
+				);
+			}
+		}
+
 		// 7. Création du fournisseur dans la base de données
 		const {
 			organizationId: validatedOrgId,
