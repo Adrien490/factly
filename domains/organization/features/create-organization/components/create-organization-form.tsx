@@ -170,16 +170,7 @@ export function CreateOrganizationForm({
 							)}
 						</form.AppField>
 
-						<form.AppField
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "La forme juridique est requise";
-									if (value.length < 1) return "La forme juridique est requise";
-									return undefined;
-								},
-							}}
-							name="legalForm"
-						>
+						<form.AppField name="legalForm">
 							{(field) => (
 								<field.SelectField
 									label="Forme juridique"
