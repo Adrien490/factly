@@ -22,7 +22,7 @@ import { cn } from "@/shared/utils";
 import { ClientStatus } from "@prisma/client";
 import { MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
-import { GetClientsReturn } from "../../../types";
+import { GetClientsReturn } from "../types";
 
 interface ClientActionsProps {
 	client: GetClientsReturn["clients"][number];

@@ -1,1 +1,1 @@
-export * from "./client-selection-actions";
+export * from "../features/get-clients/components/client-selection-actions";

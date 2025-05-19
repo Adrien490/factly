@@ -20,11 +20,11 @@ import {
 import { Button } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
 import { MoreVerticalIcon, Tag, Trash, Undo } from "lucide-react";
-import { CLIENT_STATUS_OPTIONS } from "../constants";
-import { ArchiveMultipleClientsButton } from "../features/archive-multiple-clients";
-import { DeleteMultipleClientsButton } from "../features/delete-multiple-clients";
-import { RestoreMultipleClientsButton } from "../features/restore-multiple-clients";
-import { UpdateMultipleClientStatusButton } from "../features/update-multiple-client-status";
+import { CLIENT_STATUS_OPTIONS } from "../../../constants";
+import { ArchiveMultipleClientsButton } from "../../archive-multiple-clients";
+import { DeleteMultipleClientsButton } from "../../delete-multiple-clients";
+import { RestoreMultipleClientsButton } from "../../restore-multiple-clients";
+import { UpdateMultipleClientStatusButton } from "../../update-multiple-client-status";
 
 interface ClientSelectionActionsProps {
 	selectedClientIds: string[];

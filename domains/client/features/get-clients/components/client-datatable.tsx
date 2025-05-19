@@ -1,4 +1,12 @@
 import {
+	CLIENT_STATUS_COLORS,
+	CLIENT_STATUS_LABELS,
+} from "@/domains/client/constants/client-status-options";
+import {
+	CLIENT_TYPE_COLORS,
+	CLIENT_TYPE_LABELS,
+} from "@/domains/client/constants/client-type-options";
+import {
 	Badge,
 	Card,
 	CardContent,
@@ -16,19 +24,10 @@ import {
 	TableRow,
 } from "@/shared/components";
 import { ClientStatus } from "@prisma/client";
-import { GetClientsReturn } from "../../types/index";
-import { ClientActions } from "./components/client-actions";
-
-import { ClientSelectionActions } from "@/domains/client/components";
-import {
-	CLIENT_STATUS_COLORS,
-	CLIENT_STATUS_LABELS,
-} from "@/domains/client/constants/client-status-options";
-import {
-	CLIENT_TYPE_COLORS,
-	CLIENT_TYPE_LABELS,
-} from "@/domains/client/constants/client-type-options";
 import { use } from "react";
+import { GetClientsReturn } from "../types/index";
+import { ClientActions } from "./client-actions";
+import { ClientSelectionActions } from "./client-selection-actions";
 
 export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;
