@@ -211,7 +211,7 @@ export function ClientDataTable({
 					</TableBody>
 					<TableFooter>
 						<TableRow>
-							<TableCell colSpan={7} className="px-4 py-2 hover:bg-transparent">
+							<TableCell colSpan={7}>
 								<Pagination
 									total={pagination.total}
 									pageCount={pagination.pageCount}
