@@ -32,7 +32,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 			id: state?.inputs?.id ?? supplier.id,
 			organizationId: state?.inputs?.organizationId ?? supplier.organizationId,
 			reference: state?.inputs?.reference ?? supplier.reference,
-			supplierType: state?.inputs?.supplierType ?? supplier.supplierType,
+			type: state?.inputs?.type ?? supplier.type,
 			status: state?.inputs?.status ?? supplier.status,
 
 			// Champs du contact
@@ -155,7 +155,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 							)}
 						</form.AppField>
 
-						<form.AppField name="supplierType">
+						<form.AppField name="type">
 							{(field) => (
 								<field.SelectField
 									disabled={isPending}

@@ -45,13 +45,13 @@ export function SupplierHeader({ supplierPromise }: SupplierHeaderProps) {
 							</Badge>
 							<Badge
 								style={{
-									backgroundColor: `${SUPPLIER_TYPE_COLORS[supplier.supplierType]}20`,
-									color: SUPPLIER_TYPE_COLORS[supplier.supplierType],
-									borderColor: SUPPLIER_TYPE_COLORS[supplier.supplierType],
+									backgroundColor: `${SUPPLIER_TYPE_COLORS[supplier.type]}20`,
+									color: SUPPLIER_TYPE_COLORS[supplier.type],
+									borderColor: SUPPLIER_TYPE_COLORS[supplier.type],
 								}}
 								variant="outline"
 							>
-								{SUPPLIER_TYPE_LABELS[supplier.supplierType]}
+								{SUPPLIER_TYPE_LABELS[supplier.type]}
 							</Badge>
 						</div>
 					</div>

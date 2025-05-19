@@ -10,7 +10,7 @@ export const supplierFiltersSchema = z
 	.object({
 		// Filtres avec validation spéciale
 		status: supplierStatusSchema.optional(),
-		supplierType: supplierTypeSchema.optional(),
+		type: supplierTypeSchema.optional(),
 
 		// Filtres textuels simples
 		name: textFilterSchema.optional(),

@@ -30,15 +30,15 @@ export function buildFilterConditions(
 					});
 				}
 				break;
-			case "supplierType":
+			case "type":
 				if (
 					typeof value === "string" &&
 					Object.values(SupplierType).includes(value as SupplierType)
 				) {
-					conditions.push({ supplierType: value as SupplierType });
+					conditions.push({ type: value as SupplierType });
 				} else if (Array.isArray(value) && value.length > 0) {
 					conditions.push({
-						supplierType: {
+						type: {
 							in: value.filter(
 								(v): v is SupplierType =>
 									typeof v === "string" &&

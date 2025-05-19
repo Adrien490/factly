@@ -12,7 +12,7 @@ export const updateSupplierSchema = z.object({
 	id: z.string().min(1, "L'ID du fournisseur est requis"),
 	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 	reference: z.string().min(1, "La référence est requise"),
-	supplierType: z.nativeEnum(SupplierType),
+	type: z.nativeEnum(SupplierType),
 	status: z.nativeEnum(SupplierStatus),
 
 	// Informations de contact

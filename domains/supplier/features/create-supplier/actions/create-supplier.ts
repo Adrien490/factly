@@ -69,7 +69,7 @@ export const createSupplier: ServerAction<
 		const rawData = {
 			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
-			supplierType: formData.get("supplierType") as SupplierType,
+			type: formData.get("type") as SupplierType,
 			status: formData.get("status") as SupplierStatus,
 
 			// Informations de contact
@@ -150,7 +150,7 @@ export const createSupplier: ServerAction<
 		// 7. Création du fournisseur dans la base de données
 		const {
 			organizationId: validatedOrgId,
-			supplierType,
+			type,
 			status,
 			reference,
 
@@ -194,7 +194,7 @@ export const createSupplier: ServerAction<
 		const supplier = await db.supplier.create({
 			data: {
 				reference,
-				supplierType,
+				type,
 				status,
 				organization: { connect: { id: validatedOrgId } },
 

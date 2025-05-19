@@ -89,7 +89,7 @@ export const deleteContact: ServerAction<
 				},
 				supplier: {
 					select: {
-						supplierType: true,
+						type: true,
 					},
 				},
 			},

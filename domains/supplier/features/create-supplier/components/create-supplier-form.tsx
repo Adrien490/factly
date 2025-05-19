@@ -91,7 +91,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 		defaultValues: {
 			organizationId,
 			reference: state?.inputs?.reference ?? "",
-			supplierType: SupplierType.MANUFACTURER as SupplierType,
+			type: SupplierType.COMPANY as SupplierType,
 			status: SupplierStatus.ACTIVE as SupplierStatus,
 
 			// Champs du contact
@@ -298,7 +298,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 
-						<form.AppField name="supplierType">
+						<form.AppField name="type">
 							{(field) => (
 								<field.SelectField
 									disabled={isPending}

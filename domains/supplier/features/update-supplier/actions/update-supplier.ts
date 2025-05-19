@@ -137,7 +137,7 @@ export const updateSupplier: ServerAction<
 			id: validatedId,
 			organizationId: validatedOrgId,
 			reference,
-			supplierType,
+			type,
 			status,
 			contactNotes,
 
@@ -204,7 +204,7 @@ export const updateSupplier: ServerAction<
 			},
 			data: {
 				reference: reference ?? "",
-				supplierType,
+				type,
 				status,
 				// Mettre à jour le contact principal
 				contacts: {

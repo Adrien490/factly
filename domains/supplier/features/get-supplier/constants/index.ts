@@ -8,7 +8,7 @@ export const GET_SUPPLIER_DEFAULT_SELECT = {
 	id: true,
 	organizationId: true,
 	reference: true,
-	supplierType: true,
+	type: true,
 	status: true,
 	createdAt: true,
 	updatedAt: true,

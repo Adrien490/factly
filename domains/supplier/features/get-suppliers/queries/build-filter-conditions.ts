@@ -43,7 +43,7 @@ export const buildFilterConditions = (
 					typeof value === "string" &&
 					Object.values(SupplierType).includes(value as SupplierType)
 				) {
-					conditions.push({ supplierType: value as SupplierType });
+					conditions.push({ type: value as SupplierType });
 				} else if (Array.isArray(value) && value.length > 0) {
 					// Gestion de la sélection multiple pour les types de fournisseur
 					const validTypes = value.filter(
@@ -53,7 +53,7 @@ export const buildFilterConditions = (
 					);
 
 					if (validTypes.length > 0) {
-						conditions.push({ supplierType: { in: validTypes } });
+						conditions.push({ type: { in: validTypes } });
 					}
 				}
 				break;

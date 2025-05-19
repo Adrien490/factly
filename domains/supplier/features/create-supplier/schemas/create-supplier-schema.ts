@@ -15,7 +15,7 @@ export const createSupplierSchema = z
 		// Identifiants
 		organizationId: z.string(),
 		reference: z.string(),
-		supplierType: z.nativeEnum(SupplierType),
+		type: z.nativeEnum(SupplierType),
 		status: z.nativeEnum(SupplierStatus),
 
 		// Champs du contact
