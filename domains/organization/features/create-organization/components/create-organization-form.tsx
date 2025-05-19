@@ -177,7 +177,6 @@ export function CreateOrganizationForm({
 									disabled={isPending}
 									placeholder="Sélectionnez une forme juridique"
 									options={LEGAL_FORM_OPTIONS}
-									required
 								/>
 							)}
 						</form.AppField>
