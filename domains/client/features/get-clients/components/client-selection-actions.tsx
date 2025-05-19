@@ -19,7 +19,7 @@ import {
 } from "@/shared/components";
 import { Button } from "@/shared/components/ui";
 import { cn } from "@/shared/utils";
-import { MoreVerticalIcon, Tag, Trash, Undo } from "lucide-react";
+import { MoreVerticalIcon, Tag, Trash } from "lucide-react";
 import { CLIENT_STATUS_OPTIONS } from "../../../constants";
 import { ArchiveMultipleClientsButton } from "../../archive-multiple-clients";
 import { DeleteMultipleClientsButton } from "../../delete-multiple-clients";
@@ -148,7 +148,6 @@ export function ClientSelectionActions({
 					<>
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger>
-								<Undo className="h-4 w-4 mr-2" />
 								<span>Restaurer</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuSubContent>
@@ -201,7 +200,6 @@ export function ClientSelectionActions({
 									preventDefault
 									className="text-destructive focus:text-destructive"
 								>
-									<Trash className="text-destructive h-4 w-4 mr-2" />
 									<span>Supprimer définitivement</span>
 								</DropdownMenuItem>
 							</AlertDialogTrigger>
