@@ -32,15 +32,13 @@ export function UpdateSupplierForm({ supplier }: Props) {
 		defaultValues: {
 			id: state?.inputs?.id ?? supplier.id,
 			organizationId: state?.inputs?.organizationId ?? supplier.organizationId,
-			reference: state?.inputs?.reference ?? supplier.reference,
+			reference: state?.inputs?.reference ?? supplier.reference ?? "",
 			type: state?.inputs?.type ?? supplier.type,
 			status: state?.inputs?.status ?? supplier.status,
 
 			// Champs du contact
 			contactCivility:
-				state?.inputs?.contactCivility ??
-				supplier.contacts[0]?.civility ??
-				null,
+				state?.inputs?.contactCivility ?? supplier.contacts[0]?.civility ?? "",
 			contactFirstName:
 				state?.inputs?.contactFirstName ??
 				supplier.contacts[0]?.firstName ??
@@ -71,30 +69,28 @@ export function UpdateSupplierForm({ supplier }: Props) {
 			// Champs de l'entreprise
 			companyName: state?.inputs?.companyName ?? supplier.company?.name ?? "",
 			companyLegalForm:
-				state?.inputs?.companyLegalForm ?? supplier.company?.legalForm,
+				state?.inputs?.companyLegalForm ?? supplier.company?.legalForm ?? "",
 			companyEmail:
-				state?.inputs?.companyEmail ?? supplier.company?.email ?? null,
+				state?.inputs?.companyEmail ?? supplier.company?.email ?? "",
 			companySiren:
 				state?.inputs?.companySiren ?? supplier.company?.siren ?? "",
 			companySiret:
 				state?.inputs?.companySiret ?? supplier.company?.siret ?? "",
 			companyNafApeCode:
-				state?.inputs?.companyNafApeCode ??
-				supplier.company?.nafApeCode ??
-				null,
+				state?.inputs?.companyNafApeCode ?? supplier.company?.nafApeCode ?? "",
 			companyCapital:
-				state?.inputs?.companyCapital ?? supplier.company?.capital ?? null,
-			companyRcs: state?.inputs?.companyRcs ?? supplier.company?.rcs ?? null,
+				state?.inputs?.companyCapital ?? supplier.company?.capital ?? "",
+			companyRcs: state?.inputs?.companyRcs ?? supplier.company?.rcs ?? "",
 			companyVatNumber:
-				state?.inputs?.companyVatNumber ?? supplier.company?.vatNumber ?? null,
+				state?.inputs?.companyVatNumber ?? supplier.company?.vatNumber ?? "",
 			companyBusinessSector:
 				state?.inputs?.companyBusinessSector ??
 				supplier.company?.businessSector ??
-				null,
+				"",
 			companyEmployeeCount:
 				state?.inputs?.companyEmployeeCount ??
 				supplier.company?.employeeCount ??
-				null,
+				"",
 		},
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
