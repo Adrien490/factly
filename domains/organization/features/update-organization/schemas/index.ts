@@ -17,7 +17,7 @@ export const updateOrganizationSchema = z
 
 		// Informations de base
 		companyName: z.string().min(1, "Le nom de l'entreprise est requis"),
-		legalForm: z.nativeEnum(LegalForm),
+		legalForm: z.nativeEnum(LegalForm).optional(),
 		logoUrl: z.string().optional(),
 
 		// Contact
