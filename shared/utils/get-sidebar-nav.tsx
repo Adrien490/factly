@@ -116,6 +116,10 @@ export const getSidebarNav = (organizationId: string) => [
 				title: "Modifier l'organisation",
 				url: `/dashboard/${organizationId}/edit`,
 			},
+			{
+				title: "Supprimer l'organisation",
+				url: `/dashboard/${organizationId}/delete`,
+			},
 			/*{
 				title: "Gestion des membres",
 				url: `/dashboard/${organizationId}/members`,

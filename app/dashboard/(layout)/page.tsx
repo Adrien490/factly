@@ -14,6 +14,7 @@ import {
 } from "@/shared/components";
 
 import { ViewType } from "@/shared/types";
+import { OrganizationStatus } from "@prisma/client";
 import { Calendar, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -74,6 +75,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 						sortBy: sortBy as OrganizationSortableField,
 						sortOrder: sortOrder as "asc" | "desc",
 						search,
+						status: OrganizationStatus.ACTIVE,
 					})}
 				/>
 			</Suspense>

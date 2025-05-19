@@ -15,5 +15,6 @@ export const getOrganizationsSchema = z.object({
 	status: z
 		.nativeEnum(OrganizationStatus)
 		.optional()
+		.nullable()
 		.default(OrganizationStatus.ACTIVE),
 });

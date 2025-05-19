@@ -5,11 +5,13 @@ import { useSoftDeleteOrganization } from "../hooks/use-soft-delete-organization
 
 interface SoftDeleteOrganizationButtonProps {
 	id: string;
+	confirmation: string;
 	children: React.ReactNode;
 }
 
 export function SoftDeleteOrganizationButton({
 	id,
+	confirmation,
 	children,
 }: SoftDeleteOrganizationButtonProps) {
 	const { dispatch } = useSoftDeleteOrganization();
@@ -18,6 +20,7 @@ export function SoftDeleteOrganizationButton({
 	const handleDelete = () => {
 		const formData = new FormData();
 		formData.append("id", id);
+		formData.append("confirmation", confirmation);
 		startTransition(() => {
 			dispatch(formData);
 		});

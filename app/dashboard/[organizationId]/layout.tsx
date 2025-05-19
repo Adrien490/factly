@@ -24,6 +24,7 @@ import {
 import { ThemeToggleSwitch } from "@/shared/components/theme-toggle-switch";
 import { UserDropdown } from "@/shared/components/user-dropdown";
 import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
+import { OrganizationStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
@@ -58,6 +59,7 @@ export default async function OrganizationLayout({
 									organizationsPromise={getOrganizations({
 										sortBy: "companyName",
 										sortOrder: "asc",
+										status: OrganizationStatus.ACTIVE,
 									})}
 								/>
 							</Suspense>

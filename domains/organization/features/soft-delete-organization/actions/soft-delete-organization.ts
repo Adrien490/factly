@@ -6,13 +6,13 @@ import db from "@/shared/lib/db";
 import {
 	ActionStatus,
 	createErrorResponse,
-	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
 import { Organization, OrganizationStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { softDeleteOrganizationSchema } from "../schemas/soft-delete-organization-schema";
 
 export const softDeleteOrganization: ServerAction<
@@ -34,6 +34,7 @@ export const softDeleteOrganization: ServerAction<
 		// 2. Vérification de base des données requises
 		const rawData = {
 			id: formData.get("id") as string,
+			confirmation: formData.get("confirmation") as string,
 		};
 
 		// 3. Vérification de l'accès à l'organisation
@@ -85,10 +86,7 @@ export const softDeleteOrganization: ServerAction<
 		revalidateTag(`organizations:${organization.id}`);
 		revalidateTag("organizations");
 
-		return createSuccessResponse(
-			organization,
-			`L'organisation a été supprimée avec succès`
-		);
+		redirect("/dashboard");
 	} catch (error) {
 		console.error("[SOFT_DELETE_ORGANIZATION]", error);
 		return createErrorResponse(
