@@ -19,10 +19,7 @@ import { ClientStatus } from "@prisma/client";
 import { GetClientsReturn } from "../../types/index";
 import { ClientActions } from "./components/client-actions";
 
-import {
-	ArchivedClientSelectionActions,
-	ClientSelectionActions,
-} from "@/domains/client/components";
+import { ClientSelectionActions } from "@/domains/client/components";
 import {
 	CLIENT_STATUS_COLORS,
 	CLIENT_STATUS_LABELS,
@@ -64,17 +61,11 @@ export function ClientDataTable({
 		<Card>
 			<CardContent>
 				<SelectionToolbar>
-					{isArchivedView ? (
-						<ArchivedClientSelectionActions
-							selectedClientIds={selectedClientIds}
-							organizationId={organizationId}
-						/>
-					) : (
-						<ClientSelectionActions
-							selectedClientIds={selectedClientIds}
-							organizationId={organizationId}
-						/>
-					)}
+					<ClientSelectionActions
+						selectedClientIds={selectedClientIds}
+						organizationId={organizationId}
+						isArchived={isArchivedView}
+					/>
 				</SelectionToolbar>
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
