@@ -18,6 +18,7 @@ export const buildWhereClause = (
 				userId,
 			},
 		},
+		status: params.status,
 	};
 
 	// Si pas de recherche, retourne la clause de base
