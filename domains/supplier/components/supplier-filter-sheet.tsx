@@ -5,6 +5,7 @@ import {
 	Label,
 	Separator,
 	Sheet,
+	SheetClose,
 	SheetContent,
 	SheetDescription,
 	SheetFooter,
@@ -125,7 +126,9 @@ export function SupplierFilterSheet({
 						className="w-full"
 						excludeFilters={isArchivedView ? ["status"] : []}
 					/>
-					<Button className="w-full">Fermer</Button>
+					<SheetClose asChild>
+						<Button className="w-full">Fermer</Button>
+					</SheetClose>
 				</SheetFooter>
 			</SheetContent>
 		</Sheet>
