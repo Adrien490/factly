@@ -6,7 +6,6 @@ import {
 } from "@/domains/company/constants";
 import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
 import { SUPPLIER_STATUS_OPTIONS } from "@/domains/supplier/constants/supplier-status-options";
-import { SUPPLIER_TYPE_OPTIONS } from "@/domains/supplier/constants/supplier-type-options";
 import { GetSupplierReturn } from "@/domains/supplier/features/get-supplier";
 import { ContentCard } from "@/shared/components/content-card";
 import { FormErrors, FormLayout, useAppForm } from "@/shared/components/forms";
@@ -135,28 +134,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 					description="Renseignez les informations principales du fournisseur"
 				>
 					<div className="space-y-4">
-						<form.AppField name="type">
-							{(field) => (
-								<div className="flex flex-col gap-3">
-									<input type="hidden" name="type" value={field.state.value} />
-									<field.RadioGroupField
-										disabled={isPending}
-										label="Type de fournisseur"
-										options={SUPPLIER_TYPE_OPTIONS}
-										onValueChangeCallback={(value) => {
-											if (value === SupplierType.INDIVIDUAL) {
-												form.resetField("companyName");
-											} else if (
-												value === SupplierType.COMPANY &&
-												form.getFieldValue("companyName") === ""
-											) {
-												form.resetField("contactLastName");
-											}
-										}}
-									/>
-								</div>
-							)}
-						</form.AppField>
+						{/* Suppression du champ type */}
 
 						{supplierType === SupplierType.COMPANY && (
 							<>
