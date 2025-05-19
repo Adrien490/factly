@@ -137,7 +137,7 @@ export function ProductDataTable({ productsPromise }: ProductDataTableProps) {
 													)}
 													{product.supplier && (
 														<span className="text-xs text-muted-foreground truncate">
-															{product.supplier.name}
+															{product.supplier.reference}
 														</span>
 													)}
 												</div>

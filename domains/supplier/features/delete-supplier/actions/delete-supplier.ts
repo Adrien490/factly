@@ -79,7 +79,6 @@ export const deleteSupplier: ServerAction<
 			select: {
 				id: true,
 				status: true,
-				name: true, // Récupération du nom pour le message de confirmation
 			},
 		});
 
@@ -102,10 +101,7 @@ export const deleteSupplier: ServerAction<
 		);
 		revalidateTag(`organizations:${rawData.organizationId}:suppliers:count`);
 
-		return createSuccessResponse(
-			null,
-			`Fournisseur "${existingSupplier.name}" supprimé définitivement`
-		);
+		return createSuccessResponse(null, `Fournisseur supprimé définitivement`);
 	} catch (error) {
 		console.error("[HARD_DELETE_SUPPLIER]", error);
 		return createErrorResponse(

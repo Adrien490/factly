@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
-
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -11,7 +10,17 @@ import {
 	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types";
-import { Supplier, SupplierStatus, SupplierType } from "@prisma/client";
+import {
+	AddressType,
+	BusinessSector,
+	Civility,
+	Country,
+	EmployeeCount,
+	LegalForm,
+	Supplier,
+	SupplierStatus,
+	SupplierType,
+} from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateSupplierSchema } from "../schemas";
@@ -21,6 +30,7 @@ import { updateSupplierSchema } from "../schemas";
  * Validations :
  * - L'utilisateur doit être authentifié
  * - L'utilisateur doit avoir accès à l'organisation
+ * - La référence du fournisseur doit être unique dans l'organisation
  */
 export const updateSupplier: ServerAction<
 	Supplier,
@@ -40,10 +50,11 @@ export const updateSupplier: ServerAction<
 
 		// 2. Vérification de base des données requises
 		const organizationId = formData.get("organizationId");
-		if (!organizationId) {
+		const id = formData.get("id");
+		if (!organizationId || !id) {
 			return createErrorResponse(
 				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
+				"L'ID de l'organisation et l'ID du fournisseur sont requis"
 			);
 		}
 
@@ -60,21 +71,53 @@ export const updateSupplier: ServerAction<
 		const rawData = {
 			id: formData.get("id") as string,
 			organizationId: organizationId.toString(),
-			name: formData.get("name") as string,
-			legalName: formData.get("legalName") as string,
-			email: formData.get("email") as string,
-			phone: formData.get("phone") as string,
-			website: formData.get("website") as string,
-			siren: formData.get("siren") as string,
-			siret: formData.get("siret") as string,
+			reference: formData.get("reference") as string,
 			supplierType: formData.get("supplierType") as SupplierType,
 			status: formData.get("status") as SupplierStatus,
-			notes: formData.get("notes") as string,
-			userId: session.user.id,
-			vatNumber: formData.get("vatNumber") as string,
-		};
 
-		console.log("[UPDATE_SUPPLIER] Raw data:", rawData);
+			// Informations de contact
+			contactCivility: formData.get("contactCivility") as Civility | null,
+			contactFirstName: formData.get("contactFirstName") as string,
+			contactLastName: formData.get("contactLastName") as string,
+			contactFunction: formData.get("contactFunction") as string,
+			contactEmail: formData.get("contactEmail") as string,
+			contactPhoneNumber: formData.get("contactPhoneNumber") as string,
+			contactMobileNumber: formData.get("contactMobileNumber") as string,
+			contactFaxNumber: formData.get("contactFaxNumber") as string,
+			contactWebsite: formData.get("contactWebsite") as string,
+			contactNotes: formData.get("contactNotes") as string,
+
+			// Informations d'entreprise
+			companyName: formData.get("companyName") as string,
+			companyEmail: formData.get("companyEmail") as string,
+			companyLegalForm: formData.get("companyLegalForm") as LegalForm,
+			companySiren: formData.get("companySiren") as string,
+			companySiret: formData.get("companySiret") as string,
+			companyNafApeCode: formData.get("companyNafApeCode") as string,
+			companyCapital: formData.get("companyCapital") as string,
+			companyRcs: formData.get("companyRcs") as string,
+			companyVatNumber: formData.get("companyVatNumber") as string,
+			companyBusinessSector: formData.get(
+				"companyBusinessSector"
+			) as BusinessSector,
+			companyEmployeeCount: formData.get(
+				"companyEmployeeCount"
+			) as EmployeeCount,
+
+			// Informations d'adresse
+			addressType: formData.get("addressType") as AddressType,
+			addressLine1: formData.get("addressLine1") as string,
+			addressLine2: formData.get("addressLine2") as string,
+			postalCode: formData.get("postalCode") as string,
+			city: formData.get("city") as string,
+			country: (formData.get("country") as Country) || Country.FRANCE,
+			latitude: formData.get("latitude")
+				? parseFloat(formData.get("latitude") as string)
+				: null,
+			longitude: formData.get("longitude")
+				? parseFloat(formData.get("longitude") as string)
+				: null,
+		};
 
 		// 5. Validation des données avec le schéma Zod
 		const validation = updateSupplierSchema.safeParse(rawData);
@@ -90,41 +133,152 @@ export const updateSupplier: ServerAction<
 			);
 		}
 
-		// 6. Vérification de l'existence du fournisseur
-		const existingSupplier = await db.supplier.findUnique({
+		const {
+			id: validatedId,
+			organizationId: validatedOrgId,
+			reference,
+			supplierType,
+			status,
+			contactNotes,
+
+			// Informations de contact
+			contactCivility,
+			contactFirstName,
+			contactLastName,
+			contactFunction,
+			contactEmail,
+			contactPhoneNumber,
+			contactMobileNumber,
+			contactFaxNumber,
+			contactWebsite,
+
+			// Informations d'entreprise
+			companyName,
+			companyEmail,
+			companyLegalForm,
+			companySiren,
+			companySiret,
+			companyNafApeCode,
+			companyCapital,
+			companyRcs,
+			companyVatNumber,
+			companyBusinessSector,
+			companyEmployeeCount,
+
+			// Informations d'adresse
+		} = validation.data;
+
+		// 6. Vérification de l'existence de la référence uniquement si elle est fournie
+		if (reference) {
+			const existingSupplier = await db.supplier.findFirst({
+				where: {
+					reference,
+					organizationId: validatedOrgId,
+					id: {
+						not: validatedId,
+					},
+				},
+				select: { id: true },
+			});
+
+			if (existingSupplier) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					"Un fournisseur avec cette référence existe déjà dans l'organisation"
+				);
+			}
+		}
+
+		// 7. Mise à jour du fournisseur dans la base de données
+		const existingContact = await db.contact.findFirst({
 			where: {
-				id: validation.data.id,
+				supplierId: validatedId,
+				isDefault: true,
 			},
 			select: { id: true },
 		});
 
-		if (!existingSupplier) {
-			return createErrorResponse(
-				ActionStatus.NOT_FOUND,
-				"Le fournisseur à mettre à jour n'existe pas",
-				rawData
-			);
-		}
-
-		// 7. Mise à jour du fournisseur dans la base de données
-		const { ...supplierData } = validation.data;
-
-		// Mettre à jour le fournisseur
 		const supplier = await db.supplier.update({
-			where: { id: supplierData.id },
-			data: supplierData,
+			where: {
+				id: validatedId,
+			},
+			data: {
+				reference: reference ?? "",
+				supplierType,
+				status,
+				// Mettre à jour le contact principal
+				contacts: {
+					upsert: {
+						where: {
+							id: existingContact?.id ?? "",
+						},
+						create: {
+							civility: contactCivility as Civility | null,
+							firstName: contactFirstName ?? "",
+							lastName: contactLastName ?? "",
+							function: contactFunction,
+							email: contactEmail,
+							notes: contactNotes,
+							phoneNumber: contactPhoneNumber,
+							mobileNumber: contactMobileNumber,
+							faxNumber: contactFaxNumber,
+							website: contactWebsite,
+							isDefault: true,
+						},
+						update: {
+							civility: contactCivility as Civility | null,
+							firstName: contactFirstName ?? "",
+							lastName: contactLastName ?? "",
+							function: contactFunction,
+							notes: contactNotes,
+							email: contactEmail,
+							phoneNumber: contactPhoneNumber,
+							mobileNumber: contactMobileNumber,
+							faxNumber: contactFaxNumber,
+							website: contactWebsite,
+						},
+					},
+				},
+				// Mettre à jour les informations de l'entreprise
+				company: {
+					update: {
+						name: companyName ?? "",
+						legalForm: companyLegalForm,
+						siren: companySiren,
+						siret: companySiret,
+						nafApeCode: companyNafApeCode,
+						capital: companyCapital,
+						rcs: companyRcs,
+						vatNumber: companyVatNumber,
+						businessSector: companyBusinessSector,
+						employeeCount: companyEmployeeCount,
+						email: companyEmail,
+					},
+				},
+			},
+			include: {
+				company: true,
+				contacts: {
+					where: {
+						isDefault: true,
+					},
+				},
+				addresses: {
+					where: {
+						isDefault: true,
+					},
+				},
+			},
 		});
 
-		// 8. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(
-			`organizations:${supplierData.organizationId}:suppliers:${supplierData.id}`
-		);
-		revalidateTag(`organizations:${supplierData.organizationId}:suppliers`);
+		// 8. Invalidation du cache
+		revalidateTag(`organizations:${validatedOrgId}:suppliers`);
+		revalidateTag(`organizations:${validatedOrgId}:suppliers:${validatedId}`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			supplier,
-			`Le fournisseur ${supplier.name} a été modifié avec succès`,
+			`Le fournisseur ${supplier.reference} a été modifié avec succès`,
 			rawData
 		);
 	} catch (error) {

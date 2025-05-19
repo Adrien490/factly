@@ -22,7 +22,7 @@ export const buildSearchConditions = (
 		},
 		{
 			supplier: {
-				name: { contains: searchTerm, mode: "insensitive" },
+				reference: { contains: searchTerm, mode: "insensitive" },
 			},
 		},
 	];

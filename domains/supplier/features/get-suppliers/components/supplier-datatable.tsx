@@ -6,6 +6,7 @@ import {
 	ItemCheckbox,
 	Pagination,
 	SelectAllCheckbox,
+	SelectionToolbar,
 	Table,
 	TableBody,
 	TableCell,
@@ -17,6 +18,8 @@ import {
 import { CircleDot, MapPin, Receipt } from "lucide-react";
 import { use } from "react";
 
+import { ArchivedSupplierSelectionActions } from "@/domains/supplier/components/archived-supplier-selection-actions";
+import { SupplierSelectionActions } from "@/domains/supplier/components/supplier-selection-actions";
 import {
 	SUPPLIER_STATUS_COLORS,
 	SUPPLIER_STATUS_LABELS,
@@ -30,10 +33,16 @@ import { GetSuppliersReturn } from "../types";
 
 export interface SupplierDataTableProps {
 	suppliersPromise: Promise<GetSuppliersReturn>;
+	selectedSupplierIds: string[];
+	isArchivedView: boolean;
+	organizationId: string;
 }
 
 export function SupplierDataTable({
 	suppliersPromise,
+	selectedSupplierIds,
+	isArchivedView,
+	organizationId,
 }: SupplierDataTableProps) {
 	const response = use(suppliersPromise);
 	const { suppliers, pagination } = response;
@@ -42,61 +51,68 @@ export function SupplierDataTable({
 	if (suppliers.length === 0) {
 		return (
 			<EmptyState
-				title="Aucune donnée trouvée"
-				description="Aucune donnée ne correspond à vos critères de recherche."
+				title="Aucun fournisseur trouvé"
+				description="Aucun fournisseur n'a été trouvé. Vous pouvez en créer un nouveau."
 				className="group-has-[[data-pending]]:animate-pulse py-12"
 			/>
 		);
 	}
 
-	// Calculer le nombre de colonnes pour le colSpan
-	const columnCount = 7; // Le nombre total de colonnes dans le tableau
-
 	return (
 		<Card>
 			<CardContent>
+				<SelectionToolbar>
+					{isArchivedView ? (
+						<ArchivedSupplierSelectionActions
+							selectedSupplierIds={selectedSupplierIds}
+							organizationId={organizationId}
+						/>
+					) : (
+						<SupplierSelectionActions
+							selectedSupplierIds={selectedSupplierIds}
+							organizationId={organizationId}
+						/>
+					)}
+				</SelectionToolbar>
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
 						<TableRow>
 							<TableHead key="select" role="columnheader" className="w-[50px]">
-								<div className="flex-1 font-medium">
-									<SelectAllCheckbox itemIds={supplierIds} />
-								</div>
+								<SelectAllCheckbox itemIds={supplierIds} />
 							</TableHead>
 							<TableHead key="name" role="columnheader" className="w-[220px]">
-								<div className="flex-1 font-medium">Fournisseur</div>
+								Fournisseur
 							</TableHead>
 							<TableHead
 								key="supplierType"
 								role="columnheader"
 								className="hidden md:table-cell w-[120px]"
 							>
-								<div className="flex-1 font-medium">Type</div>
+								Type
 							</TableHead>
 							<TableHead
 								key="status"
 								role="columnheader"
 								className="hidden md:table-cell w-[120px]"
 							>
-								<div className="flex-1 font-medium">Statut</div>
+								Statut
 							</TableHead>
 							<TableHead
 								key="fiscalInfo"
 								role="columnheader"
 								className="hidden lg:table-cell w-[180px]"
 							>
-								<div className="flex-1 font-medium">Infos fiscales</div>
+								Infos fiscales
 							</TableHead>
 							<TableHead
 								key="address"
 								role="columnheader"
 								className="hidden lg:table-cell w-[240px]"
 							>
-								<div className="flex-1 font-medium">Adresse</div>
+								Adresse
 							</TableHead>
-
 							<TableHead key="actions" role="columnheader" className="w-[80px]">
-								<div className="flex-1 font-medium"></div>
+								<></>
 							</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -111,14 +127,14 @@ export function SupplierDataTable({
 									</TableCell>
 									<TableCell role="gridcell" className="w-[220px]">
 										<div className="flex flex-col space-y-1">
-											{supplier.name && (
+											{supplier.company?.name && (
 												<div className="flex flex-col gap-0.5">
 													<div className="font-medium truncate">
-														{supplier.name}
+														{supplier.company.name}
 													</div>
-													{supplier.legalName && (
+													{supplier.company.legalForm && (
 														<span className="text-xs text-muted-foreground truncate">
-															{supplier.legalName}
+															{supplier.company.legalForm}
 														</span>
 													)}
 												</div>
@@ -129,68 +145,69 @@ export function SupplierDataTable({
 										role="gridcell"
 										className="hidden md:table-cell w-[120px]"
 									>
-										<div className="flex items-center gap-2">
-											<Badge
-												variant="outline"
-												className="truncate"
-												style={{
-													backgroundColor: `${
-														SUPPLIER_TYPE_COLORS[supplier.supplierType]
-													}20`, // Couleur avec opacity 20%
-													color: SUPPLIER_TYPE_COLORS[supplier.supplierType],
-													borderColor: `${
-														SUPPLIER_TYPE_COLORS[supplier.supplierType]
-													}40`, // Couleur avec opacity 40%
-												}}
-											>
-												{SUPPLIER_TYPE_LABELS[supplier.supplierType]}
-											</Badge>
-										</div>
+										<Badge
+											variant="outline"
+											className="truncate"
+											style={{
+												backgroundColor: `${
+													SUPPLIER_TYPE_COLORS[supplier.supplierType]
+												}20`,
+												color: SUPPLIER_TYPE_COLORS[supplier.supplierType],
+												borderColor: `${
+													SUPPLIER_TYPE_COLORS[supplier.supplierType]
+												}40`,
+											}}
+										>
+											{SUPPLIER_TYPE_LABELS[supplier.supplierType]}
+										</Badge>
 									</TableCell>
 									<TableCell
 										role="gridcell"
 										className="hidden md:table-cell w-[120px]"
 									>
-										<div>
-											<Badge
-												variant="outline"
-												className="truncate"
-												style={{
-													backgroundColor: `${
-														SUPPLIER_STATUS_COLORS[supplier.status]
-													}20`, // Couleur avec opacity 20%
-													color: SUPPLIER_STATUS_COLORS[supplier.status],
-													borderColor: `${
-														SUPPLIER_STATUS_COLORS[supplier.status]
-													}40`, // Couleur avec opacity 40%
-												}}
-											>
-												{SUPPLIER_STATUS_LABELS[supplier.status]}
-											</Badge>
-										</div>
+										<Badge
+											variant="outline"
+											className="truncate"
+											style={{
+												backgroundColor: `${
+													SUPPLIER_STATUS_COLORS[supplier.status]
+												}20`,
+												color: SUPPLIER_STATUS_COLORS[supplier.status],
+												borderColor: `${
+													SUPPLIER_STATUS_COLORS[supplier.status]
+												}40`,
+											}}
+										>
+											{SUPPLIER_STATUS_LABELS[supplier.status]}
+										</Badge>
 									</TableCell>
 									<TableCell
 										role="gridcell"
 										className="hidden lg:table-cell w-[180px]"
 									>
 										<div className="flex flex-col space-y-1 max-w-[150px]">
-											{supplier.siret && (
+											{supplier.company?.siret && (
 												<div className="flex items-center gap-1.5 text-xs">
 													<Receipt className="h-3 w-3 shrink-0 text-muted-foreground" />
-													<span className="truncate">{supplier.siret}</span>
+													<span className="truncate">
+														{supplier.company.siret}
+													</span>
 												</div>
 											)}
-											{supplier.vatNumber && (
+											{supplier.company?.vatNumber && (
 												<div className="flex items-center gap-1.5 text-xs">
 													<CircleDot className="h-3 w-3 shrink-0 text-muted-foreground" />
-													<span className="truncate">{supplier.vatNumber}</span>
+													<span className="truncate">
+														{supplier.company.vatNumber}
+													</span>
 												</div>
 											)}
-											{!supplier.siret && !supplier.vatNumber && (
-												<span className="text-xs text-muted-foreground italic truncate">
-													Non renseignées
-												</span>
-											)}
+											{!supplier.company?.siret &&
+												!supplier.company?.vatNumber && (
+													<span className="text-xs text-muted-foreground italic truncate">
+														Non renseignées
+													</span>
+												)}
 										</div>
 									</TableCell>
 									<TableCell
@@ -232,10 +249,7 @@ export function SupplierDataTable({
 					</TableBody>
 					<TableFooter>
 						<TableRow>
-							<TableCell
-								colSpan={columnCount}
-								className="px-4 py-2 hover:bg-transparent"
-							>
+							<TableCell colSpan={7} className="px-4 py-2 hover:bg-transparent">
 								<Pagination
 									total={pagination.total}
 									pageCount={pagination.pageCount}

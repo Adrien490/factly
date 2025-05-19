@@ -140,9 +140,11 @@ export default async function ProductPage({ params }: Props) {
 													<Truck className="h-4 w-4 text-muted-foreground mt-0.5" />
 													<div>
 														<p className="text-xs text-muted-foreground">
-															Nom du fournisseur
+															Référence du fournisseur
 														</p>
-														<p className="text-sm">{product.supplier.name}</p>
+														<p className="text-sm">
+															{product.supplier.reference}
+														</p>
 													</div>
 												</li>
 											</ul>
@@ -196,60 +198,6 @@ export default async function ProductPage({ params }: Props) {
 											</p>
 										</div>
 									</div>
-								</div>
-							)}
-						</CardContent>
-					</Card>
-
-					{/* Caractéristiques techniques */}
-					<Card>
-						<CardHeader>
-							<CardTitle className="text-lg">
-								Spécifications techniques
-							</CardTitle>
-							<CardDescription>Détails techniques du produit</CardDescription>
-						</CardHeader>
-
-						<CardContent>
-							{product.weight ||
-							product.width ||
-							product.height ||
-							product.depth ? (
-								<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-									<div className="bg-muted/40 rounded-lg p-3 text-center">
-										<p className="text-xs text-muted-foreground mb-1">Poids</p>
-										<p className="text-sm font-medium">
-											{product.weight ? `${product.weight} kg` : "-"}
-										</p>
-									</div>
-									<div className="bg-muted/40 rounded-lg p-3 text-center">
-										<p className="text-xs text-muted-foreground mb-1">
-											Hauteur
-										</p>
-										<p className="text-sm font-medium">
-											{product.height ? `${product.height} cm` : "-"}
-										</p>
-									</div>
-									<div className="bg-muted/40 rounded-lg p-3 text-center">
-										<p className="text-xs text-muted-foreground mb-1">
-											Largeur
-										</p>
-										<p className="text-sm font-medium">
-											{product.width ? `${product.width} cm` : "-"}
-										</p>
-									</div>
-									<div className="bg-muted/40 rounded-lg p-3 text-center">
-										<p className="text-xs text-muted-foreground mb-1">
-											Profondeur
-										</p>
-										<p className="text-sm font-medium">
-											{product.depth ? `${product.depth} cm` : "-"}
-										</p>
-									</div>
-								</div>
-							) : (
-								<div className="text-sm text-muted-foreground text-center p-4">
-									Aucune spécification technique disponible
 								</div>
 							)}
 						</CardContent>

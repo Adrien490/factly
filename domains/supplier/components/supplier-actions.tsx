@@ -127,8 +127,7 @@ export function SupplierActions({ supplier }: SupplierActionsProps) {
 							<AlertDialogHeader>
 								<AlertDialogTitle>Archiver le fournisseur</AlertDialogTitle>
 								<AlertDialogDescription>
-									Cette action va archiver le fournisseur
-									{supplier.name && <strong> {supplier.name}</strong>}.
+									Cette action va archiver le fournisseur.
 									<br />
 									Vous pourrez le restaurer ultérieurement.
 								</AlertDialogDescription>

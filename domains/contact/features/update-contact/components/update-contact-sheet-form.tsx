@@ -11,15 +11,11 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/shared/components/ui";
-import { createToastCallbacks, withCallbacks } from "@/shared/utils";
-import { Contact } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useParams } from "next/navigation";
-import { ReactNode, useActionState, useState } from "react";
-import { toast } from "sonner";
+import { ReactNode, useState } from "react";
 import { GetContactReturn } from "../../get-contact";
-import { updateContact } from "../actions/update-contact";
-import { updateContactSchema } from "../schemas/update-contact-schema";
+import { useUpdateContact } from "../hooks/use-update-contact";
 
 interface UpdateContactSheetFormProps {
 	contact: NonNullable<GetContactReturn>;
@@ -36,23 +32,7 @@ export function UpdateContactSheetForm({
 	const clientId = contact.clientId;
 	const supplierId = contact.supplierId;
 
-	const [state, dispatch, isPending] = useActionState(
-		withCallbacks(
-			updateContact,
-			createToastCallbacks<Contact, typeof updateContactSchema>({
-				loadingMessage: "Mise à jour du contact en cours...",
-				onSuccess: (data) => {
-					form.reset();
-					setIsOpen(false);
-					toast.success("Contact mis à jour avec succès", {
-						description: `Le contact "${data.data?.firstName} ${data.data?.lastName}" a été mis à jour.`,
-						duration: 5000,
-					});
-				},
-			})
-		),
-		undefined
-	);
+	const { state, dispatch, isPending } = useUpdateContact();
 
 	// TanStack Form setup avec les valeurs par défaut
 	const form = useAppForm({
@@ -145,35 +125,37 @@ export function UpdateContactSheetForm({
 							</form.AppField>
 
 							{/* Nom */}
-							<form.AppField
-								name="lastName"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value) return "Le nom est requis";
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Nom"
-										placeholder="Nom du contact"
-										required
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+							<div className="grid grid-cols-2 gap-2">
+								<form.AppField
+									name="lastName"
+									validators={{
+										onChange: ({ value }) => {
+											if (!value) return "Le nom est requis";
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Nom"
+											placeholder="Nom du contact"
+											required
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
 
-							{/* Prénom */}
-							<form.AppField name="firstName">
-								{(field) => (
-									<field.InputField
-										label="Prénom"
-										placeholder="Prénom du contact"
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+								{/* Prénom */}
+								<form.AppField name="firstName">
+									{(field) => (
+										<field.InputField
+											label="Prénom"
+											placeholder="Prénom du contact"
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
+							</div>
 
 							{/* Fonction */}
 							<form.AppField name="function">
@@ -209,46 +191,48 @@ export function UpdateContactSheetForm({
 							</form.AppField>
 
 							{/* Téléphone fixe */}
-							<form.AppField
-								name="phoneNumber"
-								validators={{
-									onChange: ({ value }) => {
-										if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
-											return "Le numéro de téléphone n'est pas valide";
-										}
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Téléphone fixe"
-										placeholder="+33 1 23 45 67 89"
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+							<div className="grid grid-cols-2 gap-2">
+								<form.AppField
+									name="phoneNumber"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
+												return "Le numéro de téléphone n'est pas valide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Téléphone fixe"
+											placeholder="+33 1 23 45 67 89"
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
 
-							{/* Téléphone mobile */}
-							<form.AppField
-								name="mobileNumber"
-								validators={{
-									onChange: ({ value }) => {
-										if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
-											return "Le numéro de mobile n'est pas valide";
-										}
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Téléphone mobile"
-										placeholder="+33 6 12 34 56 78"
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+								{/* Téléphone mobile */}
+								<form.AppField
+									name="mobileNumber"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
+												return "Le numéro de mobile n'est pas valide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Téléphone mobile"
+											placeholder="+33 6 12 34 56 78"
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
+							</div>
 
 							{/* Fax */}
 							<form.AppField

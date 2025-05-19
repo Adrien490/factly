@@ -97,10 +97,6 @@ export function ArchivedSupplierActions({
 											</AlertDialogTitle>
 											<AlertDialogDescription>
 												Cette action va restaurer le fournisseur
-												{supplier.name && <strong> {supplier.name}</strong>} en
-												statut {status.label.toLowerCase()}.
-												<br />
-												Cette action est réversible.
 											</AlertDialogDescription>
 										</AlertDialogHeader>
 										<AlertDialogFooter>
@@ -138,7 +134,6 @@ export function ArchivedSupplierActions({
 								</AlertDialogTitle>
 								<AlertDialogDescription>
 									Cette action va supprimer définitivement le fournisseur
-									{supplier.name && <strong> {supplier.name}</strong>}.
 									<br />
 									Cette action est irréversible.
 								</AlertDialogDescription>

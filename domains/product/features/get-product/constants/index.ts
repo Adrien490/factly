@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 /**
  * Sélection par défaut des champs pour un produit
  * Optimisée pour correspondre exactement aux besoins de la vue détail
@@ -31,7 +33,7 @@ export const GET_PRODUCT_DEFAULT_SELECT = {
 	supplier: {
 		select: {
 			id: true,
-			name: true,
+			reference: true,
 		},
 	},
-} as const;
+} as const satisfies Prisma.ProductSelect;

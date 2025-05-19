@@ -35,7 +35,7 @@ export const GET_PRODUCTS_DEFAULT_SELECT = {
 	supplier: {
 		select: {
 			id: true,
-			name: true,
+			reference: true,
 		},
 	},
 	// Note: les images sont une relation one-to-many, on peut les sélectionner

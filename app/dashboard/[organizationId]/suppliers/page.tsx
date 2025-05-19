@@ -1,8 +1,4 @@
-import {
-	ArchivedSupplierSelectionActions,
-	SupplierFilterSheet,
-	SupplierSelectionActions,
-} from "@/domains/supplier/components";
+import { SupplierFilterSheet } from "@/domains/supplier/components";
 import {
 	GET_SUPPLIERS_SORT_FIELDS,
 	getSuppliers,
@@ -19,7 +15,6 @@ import {
 	PageContainer,
 	PageHeader,
 	SearchForm,
-	SelectionToolbar,
 	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
@@ -171,21 +166,11 @@ export default async function SuppliersPage({
 				</Button>
 			</Toolbar>
 
-			<SelectionToolbar>
-				{isArchivedView ? (
-					<ArchivedSupplierSelectionActions
-						selectedSupplierIds={selectedSupplierIds}
-						organizationId={organizationId}
-					/>
-				) : (
-					<SupplierSelectionActions
-						selectedSupplierIds={selectedSupplierIds}
-						organizationId={organizationId}
-					/>
-				)}
-			</SelectionToolbar>
 			<Suspense fallback={<SupplierDataTableSkeleton />}>
 				<SupplierDataTable
+					selectedSupplierIds={selectedSupplierIds}
+					isArchivedView={isArchivedView}
+					organizationId={organizationId}
 					suppliersPromise={getSuppliers({
 						organizationId,
 						perPage: Number(perPage) || 10,

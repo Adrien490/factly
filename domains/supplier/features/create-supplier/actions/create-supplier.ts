@@ -12,14 +12,18 @@ import {
 } from "@/shared/types/server-action";
 import {
 	AddressType,
+	BusinessSector,
+	Civility,
 	Country,
+	EmployeeCount,
+	LegalForm,
 	Supplier,
 	SupplierStatus,
 	SupplierType,
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { createSupplierSchema } from "../schemas";
+import { createSupplierSchema } from "../schemas/create-supplier-schema";
 
 /**
  * Action serveur pour créer un nouveau fournisseur
@@ -64,17 +68,37 @@ export const createSupplier: ServerAction<
 		// 4. Préparation et transformation des données brutes
 		const rawData = {
 			organizationId: organizationId.toString(),
-			name: formData.get("name") as string,
-			legalName: formData.get("legalName") as string,
-			email: formData.get("email") as string,
-			phone: formData.get("phone") as string,
-			website: formData.get("website") as string,
-			siren: formData.get("siren") as string,
-			siret: formData.get("siret") as string,
-			vatNumber: formData.get("vatNumber") as string,
+			reference: formData.get("reference") as string,
 			supplierType: formData.get("supplierType") as SupplierType,
 			status: formData.get("status") as SupplierStatus,
-			notes: formData.get("notes") as string,
+
+			// Informations de contact
+			contactCivility: formData.get("contactCivility") as Civility | null,
+			contactFirstName: formData.get("contactFirstName") as string,
+			contactLastName: formData.get("contactLastName") as string,
+			contactFunction: formData.get("contactFunction") as string,
+			contactEmail: formData.get("contactEmail") as string,
+			contactPhoneNumber: formData.get("contactPhoneNumber") as string,
+			contactMobileNumber: formData.get("contactMobileNumber") as string,
+			contactFaxNumber: formData.get("contactFaxNumber") as string,
+			contactWebsite: formData.get("contactWebsite") as string,
+
+			// Informations d'entreprise
+			companyName: formData.get("companyName") as string,
+			companyEmail: formData.get("companyEmail") as string,
+			companyLegalForm: formData.get("companyLegalForm") as LegalForm,
+			companySiren: formData.get("companySiren") as string,
+			companySiret: formData.get("companySiret") as string,
+			companyNafApeCode: formData.get("companyNafApeCode") as string,
+			companyCapital: formData.get("companyCapital") as string,
+			companyRcs: formData.get("companyRcs") as string,
+			companyVatNumber: formData.get("companyVatNumber") as string,
+			companyBusinessSector: formData.get(
+				"companyBusinessSector"
+			) as BusinessSector,
+			companyEmployeeCount: formData.get(
+				"companyEmployeeCount"
+			) as EmployeeCount,
 
 			// Informations d'adresse
 			addressType: formData.get("addressType") as AddressType,
@@ -82,9 +106,7 @@ export const createSupplier: ServerAction<
 			addressLine2: formData.get("addressLine2") as string,
 			postalCode: formData.get("postalCode") as string,
 			city: formData.get("city") as string,
-			country: (formData.get("country") as string) || "France",
-
-			// Coordonnées géographiques
+			country: (formData.get("country") as Country) || Country.FRANCE,
 			latitude: formData.get("latitude")
 				? parseFloat(formData.get("latitude") as string)
 				: null,
@@ -102,15 +124,62 @@ export const createSupplier: ServerAction<
 			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Veuillez remplir tous les champs obligatoires"
+				"Veuillez remplir tous les champs obligatoires",
+				rawData
 			);
 		}
 
-		// 6. Création du fournisseur dans la base de données
+		// 6. Vérification de l'existence de la référence
+		if (validation.data.reference) {
+			const existingSupplier = await db.supplier.findFirst({
+				where: {
+					reference: validation.data.reference,
+					organizationId: validation.data.organizationId,
+				},
+				select: { id: true },
+			});
+
+			if (existingSupplier) {
+				return createErrorResponse(
+					ActionStatus.CONFLICT,
+					"Un fournisseur avec cette référence existe déjà dans l'organisation"
+				);
+			}
+		}
+
+		// 7. Création du fournisseur dans la base de données
 		const {
 			organizationId: validatedOrgId,
+			supplierType,
+			status,
+			reference,
 
-			// Extraire les champs d'adresse pour les gérer séparément
+			// Informations de contact
+			contactCivility,
+			contactFirstName,
+			contactLastName,
+			contactFunction,
+			contactEmail,
+			contactPhoneNumber,
+			contactMobileNumber,
+			contactFaxNumber,
+			contactWebsite,
+			contactNotes,
+
+			// Informations d'entreprise
+			companyName,
+			companyEmail,
+			companyLegalForm,
+			companySiren,
+			companySiret,
+			companyNafApeCode,
+			companyCapital,
+			companyRcs,
+			companyVatNumber,
+			companyBusinessSector,
+			companyEmployeeCount,
+
+			// Informations d'adresse
 			addressType,
 			addressLine1,
 			addressLine2,
@@ -119,16 +188,53 @@ export const createSupplier: ServerAction<
 			country,
 			latitude,
 			longitude,
-			...supplierData
 		} = validation.data;
 
 		// Créer le fournisseur avec les relations appropriées
 		const supplier = await db.supplier.create({
 			data: {
-				...supplierData,
+				reference,
+				supplierType,
+				status,
 				organization: { connect: { id: validatedOrgId } },
 
-				// Créer l'adresse si des informations sont fournies
+				// Créer le contact principal
+				contacts: {
+					create: [
+						{
+							civility: contactCivility,
+							firstName: contactFirstName ?? "",
+							lastName: contactLastName ?? "",
+							function: contactFunction,
+							notes: contactNotes,
+							email: contactEmail,
+							phoneNumber: contactPhoneNumber,
+							mobileNumber: contactMobileNumber,
+							faxNumber: contactFaxNumber,
+							website: contactWebsite,
+							isDefault: true,
+						},
+					],
+				},
+
+				// Créer l'entreprise
+				company: {
+					create: {
+						name: companyName!,
+						legalForm: companyLegalForm!,
+						siren: companySiren!,
+						siret: companySiret!,
+						nafApeCode: companyNafApeCode!,
+						capital: companyCapital!,
+						rcs: companyRcs!,
+						vatNumber: companyVatNumber!,
+						businessSector: companyBusinessSector!,
+						employeeCount: companyEmployeeCount!,
+						email: companyEmail || null,
+					},
+				},
+
+				// Créer l'adresse de facturation si des informations sont fournies
 				...(addressLine1 &&
 					addressLine1.trim() !== "" && {
 						addresses: {
@@ -153,13 +259,14 @@ export const createSupplier: ServerAction<
 			},
 		});
 
-		// 7. Invalidation du cache pour forcer un rafraîchissement des données
+		// 8. Invalidation du cache pour forcer un rafraîchissement des données
 		revalidateTag(`organizations:${validatedOrgId}:suppliers`);
 		revalidateTag(`organizations:${validatedOrgId}:suppliers:count`);
-		// 8. Retour de la réponse de succès
+
+		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			supplier,
-			`Le fournisseur ${supplier.name} a été créé avec succès`
+			`Le fournisseur ${supplier.reference} a été créé avec succès`
 		);
 	} catch (error) {
 		console.error("[CREATE_SUPPLIER]", error);

@@ -1,18 +1,18 @@
 "use client";
 
 import {
-	FormErrors,
-	FormFooter,
-	FormLayout,
-	useAppForm,
-} from "@/shared/components/forms";
-
-import {
-	SUPPLIER_STATUS_OPTIONS,
-	SUPPLIER_TYPE_OPTIONS,
-} from "@/domains/supplier/constants";
+	BUSINESS_SECTOR_OPTIONS,
+	EMPLOYEE_COUNT_OPTIONS,
+} from "@/domains/company/constants";
+import { CIVILITY_OPTIONS } from "@/domains/contact/constants/civility-options";
+import { SUPPLIER_STATUS_OPTIONS } from "@/domains/supplier/constants/supplier-status-options";
+import { SUPPLIER_TYPE_OPTIONS } from "@/domains/supplier/constants/supplier-type-options";
 import { GetSupplierReturn } from "@/domains/supplier/features/get-supplier";
 import { ContentCard } from "@/shared/components/content-card";
+import { FormErrors, FormLayout, useAppForm } from "@/shared/components/forms";
+import { FormFooter } from "@/shared/components/forms/form-footer";
+import { FormLabel } from "@/shared/components/ui";
+import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useParams } from "next/navigation";
 import { useUpdateSupplier } from "../hooks/use-update-supplier";
@@ -31,24 +31,77 @@ export function UpdateSupplierForm({ supplier }: Props) {
 		defaultValues: {
 			id: state?.inputs?.id ?? supplier.id,
 			organizationId: state?.inputs?.organizationId ?? supplier.organizationId,
-			name: state?.inputs?.name ?? supplier.name,
-			legalName: state?.inputs?.legalName ?? (supplier.legalName || ""),
-			email: state?.inputs?.email ?? (supplier.email || ""),
-			phone: state?.inputs?.phone ?? (supplier.phone || ""),
-			website: state?.inputs?.website ?? (supplier.website || ""),
-			notes: state?.inputs?.notes ?? (supplier.notes || ""),
+			reference: state?.inputs?.reference ?? supplier.reference,
 			supplierType: state?.inputs?.supplierType ?? supplier.supplierType,
 			status: state?.inputs?.status ?? supplier.status,
-			siren: state?.inputs?.siren ?? (supplier.siren || ""),
-			siret: state?.inputs?.siret ?? (supplier.siret || ""),
-			vatNumber: state?.inputs?.vatNumber ?? (supplier.vatNumber || ""),
-		},
 
+			// Champs du contact
+			contactCivility:
+				state?.inputs?.contactCivility ??
+				supplier.contacts[0]?.civility ??
+				null,
+			contactFirstName:
+				state?.inputs?.contactFirstName ??
+				supplier.contacts[0]?.firstName ??
+				"",
+			contactLastName:
+				state?.inputs?.contactLastName ?? supplier.contacts[0]?.lastName ?? "",
+			contactFunction:
+				state?.inputs?.contactFunction ?? supplier.contacts[0]?.function ?? "",
+			contactEmail:
+				state?.inputs?.contactEmail ?? supplier.contacts[0]?.email ?? "",
+			contactPhoneNumber:
+				state?.inputs?.contactPhoneNumber ??
+				supplier.contacts[0]?.phoneNumber ??
+				"",
+			contactMobileNumber:
+				state?.inputs?.contactMobileNumber ??
+				supplier.contacts[0]?.mobileNumber ??
+				"",
+			contactFaxNumber:
+				state?.inputs?.contactFaxNumber ??
+				supplier.contacts[0]?.faxNumber ??
+				"",
+			contactWebsite:
+				state?.inputs?.contactWebsite ?? supplier.contacts[0]?.website ?? "",
+			contactNotes:
+				state?.inputs?.contactNotes ?? supplier.contacts[0]?.notes ?? "",
+
+			// Champs de l'entreprise
+			companyName: state?.inputs?.companyName ?? supplier.company?.name ?? "",
+			companyLegalForm:
+				state?.inputs?.companyLegalForm ?? supplier.company?.legalForm,
+			companyEmail:
+				state?.inputs?.companyEmail ?? supplier.company?.email ?? null,
+			companySiren:
+				state?.inputs?.companySiren ?? supplier.company?.siren ?? "",
+			companySiret:
+				state?.inputs?.companySiret ?? supplier.company?.siret ?? "",
+			companyNafApeCode:
+				state?.inputs?.companyNafApeCode ??
+				supplier.company?.nafApeCode ??
+				null,
+			companyCapital:
+				state?.inputs?.companyCapital ?? supplier.company?.capital ?? null,
+			companyRcs: state?.inputs?.companyRcs ?? supplier.company?.rcs ?? null,
+			companyVatNumber:
+				state?.inputs?.companyVatNumber ?? supplier.company?.vatNumber ?? null,
+			companyBusinessSector:
+				state?.inputs?.companyBusinessSector ??
+				supplier.company?.businessSector ??
+				null,
+			companyEmployeeCount:
+				state?.inputs?.companyEmployeeCount ??
+				supplier.company?.employeeCount ??
+				null,
+		},
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
 			[state]
 		),
 	});
+
+	// Fonction pour sélectionner une adresse dans l'autocomplétion
 
 	return (
 		<form
@@ -62,66 +115,53 @@ export function UpdateSupplierForm({ supplier }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<input type="hidden" name="organizationId" value={organizationId} />
-			<form.AppField name="id">
+			<form.Field name="organizationId">
 				{(field) => (
-					<input type="hidden" name="id" value={field.state.value ?? ""} />
+					<input
+						type="hidden"
+						name="organizationId"
+						value={field.state.value}
+					/>
 				)}
-			</form.AppField>
+			</form.Field>
+			<form.Field name="id">
+				{(field) => <input type="hidden" name="id" value={field.state.value} />}
+			</form.Field>
 
-			<FormLayout withDividers columns={2}>
-				{/* Section Information de base */}
+			<FormLayout withDividers columns={2} className="mt-6">
+				{/* Section 1: Informations de base */}
 				<ContentCard
-					title="Informations de base"
-					description="Informations générales sur le fournisseur"
+					title="Informations générales"
+					description="Renseignez les informations principales du fournisseur"
 				>
 					<div className="space-y-4">
 						<form.AppField
-							name="name"
 							validators={{
 								onChange: ({ value }) => {
-									if (!value) return "Le nom est requis";
-									return undefined;
+									if (value && value.length < 3)
+										return "La référence doit comporter au moins 3 caractères";
 								},
 							}}
+							name="reference"
 						>
 							{(field) => (
-								<field.InputField
-									label="Nom"
-									disabled={isPending}
-									placeholder="Nom"
-								/>
+								<div className="space-y-1.5">
+									<FormLabel htmlFor="reference">Référence</FormLabel>
+									<field.InputField
+										disabled={isPending}
+										placeholder="Référence unique (ex: FOU-001)"
+									/>
+								</div>
 							)}
 						</form.AppField>
 
-						<form.AppField name="legalName">
-							{(field) => (
-								<field.InputField
-									label="Raison sociale"
-									disabled={isPending}
-									placeholder="Raison sociale"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField
-							name="supplierType"
-							validators={{
-								onChange: ({ value }) => {
-									if (!value) return "Le type de fournisseur est requis";
-									return undefined;
-								},
-							}}
-						>
+						<form.AppField name="supplierType">
 							{(field) => (
 								<field.SelectField
-									options={SUPPLIER_TYPE_OPTIONS.map((type) => ({
-										label: type.label,
-										value: type.value,
-									}))}
-									label="Type de fournisseur"
 									disabled={isPending}
-									placeholder="Sélectionnez un type de fournisseur"
+									label="Type de fournisseur"
+									options={SUPPLIER_TYPE_OPTIONS}
+									placeholder="Sélectionnez un type"
 								/>
 							)}
 						</form.AppField>
@@ -129,102 +169,401 @@ export function UpdateSupplierForm({ supplier }: Props) {
 						<form.AppField name="status">
 							{(field) => (
 								<field.SelectField
-									options={SUPPLIER_STATUS_OPTIONS.map((status) => ({
-										label: status.label,
-										value: status.value,
-									}))}
+									disabled={isPending}
 									label="Statut"
+									options={SUPPLIER_STATUS_OPTIONS}
+									placeholder="Sélectionnez un statut"
 								/>
 							)}
 						</form.AppField>
 					</div>
 				</ContentCard>
 
-				{/* Section Coordonnées */}
+				{/* Section 2: Informations de l'entreprise */}
 				<ContentCard
-					title="Coordonnées"
-					description="Informations de contact du fournisseur"
+					title="Informations de l'entreprise"
+					description="Renseignez les informations légales de l'entreprise"
 				>
 					<div className="space-y-4">
-						<form.AppField name="email">
+						<form.AppField
+							validators={{
+								onChange: ({ value }) => {
+									if (!value)
+										return "Le nom de l&apos;entreprise est obligatoire";
+								},
+							}}
+							name="companyName"
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="Nom de l'entreprise"
+									placeholder="Nom de l'entreprise"
+									required
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="companyLegalForm">
+							{(field) => (
+								<field.SelectField
+									disabled={isPending}
+									label="Forme juridique"
+									options={LEGAL_FORM_OPTIONS}
+									placeholder="Sélectionnez une forme juridique"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companyEmail"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+										return "Format d&apos;email invalide";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									label="Email de l'entreprise"
+									disabled={isPending}
+									placeholder="Ex: contact@example.com"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companySiren"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^\d{9}$/.test(value)) {
+										return "Le numéro SIREN doit comporter exactement 9 chiffres";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="SIREN"
+									placeholder="9 chiffres (ex: 123456789)"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companySiret"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^\d{14}$/.test(value)) {
+										return "Le numéro SIRET doit comporter exactement 14 chiffres";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="SIRET"
+									placeholder="14 chiffres (ex: 12345678900001)"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companyNafApeCode"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[0-9]{4}[A-Z]$/.test(value)) {
+										return "Le code APE doit être au format 4 chiffres + 1 lettre (ex: 6201Z)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="Code APE"
+									placeholder="Ex: 6201Z"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companyCapital"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^\d+(?:[.,]\d{1,2})?$/.test(value)) {
+										return "Le capital doit être un nombre avec maximum 2 décimales";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="Capital social"
+									placeholder="Ex: 10000.00"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companyRcs"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[A-Z]\d{8}$/.test(value)) {
+										return "Le numéro RCS doit commencer par une lettre suivie de 8 chiffres (ex: B12345678)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="RCS"
+									placeholder="Ex: B12345678"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="companyVatNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^FR\d{2}\d{9}$/.test(value)) {
+										return "Le numéro de TVA doit être au format FR + 2 chiffres + 9 chiffres (ex: FR12345678900)";
+									}
+									return undefined;
+								},
+							}}
+						>
+							{(field) => (
+								<field.InputField
+									disabled={isPending}
+									label="N° TVA"
+									placeholder="Ex: FR12345678900"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="companyBusinessSector">
+							{(field) => (
+								<field.SelectField
+									disabled={isPending}
+									label="Secteur d'activité"
+									options={BUSINESS_SECTOR_OPTIONS}
+									placeholder="Sélectionnez un secteur d'activité"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField name="companyEmployeeCount">
+							{(field) => (
+								<field.SelectField
+									disabled={isPending}
+									label="Effectif"
+									options={EMPLOYEE_COUNT_OPTIONS}
+									placeholder="Sélectionnez l'effectif"
+								/>
+							)}
+						</form.AppField>
+					</div>
+				</ContentCard>
+
+				{/* Section 3: Informations du contact */}
+				<ContentCard
+					title="Informations du contact"
+					description="Renseignez les informations du contact principal"
+				>
+					<div className="space-y-4">
+						<form.AppField name="contactCivility">
+							{(field) => (
+								<field.RadioGroupField
+									disabled={isPending}
+									label="Civilité"
+									options={CIVILITY_OPTIONS}
+								/>
+							)}
+						</form.AppField>
+
+						<div className="grid grid-cols-2 gap-4">
+							<form.AppField
+								validators={{
+									onChange: ({ value }) => {
+										if (!value) return "Le nom est obligatoire";
+									},
+								}}
+								name="contactLastName"
+							>
+								{(field) => (
+									<field.InputField
+										label="Nom"
+										disabled={isPending}
+										placeholder="Nom du contact"
+										required
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField name="contactFirstName">
+								{(field) => (
+									<field.InputField
+										label="Prénom"
+										disabled={isPending}
+										placeholder="Prénom du contact"
+									/>
+								)}
+							</form.AppField>
+						</div>
+
+						<form.AppField name="contactFunction">
+							{(field) => (
+								<field.InputField
+									label="Fonction"
+									disabled={isPending}
+									placeholder="Fonction du contact"
+								/>
+							)}
+						</form.AppField>
+
+						<form.AppField
+							name="contactEmail"
+							validators={{
+								onChange: ({ value }) => {
+									if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+										return "Format d&apos;email invalide";
+									}
+									return undefined;
+								},
+							}}
+						>
 							{(field) => (
 								<field.InputField
 									label="Email"
 									disabled={isPending}
-									placeholder="Email"
+									placeholder="Ex: contact@example.com"
 								/>
 							)}
 						</form.AppField>
 
-						<form.AppField name="phone">
+						<div className="grid grid-cols-2 gap-4">
+							<form.AppField
+								name="contactPhoneNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (
+											value &&
+											!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+												value
+											)
+										) {
+											return "Format de numéro de téléphone invalide (ex: +33 1 23 45 67 89)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Téléphone"
+										disabled={isPending}
+										placeholder="Ex: +33 1 23 45 67 89"
+									/>
+								)}
+							</form.AppField>
+
+							<form.AppField
+								name="contactMobileNumber"
+								validators={{
+									onChange: ({ value }) => {
+										if (
+											value &&
+											!/^(?:(?:\+|00)33|0)\s*[67](?:[\s.-]*\d{2}){4}$/.test(
+												value
+											)
+										) {
+											return "Format de numéro de mobile invalide (ex: +33 6 12 34 56 78)";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<field.InputField
+										label="Mobile"
+										disabled={isPending}
+										placeholder="Ex: +33 6 12 34 56 78"
+									/>
+								)}
+							</form.AppField>
+						</div>
+
+						<form.AppField
+							name="contactFaxNumber"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(
+											value
+										)
+									) {
+										return "Format de numéro de fax invalide (ex: +33 1 23 45 67 89)";
+									}
+									return undefined;
+								},
+							}}
+						>
 							{(field) => (
 								<field.InputField
-									label="Téléphone"
+									label="Fax"
 									disabled={isPending}
-									placeholder="Téléphone"
+									placeholder="Ex: +33 1 23 45 67 89"
 								/>
 							)}
 						</form.AppField>
 
-						<form.AppField name="website">
+						<form.AppField
+							name="contactWebsite"
+							validators={{
+								onChange: ({ value }) => {
+									if (
+										value &&
+										!/^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+											value
+										)
+									) {
+										return "Format d&apos;URL invalide (ex: https://www.example.com)";
+									}
+									return undefined;
+								},
+							}}
+						>
 							{(field) => (
 								<field.InputField
 									label="Site web"
 									disabled={isPending}
-									placeholder="Site web"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				{/* Section Informations fiscales */}
-				<ContentCard
-					title="Informations fiscales"
-					description="Informations légales et fiscales"
-				>
-					<div className="space-y-4">
-						<form.AppField name="siren">
-							{(field) => (
-								<field.InputField
-									label="SIREN"
-									disabled={isPending}
-									placeholder="SIREN"
+									placeholder="Ex: https://www.example.com"
 								/>
 							)}
 						</form.AppField>
 
-						<form.AppField name="siret">
-							{(field) => (
-								<field.InputField
-									label="SIRET"
-									disabled={isPending}
-									placeholder="SIRET"
-								/>
-							)}
-						</form.AppField>
-
-						<form.AppField name="vatNumber">
-							{(field) => (
-								<field.InputField
-									label="Numéro de TVA"
-									disabled={isPending}
-									placeholder="Numéro de TVA"
-								/>
-							)}
-						</form.AppField>
-					</div>
-				</ContentCard>
-
-				{/* Section Notes */}
-				<ContentCard title="Notes" description="Informations supplémentaires">
-					<div className="space-y-4">
-						<form.AppField name="notes">
+						<form.AppField name="contactNotes">
 							{(field) => (
 								<field.TextareaField
 									label="Notes"
 									disabled={isPending}
-									placeholder="Notes"
+									rows={6}
+									placeholder="Notes et informations complémentaires"
 								/>
 							)}
 						</form.AppField>
@@ -232,11 +571,15 @@ export function UpdateSupplierForm({ supplier }: Props) {
 				</ContentCard>
 			</FormLayout>
 
-			{/* Boutons d'action */}
-			<FormFooter
-				submitLabel="Mettre à jour le fournisseur"
-				cancelHref={`/dashboard/${organizationId}/suppliers`}
-			/>
+			<form.Subscribe selector={(state) => [state.canSubmit]}>
+				{([canSubmit]) => (
+					<FormFooter
+						disabled={!canSubmit || isPending}
+						cancelHref={`/dashboard/${organizationId}/suppliers`}
+						submitLabel="Mettre à jour le fournisseur"
+					/>
+				)}
+			</form.Subscribe>
 		</form>
 	);
 }

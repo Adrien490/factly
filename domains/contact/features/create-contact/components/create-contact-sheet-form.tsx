@@ -148,35 +148,37 @@ export function CreateContactSheetForm({
 							</form.AppField>
 
 							{/* Nom */}
-							<form.AppField
-								name="lastName"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value) return "Le nom est requis";
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Nom"
-										placeholder="Nom du contact"
-										required
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+							<div className="grid grid-cols-2 gap-2">
+								<form.AppField
+									name="lastName"
+									validators={{
+										onChange: ({ value }) => {
+											if (!value) return "Le nom est requis";
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Nom"
+											placeholder="Nom du contact"
+											required
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
 
-							{/* Prénom */}
-							<form.AppField name="firstName">
-								{(field) => (
-									<field.InputField
-										label="Prénom"
-										placeholder="Prénom du contact"
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+								{/* Prénom */}
+								<form.AppField name="firstName">
+									{(field) => (
+										<field.InputField
+											label="Prénom"
+											placeholder="Prénom du contact"
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
+							</div>
 
 							{/* Fonction */}
 							<form.AppField name="function">
@@ -210,48 +212,49 @@ export function CreateContactSheetForm({
 									/>
 								)}
 							</form.AppField>
+							<div className="grid grid-cols-2 gap-2">
+								{/* Téléphone fixe */}
+								<form.AppField
+									name="phoneNumber"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
+												return "Le numéro de téléphone n'est pas valide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Téléphone fixe"
+											placeholder="+33 1 23 45 67 89"
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
 
-							{/* Téléphone fixe */}
-							<form.AppField
-								name="phoneNumber"
-								validators={{
-									onChange: ({ value }) => {
-										if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
-											return "Le numéro de téléphone n'est pas valide";
-										}
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Téléphone fixe"
-										placeholder="+33 1 23 45 67 89"
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
-
-							{/* Téléphone mobile */}
-							<form.AppField
-								name="mobileNumber"
-								validators={{
-									onChange: ({ value }) => {
-										if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
-											return "Le numéro de mobile n'est pas valide";
-										}
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<field.InputField
-										label="Téléphone mobile"
-										placeholder="+33 6 12 34 56 78"
-										disabled={isPending}
-									/>
-								)}
-							</form.AppField>
+								{/* Téléphone mobile */}
+								<form.AppField
+									name="mobileNumber"
+									validators={{
+										onChange: ({ value }) => {
+											if (value && !/^\+?[0-9\s-]{10,}$/.test(value)) {
+												return "Le numéro de mobile n'est pas valide";
+											}
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<field.InputField
+											label="Téléphone mobile"
+											placeholder="+33 6 12 34 56 78"
+											disabled={isPending}
+										/>
+									)}
+								</form.AppField>
+							</div>
 
 							{/* Fax */}
 							<form.AppField

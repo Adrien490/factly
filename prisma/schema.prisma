@@ -184,6 +184,8 @@ model Company {
   // Relation to client
   client         Client?       @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId       String?       @unique
+  supplier       Supplier?     @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplierId     String?       @unique
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String?       @unique
 }
@@ -233,22 +235,12 @@ model Member {
 }
 
 model Supplier {
-  id                 String         @id @default(cuid())
-  name               String // Nom commercial
-  legalName          String? // Raison sociale
-  email              String?
-  phone              String?
-  website            String?
-  logoUrl            String?
-  siren              String?
-  siret              String?
-  vatNumber          String?
-  registrationNumber String?
-  supplierType       SupplierType   @default(MANUFACTURER)
-  status             SupplierStatus @default(ACTIVE)
-  notes              String?
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
+  id           String         @id @default(cuid())
+  reference    String
+  supplierType SupplierType   @default(MANUFACTURER)
+  status       SupplierStatus @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   // Relations
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -256,8 +248,9 @@ model Supplier {
   addresses      Address[]
   contacts       Contact[]
   products       Product[]
+  company        Company?
 
-  @@index([name])
+  @@unique([reference, organizationId])
   @@index([status, organizationId])
 }
 

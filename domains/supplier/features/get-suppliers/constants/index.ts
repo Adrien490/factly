@@ -9,42 +9,18 @@ export const DEFAULT_PER_PAGE = 10;
  */
 export const GET_SUPPLIERS_DEFAULT_SELECT = {
 	// Identifiants et informations de base
-	organizationId: true,
 	id: true,
-	name: true,
-	legalName: true,
-	email: true,
-	phone: true,
-	website: true,
+	organizationId: true,
+	reference: true,
 	supplierType: true,
 	status: true,
-
-	// Informations fiscales
-	siren: true,
-	siret: true,
-	vatNumber: true,
-
-	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
 
 	// Relations avec sélections optimisées
-	addresses: {
-		select: {
-			id: true,
-			addressLine1: true,
-			addressLine2: true,
-			postalCode: true,
-			city: true,
-			country: true,
-			latitude: true,
-			longitude: true,
-			isDefault: true,
-		},
-		where: {
-			isDefault: true,
-		},
-	},
+	company: true,
+	addresses: true,
+	contacts: true,
 } as const satisfies Prisma.SupplierSelect;
 
 export const GET_SUPPLIERS_DEFAULT_SORT_BY = "createdAt";

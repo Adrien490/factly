@@ -46,7 +46,7 @@ export function ProductHeader({ productPromise }: ProductHeaderProps) {
 								</Badge>
 								{product.supplier && (
 									<Badge variant="outline" className="bg-muted/50">
-										{product.supplier.name}
+										{product.supplier.reference}
 									</Badge>
 								)}
 							</div>

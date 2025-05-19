@@ -6,7 +6,7 @@ import router from "next/router";
 import { useActionState } from "react";
 import { toast } from "sonner";
 import { createSupplier } from "../actions/create-supplier";
-import { createSupplierSchema } from "../schemas";
+import { createSupplierSchema } from "../schemas/create-supplier-schema";
 
 export function useCreateSupplier() {
 	const [state, dispatch, isPending] = useActionState(

@@ -67,7 +67,6 @@ export const restoreSupplier: ServerAction<
 			select: {
 				id: true,
 				status: true,
-				name: true,
 			},
 		});
 
@@ -109,7 +108,7 @@ export const restoreSupplier: ServerAction<
 					? "inactif"
 					: "autre statut";
 
-		const message = `Le fournisseur ${existingSupplier.name} a été restauré en ${statusText} avec succès`;
+		const message = `Le fournisseur a été restauré en ${statusText} avec succès`;
 
 		return createSuccessResponse(updatedSupplier, message);
 	} catch (error) {
