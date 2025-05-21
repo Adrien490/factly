@@ -253,7 +253,6 @@ model Supplier {
   products       Product[]
   company        Company?
 
-  @@unique([reference, organizationId])
   @@index([status, organizationId])
 }
 
