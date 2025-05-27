@@ -99,6 +99,8 @@ export function MemberDataTable({
 													<Image
 														src={member.user.image}
 														alt={member.user.name}
+														width={32}
+														height={32}
 														className="w-8 h-8 rounded-full"
 													/>
 												)}

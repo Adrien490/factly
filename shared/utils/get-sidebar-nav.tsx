@@ -116,6 +116,10 @@ export const getSidebarNav = () => [
 				title: "Modifier l'entreprise",
 				url: `/dashboard/company/edit`,
 			},
+			{
+				title: "Gestion des membres",
+				url: `/dashboard/company/members`,
+			},
 		],
 	},
 	/*{

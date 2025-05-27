@@ -10,7 +10,7 @@ export const useRefreshMembership = () => {
 		withCallbacks(
 			refreshMembership,
 			createToastCallbacks<null, typeof refreshMembershipSchema>({
-				loadingMessage: "Rafraîchissement du membership en cours...",
+				loadingMessage: "Rafraîchissement de vos droits en cours...",
 				onSuccess: () => {
 					window.location.reload();
 				},
