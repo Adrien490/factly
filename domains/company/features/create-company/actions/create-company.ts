@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { initPermissions } from "@/domains/auth/lib/init-permissions";
+import { initAdminRole } from "@/domains/auth/lib/init-permissions";
 import { checkMembership } from "@/domains/member/features/check-membership";
 import db from "@/shared/lib/db";
 import {
@@ -203,16 +203,16 @@ export const createCompany: ServerAction<
 			revalidateTag(`membership:${session.user.id}`);
 		}
 
-		// 8. Initialisation des permissions et rôles système
+		// 8. Initialisation du rôle administrateur
 		try {
-			console.log("🔐 Initialisation des permissions...");
-			await initPermissions(db);
+			console.log("🔐 Initialisation du rôle administrateur...");
+			await initAdminRole(db, session.user.id);
 		} catch (error) {
 			console.error(
-				"⚠️ Erreur lors de l'initialisation des permissions:",
+				"⚠️ Erreur lors de l'initialisation du rôle administrateur:",
 				error
 			);
-			// Ne pas faire échouer la création de l'entreprise si l'init des permissions échoue
+			// Ne pas faire échouer la création de l'entreprise si l'init du rôle échoue
 		}
 
 		// 9. Invalidation du cache pour forcer un rafraîchissement des données
@@ -224,7 +224,7 @@ export const createCompany: ServerAction<
 		// 10. Retour de la réponse de succès
 		return createSuccessResponse(
 			company,
-			`L'entreprise ${company.name} a été créée avec succès. Les permissions ont été initialisées.`
+			`L'entreprise ${company.name} a été créée avec succès. Le rôle administrateur a été configuré.`
 		);
 	} catch (error) {
 		console.error("[CREATE_COMPANY]", error);
