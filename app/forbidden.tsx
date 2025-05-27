@@ -1,6 +1,7 @@
 "use client";
 
-import { authClient } from "@/domains/auth";
+import { authClient } from "@/domains/auth/lib/auth-client";
+import { RefreshMembersButton } from "@/domains/member/features/refresh-members";
 import { Button } from "@/shared/components";
 import { ErrorPage } from "@/shared/components/error-page";
 import { LockIcon, UserPlus } from "lucide-react";
@@ -8,7 +9,6 @@ import { useRouter } from "next/navigation";
 
 export default function ForbiddenPage() {
 	const router = useRouter();
-
 	const handleLogout = () => {
 		authClient.signOut({
 			fetchOptions: {
@@ -21,9 +21,9 @@ export default function ForbiddenPage() {
 
 	return (
 		<ErrorPage
-			icon={<LockIcon className="h-16 w-16 text-amber-500" />}
+			icon={<LockIcon className="h-16 w-16 text-red-500" />}
 			title="Accès refusé"
-			message="Vous n'avez pas les permissions nécessaires pour accéder à cette page. Pour accéder à cette fonctionnalité, vous devez être membre de l'organisation."
+			message="Vous n'avez pas les permissions nécessaires pour accéder à cette page."
 			showHomeButton={false}
 			actions={
 				<div className="space-y-6">
@@ -32,13 +32,20 @@ export default function ForbiddenPage() {
 							<UserPlus className="h-5 w-5" />
 							Demander l&apos;accès
 						</div>
+						<p className="text-sm text-blue-700 mb-3">
+							Pour accéder à cette fonctionnalité, vous devez être membre de
+							l&apos;organisation.
+						</p>
 						<p className="text-sm text-blue-600">
 							Contactez l&apos;administrateur pour qu&apos;il vous ajoute en
 							tant que membre.
 						</p>
 					</div>
-					<div className="flex flex-col sm:flex-row gap-3 items-center">
-						<Button onClick={handleLogout}>Se déconnecter</Button>
+					<div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+						<RefreshMembersButton />
+						<Button onClick={handleLogout} variant="destructive">
+							Se déconnecter
+						</Button>
 					</div>
 				</div>
 			}
