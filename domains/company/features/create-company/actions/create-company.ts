@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { checkMembership } from "@/domains/member/features/check-membership";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -43,7 +44,12 @@ export const createCompany: ServerAction<
 			);
 		}
 
-		// 2. Préparation et transformation des données brutes
+		// 2. Vérification de l'appartenance (optionnelle pour la création d'entreprise)
+		const membership = await checkMembership({
+			userId: session.user.id,
+		});
+
+		// 3. Préparation et transformation des données brutes
 		const rawData = {
 			name: formData.get("name") as string,
 			logoUrl: formData.get("logoUrl") as string | null,
@@ -80,7 +86,7 @@ export const createCompany: ServerAction<
 
 		console.log("[CREATE_COMPANY] Raw data:", rawData);
 
-		// 3. Validation des données avec le schéma Zod
+		// 4. Validation des données avec le schéma Zod
 		const validation = createCompanySchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(
@@ -94,24 +100,22 @@ export const createCompany: ServerAction<
 			);
 		}
 
-		// 4. Vérification qu'il n'y a pas déjà une company principale si isMain est true
-		if (validation.data.isMain) {
-			const existingMainCompany = await db.company.findFirst({
-				where: {
-					isMain: true,
-				},
-				select: { id: true, name: true },
-			});
+		// 5. Vérification qu'il n'y a pas déjà une company principale dans l'application
+		const existingMainCompany = await db.company.findFirst({
+			where: {
+				isMain: true,
+			},
+			select: { id: true, name: true },
+		});
 
-			if (existingMainCompany) {
-				return createErrorResponse(
-					ActionStatus.CONFLICT,
-					`Une entreprise principale existe déjà : ${existingMainCompany.name}`
-				);
-			}
+		if (existingMainCompany) {
+			return createErrorResponse(
+				ActionStatus.CONFLICT,
+				`Une entreprise principale existe déjà dans l'application : ${existingMainCompany.name}`
+			);
 		}
 
-		// 5. Création de la company dans la base de données
+		// 6. Création de la company dans la base de données
 		const {
 			name,
 			logoUrl,
@@ -187,12 +191,23 @@ export const createCompany: ServerAction<
 			},
 		});
 
-		// 6. Invalidation du cache pour forcer un rafraîchissement des données
+		// 7. Création du membership si l'utilisateur n'est pas encore membre
+		if (!membership.isMember) {
+			await db.member.create({
+				data: {
+					userId: session.user.id,
+				},
+			});
+			// Invalider le cache du membership
+			revalidateTag(`membership:${session.user.id}`);
+		}
+
+		// 8. Invalidation du cache pour forcer un rafraîchissement des données
 		revalidateTag("companies");
 		revalidateTag("companies:main");
 		revalidateTag(`companies:${company.id}`);
 
-		// 7. Retour de la réponse de succès
+		// 9. Retour de la réponse de succès
 		return createSuccessResponse(
 			company,
 			`L'entreprise ${company.name} a été créée avec succès`

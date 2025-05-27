@@ -330,12 +330,6 @@ enum AddressType {
   COMMERCIAL // Bureau commercial
 }
 
-enum InvitationStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-}
-
 enum ClientType {
   INDIVIDUAL
   COMPANY

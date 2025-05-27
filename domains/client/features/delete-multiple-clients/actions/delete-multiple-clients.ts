@@ -3,6 +3,7 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 
+import { checkMembership } from "@/domains/member/features/check-membership";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -27,6 +28,18 @@ export const deleteMultipleClients: ServerAction<
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour effectuer cette action"
+			);
+		}
+
+		// 2. Vérification de l'appartenance
+		const membership = await checkMembership({
+			userId: session.user.id,
+		});
+
+		if (!membership.isMember) {
+			return createErrorResponse(
+				ActionStatus.UNAUTHORIZED,
+				"Vous devez être membre pour effectuer cette action"
 			);
 		}
 

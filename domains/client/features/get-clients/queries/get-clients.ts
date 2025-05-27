@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { checkMembership } from "@/domains/member/features/check-membership";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getClientsSchema } from "../schemas";
@@ -23,6 +24,23 @@ export async function getClients(
 
 		if (!session?.user?.id) {
 			throw new Error("Unauthorized");
+		}
+
+		// 2. Vérification de l'appartenance
+		const membership = await checkMembership({
+			userId: session.user.id,
+		});
+
+		if (!membership.isMember) {
+			return {
+				clients: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					perPage: 10,
+					pageCount: 0,
+				},
+			};
 		}
 
 		const validation = getClientsSchema.safeParse(params);

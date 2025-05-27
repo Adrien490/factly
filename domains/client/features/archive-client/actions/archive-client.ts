@@ -2,6 +2,7 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
+import { checkMembership } from "@/domains/member/features/check-membership";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -42,6 +43,17 @@ export const archiveClient: ServerAction<
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				"Validation échouée. Veuillez vérifier votre sélection."
+			);
+		}
+
+		const membership = await checkMembership({
+			userId: session.user.id,
+		});
+
+		if (!membership.isMember) {
+			return createErrorResponse(
+				ActionStatus.UNAUTHORIZED,
+				"Vous devez être membre pour effectuer cette action"
 			);
 		}
 

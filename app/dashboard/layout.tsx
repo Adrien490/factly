@@ -4,6 +4,7 @@ import {
 	CompanyHeaderSkeleton,
 	getCompany,
 } from "@/domains/company";
+import { checkOwnMembership } from "@/domains/member/features/check-membership";
 import {
 	Separator,
 	Sidebar,
@@ -22,7 +23,7 @@ import { ThemeToggleSwitch } from "@/shared/components/theme-toggle-switch";
 import { UserDropdown } from "@/shared/components/user-dropdown";
 import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { forbidden, redirect } from "next/navigation";
 import { Suspense } from "react";
 
 interface OrganizationLayoutProps {
@@ -36,6 +37,13 @@ export default async function OrganizationLayout({
 	if (!company) {
 		redirect("/setup");
 	}
+
+	const membership = await checkOwnMembership();
+
+	if (!membership.isMember) {
+		forbidden();
+	}
+
 	return (
 		<SidebarProvider>
 			<Sidebar collapsible="icon">

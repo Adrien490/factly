@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { checkMembership } from "@/domains/member/features/check-membership";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { fetchCount } from ".";
@@ -22,6 +23,15 @@ export async function countClients(
 
 		if (!session?.user?.id) {
 			throw new Error("Unauthorized");
+		}
+
+		// 2. Vérification de l'appartenance
+		const membership = await checkMembership({
+			userId: session.user.id,
+		});
+
+		if (!membership.isMember) {
+			return 0;
 		}
 
 		// Appel à la fonction

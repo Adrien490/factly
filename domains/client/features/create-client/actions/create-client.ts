@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { checkMembership } from "@/domains/member/features/check-membership";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -44,6 +45,18 @@ export const createClient: ServerAction<
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
 				"Vous devez être connecté pour créer un client"
+			);
+		}
+
+		// 2. Vérification de l'appartenance
+		const membership = await checkMembership({
+			userId: session.user.id,
+		});
+
+		if (!membership.isMember) {
+			return createErrorResponse(
+				ActionStatus.UNAUTHORIZED,
+				"Vous devez être membre pour effectuer cette action"
 			);
 		}
 
