@@ -12,7 +12,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
-import { ChevronsUpDown, GalleryVerticalEnd, Home } from "lucide-react";
+import { ChevronsUpDown, Edit, GalleryVerticalEnd } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { use } from "react";
@@ -71,11 +71,14 @@ export function CompanyHeader({ companyPromise }: CompanyHeaderProps) {
 						<DropdownMenuSeparator />
 
 						<DropdownMenuItem asChild className="gap-2 p-2">
-							<Link href="/" className="flex items-center">
+							<Link
+								href="/dashboard/company/edit"
+								className="flex items-center"
+							>
 								<div className="flex size-6 items-center justify-center rounded-sm border">
-									<Home className="size-3" />
+									<Edit className="size-3" />
 								</div>
-								<span className="flex-1">Retour à l&apos;accueil</span>
+								<span className="flex-1">Modifier</span>
 							</Link>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
