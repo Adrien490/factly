@@ -26,7 +26,8 @@ export async function middleware(request: NextRequest) {
 
 	if (
 		isLoggedIn &&
-		publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route))
+		publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route)) &&
+		nextUrl.pathname !== "/dashboard"
 	) {
 		return Response.redirect(new URL("/dashboard", nextUrl.origin));
 	}
@@ -44,5 +45,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/dashboard", "/", "/api"], // Apply middleware to specific routes
+	matcher: [
+		/*
+		 * Match all request paths except for the ones starting with:
+		 * - api (API routes)
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 */
+		"/((?!api|_next/static|_next/image|favicon.ico).*)",
+	],
 };

@@ -1,6 +1,6 @@
 import { Logo, Spotlight } from "@/shared/components";
 
-export default function AuthLayout({
+export default async function AuthLayout({
 	children,
 }: {
 	children: React.ReactNode;
