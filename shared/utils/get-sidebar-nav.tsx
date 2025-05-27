@@ -2,10 +2,10 @@ import { getClientNavigation } from "@/domains/client/utils";
 import { getProductNavigation } from "@/domains/product/utils";
 import { getSupplierNavigation } from "@/domains/supplier/utils";
 import {
-	Building2,
 	CalendarClock,
 	LayoutDashboard,
 	Package,
+	Settings2,
 	Truck,
 	Users,
 } from "lucide-react";
@@ -109,8 +109,8 @@ export const getSidebarNav = () => [
 		],
 	},
 	{
-		title: "Entreprise",
-		icon: Building2,
+		title: "Paramètres",
+		icon: Settings2,
 		items: [
 			{
 				title: "Modifier l'entreprise",
@@ -118,11 +118,11 @@ export const getSidebarNav = () => [
 			},
 			{
 				title: "Gestion des membres",
-				url: `/dashboard/company/members`,
+				url: `/dashboard/members`,
 			},
 			{
 				title: "Gestion des droits",
-				url: `/dashboard/company/permissions`,
+				url: `/dashboard/permissions`,
 			},
 		],
 	},
