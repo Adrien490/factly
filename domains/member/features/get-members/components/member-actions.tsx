@@ -7,10 +7,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/shared/components";
 import { MoreHorizontal, UserMinus, UserX } from "lucide-react";
-import { GetMembersReturn } from "../types";
+import { GetMemberReturn } from "../../get-member/types";
 
 export interface MemberActionsProps {
-	member: NonNullable<GetMembersReturn>[number];
+	member: NonNullable<GetMemberReturn>;
 }
 
 export function MemberActions({}: MemberActionsProps) {
