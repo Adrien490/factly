@@ -24,14 +24,16 @@ import {
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
-import { AddressType, Country, EmployeeCount } from "@prisma/client";
+import { createToastCallbacks, withCallbacks } from "@/shared/utils";
+import { AddressType, Company, Country, EmployeeCount } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { use, useTransition } from "react";
+import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
 import { GetCompanyReturn } from "../../get-company";
-import { useUpdateCompany } from "../hooks/use-update-company";
+import { updateCompany } from "../actions/update-company";
+import { updateCompanySchema } from "../schemas/update-company-schema";
 
 // Types pour les props
 type Props = {
@@ -48,8 +50,22 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 	// Récupérer l'adresse par défaut
 	const defaultAddress = company.addresses?.find((addr) => addr.isDefault);
 
-	// Hook pour la mise à jour de l'entreprise
-	const { state, dispatch, isPending } = useUpdateCompany();
+	const [state, dispatch, isPending] = useActionState(
+		withCallbacks(
+			updateCompany,
+			createToastCallbacks<Company, typeof updateCompanySchema>({
+				loadingMessage: "Mise à jour de l'entreprise en cours...",
+				onSuccess: () => {
+					toast.success("Entreprise mise à jour avec succès", {
+						description: `L'entreprise ${company.name} a été mise à jour.`,
+						duration: 5000,
+					});
+					router.push("/dashboard/companies");
+				},
+			})
+		),
+		undefined
+	);
 
 	// TanStack Form setup
 	const form = useAppForm({
@@ -75,7 +91,7 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 				state?.inputs?.employeeCount ??
 				company.employeeCount ??
 				EmployeeCount.ONE_TO_TWO,
-			isMain: state?.inputs?.isMain ?? company.isMain ?? false,
+			isMain: company.isMain ?? false,
 
 			// Champs d'adresse
 			addressType:
@@ -110,13 +126,16 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 	const handleAddressSelect = (address: FormattedAddressResult) => {
 		// Adresse ligne 1
 		if (address.type === "housenumber") {
+			// Si c'est une adresse complète avec numéro, on utilise le format complet
 			form.setFieldValue(
 				"addressLine1",
 				`${address.housenumber} ${address.street}` || ""
 			);
 		} else if (address.type === "street") {
+			// Si c'est une rue sans numéro
 			form.setFieldValue("addressLine1", address.street || "");
 		} else {
+			// Pour les autres types (locality, municipality), on utilise simplement le label
 			form.setFieldValue("addressLine1", address.label || "");
 		}
 
@@ -133,10 +152,12 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 
 		// Coordonnées géographiques (longitude, latitude)
 		if (address.coordinates && address.coordinates.length === 2) {
+			// L'API retourne les coordonnées au format [longitude, latitude]
 			const [longitude, latitude] = address.coordinates;
 			form.setFieldValue("longitude", longitude);
 			form.setFieldValue("latitude", latitude);
 		} else {
+			// Réinitialiser les coordonnées si elles ne sont pas disponibles
 			form.setFieldValue("longitude", null);
 			form.setFieldValue("latitude", null);
 		}
@@ -149,8 +170,9 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 		form.setFieldValue("postalCode", "");
 		form.setFieldValue("city", "");
 		const url = new URLSearchParams();
+		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
-			router.push(`/dashboard/companies/${company.id}/edit?${url.toString()}`);
+			router.push(`/dashboard/company/edit?${url.toString()}`);
 		});
 	};
 
@@ -607,7 +629,7 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 										if (!isSubmitting) {
 											startAddressTransition(() => {
 												router.push(
-													`/dashboard/companies/${company.id}/edit?${url.toString()}`,
+													`/dashboard/company/edit?${url.toString()}`,
 													{
 														scroll: false,
 													}
@@ -754,33 +776,6 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 								/>
 							)}
 						</form.AppField>
-
-						{/* Switch pour entreprise principale */}
-						<form.Field name="isMain">
-							{(field) => (
-								<div className="flex flex-row items-center justify-between rounded-lg border p-4">
-									<div className="space-y-0.5">
-										<FormLabel className="text-base">
-											Entreprise principale
-										</FormLabel>
-										<div className="text-sm text-muted-foreground">
-											Définir cette entreprise comme entreprise principale
-										</div>
-									</div>
-									<div className="flex items-center space-x-2">
-										<input
-											type="checkbox"
-											id="isMain"
-											disabled={isPending}
-											checked={field.state.value}
-											onChange={(e) => field.handleChange(e.target.checked)}
-											className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-										/>
-									</div>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
 					</div>
 				</ContentCard>
 			</FormLayout>
