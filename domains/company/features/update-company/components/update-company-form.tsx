@@ -24,16 +24,14 @@ import {
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
-import { createToastCallbacks, withCallbacks } from "@/shared/utils";
-import { AddressType, Company, Country, EmployeeCount } from "@prisma/client";
+import { AddressType, Country, EmployeeCount } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { use, useActionState, useTransition } from "react";
+import { use, useTransition } from "react";
 import { toast } from "sonner";
 import { GetCompanyReturn } from "../../get-company";
-import { updateCompany } from "../actions/update-company";
-import { updateCompanySchema } from "../schemas/update-company-schema";
+import { useUpdateCompany } from "../hooks/use-update-company";
 
 // Types pour les props
 type Props = {
@@ -50,21 +48,7 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 	// Récupérer l'adresse par défaut
 	const defaultAddress = company.addresses?.find((addr) => addr.isDefault);
 
-	const [state, dispatch, isPending] = useActionState(
-		withCallbacks(
-			updateCompany,
-			createToastCallbacks<Company, typeof updateCompanySchema>({
-				loadingMessage: "Mise à jour de l'entreprise en cours...",
-				onSuccess: () => {
-					toast.success("Entreprise mise à jour avec succès", {
-						description: `L'entreprise a été mise à jour.`,
-						duration: 5000,
-					});
-				},
-			})
-		),
-		undefined
-	);
+	const { state, dispatch, isPending } = useUpdateCompany();
 
 	// TanStack Form setup
 	const form = useAppForm({
