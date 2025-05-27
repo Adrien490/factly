@@ -46,7 +46,7 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 	const { isUploading, startUpload } = useUploadThing("companyLogo");
 
 	// Récupérer l'adresse par défaut
-	const defaultAddress = company.addresses?.find((addr) => addr.isDefault);
+	const defaultAddress = company.addresses?.[0];
 
 	const { state, dispatch, isPending } = useUpdateCompany();
 

@@ -38,5 +38,8 @@ export const GET_COMPANY_DEFAULT_SELECT = {
 			longitude: true,
 			isDefault: true,
 		},
+		where: {
+			isDefault: true,
+		},
 	},
 } as const satisfies Prisma.CompanySelect;
