@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/domains/auth/lib/auth-client";
-import { RefreshMembersButton } from "@/domains/member/features/refresh-members";
+import { RefreshMembershipButton } from "@/domains/member/features/refresh-membership/components/refresh-membership-button";
 import { Button } from "@/shared/components";
 import { ErrorPage } from "@/shared/components/error-page";
 import { LockIcon, UserPlus } from "lucide-react";
@@ -42,7 +42,7 @@ export default function ForbiddenPage() {
 						</p>
 					</div>
 					<div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-						<RefreshMembersButton />
+						<RefreshMembershipButton />
 						<Button onClick={handleLogout} variant="destructive">
 							Se déconnecter
 						</Button>

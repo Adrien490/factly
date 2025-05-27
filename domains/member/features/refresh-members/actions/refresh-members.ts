@@ -13,10 +13,9 @@ import { headers } from "next/headers";
 import { refreshMembersSchema } from "../schemas";
 
 /**
- * Action serveur pour rafraîchir les membres et le membership
+ * Action serveur pour rafraîchir les membres
  * Validations :
  * - L'utilisateur doit être authentifié
- * - L'utilisateur doit être membre
  */
 export const refreshMembers: ServerAction<
 	null,
@@ -44,11 +43,9 @@ export const refreshMembers: ServerAction<
 			);
 		}
 
-		// 4. Invalidation des caches pour les membres et le membership
+		// 4. Invalidation des caches pour les membres uniquement
 		revalidateTag(`members`);
 		revalidateTag(`members:count`);
-		revalidateTag(`membership:${session.user.id}`);
-		revalidateTag(`membership`);
 
 		// 5. Retour de la réponse de succès
 		return createSuccessResponse(

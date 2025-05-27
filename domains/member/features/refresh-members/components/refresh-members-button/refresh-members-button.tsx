@@ -7,7 +7,8 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components/ui";
-import { useRefreshMembers } from "../hooks/use-refresh-members";
+import { RefreshCw } from "lucide-react";
+import { useRefreshMembers } from "../../hooks/use-refresh-members";
 
 export function RefreshMembersButton() {
 	const { dispatch, isPending } = useRefreshMembers();
@@ -18,7 +19,7 @@ export function RefreshMembersButton() {
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button type="submit" variant="outline" disabled={isPending}>
-							Réessayer
+							<RefreshCw className="h-4 w-4" />
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent>
