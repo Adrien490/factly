@@ -1,5 +1,8 @@
 import { CreateMemberSheetForm } from "@/domains/member/features/create-member";
-import { getMembers } from "@/domains/member/features/get-members";
+import {
+	getMembers,
+	memberSortBySchema,
+} from "@/domains/member/features/get-members";
 import { RefreshMembersButton } from "@/domains/member/features/refresh-members";
 
 import {
@@ -20,6 +23,7 @@ import {
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
 import { Suspense } from "react";
+import { z } from "zod";
 
 type PageProps = {
 	searchParams: Promise<{
@@ -96,11 +100,10 @@ export default async function MembersPage({ searchParams }: PageProps) {
 
 			<Suspense fallback={<MemberDataTableSkeleton />}>
 				<MemberDataTable
-					selectedMemberIds={selectedMemberIds}
 					membersPromise={getMembers({
 						perPage: Number(perPage) || 10,
 						page: Number(page) || 1,
-						sortBy: sortBy as "createdAt" | "user",
+						sortBy: sortBy as z.infer<typeof memberSortBySchema>,
 						sortOrder: sortOrder as SortOrder,
 						search,
 						filters,

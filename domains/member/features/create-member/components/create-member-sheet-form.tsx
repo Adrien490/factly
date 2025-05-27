@@ -14,8 +14,8 @@ import { Member } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { ReactNode, useActionState, useState } from "react";
 import { toast } from "sonner";
-import { createMember } from "../../actions/create-member";
-import { createMemberSchema } from "../../schemas/create-member-schema";
+import { createMember } from "../actions/create-member";
+import { createMemberSchema } from "../schemas";
 
 interface CreateMemberSheetFormProps {
 	children?: ReactNode;

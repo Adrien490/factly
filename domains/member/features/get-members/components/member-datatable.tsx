@@ -3,10 +3,7 @@ import {
 	Card,
 	CardContent,
 	EmptyState,
-	ItemCheckbox,
 	Pagination,
-	SelectAllCheckbox,
-	SelectionToolbar,
 	Table,
 	TableBody,
 	TableCell,
@@ -19,20 +16,15 @@ import Image from "next/image";
 import { use } from "react";
 import { GetMembersReturn } from "../types/index";
 import { MemberActions } from "./member-actions";
-import { MemberSelectionActions } from "./member-selection-actions";
 
 export interface MemberDataTableProps {
 	membersPromise: Promise<GetMembersReturn>;
 	selectedMemberIds: string[];
 }
 
-export function MemberDataTable({
-	membersPromise,
-	selectedMemberIds,
-}: MemberDataTableProps) {
+export function MemberDataTable({ membersPromise }: MemberDataTableProps) {
 	const response = use(membersPromise);
 	const { members, pagination } = response;
-	const memberIds = members.map((member) => member.id);
 
 	if (members.length === 0) {
 		return (
@@ -47,15 +39,9 @@ export function MemberDataTable({
 	return (
 		<Card>
 			<CardContent>
-				<SelectionToolbar>
-					<MemberSelectionActions selectedMemberIds={selectedMemberIds} />
-				</SelectionToolbar>
 				<Table className="group-has-[[data-pending]]:animate-pulse">
 					<TableHeader>
 						<TableRow>
-							<TableHead key="select" role="columnheader">
-								<SelectAllCheckbox itemIds={memberIds} />
-							</TableHead>
 							<TableHead key="user" role="columnheader">
 								Utilisateur
 							</TableHead>
@@ -89,9 +75,6 @@ export function MemberDataTable({
 						{members.map((member) => {
 							return (
 								<TableRow key={member.id} role="row" tabIndex={0}>
-									<TableCell role="gridcell">
-										<ItemCheckbox itemId={member.id} />
-									</TableCell>
 									<TableCell role="gridcell">
 										<div className="w-[200px] flex flex-col space-y-1">
 											<div className="flex items-center gap-2">
