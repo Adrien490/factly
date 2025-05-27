@@ -120,6 +120,10 @@ export const getSidebarNav = () => [
 				title: "Gestion des membres",
 				url: `/dashboard/company/members`,
 			},
+			{
+				title: "Gestion des droits",
+				url: `/dashboard/company/permissions`,
+			},
 		],
 	},
 	/*{

@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/domains/auth";
+import { initPermissions } from "@/domains/auth/lib/init-permissions";
 import { checkMembership } from "@/domains/member/features/check-membership";
 import db from "@/shared/lib/db";
 import {
@@ -202,15 +203,28 @@ export const createCompany: ServerAction<
 			revalidateTag(`membership:${session.user.id}`);
 		}
 
-		// 8. Invalidation du cache pour forcer un rafraîchissement des données
+		// 8. Initialisation des permissions et rôles système
+		try {
+			console.log("🔐 Initialisation des permissions...");
+			await initPermissions(db);
+		} catch (error) {
+			console.error(
+				"⚠️ Erreur lors de l'initialisation des permissions:",
+				error
+			);
+			// Ne pas faire échouer la création de l'entreprise si l'init des permissions échoue
+		}
+
+		// 9. Invalidation du cache pour forcer un rafraîchissement des données
 		revalidateTag("companies");
 		revalidateTag("companies:main");
 		revalidateTag(`companies:${company.id}`);
+		revalidateTag(`membership:${session.user.id}`);
 
-		// 9. Retour de la réponse de succès
+		// 10. Retour de la réponse de succès
 		return createSuccessResponse(
 			company,
-			`L'entreprise ${company.name} a été créée avec succès`
+			`L'entreprise ${company.name} a été créée avec succès. Les permissions ont été initialisées.`
 		);
 	} catch (error) {
 		console.error("[CREATE_COMPANY]", error);

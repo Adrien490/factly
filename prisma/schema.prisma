@@ -202,7 +202,80 @@ model Member {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
+  // Nouveau : Relations pour les rôles
+  memberRoles MemberRole[]
+
   @@unique([userId])
+}
+
+// Nouveau modèle : Rôles
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique // Ex: "admin", "manager", "user", "viewer"
+  displayName String // Ex: "Administrateur", "Gestionnaire", "Utilisateur", "Lecteur"
+  description String? // Description du rôle
+  isSystem    Boolean  @default(false) // Rôles système non supprimables
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  memberRoles     MemberRole[]
+  rolePermissions RolePermission[]
+
+  @@index([name])
+}
+
+// Nouveau modèle : Permissions
+model Permission {
+  id          String         @id @default(cuid())
+  type        PermissionType @unique // Utilise l'enum pour les permissions
+  name        String // Nom d'affichage (ex: "Lire les clients")
+  description String? // Description de la permission
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relations
+  rolePermissions RolePermission[]
+
+  @@index([type])
+}
+
+// Nouveau modèle : Association Member-Role (Many-to-Many)
+model MemberRole {
+  id       String @id @default(cuid())
+  memberId String
+  roleId   String
+
+  // Métadonnées
+  assignedAt DateTime  @default(now())
+  assignedBy String? // ID de l'utilisateur qui a assigné le rôle
+  expiresAt  DateTime? // Optionnel : expiration du rôle
+
+  // Relations
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, roleId])
+  @@index([memberId])
+  @@index([roleId])
+}
+
+// Nouveau modèle : Association Role-Permission (Many-to-Many)
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+
+  // Métadonnées
+  createdAt DateTime @default(now())
+
+  // Relations
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
 }
 
 model Supplier {
@@ -473,4 +546,55 @@ enum BusinessSector {
   HEALTH // Santé humaine et action sociale
   ARTS // Arts, spectacles et activités récréatives
   OTHER // Autres activités de services
+}
+
+// Enum pour les permissions
+enum PermissionType {
+  // Clients
+  CLIENTS_READ
+  CLIENTS_WRITE
+  CLIENTS_CREATE
+  CLIENTS_UPDATE
+  CLIENTS_DELETE
+
+  // Membres
+  MEMBERS_READ
+  MEMBERS_MANAGE
+
+  // Produits
+  PRODUCTS_READ
+  PRODUCTS_WRITE
+  PRODUCTS_CREATE
+  PRODUCTS_UPDATE
+  PRODUCTS_DELETE
+  PRODUCTS_MANAGE
+
+  // Fournisseurs
+  SUPPLIERS_READ
+  SUPPLIERS_WRITE
+  SUPPLIERS_CREATE
+  SUPPLIERS_UPDATE
+  SUPPLIERS_DELETE
+  SUPPLIERS_MANAGE
+
+  // Entreprises
+  COMPANIES_READ
+  COMPANIES_UPDATE
+  COMPANIES_MANAGE
+
+  // Paramètres
+  SETTINGS_MANAGE
+
+  // Années fiscales
+  FISCAL_YEARS_MANAGE
+
+  // Adresses
+  ADDRESSES_READ
+  ADDRESSES_WRITE
+  ADDRESSES_MANAGE
+
+  // Contacts
+  CONTACTS_READ
+  CONTACTS_WRITE
+  CONTACTS_MANAGE
 }
