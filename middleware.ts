@@ -20,18 +20,20 @@ export async function middleware(request: NextRequest) {
 	const { nextUrl } = request;
 	const isLoggedIn = !!session;
 
+	// Allow API routes to pass through
 	if (publicApiRoutes.some((route) => nextUrl.pathname.startsWith(route))) {
 		return NextResponse.next();
 	}
 
+	// Redirect logged-in users from public-only routes to dashboard
 	if (
 		isLoggedIn &&
-		publicOnlyRoutes.some((route) => nextUrl.pathname.startsWith(route)) &&
-		nextUrl.pathname !== "/dashboard"
+		publicOnlyRoutes.some((route) => nextUrl.pathname === route)
 	) {
 		return Response.redirect(new URL("/dashboard", nextUrl.origin));
 	}
 
+	// Redirect non-logged-in users from protected routes to home
 	if (
 		!isLoggedIn &&
 		protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))
@@ -52,7 +54,8 @@ export const config = {
 		 * - _next/static (static files)
 		 * - _next/image (image optimization files)
 		 * - favicon.ico (favicon file)
+		 * - dashboard (protected routes)
 		 */
-		"/((?!api|_next/static|_next/image|favicon.ico).*)",
+		"/((?!api|_next/static|_next/image|favicon.ico|dashboard).*)",
 	],
 };
