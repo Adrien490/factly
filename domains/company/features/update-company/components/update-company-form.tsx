@@ -57,10 +57,9 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 				loadingMessage: "Mise à jour de l'entreprise en cours...",
 				onSuccess: () => {
 					toast.success("Entreprise mise à jour avec succès", {
-						description: `L'entreprise ${company.name} a été mise à jour.`,
+						description: `L'entreprise a été mise à jour.`,
 						duration: 5000,
 					});
-					router.push("/dashboard/companies");
 				},
 			})
 		),
