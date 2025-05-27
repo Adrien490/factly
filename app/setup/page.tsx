@@ -1,6 +1,15 @@
 import { searchAddress } from "@/domains/address/features/search-address";
-import { CreateCompanyForm } from "@/domains/company";
-import { PageContainer, PageHeader } from "@/shared/components";
+import { auth } from "@/domains/auth";
+import { CreateCompanyForm, getCompany } from "@/domains/company";
+import {
+	PageContainer,
+	PageHeader,
+	UserAvatar,
+	UserAvatarSkeleton,
+} from "@/shared/components";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 type Props = {
 	searchParams: Promise<{
@@ -16,6 +25,10 @@ type Props = {
 };
 
 export default async function NewOrganizationPage({ searchParams }: Props) {
+	const company = await getCompany();
+	if (company) {
+		redirect("/dashboard");
+	}
 	const {
 		q = "",
 		postcode,
@@ -46,7 +59,24 @@ export default async function NewOrganizationPage({ searchParams }: Props) {
 
 	return (
 		<PageContainer>
-			<PageHeader title="Créer une entreprise pour accéder à l'espace de travail" />
+			<PageHeader
+				title="Créer votre entreprise"
+				description="Renseignez les informations de votre entreprise pour accéder au tableau de bord"
+			/>
+
+			{/* User dropdown positionné en haut à droite */}
+			<div className="absolute top-4 right-4 z-50">
+				<Suspense fallback={<UserAvatarSkeleton />}>
+					<UserAvatar
+						size="sm"
+						userPromise={auth.api
+							.getSession({ headers: await headers() })
+							.then((session) => session?.user ?? null)}
+					/>
+				</Suspense>
+			</div>
+
+			{/* Formulaire */}
 			<CreateCompanyForm searchAddressPromise={searchAddressPromise} />
 		</PageContainer>
 	);

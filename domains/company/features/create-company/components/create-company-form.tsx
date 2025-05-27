@@ -1,6 +1,7 @@
 "use client";
 
-import { FormLabel } from "@/shared/components/ui";
+import { Button, FormLabel } from "@/shared/components/ui";
+import Image from "next/image";
 
 import { COUNTRY_OPTIONS } from "@/domains/address/constants/country-options";
 import {
@@ -11,6 +12,7 @@ import {
 	BUSINESS_SECTOR_OPTIONS,
 	EMPLOYEE_COUNT_OPTIONS,
 } from "@/domains/company/constants";
+import { DotsLoader } from "@/shared/components";
 import { Autocomplete } from "@/shared/components/autocomplete";
 import { ContentCard } from "@/shared/components/content-card";
 import {
@@ -21,6 +23,7 @@ import {
 } from "@/shared/components/forms";
 import { FormFooter } from "@/shared/components/forms/form-footer";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
+import { UploadDropzone, useUploadThing } from "@/shared/lib/uploadthing";
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { AddressType, Company, Country, EmployeeCount } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
@@ -39,25 +42,19 @@ export function CreateCompanyForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const router = useRouter();
+	const { isUploading, startUpload } = useUploadThing("companyLogo");
 
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			createCompany,
 			createToastCallbacks<Company, typeof createCompanySchema>({
 				loadingMessage: "Création de l'entreprise en cours...",
-				onSuccess: (result) => {
+				onSuccess: () => {
 					toast.success("Entreprise créée avec succès", {
-						description: `L'entreprise a été ajoutée.`,
+						description: `L'entreprise a été ajoutée. Vous allez être redirigé vers le tableau de bord...`,
 						duration: 5000,
-						action: {
-							label: "Voir l'entreprise",
-							onClick: () => {
-								if (result.data?.id) {
-									router.push(`/dashboard/companies/${result.data.id}`);
-								}
-							},
-						},
 					});
+					router.push("/dashboard");
 					form.reset();
 				},
 			})
@@ -179,6 +176,12 @@ export function CreateCompanyForm({ searchAddressPromise }: Props) {
 				)}
 			</form.Field>
 
+			<form.Field name="logoUrl">
+				{(field) => (
+					<input type="hidden" name="logoUrl" value={field.state.value ?? ""} />
+				)}
+			</form.Field>
+
 			<form.Field name="latitude">
 				{(field) => (
 					<input
@@ -279,15 +282,78 @@ export function CreateCompanyForm({ searchAddressPromise }: Props) {
 							)}
 						</form.AppField>
 
-						<form.AppField name="logoUrl">
+						{/* Logo de l'entreprise */}
+						<form.Field name="logoUrl">
 							{(field) => (
-								<field.InputField
-									label="URL du logo"
-									disabled={isPending}
-									placeholder="Ex: https://www.entreprise.com/logo.png"
-								/>
+								<div className="space-y-3">
+									<div className="flex items-center justify-between">
+										<FormLabel className="text-base">
+											Logo de l&apos;entreprise
+										</FormLabel>
+										{field.state.value && (
+											<Button
+												disabled={isPending}
+												type="button"
+												variant="ghost"
+												size="sm"
+												className="text-destructive"
+												onClick={() => field.handleChange("")}
+											>
+												Supprimer
+											</Button>
+										)}
+									</div>
+
+									{field.state.value ? (
+										<div className="flex items-center justify-center">
+											<div className="relative h-24 w-24 rounded-md overflow-hidden">
+												<Image
+													src={field.state.value}
+													alt="Logo de l'entreprise"
+													fill
+													sizes="96px"
+													className="object-cover"
+													priority
+												/>
+											</div>
+										</div>
+									) : (
+										<div className="relative">
+											<UploadDropzone
+												endpoint="companyLogo"
+												onChange={async (files) => {
+													const res = await startUpload(files);
+													const logoUrl = res?.[0]?.serverData?.url;
+													if (logoUrl) {
+														field.handleChange(logoUrl);
+													}
+												}}
+												onUploadError={(error) => {
+													console.error(error);
+													toast.error("Erreur lors de l'upload", {
+														description:
+															"Impossible de charger le logo. Veuillez réessayer.",
+													});
+												}}
+												className="border-2 border-dashed border-muted-foreground/25 h-32 rounded-lg bg-muted/5 hover:bg-muted/10 transition-all duration-300 ut-label:text-sm ut-allowed-content:hidden hover:border-primary/30 ut-container:cursor-pointer ut-button:bg-primary ut-button:hover:bg-primary/90"
+											/>
+
+											{isUploading && (
+												<div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-[2px] rounded-lg transition-all duration-300">
+													<div className="flex items-center gap-3 flex-col">
+														<DotsLoader color="primary" size="xs" />
+													</div>
+												</div>
+											)}
+										</div>
+									)}
+									<p className="text-xs text-muted-foreground mt-2">
+										Formats acceptés: JPG, PNG ou SVG. Max. 2MB.
+									</p>
+									<FieldInfo field={field} />
+								</div>
 							)}
-						</form.AppField>
+						</form.Field>
 					</div>
 				</ContentCard>
 
@@ -681,33 +747,6 @@ export function CreateCompanyForm({ searchAddressPromise }: Props) {
 								/>
 							)}
 						</form.AppField>
-
-						{/* Switch pour entreprise principale */}
-						<form.Field name="isMain">
-							{(field) => (
-								<div className="flex flex-row items-center justify-between rounded-lg border p-4">
-									<div className="space-y-0.5">
-										<FormLabel className="text-base">
-											Entreprise principale
-										</FormLabel>
-										<div className="text-sm text-muted-foreground">
-											Définir cette entreprise comme entreprise principale
-										</div>
-									</div>
-									<div className="flex items-center space-x-2">
-										<input
-											type="checkbox"
-											id="isMain"
-											disabled={isPending}
-											checked={field.state.value}
-											onChange={(e) => field.handleChange(e.target.checked)}
-											className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-										/>
-									</div>
-									<FieldInfo field={field} />
-								</div>
-							)}
-						</form.Field>
 					</div>
 				</ContentCard>
 			</FormLayout>
@@ -715,7 +754,7 @@ export function CreateCompanyForm({ searchAddressPromise }: Props) {
 			<form.Subscribe selector={(state) => [state.canSubmit]}>
 				{([canSubmit]) => (
 					<FormFooter
-						disabled={!canSubmit || isPending}
+						disabled={!canSubmit || isPending || isUploading}
 						cancelHref={`/dashboard/companies`}
 						submitLabel="Créer l'entreprise"
 					/>

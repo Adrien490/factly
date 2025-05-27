@@ -12,15 +12,15 @@ export const createCompanySchema = z.object({
 	name: z.string().min(1, "Le nom de l'entreprise est requis"),
 
 	// Champs optionnels
-	logoUrl: z.string().url("URL invalide").optional().nullable(),
-	email: z.string().email("Email invalide").optional().nullable(),
+	logoUrl: z.string().optional().nullable(),
+	email: z.string().optional().nullable(),
 	legalForm: z.nativeEnum(LegalForm).optional().nullable(),
 	siret: z.string().optional().nullable(),
 	siren: z.string().optional().nullable(),
 	phoneNumber: z.string().optional().nullable(),
 	mobileNumber: z.string().optional().nullable(),
 	faxNumber: z.string().optional().nullable(),
-	website: z.string().url("URL invalide").optional().nullable(),
+	website: z.string().optional().nullable(),
 	nafApeCode: z.string().optional().nullable(),
 	capital: z.string().optional().nullable(),
 	rcs: z.string().optional().nullable(),

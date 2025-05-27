@@ -22,6 +22,7 @@ import { ThemeToggleSwitch } from "@/shared/components/theme-toggle-switch";
 import { UserDropdown } from "@/shared/components/user-dropdown";
 import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 interface OrganizationLayoutProps {
@@ -31,6 +32,10 @@ interface OrganizationLayoutProps {
 export default async function OrganizationLayout({
 	children,
 }: OrganizationLayoutProps) {
+	const company = await getCompany();
+	if (!company) {
+		redirect("/setup");
+	}
 	return (
 		<SidebarProvider>
 			<Sidebar collapsible="icon">
