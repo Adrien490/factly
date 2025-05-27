@@ -1,15 +1,27 @@
 "use client";
 
+import { authClient } from "@/domains/auth";
 import { Button } from "@/shared/components";
 import { ErrorPage } from "@/shared/components/error-page";
 import { ArrowLeftIcon, LockIcon, Mail, UserPlus } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function ForbiddenPage() {
 	const params = useParams();
 	const organizationId = params.organizationId as string;
 	console.log(organizationId);
+	const router = useRouter();
+
+	const handleLogout = () => {
+		authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					router.push("/");
+				},
+			},
+		});
+	};
 
 	return (
 		<ErrorPage
@@ -48,11 +60,7 @@ export default function ForbiddenPage() {
 								Contacter l&apos;administrateur
 							</Link>
 						</Button>
-						<Button asChild>
-							<Link href="/" className="flex items-center gap-2">
-								Accueil
-							</Link>
-						</Button>
+						<Button onClick={handleLogout}>Se déconnecter</Button>
 					</div>
 				</div>
 			}
