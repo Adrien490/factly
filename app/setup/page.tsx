@@ -52,8 +52,6 @@ export default async function NewOrganizationPage({ searchParams }: Props) {
 		...(lon && { lon: parseFloat(lon) }),
 	};
 
-	console.log(searchAddressParams);
-
 	// Recherche d'adresse
 	const searchAddressPromise = searchAddress(searchAddressParams);
 

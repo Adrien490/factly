@@ -11,12 +11,7 @@ interface UploadFieldProps {
 	label?: string;
 	onChange?: (files: File[]) => void;
 	required?: boolean;
-	endpoint:
-		| "groupImage"
-		| "organizationLogo"
-		| "companyLogo"
-		| "productImage"
-		| "userAvatar";
+	endpoint: "companyLogo" | "productImage" | "userAvatar";
 	previewSize?: "sm" | "md" | "lg";
 	accept?: string;
 	maxSize?: string;
