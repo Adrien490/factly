@@ -12,7 +12,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
-import { ChevronsUpDown, Edit, GalleryVerticalEnd } from "lucide-react";
+import { ChevronsUpDown, GalleryVerticalEnd } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { use } from "react";
@@ -75,9 +75,6 @@ export function CompanyHeader({ companyPromise }: CompanyHeaderProps) {
 								href="/dashboard/company/edit"
 								className="flex items-center"
 							>
-								<div className="flex size-6 items-center justify-center rounded-sm border">
-									<Edit className="size-3" />
-								</div>
 								<span className="flex-1">Modifier</span>
 							</Link>
 						</DropdownMenuItem>
