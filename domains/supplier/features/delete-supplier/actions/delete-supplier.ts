@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -31,35 +30,16 @@ export const deleteSupplier: ServerAction<
 			);
 		}
 
-		// 2. Vérification de base des données requises
+		// 2. Récupération des données
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
 		};
 
 		console.log("[DELETE_SUPPLIER] Form Data:", {
 			id: rawData.id,
-			organizationId: rawData.organizationId,
 		});
 
-		// Vérification que l'organizationId n'est pas vide
-		if (!rawData.organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
+		// 3. Validation complète des données
 		const validation = deleteSupplierSchema.safeParse(rawData);
 
 		if (!validation.success) {
@@ -70,11 +50,10 @@ export const deleteSupplier: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence du fournisseur
+		// 4. Vérification de l'existence du fournisseur
 		const existingSupplier = await db.supplier.findFirst({
 			where: {
 				id: validation.data.id,
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -89,17 +68,15 @@ export const deleteSupplier: ServerAction<
 			);
 		}
 
-		// 6. Suppression
+		// 5. Suppression
 		await db.supplier.delete({
 			where: { id: validation.data.id },
 		});
 
-		// Revalidation du cache avec les tags appropriés
-		revalidateTag(`organizations:${rawData.organizationId}:suppliers`);
-		revalidateTag(
-			`organizations:${rawData.organizationId}:supplier:${existingSupplier.id}`
-		);
-		revalidateTag(`organizations:${rawData.organizationId}:suppliers:count`);
+		// Revalidation du cache
+		revalidateTag(`suppliers`);
+		revalidateTag(`suppliers:${existingSupplier.id}`);
+		revalidateTag(`suppliers:count`);
 
 		return createSuccessResponse(null, `Fournisseur supprimé définitivement`);
 	} catch (error) {

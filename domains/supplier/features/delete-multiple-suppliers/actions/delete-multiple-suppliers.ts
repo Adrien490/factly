@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -32,35 +31,15 @@ export const deleteMultipleSuppliers: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const supplierIds = formData.getAll("ids") as string[];
 
 		console.log("[DELETE_SUPPLIERS] Form Data:", {
 			ids: supplierIds,
-			organizationId,
 		});
 
-		// Vérification que l'organizationId n'est pas vide
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
+		// 3. Validation complète des données
 		const validation = deleteMultipleSuppliersSchema.safeParse({
 			ids: supplierIds,
-			organizationId,
 		});
 
 		if (!validation.success) {
@@ -70,11 +49,10 @@ export const deleteMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence des fournisseurs
+		// 4. Vérification de l'existence des fournisseurs
 		const existingSuppliers = await db.supplier.findMany({
 			where: {
 				id: { in: validation.data.ids },
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -88,20 +66,19 @@ export const deleteMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 6. Suppression
+		// 5. Suppression
 		await db.supplier.deleteMany({
 			where: {
 				id: { in: validation.data.ids },
-				organizationId: validation.data.organizationId,
 			},
 		});
 
 		// Revalidation du cache
-		revalidateTag(`organizations:${organizationId}:suppliers`);
+		revalidateTag(`suppliers`);
 		validation.data.ids.forEach((supplierId) => {
-			revalidateTag(`organizations:${organizationId}:suppliers:${supplierId}`);
+			revalidateTag(`suppliers:${supplierId}`);
 		});
-		revalidateTag(`organizations:${organizationId}:suppliers:count`);
+		revalidateTag(`suppliers:count`);
 
 		return createSuccessResponse(
 			null,

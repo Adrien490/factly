@@ -1,15 +1,14 @@
 "use client";
+
 import { useTransition } from "react";
 import { useDeleteFiscalYear } from "../hooks/use-delete-fiscal-year";
 
 interface DeleteFiscalYearButtonProps {
-	organizationId: string;
 	id: string;
 	children: React.ReactNode;
 }
 
 export function DeleteFiscalYearButton({
-	organizationId,
 	id,
 	children,
 }: DeleteFiscalYearButtonProps) {
@@ -20,7 +19,6 @@ export function DeleteFiscalYearButton({
 	const handleDelete = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 
 		startTransition(() => {
 			dispatch(formData);

@@ -1,5 +1,3 @@
 import { z } from "zod";
 
-export const refreshFiscalYearsSchema = z.object({
-	organizationId: z.string(),
-});
+export const refreshFiscalYearsSchema = z.object({});

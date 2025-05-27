@@ -7,7 +7,6 @@ import { z } from "zod";
 export const updateClientStatusSchema = z.object({
 	// Identifiants
 	id: z.string().min(1, "L'ID du client est requis"),
-	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 	// Nouveau statut
 	status: z.nativeEnum(ClientStatus, {
 		required_error: "Le statut est requis",

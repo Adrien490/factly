@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { validateProductStatusTransition } from "@/domains/product/utils";
 import db from "@/shared/lib/db";
 import {
@@ -48,20 +47,10 @@ export const archiveProduct: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 5. Vérification de l'existence du produit
 		const existingProduct = await db.product.findUnique({
 			where: {
 				id,
-				organizationId,
 			},
 			select: {
 				id: true,
@@ -101,7 +90,6 @@ export const archiveProduct: ServerAction<
 		const updatedProduct = await db.product.update({
 			where: {
 				id,
-				organizationId,
 			},
 			data: {
 				status: ProductStatus.ARCHIVED,
@@ -109,8 +97,8 @@ export const archiveProduct: ServerAction<
 		});
 
 		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:products:${id}`);
-		revalidateTag(`organizations:${organizationId}:products`);
+		revalidateTag(`products:${id}`);
+		revalidateTag(`products`);
 
 		return createSuccessResponse(
 			updatedProduct,

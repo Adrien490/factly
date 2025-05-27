@@ -45,7 +45,6 @@ export function CreateAddressSheetForm({
 	const clientId = params.clientId as string;
 	const supplierId = params.supplierId as string;
 	const pathname = usePathname();
-	const organizationId = params.organizationId as string;
 
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const router = useRouter();
@@ -68,7 +67,6 @@ export function CreateAddressSheetForm({
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			organizationId,
 			addressType: AddressType.BILLING as AddressType,
 			addressLine1: "",
 			addressLine2: "",
@@ -165,15 +163,7 @@ export function CreateAddressSheetForm({
 					</form.Subscribe>
 
 					{/* Champs cachés */}
-					<form.AppField name="organizationId">
-						{(field) => (
-							<input
-								type="hidden"
-								name="organizationId"
-								value={field.state.value}
-							/>
-						)}
-					</form.AppField>
+
 					{clientId && (
 						<form.AppField name="clientId">
 							{(field) => (

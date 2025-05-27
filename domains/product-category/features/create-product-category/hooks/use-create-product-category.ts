@@ -20,9 +20,7 @@ export function useCreateProductCategory() {
 						label: "Voir la catégorie",
 						onClick: (data) => {
 							if (data?.id) {
-								router.push(
-									`/dashboard/${data.organizationId}/products/categories/${data.id}`
-								);
+								router.push(`/dashboard/products/categories/${data.id}`);
 							}
 						},
 					},

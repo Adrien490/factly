@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useUpdateClientStatus } from "../hooks/use-update-client-status";
 
 interface UpdateClientStatusButtonProps {
-	organizationId: string;
 	id: string;
 	status: ClientStatus;
 	children: React.ReactNode;
 }
 
 export function UpdateClientStatusButton({
-	organizationId,
 	id,
 	status,
 	children,
@@ -24,7 +22,6 @@ export function UpdateClientStatusButton({
 	const handleDelete = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
 		startTransition(() => {
 			dispatch(formData);

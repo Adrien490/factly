@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getProductsSchema } from "../schemas";
@@ -24,15 +23,6 @@ export async function getProducts(
 
 		if (!session?.user?.id) {
 			throw new Error("Unauthorized");
-		}
-
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(
-			params.organizationId as string
-		);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
 		}
 
 		// Validation des paramètres

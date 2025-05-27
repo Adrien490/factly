@@ -20,18 +20,16 @@ export async function fetchClients(
 ): Promise<GetClientsReturn> {
 	"use cache";
 
-	// Tag de base pour tous les clients de l'organisation
-	cacheTag(`organizations:${params.organizationId}:clients`);
+	// Tag de base pour tous les clients
+	cacheTag(`clients`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(`organizations:${params.organizationId}:search:${params.search}`);
+		cacheTag(`clients:search:${params.search}`);
 	}
 
 	// Tag pour le tri
-	cacheTag(
-		`organizations:${params.organizationId}:sort:${params.sortBy}:${params.sortOrder}`
-	);
+	cacheTag(`clients:sort:${params.sortBy}:${params.sortOrder}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
 		stale: 60 * 60 * 24,
@@ -44,24 +42,16 @@ export async function fetchClients(
 		Math.max(1, Number(params.perPage) || GET_CLIENTS_DEFAULT_PER_PAGE),
 		GET_CLIENTS_MAX_RESULTS_PER_PAGE
 	);
-	cacheTag(
-		`organizations:${params.organizationId}:page:${page}:perPage:${perPage}`
-	);
+	cacheTag(`clients:page:${page}:perPage:${perPage}`);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
 		Object.entries(params.filters).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
-				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value.join(
-						","
-					)}`
-				);
+				cacheTag(`clients:filter:${key}:${value.join(",")}`);
 			} else {
-				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value}`
-				);
+				cacheTag(`clients:filter:${key}:${value}`);
 			}
 		});
 	}

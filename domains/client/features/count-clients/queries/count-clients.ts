@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { fetchCount } from ".";
@@ -23,13 +22,6 @@ export async function countClients(
 
 		if (!session?.user?.id) {
 			throw new Error("Unauthorized");
-		}
-
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(params.organizationId);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
 		}
 
 		// Appel à la fonction

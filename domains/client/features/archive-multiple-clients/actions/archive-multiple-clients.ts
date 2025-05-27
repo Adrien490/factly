@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -33,27 +32,16 @@ export const archiveMultipleClients: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
 
 		// 3. Validation des données
 		const validation = archiveMultipleClientsSchema.safeParse({
 			ids,
-			organizationId,
 		});
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				"Validation échouée. Veuillez vérifier votre sélection."
-			);
-		}
-
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
 			);
 		}
 
@@ -63,7 +51,6 @@ export const archiveMultipleClients: ServerAction<
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -114,7 +101,6 @@ export const archiveMultipleClients: ServerAction<
 				id: {
 					in: clientsToArchive.map((client) => client.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 			data: {
 				status: ClientStatus.ARCHIVED,
@@ -127,15 +113,14 @@ export const archiveMultipleClients: ServerAction<
 				id: {
 					in: clientsToArchive.map((client) => client.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 		});
 
 		// 8. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:clients:${id}`);
+			revalidateTag(`clients:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`clients`);
 
 		// 9. Message de succès personnalisé
 		const message = `${clientsToArchive.length} client(s) ont été archivé(s) avec succès`;

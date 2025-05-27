@@ -1,14 +1,13 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
-	ServerAction,
 	createErrorResponse,
 	createSuccessResponse,
 	createValidationErrorResponse,
+	ServerAction,
 } from "@/shared/types/server-action";
 import { Contact } from "@prisma/client";
 import { revalidateTag } from "next/cache";
@@ -24,90 +23,59 @@ export const setDefaultContact: ServerAction<
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
-
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour effectuer cette action"
+				"Vous devez être connecté pour définir un contact par défaut"
 			);
 		}
 
+		// 2. Récupération des données
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
-			clientId: formData.get("clientId") as string | null,
-			supplierId: formData.get("supplierId") as string | null,
+			clientId: formData.get("clientId") as string,
+			supplierId: formData.get("supplierId") as string,
 		};
 
-		console.log("[SET_DEFAULT_CONTACT] Raw Data:", rawData);
-
-		// 2. Validation des données
+		// 3. Validation des données
 		const validation = setDefaultContactSchema.safeParse(rawData);
-
 		if (!validation.success) {
-			console.log("[SET_DEFAULT_CONTACT] Validation Error:", validation.error);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Données invalides"
+				"Validation échouée. Veuillez vérifier votre saisie."
 			);
 		}
 
-		const { id, organizationId, clientId, supplierId } = validation.data;
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
+		const { id, clientId, supplierId } = validation.data;
 
 		// 4. Vérification de l'existence du contact
 		const existingContact = await db.contact.findFirst({
 			where: {
 				id,
-				OR: [
-					{
-						client: {
-							organizationId,
-						},
-					},
-					{
-						supplier: {
-							organizationId,
-						},
-					},
-				],
+				OR: [{ clientId }, { supplierId }],
 			},
 		});
 
 		if (!existingContact) {
-			return createErrorResponse(
-				ActionStatus.NOT_FOUND,
-				"Le contact n'existe pas"
-			);
+			return createErrorResponse(ActionStatus.NOT_FOUND, "Contact introuvable");
 		}
 
-		// 4.1 Vérification si le contact est déjà par défaut
+		// 5. Si le contact est déjà par défaut, pas besoin de continuer
 		if (existingContact.isDefault) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"Ce contact est déjà défini comme contact par défaut"
+			return createSuccessResponse(
+				existingContact,
+				"Ce contact est déjà défini par défaut"
 			);
 		}
 
-		// 5. Mise à jour des contacts dans une transaction
-		await db.$transaction(async (tx) => {
-			// 5.1 Réinitialiser le statut par défaut des autres contacts
+		// 6. Mise à jour dans une transaction
+		const updatedContact = await db.$transaction(async (tx) => {
+			// Désactiver tous les autres contacts par défaut
 			if (clientId) {
 				await tx.contact.updateMany({
 					where: {
 						clientId,
-						id: {
-							not: id,
-						},
+						isDefault: true,
 					},
 					data: {
 						isDefault: false,
@@ -119,9 +87,7 @@ export const setDefaultContact: ServerAction<
 				await tx.contact.updateMany({
 					where: {
 						supplierId,
-						id: {
-							not: id,
-						},
+						isDefault: true,
 					},
 					data: {
 						isDefault: false,
@@ -129,37 +95,29 @@ export const setDefaultContact: ServerAction<
 				});
 			}
 
-			// 5.2 Définir le contact comme contact par défaut
-			await tx.contact.update({
-				where: {
-					id,
-				},
-				data: {
-					isDefault: true,
-				},
+			// Définir le nouveau contact par défaut
+			return await tx.contact.update({
+				where: { id },
+				data: { isDefault: true },
 			});
 		});
 
-		// 6. Revalidation du cache
+		// 7. Invalidation du cache
 		if (clientId) {
-			revalidateTag(`organizations:${organizationId}:clients`);
-			revalidateTag(
-				`organizations:${organizationId}:clients:${clientId}:contacts`
-			);
+			revalidateTag(`clients`);
+			revalidateTag(`clients:${clientId}:contacts`);
 		}
 		if (supplierId) {
-			revalidateTag(`organizations:${organizationId}:suppliers`);
-			revalidateTag(
-				`organizations:${organizationId}:suppliers:${supplierId}:contacts`
-			);
+			revalidateTag(`suppliers`);
+			revalidateTag(`suppliers:${supplierId}:contacts`);
 		}
 
 		return createSuccessResponse(
-			existingContact,
-			"Le contact par défaut a été mis à jour avec succès"
+			updatedContact,
+			"Contact défini par défaut avec succès"
 		);
 	} catch (error) {
-		console.error("Erreur lors de la définition du contact par défaut:", error);
+		console.error("[SET_DEFAULT_CONTACT]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
 			"Une erreur est survenue lors de la définition du contact par défaut"

@@ -1,44 +1,39 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
+import db from "@/shared/lib/db";
 import { headers } from "next/headers";
-import { z } from "zod";
+import { notFound, redirect } from "next/navigation";
 import { getFiscalYearSchema } from "../schemas";
-import { GetFiscalYearReturn } from "../types";
-import { fetchFiscalYear } from "./fetch-fiscal-year";
 
 /**
  * Récupère les détails d'une année fiscale spécifique
  * Gère l'authentification et les accès avant d'appeler la fonction cacheable
  */
-export async function getFiscalYear(
-	params: z.infer<typeof getFiscalYearSchema>
-): Promise<GetFiscalYearReturn> {
-	// Vérification de l'authentification
+export async function getFiscalYear(params: { id: string }) {
+	// 1. Vérification de l'authentification
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
 
 	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
+		redirect("/auth/signin");
 	}
 
-	// Validation des paramètres
+	// 2. Validation des paramètres
 	const validation = getFiscalYearSchema.safeParse(params);
 	if (!validation.success) {
-		throw new Error("Invalid parameters");
+		notFound();
 	}
 
-	const validatedParams = validation.data;
+	// 3. Récupération de l'année fiscale
+	const fiscalYear = await db.fiscalYear.findUnique({
+		where: { id: validation.data.id },
+	});
 
-	// Vérification des droits d'accès à l'organisation
-	const hasAccess = await hasOrganizationAccess(validatedParams.organizationId);
-
-	if (!hasAccess) {
-		throw new Error("Access denied");
+	if (!fiscalYear) {
+		return null;
 	}
 
-	// Appel à la fonction cacheable
-	return fetchFiscalYear(validatedParams);
+	return fiscalYear;
 }

@@ -12,7 +12,6 @@ import {
 import { SetDefaultContactButton } from "./set-default-contact-button";
 
 interface SetDefaultContactAlertDialogProps {
-	organizationId: string;
 	id: string;
 	clientId?: string;
 	supplierId?: string;
@@ -20,7 +19,6 @@ interface SetDefaultContactAlertDialogProps {
 }
 
 export function SetDefaultContactAlertDialog({
-	organizationId,
 	id,
 	clientId,
 	supplierId,
@@ -43,7 +41,6 @@ export function SetDefaultContactAlertDialog({
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
 					<SetDefaultContactButton
-						organizationId={organizationId}
 						id={id}
 						clientId={clientId}
 						supplierId={supplierId}

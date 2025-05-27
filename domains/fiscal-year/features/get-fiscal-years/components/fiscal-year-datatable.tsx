@@ -45,12 +45,10 @@ import { GetFiscalYearsReturn } from "../types";
 
 export interface FiscalYearDataTableProps {
 	fiscalYearsPromise: Promise<GetFiscalYearsReturn>;
-	organizationId: string;
 }
 
 export function FiscalYearDataTable({
 	fiscalYearsPromise,
-	organizationId,
 }: FiscalYearDataTableProps) {
 	const fiscalYears = use(fiscalYearsPromise);
 
@@ -180,7 +178,7 @@ export function FiscalYearDataTable({
 										>
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}`}
+													href={`/dashboard/fiscal-years/${fiscalYear.id}`}
 													className={cn("flex w-full items-center")}
 												>
 													<Eye className="h-4 w-4 mr-2" />
@@ -211,10 +209,7 @@ export function FiscalYearDataTable({
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<SetFiscalYearAsDefaultButton
-															id={fiscalYear.id}
-															organizationId={organizationId}
-														>
+														<SetFiscalYearAsDefaultButton id={fiscalYear.id}>
 															<AlertDialogAction>
 																Définir comme période courante
 															</AlertDialogAction>
@@ -224,7 +219,7 @@ export function FiscalYearDataTable({
 											</AlertDialog>
 											<DropdownMenuItem asChild>
 												<Link
-													href={`/dashboard/${organizationId}/fiscal-years/${fiscalYear.id}/edit`}
+													href={`/dashboard/fiscal-years/${fiscalYear.id}/edit`}
 													className={cn("flex w-full items-center")}
 												>
 													<Edit2 className="h-4 w-4 mr-2" />
@@ -259,10 +254,7 @@ export function FiscalYearDataTable({
 													</AlertDialogHeader>
 													<AlertDialogFooter>
 														<AlertDialogCancel>Annuler</AlertDialogCancel>
-														<DeleteFiscalYearButton
-															id={fiscalYear.id}
-															organizationId={organizationId}
-														>
+														<DeleteFiscalYearButton id={fiscalYear.id}>
 															<AlertDialogAction>Supprimer</AlertDialogAction>
 														</DeleteFiscalYearButton>
 													</AlertDialogFooter>

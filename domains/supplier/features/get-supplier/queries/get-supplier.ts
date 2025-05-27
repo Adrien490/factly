@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getSupplierSchema } from "../schemas";
@@ -9,7 +8,7 @@ import { fetchSupplier } from "./fetch-supplier";
 
 /**
  * Récupère les détails d'un fournisseur spécifique
- * Gère l'authentification et les accès avant d'appeler la fonction cacheable
+ * Gère l'authentification avant d'appeler la fonction cacheable
  */
 export async function getSupplier(params: z.infer<typeof getSupplierSchema>) {
 	try {
@@ -29,15 +28,6 @@ export async function getSupplier(params: z.infer<typeof getSupplierSchema>) {
 		}
 
 		const validatedParams = validation.data;
-
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(
-			validatedParams.organizationId
-		);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
-		}
 
 		// Appel à la fonction cacheable
 		return fetchSupplier(validatedParams);

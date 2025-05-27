@@ -4,7 +4,6 @@
  */
 export const GET_FISCAL_YEAR_DEFAULT_SELECT = {
 	id: true,
-	organizationId: true,
 	name: true,
 	description: true,
 	startDate: true,

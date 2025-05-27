@@ -12,10 +12,8 @@ import { buildSearchConditions } from "./build-search-conditions";
 export const buildWhereClause = (
 	params: z.infer<typeof getClientsSchema>
 ): Prisma.ClientWhereInput => {
-	// Condition de base qui doit toujours être respectée
-	const whereClause: Prisma.ClientWhereInput = {
-		organizationId: params.organizationId as string,
-	};
+	// Condition de base
+	const whereClause: Prisma.ClientWhereInput = {};
 
 	// Ajouter les conditions de recherche textuelle
 	if (typeof params.search === "string" && params.search.trim()) {

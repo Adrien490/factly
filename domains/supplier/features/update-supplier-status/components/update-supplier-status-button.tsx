@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useUpdateSupplierStatus } from "../hooks/use-update-supplier-status";
 
 interface UpdateSupplierStatusButtonProps {
-	organizationId: string;
 	id: string;
 	status: SupplierStatus;
 	children: React.ReactNode;
 }
 
 export function UpdateSupplierStatusButton({
-	organizationId,
 	id,
 	status,
 	children,
@@ -24,7 +22,6 @@ export function UpdateSupplierStatusButton({
 	const handleUpdate = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
 		startTransition(() => {
 			dispatch(formData);

@@ -28,13 +28,11 @@ import { UpdateMultipleSupplierStatusButton } from "../features/update-multiple-
 
 interface SupplierSelectionActionsProps {
 	selectedSupplierIds: string[];
-	organizationId: string;
 	isArchived?: boolean;
 }
 
 export function SupplierSelectionActions({
 	selectedSupplierIds,
-	organizationId,
 	isArchived,
 }: SupplierSelectionActionsProps) {
 	return (
@@ -96,7 +94,6 @@ export function SupplierSelectionActions({
 											<AlertDialogFooter>
 												<AlertDialogCancel>Annuler</AlertDialogCancel>
 												<UpdateMultipleSupplierStatusButton
-													organizationId={organizationId}
 													ids={selectedSupplierIds}
 													status={status.value}
 												>
@@ -132,10 +129,7 @@ export function SupplierSelectionActions({
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<ArchiveMultipleSuppliersButton
-										organizationId={organizationId}
-										ids={selectedSupplierIds}
-									>
+									<ArchiveMultipleSuppliersButton ids={selectedSupplierIds}>
 										<AlertDialogAction>Archiver</AlertDialogAction>
 									</ArchiveMultipleSuppliersButton>
 								</AlertDialogFooter>
@@ -179,7 +173,6 @@ export function SupplierSelectionActions({
 											<AlertDialogFooter>
 												<AlertDialogCancel>Annuler</AlertDialogCancel>
 												<RestoreMultipleSuppliersButton
-													organizationId={organizationId}
 													ids={selectedSupplierIds}
 													status={status.value}
 												>
@@ -216,10 +209,7 @@ export function SupplierSelectionActions({
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<DeleteMultipleSuppliersButton
-										organizationId={organizationId}
-										ids={selectedSupplierIds}
-									>
+									<DeleteMultipleSuppliersButton ids={selectedSupplierIds}>
 										<AlertDialogAction>Supprimer</AlertDialogAction>
 									</DeleteMultipleSuppliersButton>
 								</AlertDialogFooter>

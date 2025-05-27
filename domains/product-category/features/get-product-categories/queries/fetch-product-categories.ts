@@ -23,17 +23,13 @@ export async function fetchProductCategories(
 	"use cache";
 
 	// Tags de cache
-	cacheTag(`organizations:${params.organizationId}:product-categories`);
+	cacheTag(`product-categories`);
 
 	if (params.search) {
-		cacheTag(
-			`organizations:${params.organizationId}:product-categories:search:${params.search}`
-		);
+		cacheTag(`product-categories:search:${params.search}`);
 	}
 
-	cacheTag(
-		`organizations:${params.organizationId}:product-categories:sort:${params.sortBy}:${params.sortOrder}`
-	);
+	cacheTag(`product-categories:sort:${params.sortBy}:${params.sortOrder}`);
 
 	// Normalisation et tag pour la pagination
 	const page = Math.max(1, Number(params.page) || 1);
@@ -41,9 +37,7 @@ export async function fetchProductCategories(
 		Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
 		MAX_RESULTS_PER_PAGE
 	);
-	cacheTag(
-		`organizations:${params.organizationId}:product-categories:page:${page}:perPage:${perPage}`
-	);
+	cacheTag(`product-categories:page:${page}:perPage:${perPage}`);
 
 	// Durée de vie du cache
 	cacheLife({

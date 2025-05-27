@@ -8,7 +8,6 @@ import { productFiltersSchema } from "./product-filters-schema";
 import { productSortBySchema } from "./product-sort-by-schema";
 
 export const getProductsSchema = z.object({
-	organizationId: z.string(),
 	search: z.string().optional(),
 	filters: productFiltersSchema.default({}),
 	page: z.number().default(1),

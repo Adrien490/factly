@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -52,15 +51,6 @@ export const deleteAddress: ServerAction<
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawOrganizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 4. Validation complète des données
 		const validation = deleteAddressSchema.safeParse({
 			id: rawId,
@@ -81,8 +71,6 @@ export const deleteAddress: ServerAction<
 				isDefault: true,
 				clientId: true,
 				supplierId: true,
-				client: { select: { organizationId: true } },
-				supplier: { select: { organizationId: true } },
 				addressType: true,
 			},
 		});
@@ -92,21 +80,11 @@ export const deleteAddress: ServerAction<
 		}
 
 		// 6. Vérifier que l'adresse appartient bien à l'organisation spécifiée
-		const addressOrganizationId =
-			existingAddress.client?.organizationId ||
-			existingAddress.supplier?.organizationId;
 
-		if (!addressOrganizationId) {
+		if (!existingAddress.clientId && !existingAddress.supplierId) {
 			return createErrorResponse(
 				ActionStatus.ERROR,
 				"L'adresse n'est associée à aucune entité"
-			);
-		}
-
-		if (addressOrganizationId !== validation.data.organizationId) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"L'adresse n'appartient pas à l'organisation spécifiée"
 			);
 		}
 
@@ -117,31 +95,14 @@ export const deleteAddress: ServerAction<
 
 		// 9. Revalidation du cache
 		// Tags généraux d'adresses
-		revalidateTag(`organizations:${validation.data.organizationId}:addresses`);
-		revalidateTag(
-			`organizations:${validation.data.organizationId}:addresses:sort:createdAt:desc`
-		); // Tag par défaut pour le tri
+		revalidateTag(`addresses`);
 
 		// Tags spécifiques au client ou fournisseur
 		if (existingAddress.clientId) {
-			revalidateTag(`organizations:${validation.data.organizationId}:clients`);
-			revalidateTag(
-				`organizations:${validation.data.organizationId}:client:${existingAddress.clientId}`
-			);
-			revalidateTag(
-				`organizations:${validation.data.organizationId}:client:${existingAddress.clientId}:addresses`
-			);
+			revalidateTag(`clients:${existingAddress.clientId}`);
 		}
 		if (existingAddress.supplierId) {
-			revalidateTag(
-				`organizations:${validation.data.organizationId}:suppliers`
-			);
-			revalidateTag(
-				`organizations:${validation.data.organizationId}:supplier:${existingAddress.supplierId}`
-			);
-			revalidateTag(
-				`organizations:${validation.data.organizationId}:supplier:${existingAddress.supplierId}:addresses`
-			);
+			revalidateTag(`suppliers:${existingAddress.supplierId}`);
 		}
 
 		return createSuccessResponse(null, "Adresse supprimée avec succès");

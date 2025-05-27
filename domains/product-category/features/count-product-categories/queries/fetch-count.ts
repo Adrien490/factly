@@ -16,21 +16,15 @@ export async function fetchCount(
 	"use cache";
 
 	// Tag de base pour toutes les catégories de l'organisation
-	cacheTag(`organizations:${params.organizationId}:product-categories:count`);
+	cacheTag(`product-categories:count`);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
 		Object.entries(params.filters).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
-				cacheTag(
-					`organizations:${
-						params.organizationId
-					}:productCategories:filter:${key}:${value.join(",")}:count`
-				);
+				cacheTag(`product-categories:filter:${key}:${value.join(",")}:count`);
 			} else {
-				cacheTag(
-					`organizations:${params.organizationId}:product-categories:filter:${key}:${value}:count`
-				);
+				cacheTag(`product-categories:filter:${key}:${value}:count`);
 			}
 		});
 	}

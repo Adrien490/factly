@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -46,18 +45,8 @@ export const createAddress: ServerAction<
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 4. Préparation et transformation des données brutes
 		const rawData = {
-			organizationId: organizationId.toString(),
 			addressType:
 				(formData.get("addressType") as AddressType) || AddressType.BILLING,
 			addressLine1: formData.get("addressLine1") as string,
@@ -98,12 +87,7 @@ export const createAddress: ServerAction<
 		}
 
 		// 6. Création de l'adresse dans la base de données
-		const {
-			organizationId: validatedOrgId,
-			clientId,
-			supplierId,
-			...addressData
-		} = validation.data;
+		const { clientId, supplierId, ...addressData } = validation.data;
 
 		// Vérifier qu'au moins clientId ou supplierId est défini
 		if (!clientId && !supplierId) {
@@ -156,18 +140,10 @@ export const createAddress: ServerAction<
 
 		// Tags spécifiques au client ou fournisseur
 		if (clientId) {
-			revalidateTag(`organizations:${validatedOrgId}:clients`);
-			revalidateTag(`organizations:${validatedOrgId}:clients:${clientId}`);
-			revalidateTag(
-				`organizations:${validatedOrgId}:clients:${clientId}:addresses`
-			);
+			revalidateTag(`clients:${clientId}`);
 		}
 		if (supplierId) {
-			revalidateTag(`organizations:${validatedOrgId}:suppliers`);
-			revalidateTag(`organizations:${validatedOrgId}:suppliers:${supplierId}`);
-			revalidateTag(
-				`organizations:${validatedOrgId}:suppliers:${supplierId}:addresses`
-			);
+			revalidateTag(`suppliers:${supplierId}`);
 		}
 
 		// 8. Retour de la réponse de succès

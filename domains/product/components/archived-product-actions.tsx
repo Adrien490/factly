@@ -49,7 +49,7 @@ export function ArchivedProductActions({
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${product.organizationId}/products/${product.id}`}
+						href={`/dashboard/products/${product.id}`}
 						className={cn("flex w-full items-center")}
 					>
 						Fiche produit
@@ -73,7 +73,6 @@ export function ArchivedProductActions({
 								<RestoreProductAlertDialog
 									status={status}
 									name={product.name}
-									organizationId={product.organizationId}
 									id={product.id}
 								>
 									<div className="flex items-center gap-2 px-2 py-1.5 cursor-pointer w-full">
@@ -93,11 +92,7 @@ export function ArchivedProductActions({
 					className="text-destructive focus:text-destructive"
 					preventDefault
 				>
-					<DeleteProductAlertDialog
-						name={product.name}
-						organizationId={product.organizationId}
-						id={product.id}
-					>
+					<DeleteProductAlertDialog name={product.name} id={product.id}>
 						<span>Supprimer définitivement</span>
 					</DeleteProductAlertDialog>
 				</DropdownMenuItem>

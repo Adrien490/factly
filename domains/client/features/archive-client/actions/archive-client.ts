@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -34,12 +33,10 @@ export const archiveClient: ServerAction<
 
 		// 2. Récupération des données
 		const id = formData.get("id") as string;
-		const organizationId = formData.get("organizationId") as string;
 
 		// 3. Validation des données
 		const validation = archiveClientSchema.safeParse({
 			id,
-			organizationId,
 		});
 		if (!validation.success) {
 			return createValidationErrorResponse(
@@ -48,20 +45,10 @@ export const archiveClient: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 5. Vérification de l'existence du client
 		const existingClient = await db.client.findUnique({
 			where: {
 				id,
-				organizationId,
 			},
 			select: {
 				id: true,
@@ -101,7 +88,6 @@ export const archiveClient: ServerAction<
 		const updatedClient = await db.client.update({
 			where: {
 				id,
-				organizationId,
 			},
 			data: {
 				status: ClientStatus.ARCHIVED,
@@ -109,8 +95,8 @@ export const archiveClient: ServerAction<
 		});
 
 		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:clients:${id}`);
-		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`clients:${id}`);
+		revalidateTag(`clients`);
 
 		return createSuccessResponse(
 			updatedClient,

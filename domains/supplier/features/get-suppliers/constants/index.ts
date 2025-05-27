@@ -10,7 +10,6 @@ export const DEFAULT_PER_PAGE = 10;
 export const GET_SUPPLIERS_DEFAULT_SELECT = {
 	// Identifiants et informations de base
 	id: true,
-	organizationId: true,
 	reference: true,
 	type: true,
 	status: true,

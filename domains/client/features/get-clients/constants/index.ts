@@ -10,7 +10,6 @@ export const GET_CLIENTS_DEFAULT_PER_PAGE = 10;
 
 export const GET_CLIENTS_DEFAULT_SELECT = {
 	// Identifiants et informations de base
-	organizationId: true,
 	id: true,
 	reference: true,
 	type: true,

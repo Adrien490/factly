@@ -6,7 +6,6 @@ import { Prisma } from "@prisma/client";
  */
 export const GET_CLIENT_DEFAULT_SELECT = {
 	id: true,
-	organizationId: true,
 	reference: true,
 	type: true,
 	status: true,

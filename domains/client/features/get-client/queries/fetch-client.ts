@@ -11,8 +11,8 @@ import { getClientSchema } from "../schemas/get-client-schema";
 export async function fetchClient(params: z.infer<typeof getClientSchema>) {
 	"use cache";
 
-	// Tag de base pour tous les clients de l'organisation
-	cacheTag(`organizations:${params.organizationId}:clients:${params.id}`);
+	// Tag de base pour tous les clients
+	cacheTag(`clients:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
 		stale: 60 * 60 * 24,
@@ -23,7 +23,6 @@ export async function fetchClient(params: z.infer<typeof getClientSchema>) {
 		const client = await db.client.findFirst({
 			where: {
 				id: params.id,
-				organizationId: params.organizationId,
 			},
 			select: GET_CLIENT_DEFAULT_SELECT,
 		});

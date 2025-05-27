@@ -22,20 +22,16 @@ export async function fetchSuppliers(
 ): Promise<GetSuppliersReturn> {
 	"use cache";
 
-	// Tag de base pour tous les fournisseurs de l'organisation
-	cacheTag(`organizations:${params.organizationId}:suppliers`);
+	// Tag de base pour tous les fournisseurs
+	cacheTag(`suppliers`);
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(
-			`organizations:${params.organizationId}:suppliers:search:${params.search}`
-		);
+		cacheTag(`suppliers:search:${params.search}`);
 	}
 
 	// Tag pour le tri
-	cacheTag(
-		`organizations:${params.organizationId}:suppliers:sort:${params.sortBy}:${params.sortOrder}`
-	);
+	cacheTag(`suppliers:sort:${params.sortBy}:${params.sortOrder}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
 		stale: 60 * 60 * 24,
@@ -48,24 +44,16 @@ export async function fetchSuppliers(
 		Math.max(1, Number(params.perPage) || DEFAULT_PER_PAGE),
 		MAX_RESULTS_PER_PAGE
 	);
-	cacheTag(
-		`organizations:${params.organizationId}:suppliers:page:${page}:perPage:${perPage}`
-	);
+	cacheTag(`suppliers:page:${page}:perPage:${perPage}`);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
 		Object.entries(params.filters).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
-				cacheTag(
-					`organizations:${
-						params.organizationId
-					}:suppliers:filter:${key}:${value.join(",")}`
-				);
+				cacheTag(`suppliers:filter:${key}:${value.join(",")}`);
 			} else {
-				cacheTag(
-					`organizations:${params.organizationId}:suppliers:filter:${key}:${value}`
-				);
+				cacheTag(`suppliers:filter:${key}:${value}`);
 			}
 		});
 	}

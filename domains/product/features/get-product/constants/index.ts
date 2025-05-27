@@ -6,7 +6,6 @@ import { Prisma } from "@prisma/client";
  */
 export const GET_PRODUCT_DEFAULT_SELECT = {
 	id: true,
-	organizationId: true,
 	reference: true,
 	name: true,
 	description: true,

@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -49,26 +48,9 @@ export const createClient: ServerAction<
 		}
 
 		// 2. Vérification de base des données requises
-		const organizationId = formData.get("organizationId");
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
 
 		// 4. Préparation et transformation des données brutes
 		const rawData = {
-			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
 			type: formData.get("type") as ClientType,
 			status: formData.get("status") as ClientStatus,
@@ -137,7 +119,6 @@ export const createClient: ServerAction<
 			const existingClient = await db.client.findFirst({
 				where: {
 					reference: validation.data.reference,
-					organizationId: validation.data.organizationId,
 				},
 				select: { id: true },
 			});
@@ -152,7 +133,6 @@ export const createClient: ServerAction<
 
 		// 7. Création du client dans la base de données
 		const {
-			organizationId: validatedOrgId,
 			type,
 			status,
 			reference,
@@ -199,7 +179,6 @@ export const createClient: ServerAction<
 				reference: reference ?? "",
 				type: type,
 				status,
-				organization: { connect: { id: validatedOrgId } },
 
 				// Créer le contact principal uniquement si c'est un client INDIVIDUAL
 				...(type === ClientType.INDIVIDUAL && {
@@ -267,9 +246,8 @@ export const createClient: ServerAction<
 		});
 
 		// 8. Invalidation du cache pour forcer un rafraîchissement des données
-		// Invalider le tag de base pour tous les clients de l'organisation
-		revalidateTag(`organizations:${validatedOrgId}:clients`);
-		revalidateTag(`organizations:${validatedOrgId}:clients:count`);
+		revalidateTag(`clients`);
+		revalidateTag(`clients:count`);
 
 		// 9. Retour de la réponse de succès
 		return createSuccessResponse(

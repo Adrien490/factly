@@ -19,7 +19,6 @@ import { FormLabel } from "@/shared/components/ui";
 import { LEGAL_FORM_OPTIONS } from "@/shared/constants";
 import { SupplierStatus, SupplierType } from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
-import { useParams } from "next/navigation";
 import { useUpdateSupplier } from "../hooks/use-update-supplier";
 
 type Props = {
@@ -27,15 +26,12 @@ type Props = {
 };
 
 export function UpdateSupplierForm({ supplier }: Props) {
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const { state, dispatch, isPending } = useUpdateSupplier();
 
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
 			id: state?.inputs?.id ?? supplier.id,
-			organizationId: state?.inputs?.organizationId ?? supplier.organizationId,
 			reference: state?.inputs?.reference ?? supplier.reference ?? "",
 			type: state?.inputs?.type ?? supplier.type ?? SupplierType.INDIVIDUAL,
 			status: state?.inputs?.status ?? supplier.status ?? SupplierStatus.ACTIVE,
@@ -119,15 +115,6 @@ export function UpdateSupplierForm({ supplier }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<form.Field name="organizationId">
-				{(field) => (
-					<input
-						type="hidden"
-						name="organizationId"
-						value={field.state.value}
-					/>
-				)}
-			</form.Field>
 			<form.Field name="id">
 				{(field) => <input type="hidden" name="id" value={field.state.value} />}
 			</form.Field>
@@ -622,7 +609,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/${organizationId}/suppliers`}
+						cancelHref={`/dashboard/suppliers`}
 						submitLabel="Mettre à jour le fournisseur"
 					/>
 				)}

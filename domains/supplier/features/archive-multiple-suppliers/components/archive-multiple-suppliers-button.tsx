@@ -4,13 +4,11 @@ import { useTransition } from "react";
 import { useArchiveMultipleSuppliers } from "../hooks/use-archive-multiple-suppliers";
 
 interface ArchiveMultipleSuppliersButtonProps {
-	organizationId: string;
 	ids: string[];
 	children: React.ReactNode;
 }
 
 export function ArchiveMultipleSuppliersButton({
-	organizationId,
 	ids,
 	children,
 }: ArchiveMultipleSuppliersButtonProps) {
@@ -22,8 +20,6 @@ export function ArchiveMultipleSuppliersButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
-
 		startTransition(() => {
 			dispatch(formData);
 		});

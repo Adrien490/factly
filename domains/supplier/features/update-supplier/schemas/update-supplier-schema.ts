@@ -12,7 +12,6 @@ export const updateSupplierSchema = z
 	.object({
 		// Identifiants
 		id: z.string(),
-		organizationId: z.string(),
 		reference: z.string().optional(),
 		type: z.nativeEnum(SupplierType),
 		status: z.nativeEnum(SupplierStatus).optional(),

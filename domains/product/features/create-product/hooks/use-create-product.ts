@@ -20,10 +20,8 @@ export function useCreateProduct() {
 						action: {
 							label: "Voir les produits",
 							onClick: () => {
-								if (result.data?.organizationId) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/products`
-									);
+								if (result.data?.id) {
+									router.push(`/dashboard/products/${result.data.id}`);
 								}
 							},
 						},

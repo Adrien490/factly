@@ -19,7 +19,6 @@ export const PARENT_SELECT_RECURSIVE = {
 export const GET_PRODUCT_CATEGORIES_DEFAULT_SELECT = {
 	// Identifiants et informations de base
 	id: true,
-	organizationId: true,
 	name: true,
 	description: true,
 	status: true,

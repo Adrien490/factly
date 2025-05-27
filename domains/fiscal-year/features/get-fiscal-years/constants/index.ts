@@ -16,9 +16,6 @@ export const GET_FISCAL_YEARS_DEFAULT_SELECT = {
 	status: true,
 	isCurrent: true,
 
-	// Relations
-	organizationId: true,
-
 	// Métadonnées
 	createdAt: true,
 	updatedAt: true,
@@ -36,10 +33,10 @@ export const FISCAL_YEAR_SORT_OPTIONS = FISCAL_YEAR_SORTABLE_FIELDS.map(
 			field === "createdAt"
 				? "Date de création"
 				: field === "name"
-				? "Nom"
-				: field === "startDate"
-				? "Date de début"
-				: field,
+					? "Nom"
+					: field === "startDate"
+						? "Date de début"
+						: field,
 		value: field,
 	})
 );

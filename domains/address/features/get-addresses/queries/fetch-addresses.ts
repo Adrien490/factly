@@ -21,28 +21,20 @@ export async function fetchAddresses(
 
 	// Tag de base
 	if (params.clientId) {
-		cacheTag(
-			`organizations:${params.organizationId}:clients:${params.clientId}:addresses`
-		);
+		cacheTag(`clients:${params.clientId}:addresses`);
 	}
 
 	if (params.supplierId) {
-		cacheTag(
-			`organizations:${params.organizationId}:suppliers:${params.supplierId}:addresses`
-		);
+		cacheTag(`suppliers:${params.supplierId}:addresses`);
 	}
 
 	// Tag pour la recherche textuelle
 	if (params.search) {
-		cacheTag(
-			`organizations:${params.organizationId}:addresses:search:${params.search}`
-		);
+		cacheTag(`addresses:search:${params.search}`);
 	}
 
 	// Tag pour le tri
-	cacheTag(
-		`organizations:${params.organizationId}:addresses:sort:${params.sortBy}:${params.sortOrder}`
-	);
+	cacheTag(`addresses:sort:${params.sortBy}:${params.sortOrder}`);
 
 	// Durée de vie du cache
 	cacheLife({

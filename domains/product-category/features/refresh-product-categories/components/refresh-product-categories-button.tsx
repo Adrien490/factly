@@ -8,17 +8,13 @@ import {
 	TooltipTrigger,
 } from "@/shared/components/ui";
 import { RefreshCw } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useRefreshProductCategories } from "../hooks/use-refresh-product-categories";
 
 export function RefreshProductCategoriesButton() {
-	const params = useParams();
 	const { dispatch, isPending } = useRefreshProductCategories();
-	const organizationId = params.organizationId as string;
 
 	return (
 		<form action={dispatch}>
-			<input type="hidden" name="organizationId" value={organizationId} />
 			<TooltipProvider>
 				<Tooltip>
 					<TooltipTrigger asChild>

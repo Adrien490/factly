@@ -23,15 +23,13 @@ import { mergeForm, useForm, useTransform } from "@tanstack/react-form";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "sonner";
 import { createFiscalYear } from "../actions";
 import { createFiscalYearSchema } from "../schemas";
 
 export function CreateFiscalYearForm() {
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const router = useRouter();
 
 	const [state, dispatch, isPending] = useActionState(
@@ -49,9 +47,7 @@ export function CreateFiscalYearForm() {
 							label: "Voir l'année fiscale",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/fiscal-years/${result.data.id}`
-									);
+									router.push(`/dashboard/fiscal-years/${result.data.id}`);
 								}
 							},
 						},
@@ -66,7 +62,6 @@ export function CreateFiscalYearForm() {
 	// TanStack Form setup
 	const form = useForm({
 		defaultValues: {
-			organizationId,
 			name: `Année fiscale ${new Date().getFullYear()}`,
 			description: "",
 			startDate: new Date(new Date().getFullYear(), 0, 1), // 1er janvier de l'année courante
@@ -89,9 +84,6 @@ export function CreateFiscalYearForm() {
 			<form.Subscribe selector={(state) => state.errors}>
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
-
-			{/* Champs cachés */}
-			<input type="hidden" name="organizationId" value={organizationId} />
 
 			<form.Field name="startDate">
 				{(field) => (
@@ -333,7 +325,7 @@ export function CreateFiscalYearForm() {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/${organizationId}/fiscal-years`}
+						cancelHref={`/dashboard/fiscal-years`}
 						submitLabel="Créer l'année fiscale"
 					/>
 				)}

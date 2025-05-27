@@ -23,9 +23,6 @@ export const productCategoryFiltersSchema = z.record(filterValueSchema);
 
 // Schéma principal pour get-product-categories
 export const getProductCategoriesSchema = z.object({
-	// Paramètre requis - l'organisation à laquelle appartiennent les catégories
-	organizationId: z.string(),
-
 	// Paramètres de recherche et filtrage
 	search: z.string().optional(),
 	filters: productCategoryFiltersSchema.optional().default({}),

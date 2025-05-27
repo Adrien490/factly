@@ -19,9 +19,7 @@ export function useCreateClient() {
 					label: "Voir le client",
 					onClick: (data) => {
 						if (data?.id) {
-							router.push(
-								`/dashboard/${data.organizationId}/clients/${data.id}`
-							);
+							router.push(`/dashboard/clients/${data.id}`);
 						}
 					},
 				},

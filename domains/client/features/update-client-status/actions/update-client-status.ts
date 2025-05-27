@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -34,13 +33,11 @@ export const updateClientStatus: ServerAction<
 
 		// 2. Récupération des données
 		const id = formData.get("id") as string;
-		const organizationId = formData.get("organizationId") as string;
 		const status = formData.get("status") as ClientStatus;
 
 		// 3. Validation des données
 		const validation = updateClientStatusSchema.safeParse({
 			id,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -50,20 +47,10 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence du client
+		// 4. Vérification de l'existence du client
 		const existingClient = await db.client.findUnique({
 			where: {
 				id,
-				organizationId,
 			},
 			select: {
 				id: true,
@@ -78,7 +65,7 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 6. Validation de la transition de statut
+		// 5. Validation de la transition de statut
 		const transitionValidation = validateClientStatusTransition({
 			currentStatus: existingClient.status,
 			newStatus: validation.data.status,
@@ -91,22 +78,21 @@ export const updateClientStatus: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour du client
+		// 6. Mise à jour du client
 		const updatedClient = await db.client.update({
 			where: {
 				id,
-				organizationId,
 			},
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:clients:${id}`);
-		revalidateTag(`organizations:${organizationId}:clients`);
+		// 7. Invalidation du cache
+		revalidateTag(`clients:${id}`);
+		revalidateTag(`clients`);
 
-		// 9. Message de succès personnalisé
+		// 8. Message de succès personnalisé
 		const message =
 			validation.data.status === ClientStatus.ARCHIVED
 				? "Le client a été archivé avec succès"

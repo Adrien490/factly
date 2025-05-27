@@ -4,13 +4,11 @@ import { useTransition } from "react";
 import { useArchiveSupplier } from "../hooks/use-archive-supplier";
 
 interface ArchiveSupplierButtonProps {
-	organizationId: string;
 	id: string;
 	children: React.ReactNode;
 }
 
 export function ArchiveSupplierButton({
-	organizationId,
 	id,
 	children,
 }: ArchiveSupplierButtonProps) {
@@ -20,7 +18,6 @@ export function ArchiveSupplierButton({
 	const handleArchive = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 		startTransition(() => {
 			dispatch(formData);
 		});

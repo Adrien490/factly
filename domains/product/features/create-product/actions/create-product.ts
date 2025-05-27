@@ -51,7 +51,6 @@ export const createProduct: ServerAction<
 			height: Number(formData.get("height")) || null,
 			depth: Number(formData.get("depth")) || null,
 			imageUrl: (formData.get("imageUrl") as string) || null,
-			organizationId: formData.get("organizationId") as string,
 			categoryId:
 				((formData.get("categoryId") as string) || "").trim() === ""
 					? null
@@ -79,7 +78,6 @@ export const createProduct: ServerAction<
 		const existingProduct = await db.product.findFirst({
 			where: {
 				reference: validation.data.reference,
-				organizationId: validation.data.organizationId,
 			},
 			select: { id: true },
 		});
@@ -97,7 +95,7 @@ export const createProduct: ServerAction<
 		});
 
 		// 6. Revalidation des tags de cache
-		revalidateTag(`organizations:${validation.data.organizationId}:products`);
+		revalidateTag(`products`);
 
 		// 7. Retour de la réponse de succès
 		return createSuccessResponse(

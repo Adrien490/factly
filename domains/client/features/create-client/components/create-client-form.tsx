@@ -41,7 +41,7 @@ import {
 } from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { Wand2, X } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
 import { createClient } from "../actions/create-client";
@@ -53,8 +53,6 @@ type Props = {
 
 export function CreateClientForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const router = useRouter();
 
@@ -71,9 +69,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							label: "Voir le client",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/clients/${result.data.id}`
-									);
+									router.push(`/dashboard/clients/${result.data.id}`);
 								}
 							},
 						},
@@ -88,7 +84,6 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			organizationId,
 			reference: state?.inputs?.reference ?? "",
 			companyEmail: state?.inputs?.companyEmail ?? "",
 			contactEmail: state?.inputs?.contactEmail ?? "",
@@ -183,7 +178,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		const url = new URLSearchParams();
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
-			router.push(`/dashboard/${organizationId}/clients/new?${url.toString()}`);
+			router.push(`/dashboard/clients/new?${url.toString()}`);
 		});
 	};
 
@@ -221,15 +216,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<form.Field name="organizationId">
-				{(field) => (
-					<input
-						type="hidden"
-						name="organizationId"
-						value={field.state.value}
-					/>
-				)}
-			</form.Field>
+
 			<form.Field name="latitude">
 				{(field) => (
 					<input
@@ -782,7 +769,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										if (!isSubmitting) {
 											startAddressTransition(() => {
 												router.push(
-													`/dashboard/${organizationId}/clients/new?${url.toString()}`,
+													`/dashboard/clients/new?${url.toString()}`,
 													{
 														scroll: false,
 													}
@@ -937,7 +924,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/${organizationId}/clients`}
+						cancelHref={`/dashboard/clients`}
 						submitLabel="Créer le client"
 					/>
 				)}

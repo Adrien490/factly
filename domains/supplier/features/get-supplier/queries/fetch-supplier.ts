@@ -17,7 +17,7 @@ export async function fetchSupplier(
 	"use cache";
 
 	// Tags de cache
-	cacheTag(`organizations:${params.organizationId}:suppliers:${params.id}`);
+	cacheTag(`suppliers:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures
@@ -29,7 +29,6 @@ export async function fetchSupplier(
 		const supplier = await db.supplier.findFirst({
 			where: {
 				id: params.id,
-				organizationId: params.organizationId,
 			},
 			select: GET_SUPPLIER_DEFAULT_SELECT,
 		});

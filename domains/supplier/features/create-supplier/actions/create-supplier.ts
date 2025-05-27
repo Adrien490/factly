@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -29,7 +28,6 @@ import { createSupplierSchema } from "../schemas/create-supplier-schema";
  * Action serveur pour créer un nouveau fournisseur
  * Validations :
  * - L'utilisateur doit être authentifié
- * - L'utilisateur doit avoir accès à l'organisation
  */
 export const createSupplier: ServerAction<
 	Supplier,
@@ -47,27 +45,8 @@ export const createSupplier: ServerAction<
 			);
 		}
 
-		// 2. Vérification de base des données requises
-		const organizationId = formData.get("organizationId");
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Préparation et transformation des données brutes
+		// 2. Préparation et transformation des données brutes
 		const rawData = {
-			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
 			type: formData.get("type") as SupplierType,
 			status: formData.get("status") as SupplierStatus,
@@ -115,7 +94,7 @@ export const createSupplier: ServerAction<
 				: null,
 		};
 
-		// 5. Validation des données avec le schéma Zod
+		// 3. Validation des données avec le schéma Zod
 		const validation = createSupplierSchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(
@@ -129,12 +108,11 @@ export const createSupplier: ServerAction<
 			);
 		}
 
-		// 6. Vérification de l'existence de la référence
+		// 4. Vérification de l'existence de la référence
 		if (validation.data.reference) {
 			const existingSupplier = await db.supplier.findFirst({
 				where: {
 					reference: validation.data.reference,
-					organizationId: validation.data.organizationId,
 				},
 				select: { id: true, reference: true },
 			});
@@ -142,14 +120,13 @@ export const createSupplier: ServerAction<
 			if (existingSupplier) {
 				return createErrorResponse(
 					ActionStatus.CONFLICT,
-					`Un fournisseur avec la référence "${existingSupplier.reference}" existe déjà dans cette organisation`
+					`Un fournisseur avec la référence "${existingSupplier.reference}" existe déjà`
 				);
 			}
 		}
 
-		// 7. Création du fournisseur dans la base de données
+		// 5. Création du fournisseur dans la base de données
 		const {
-			organizationId: validatedOrgId,
 			type,
 			status,
 			reference,
@@ -196,7 +173,6 @@ export const createSupplier: ServerAction<
 				reference: reference ?? "",
 				type,
 				status,
-				organization: { connect: { id: validatedOrgId } },
 
 				// Créer le contact principal
 				contacts: {
@@ -259,11 +235,11 @@ export const createSupplier: ServerAction<
 			},
 		});
 
-		// 8. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`organizations:${validatedOrgId}:suppliers`);
-		revalidateTag(`organizations:${validatedOrgId}:suppliers:count`);
+		// 6. Invalidation du cache pour forcer un rafraîchissement des données
+		revalidateTag(`suppliers`);
+		revalidateTag(`suppliers:count`);
 
-		// 9. Retour de la réponse de succès
+		// 7. Retour de la réponse de succès
 		return createSuccessResponse(
 			supplier,
 			`Le fournisseur ${supplier.reference} a été créé avec succès`

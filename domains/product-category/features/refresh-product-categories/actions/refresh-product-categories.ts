@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -61,19 +60,9 @@ export const refreshProductCategories: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 5. Rafraîchissement des données
-		revalidateTag(`organizations:${organizationId}:product-categories`);
-		revalidateTag(`organizations:${organizationId}:product-categories:count`);
+		revalidateTag(`product-categories`);
+		revalidateTag(`product-categories:count`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(

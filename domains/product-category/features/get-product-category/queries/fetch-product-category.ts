@@ -17,7 +17,7 @@ export async function fetchProductCategory(
 	"use cache";
 
 	// Configuration du cache
-	const cacheKey = `organizations:${params.organizationId}:product-categories:id:${params.id}`;
+	const cacheKey = `product-categories:id:${params.id}`;
 
 	cacheTag(cacheKey);
 	cacheLife({
@@ -28,9 +28,7 @@ export async function fetchProductCategory(
 
 	try {
 		// Préparation des conditions de recherche basées sur id ou slug
-		let whereCondition: Prisma.ProductCategoryWhereInput = {
-			organizationId: params.organizationId,
-		};
+		let whereCondition: Prisma.ProductCategoryWhereInput = {};
 
 		// Priorité à l'id s'il est fourni, sinon utiliser le slug
 		if (params.id) {

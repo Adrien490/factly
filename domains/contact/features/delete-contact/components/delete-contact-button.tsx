@@ -4,7 +4,6 @@ import { useTransition } from "react";
 import { useDeleteContact } from "../hooks/use-delete-contact";
 
 interface DeleteContactButtonProps {
-	organizationId: string;
 	id: string;
 	clientId?: string;
 	supplierId?: string;
@@ -12,7 +11,6 @@ interface DeleteContactButtonProps {
 }
 
 export function DeleteContactButton({
-	organizationId,
 	id,
 	clientId,
 	supplierId,
@@ -25,7 +23,6 @@ export function DeleteContactButton({
 	const handleDelete = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 		if (clientId) formData.append("clientId", clientId);
 		if (supplierId) formData.append("supplierId", supplierId);
 

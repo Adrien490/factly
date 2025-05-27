@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -32,13 +31,11 @@ export const archiveMultipleSuppliers: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
 
 		// 3. Validation des données
 		const validation = archiveMultipleSuppliersSchema.safeParse({
 			ids,
-			organizationId,
 		});
 		if (!validation.success) {
 			return createValidationErrorResponse(
@@ -47,22 +44,12 @@ export const archiveMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence des fournisseurs
+		// 4. Vérification de l'existence des fournisseurs
 		const existingSuppliers = await db.supplier.findMany({
 			where: {
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -77,7 +64,7 @@ export const archiveMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 6. Filtrer les fournisseurs qui ne sont pas déjà archivés
+		// 5. Filtrer les fournisseurs qui ne sont pas déjà archivés
 		const suppliersToArchive = existingSuppliers.filter(
 			(supplier) => supplier.status !== SupplierStatus.ARCHIVED
 		);
@@ -89,13 +76,12 @@ export const archiveMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour des fournisseurs
+		// 6. Mise à jour des fournisseurs
 		await db.supplier.updateMany({
 			where: {
 				id: {
 					in: suppliersToArchive.map((supplier) => supplier.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 			data: {
 				status: SupplierStatus.ARCHIVED,
@@ -108,20 +94,20 @@ export const archiveMultipleSuppliers: ServerAction<
 				id: {
 					in: suppliersToArchive.map((supplier) => supplier.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 		});
 
-		// 8. Invalidation du cache
+		// 7. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:suppliers:${id}`);
+			revalidateTag(`suppliers:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:suppliers`);
+		revalidateTag(`suppliers`);
 
-		// 9. Message de succès personnalisé
 		const message = `${suppliersToArchive.length} fournisseur(s) ont été archivé(s) avec succès`;
 
-		return createSuccessResponse(updatedSuppliers, message);
+		return createSuccessResponse(updatedSuppliers, message, {
+			archivedSupplierIds: suppliersToArchive.map((supplier) => supplier.id),
+		});
 	} catch (error) {
 		console.error("[ARCHIVE_MULTIPLE_SUPPLIERS]", error);
 		return createErrorResponse(

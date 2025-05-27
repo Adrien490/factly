@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -47,20 +46,10 @@ export const archiveProductCategory: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 5. Vérification de l'existence de la catégorie
 		const existingCategory = await db.productCategory.findUnique({
 			where: {
 				id,
-				organizationId,
 			},
 			select: {
 				id: true,
@@ -88,7 +77,6 @@ export const archiveProductCategory: ServerAction<
 		const updatedCategory = await db.productCategory.update({
 			where: {
 				id,
-				organizationId,
 			},
 			data: {
 				status: ProductCategoryStatus.ARCHIVED,
@@ -96,8 +84,8 @@ export const archiveProductCategory: ServerAction<
 		});
 
 		// 9. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:product-categories:${id}`);
-		revalidateTag(`organizations:${organizationId}:product-categories`);
+		revalidateTag(`product-categories:${id}`);
+		revalidateTag(`product-categories`);
 
 		return createSuccessResponse(
 			updatedCategory,

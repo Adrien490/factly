@@ -6,7 +6,6 @@ import { z } from "zod";
  */
 export const createFiscalYearSchema = z
 	.object({
-		organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 		name: z.string().min(1, "Le nom est requis"),
 		description: z.string().optional().nullable(),
 		startDate: z.coerce.date({

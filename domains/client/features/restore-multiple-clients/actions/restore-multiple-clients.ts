@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -33,14 +32,12 @@ export const restoreMultipleClients: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
 		const status = formData.get("status") as ClientStatus;
 
 		// 3. Validation des données
 		const validation = restoreMultipleClientsSchema.safeParse({
 			ids,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -50,22 +47,12 @@ export const restoreMultipleClients: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence des clients
+		// 4. Vérification de l'existence des clients
 		const existingClients = await db.client.findMany({
 			where: {
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -80,7 +67,7 @@ export const restoreMultipleClients: ServerAction<
 			);
 		}
 
-		// 6. Filtrer les clients qui sont actuellement archivés
+		// 5. Filtrer les clients qui sont actuellement archivés
 		const clientsToRestore = existingClients.filter(
 			(client) => client.status === ClientStatus.ARCHIVED
 		);
@@ -92,7 +79,7 @@ export const restoreMultipleClients: ServerAction<
 			);
 		}
 
-		// 6.1 Vérifier les transitions de statut pour chaque client
+		// 5.1 Vérifier les transitions de statut pour chaque client
 		const invalidTransitions = clientsToRestore
 			.map((client) => {
 				const validationResult = validateClientStatusTransition({
@@ -114,13 +101,12 @@ export const restoreMultipleClients: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour des clients avec le statut spécifié
+		// 6. Mise à jour des clients avec le statut spécifié
 		await db.client.updateMany({
 			where: {
 				id: {
 					in: clientsToRestore.map((client) => client.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 			data: {
 				status: validation.data.status,
@@ -133,17 +119,16 @@ export const restoreMultipleClients: ServerAction<
 				id: {
 					in: clientsToRestore.map((client) => client.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 		});
 
-		// 8. Invalidation du cache
+		// 7. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:clients:${id}`);
+			revalidateTag(`clients:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`clients`);
 
-		// 9. Message de succès personnalisé
+		// 8. Message de succès personnalisé
 		const statusText =
 			validation.data.status === ClientStatus.ACTIVE
 				? "actif"

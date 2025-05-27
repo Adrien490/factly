@@ -1,10 +1,10 @@
-export const getClientNavigation = (organizationId: string) => [
+export const getClientNavigation = () => [
 	{
 		title: "Liste des clients",
-		url: `/dashboard/${organizationId}/clients`,
+		url: `/dashboard/clients`,
 	},
 	{
 		title: "Nouveau client",
-		url: `/dashboard/${organizationId}/clients/new`,
+		url: `/dashboard/clients/new`,
 	},
 ];

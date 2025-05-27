@@ -1,51 +1,38 @@
 "use client";
 
 import { Button } from "@/shared/components";
-import { ProductStatus } from "@prisma/client";
-import { Archive, Undo } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
 export function ProductToggleArchivedButton() {
 	const router = useRouter();
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const searchParams = useSearchParams();
+	const [isPending, startTransition] = useTransition();
 
-	const isArchivedView = searchParams.get("status") === ProductStatus.ARCHIVED;
+	const isArchivedView = searchParams.get("archived") === "true";
 
-	const handleToggleArchived = () => {
-		// Créer un nouvel objet URLSearchParams basé sur les paramètres actuels
-		const params = new URLSearchParams(searchParams.toString());
-
-		if (isArchivedView) {
-			// Si on est en vue archivée, on retire le filtre de statut
-			params.delete("status");
-		} else {
-			// Sinon, on ajoute le filtre pour voir les produits archivés
-			params.set("status", ProductStatus.ARCHIVED);
-		}
-
-		// Rediriger vers la nouvelle URL
-		router.push(`/dashboard/${organizationId}/products?${params.toString()}`);
+	const handleToggle = () => {
+		startTransition(() => {
+			const params = new URLSearchParams(searchParams);
+			if (isArchivedView) {
+				params.delete("archived");
+			} else {
+				params.set("archived", "true");
+			}
+			router.push(`/dashboard/products?${params.toString()}`);
+		});
 	};
 
 	return (
 		<Button
-			variant={isArchivedView ? "default" : "outline"}
-			onClick={handleToggleArchived}
-			className="shrink-0 relative w-[200px]"
+			variant="outline"
+			onClick={handleToggle}
+			disabled={isPending}
+			className="shrink-0"
 		>
-			{isArchivedView ? (
-				<>
-					<Undo className="mr-2 h-4 w-4" />
-					<span>Voir tous les produits</span>
-				</>
-			) : (
-				<>
-					<Archive className="mr-2 h-4 w-4" />
-					<span>Voir les produits archivés</span>
-				</>
-			)}
+			{isArchivedView
+				? "Voir les produits actifs"
+				: "Voir les produits archivés"}
 		</Button>
 	);
 }

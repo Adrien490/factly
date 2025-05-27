@@ -9,16 +9,12 @@ import {
 } from "@/shared/components/ui";
 import { RefreshCw } from "lucide-react";
 import { useRefreshSuppliers } from "../../hooks/use-refresh-suppliers";
-import { RefreshSuppliersButtonProps } from "./types";
 
-export function RefreshSuppliersButton({
-	organizationId,
-}: RefreshSuppliersButtonProps) {
+export function RefreshSuppliersButton() {
 	const { dispatch, isPending } = useRefreshSuppliers();
 
 	return (
 		<form action={dispatch}>
-			<input type="hidden" name="organizationId" value={organizationId} />
 			<TooltipProvider>
 				<Tooltip>
 					<TooltipTrigger asChild>

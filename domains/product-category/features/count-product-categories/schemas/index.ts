@@ -15,6 +15,5 @@ const filterValueSchema = z.union([
 const categoryFiltersSchema = z.record(filterValueSchema);
 
 export const countProductCategoriesSchema = z.object({
-	organizationId: z.string(),
 	filters: categoryFiltersSchema.optional().default({}),
 });

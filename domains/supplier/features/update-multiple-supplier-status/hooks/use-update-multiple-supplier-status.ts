@@ -1,6 +1,7 @@
 "use client";
 
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
+import { Supplier } from "@prisma/client";
 import { useActionState } from "react";
 import { toast } from "sonner";
 import { updateMultipleSupplierStatus } from "../actions/update-multiple-supplier-status";
@@ -10,7 +11,10 @@ export const useUpdateMultipleSupplierStatus = () => {
 	const [state, dispatch, isPending] = useActionState(
 		withCallbacks(
 			updateMultipleSupplierStatus,
-			createToastCallbacks<null, typeof updateMultipleSupplierStatusSchema>({
+			createToastCallbacks<
+				Supplier[],
+				typeof updateMultipleSupplierStatusSchema
+			>({
 				loadingMessage: "Mise à jour du statut en cours...",
 				onSuccess: (data) => {
 					toast.success(data?.message);

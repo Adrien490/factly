@@ -19,7 +19,6 @@ const addressFiltersSchema = z.record(filterValueSchema);
 
 export const getAddressesSchema = z
 	.object({
-		organizationId: z.string(),
 		// Un des deux doit être fourni
 		supplierId: z.string().optional(),
 		clientId: z.string().optional(),

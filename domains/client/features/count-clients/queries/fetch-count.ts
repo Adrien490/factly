@@ -13,23 +13,17 @@ export async function fetchCount(
 ): Promise<number> {
 	"use cache";
 
-	// Tag de base pour tous les clients de l'organisation
-	cacheTag(`organizations:${params.organizationId}:clients:count`);
+	// Tag de base pour tous les clients
+	cacheTag(`clients:count`);
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
 		Object.entries(params.filters).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
-				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value.join(
-						","
-					)}:count`
-				);
+				cacheTag(`clients:filter:${key}:${value.join(",")}:count`);
 			} else {
-				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value}:count`
-				);
+				cacheTag(`clients:filter:${key}:${value}:count`);
 			}
 		});
 	}

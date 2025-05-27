@@ -6,7 +6,6 @@ import { z } from "zod";
  */
 export const changeFiscalYearStatusSchema = z.object({
 	id: z.string().min(1, "L'ID de l'année fiscale est requis"),
-	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 	status: z.nativeEnum(FiscalYearStatus, {
 		required_error: "Le statut est requis",
 		invalid_type_error: "Le statut n'est pas valide",

@@ -30,7 +30,7 @@ import {
 	useTransform,
 } from "@tanstack/react-form";
 import { X } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { use, useEffect, useTransition } from "react";
 import { toast } from "sonner";
 import { GetAddressReturn } from "../../../get-address/types";
@@ -49,15 +49,13 @@ export function UpdateAddressForm({
 	returnUrl,
 }: Props) {
 	const response = use(searchAddressPromise);
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const [, startAddressTransition] = useTransition();
 	const { state, dispatch, isPending } = useUpdateAddress();
 	const router = useRouter();
 
 	// TanStack Form setup
 	const form = useForm({
-		...formOpts(address, organizationId),
+		...formOpts(address),
 
 		transform: useTransform(
 			(baseForm) => mergeForm(baseForm, (state as unknown) ?? {}),
@@ -116,7 +114,7 @@ export function UpdateAddressForm({
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
 			router.push(
-				`/dashboard/${organizationId}/clients/${address.clientId}/addresses/${
+				`/dashboard/clients/${address.clientId}/addresses/${
 					address.id
 				}/edit?${url.toString()}`
 			);
@@ -134,10 +132,10 @@ export function UpdateAddressForm({
 						router.push(
 							returnUrl ||
 								(address.clientId
-									? `/dashboard/${organizationId}/clients/${address.clientId}`
+									? `/dashboard/clients/${address.clientId}`
 									: address.supplierId
-										? `/dashboard/${organizationId}/suppliers/${address.supplierId}`
-										: `/dashboard/${organizationId}`)
+										? `/dashboard/suppliers/${address.supplierId}`
+										: `/dashboard`)
 						);
 						toast.dismiss();
 					},
@@ -147,15 +145,7 @@ export function UpdateAddressForm({
 		return () => {
 			toast.dismiss();
 		};
-	}, [
-		form,
-		state?.message,
-		state.status,
-		router,
-		organizationId,
-		returnUrl,
-		address,
-	]);
+	}, [form, state?.message, state.status, router, returnUrl, address]);
 
 	return (
 		<form
@@ -170,7 +160,6 @@ export function UpdateAddressForm({
 
 			{/* Champs cachés */}
 			<input type="hidden" name="id" value={address.id} />
-			<input type="hidden" name="organizationId" value={organizationId} />
 			{/* On garde les relations existantes en tant que champs cachés */}
 			{address.clientId && (
 				<input type="hidden" name="clientId" value={address.clientId} />
@@ -297,9 +286,9 @@ export function UpdateAddressForm({
 
 									startAddressTransition(() => {
 										router.push(
-											`/dashboard/${organizationId}/clients/${
-												address.clientId
-											}/addresses/${address.id}/edit?${url.toString()}`,
+											`/dashboard/clients/${address.clientId}/addresses/${
+												address.id
+											}/edit?${url.toString()}`,
 											{
 												scroll: false,
 											}
@@ -481,10 +470,10 @@ export function UpdateAddressForm({
 				cancelHref={
 					returnUrl ||
 					(address.clientId
-						? `/dashboard/${organizationId}/clients/${address.clientId}`
+						? `/dashboard/clients/${address.clientId}`
 						: address.supplierId
-							? `/dashboard/${organizationId}/suppliers/${address.supplierId}`
-							: `/dashboard/${organizationId}`)
+							? `/dashboard/suppliers/${address.supplierId}`
+							: `/dashboard`)
 				}
 				isPending={isPending}
 			/>

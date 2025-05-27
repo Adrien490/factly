@@ -39,7 +39,7 @@ import {
 } from "@prisma/client";
 import { mergeForm, useStore, useTransform } from "@tanstack/react-form";
 import { Wand2, X } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { use, useActionState, useTransition } from "react";
 import { toast } from "sonner";
 import { createSupplier } from "../actions/create-supplier";
@@ -51,8 +51,6 @@ type Props = {
 
 export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	const response = use(searchAddressPromise);
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const [isAddressLoading, startAddressTransition] = useTransition();
 	const router = useRouter();
 
@@ -69,9 +67,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							label: "Voir le fournisseur",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/suppliers/${result.data.id}`
-									);
+									router.push(`/dashboard/suppliers/${result.data.id}`);
 								}
 							},
 						},
@@ -86,7 +82,6 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			organizationId,
 			reference: state?.inputs?.reference ?? "",
 			companyEmail: state?.inputs?.companyEmail ?? "",
 			contactEmail: state?.inputs?.contactEmail ?? "",
@@ -181,9 +176,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 		const url = new URLSearchParams();
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
-			router.push(
-				`/dashboard/${organizationId}/suppliers/new?${url.toString()}`
-			);
+			router.push(`/dashboard/suppliers/new?${url.toString()}`);
 		});
 	};
 
@@ -221,15 +214,6 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 			</form.Subscribe>
 
 			{/* Champs cachés */}
-			<form.Field name="organizationId">
-				{(field) => (
-					<input
-						type="hidden"
-						name="organizationId"
-						value={field.state.value}
-					/>
-				)}
-			</form.Field>
 			<form.Field name="latitude">
 				{(field) => (
 					<input
@@ -782,7 +766,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										if (!isSubmitting) {
 											startAddressTransition(() => {
 												router.push(
-													`/dashboard/${organizationId}/suppliers/new?${url.toString()}`,
+													`/dashboard/suppliers/new?${url.toString()}`,
 													{
 														scroll: false,
 													}
@@ -936,7 +920,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/${organizationId}/suppliers`}
+						cancelHref={`/dashboard/suppliers`}
 						submitLabel="Créer le fournisseur"
 					/>
 				)}

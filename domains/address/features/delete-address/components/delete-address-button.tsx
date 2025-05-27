@@ -3,13 +3,11 @@ import { useTransition } from "react";
 import { useDeleteAddress } from "../hooks";
 
 interface DeleteAddressButtonProps {
-	organizationId: string;
 	id: string;
 	children: React.ReactNode;
 }
 
 export function DeleteAddressButton({
-	organizationId,
 	id,
 	children,
 }: DeleteAddressButtonProps) {
@@ -20,7 +18,6 @@ export function DeleteAddressButton({
 	const handleDelete = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 
 		startTransition(() => {
 			dispatch(formData);

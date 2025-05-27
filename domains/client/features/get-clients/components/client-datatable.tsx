@@ -33,14 +33,12 @@ export interface ClientDataTableProps {
 	clientsPromise: Promise<GetClientsReturn>;
 	selectedClientIds: string[];
 	isArchivedView: boolean;
-	organizationId: string;
 }
 
 export function ClientDataTable({
 	clientsPromise,
 	selectedClientIds,
 	isArchivedView,
-	organizationId,
 }: ClientDataTableProps) {
 	const response = use(clientsPromise);
 	const { clients, pagination } = response;
@@ -61,9 +59,8 @@ export function ClientDataTable({
 			<CardContent>
 				<SelectionToolbar>
 					<ClientSelectionActions
-						selectedClientIds={selectedClientIds}
-						organizationId={organizationId}
 						isArchived={isArchivedView}
+						selectedClientIds={selectedClientIds}
 					/>
 				</SelectionToolbar>
 				<Table className="group-has-[[data-pending]]:animate-pulse">

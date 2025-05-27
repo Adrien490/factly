@@ -50,7 +50,7 @@ export function ProductActions({ product }: ProductActionsProps) {
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${product.organizationId}/products/${product.id}`}
+						href={`/dashboard/products/${product.id}`}
 						className={cn("flex w-full items-center")}
 					>
 						Fiche produit
@@ -60,7 +60,7 @@ export function ProductActions({ product }: ProductActionsProps) {
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${product.organizationId}/products/${product.id}/edit`}
+						href={`/dashboard/products/${product.id}/edit`}
 						className={cn("flex w-full items-center")}
 					>
 						<span>Modifier</span>
@@ -81,7 +81,6 @@ export function ProductActions({ product }: ProductActionsProps) {
 						).map((status) => (
 							<UpdateProductStatusButton
 								key={status.value}
-								organizationId={product.organizationId}
 								id={product.id}
 								status={status.value}
 							>
@@ -103,11 +102,7 @@ export function ProductActions({ product }: ProductActionsProps) {
 					preventDefault
 					className="text-destructive focus:text-destructive p-0"
 				>
-					<ArchiveProductAlertDialog
-						name={product.name}
-						organizationId={product.organizationId}
-						id={product.id}
-					>
+					<ArchiveProductAlertDialog name={product.name} id={product.id}>
 						<span className="w-full text-left px-2 py-1.5">Archiver</span>
 					</ArchiveProductAlertDialog>
 				</DropdownMenuItem>

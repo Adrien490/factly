@@ -1,79 +1,55 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { getContactsSchema } from "../schemas";
-import { buildFilterConditions } from "./build-filter-conditions";
-import { buildSearchConditions } from "./build-search-conditions";
+import { getContactsSchema } from "../schemas/get-contacts-schema";
 
 /**
- * Construit la clause WHERE pour la requête Prisma
- * @param params - Paramètres validés de la requête
- * @returns Clause WHERE Prisma complète
+ * Construit la clause WHERE de la requête Prisma pour le filtrage des contacts
  */
-export const buildWhereClause = (
+export function buildWhereClause(
 	params: z.infer<typeof getContactsSchema>
-): Prisma.ContactWhereInput => {
+): Prisma.ContactWhereInput {
+	// Base de la clause WHERE
 	const whereClause: Prisma.ContactWhereInput = {};
 
-	// Condition de base qui doit toujours être respectée
-	const baseConditions: Prisma.ContactWhereInput[] = [
-		// Condition pour les contacts d'un client
-		...(params.clientId
-			? [
-					{
-						clientId: params.clientId,
-						client: {
-							organizationId: params.organizationId,
-						},
-					},
-				]
-			: []),
-		// Condition pour les contacts d'un fournisseur
-		...(params.supplierId
-			? [
-					{
-						supplierId: params.supplierId,
-						supplier: {
-							organizationId: params.organizationId,
-						},
-					},
-				]
-			: []),
-	];
+	// Filtrage par client ou fournisseur
+	if (params.clientId) {
+		whereClause.clientId = params.clientId;
+	}
 
-	// Ajouter les conditions de base
-	if (baseConditions.length > 0) {
-		whereClause.AND = [
+	if (params.supplierId) {
+		whereClause.supplierId = params.supplierId;
+	}
+
+	// Traitement de la recherche textuelle si fournie
+	if (typeof params.search === "string" && params.search.trim()) {
+		const searchTerm = params.search.trim();
+		whereClause.OR = [
 			{
-				OR: baseConditions,
+				firstName: {
+					contains: searchTerm,
+					mode: "insensitive",
+				},
+			},
+			{
+				lastName: {
+					contains: searchTerm,
+					mode: "insensitive",
+				},
+			},
+			{
+				email: {
+					contains: searchTerm,
+					mode: "insensitive",
+				},
+			},
+			{
+				function: {
+					contains: searchTerm,
+					mode: "insensitive",
+				},
 			},
 		];
 	}
 
-	// Ajouter les conditions de recherche textuelle
-	if (typeof params.search === "string" && params.search.trim()) {
-		const searchConditions = buildSearchConditions(params.search);
-		if (searchConditions.length > 0) {
-			whereClause.AND = [
-				...(Array.isArray(whereClause.AND) ? whereClause.AND : []),
-				{
-					OR: searchConditions,
-				},
-			];
-		}
-	}
-
-	// Ajouter les filtres spécifiques
-	if (params.filters && Object.keys(params.filters).length > 0) {
-		const filterConditions = buildFilterConditions(
-			params.filters as Record<string, unknown>
-		);
-		if (filterConditions.length > 0) {
-			whereClause.AND = [
-				...(Array.isArray(whereClause.AND) ? whereClause.AND : []),
-				...filterConditions,
-			];
-		}
-	}
-
 	return whereClause;
-};
+}

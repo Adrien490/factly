@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -34,13 +33,11 @@ export const restoreClient: ServerAction<
 
 		// 2. Récupération des données
 		const id = formData.get("id") as string;
-		const organizationId = formData.get("organizationId") as string;
 		const status = formData.get("status") as ClientStatus;
 
 		// 3. Validation des données
 		const validation = restoreClientSchema.safeParse({
 			id,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -50,20 +47,10 @@ export const restoreClient: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence du client
+		// 4. Vérification de l'existence du client
 		const existingClient = await db.client.findUnique({
 			where: {
 				id,
-				organizationId,
 			},
 			select: {
 				id: true,
@@ -79,7 +66,7 @@ export const restoreClient: ServerAction<
 			);
 		}
 
-		// 6. Vérification que le client est bien archivé
+		// 5. Vérification que le client est bien archivé
 		if (existingClient.status !== ClientStatus.ARCHIVED) {
 			return createErrorResponse(
 				ActionStatus.ERROR,
@@ -87,7 +74,7 @@ export const restoreClient: ServerAction<
 			);
 		}
 
-		// 6.1 Validation de la transition de statut
+		// 5.1 Validation de la transition de statut
 		const validationResult = validateClientStatusTransition({
 			currentStatus: existingClient.status,
 			newStatus: validation.data.status,
@@ -101,22 +88,21 @@ export const restoreClient: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour du client
+		// 6. Mise à jour du client
 		const updatedClient = await db.client.update({
 			where: {
 				id,
-				organizationId,
 			},
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:clients:${id}`);
-		revalidateTag(`organizations:${organizationId}:clients`);
+		// 7. Invalidation du cache
+		revalidateTag(`clients:${id}`);
+		revalidateTag(`clients`);
 
-		// 9. Message de succès personnalisé
+		// 8. Message de succès personnalisé
 		const statusText =
 			validation.data.status === ClientStatus.ACTIVE
 				? "actif"

@@ -20,7 +20,6 @@ interface ProductStatusOption {
 interface RestoreProductAlertDialogProps {
 	status: ProductStatusOption;
 	name: string;
-	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
@@ -28,7 +27,6 @@ interface RestoreProductAlertDialogProps {
 export function RestoreProductAlertDialog({
 	status,
 	name,
-	organizationId,
 	id,
 	children,
 }: RestoreProductAlertDialogProps) {
@@ -50,11 +48,7 @@ export function RestoreProductAlertDialog({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
-					<RestoreProductButton
-						organizationId={organizationId}
-						id={id}
-						status={status.value}
-					>
+					<RestoreProductButton id={id} status={status.value}>
 						<AlertDialogAction>Restaurer</AlertDialogAction>
 					</RestoreProductButton>
 				</AlertDialogFooter>

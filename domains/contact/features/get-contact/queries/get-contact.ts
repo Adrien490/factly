@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getContactSchema } from "../schemas/get-contact-schema";
@@ -33,19 +32,13 @@ export async function getContact(
 
 		const validatedParams = validation.data;
 
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(
-			validatedParams.organizationId
-		);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
+		// Appel à la fonction avec cache
+		return await fetchContact(validatedParams);
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			throw new Error("Invalid parameters");
 		}
 
-		// Appel à la fonction cacheable
-		return fetchContact(validatedParams);
-	} catch (error) {
-		console.error("[GET_CONTACT]", error);
 		throw error;
 	}
 }

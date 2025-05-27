@@ -2,8 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
-
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -27,42 +25,17 @@ export const deleteMultipleProducts: ServerAction<
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour effectuer cette action"
+				"Vous devez être connecté pour supprimer des produits"
 			);
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
-		const productIds = formData.getAll("ids") as string[];
+		const rawData = {
+			ids: formData.getAll("ids") as string[],
+		};
 
-		console.log("[DELETE_MULTIPLE_PRODUCTS] Form Data:", {
-			ids: productIds,
-			organizationId,
-		});
-
-		// Vérification que l'organizationId n'est pas vide
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
-		const validation = deleteMultipleProductsSchema.safeParse({
-			ids: productIds,
-			organizationId,
-		});
-
+		// 3. Validation des données
+		const validation = deleteMultipleProductsSchema.safeParse(rawData);
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
@@ -70,48 +43,50 @@ export const deleteMultipleProducts: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence des produits
+		// 4. Vérification de l'existence des produits
 		const existingProducts = await db.product.findMany({
 			where: {
-				id: { in: validation.data.ids },
-				organizationId: validation.data.organizationId,
+				id: {
+					in: validation.data.ids,
+				},
 			},
 			select: {
 				id: true,
+				name: true,
 			},
 		});
 
 		if (existingProducts.length !== validation.data.ids.length) {
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
-				"Certains produits sont introuvables"
+				"Un ou plusieurs produits n'ont pas été trouvés"
 			);
 		}
 
-		// 6. Suppression
+		// 5. Suppression des produits
 		await db.product.deleteMany({
 			where: {
-				id: { in: validation.data.ids },
-				organizationId: validation.data.organizationId,
+				id: {
+					in: validation.data.ids,
+				},
 			},
 		});
 
-		// Revalidation du cache avec les mêmes tags que get-products
-		revalidateTag(`organizations:${organizationId}:products`);
-		validation.data.ids.forEach((productId) => {
-			revalidateTag(`organizations:${organizationId}:products:${productId}`);
-		});
-		revalidateTag(`organizations:${organizationId}:products:count`);
+		// 6. Invalidation du cache
+		revalidateTag(`products`);
+		for (const productId of validation.data.ids) {
+			revalidateTag(`products:${productId}`);
+		}
 
 		return createSuccessResponse(
 			null,
-			`${validation.data.ids.length} produit(s) supprimé(s) définitivement`
+			`${existingProducts.length} produit(s) supprimé(s) avec succès`
 		);
 	} catch (error) {
 		console.error("[DELETE_MULTIPLE_PRODUCTS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de supprimer les produits sélectionnés"
+			"Une erreur est survenue lors de la suppression des produits"
 		);
 	}
 };

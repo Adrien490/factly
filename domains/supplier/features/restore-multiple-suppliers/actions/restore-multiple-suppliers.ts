@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -32,14 +31,12 @@ export const restoreMultipleSuppliers: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
 		const status = formData.get("status") as SupplierStatus;
 
 		// 3. Validation des données
 		const validation = restoreMultipleSuppliersSchema.safeParse({
 			ids,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -49,22 +46,12 @@ export const restoreMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence des fournisseurs
+		// 4. Vérification de l'existence des fournisseurs
 		const existingSuppliers = await db.supplier.findMany({
 			where: {
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -79,7 +66,7 @@ export const restoreMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 6. Filtrer les fournisseurs qui sont actuellement archivés
+		// 5. Filtrer les fournisseurs qui sont actuellement archivés
 		const suppliersToRestore = existingSuppliers.filter(
 			(supplier) => supplier.status === SupplierStatus.ARCHIVED
 		);
@@ -91,13 +78,12 @@ export const restoreMultipleSuppliers: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour des fournisseurs avec le statut spécifié
+		// 6. Mise à jour des fournisseurs avec le statut spécifié
 		await db.supplier.updateMany({
 			where: {
 				id: {
 					in: suppliersToRestore.map((supplier) => supplier.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 			data: {
 				status: validation.data.status,
@@ -110,17 +96,16 @@ export const restoreMultipleSuppliers: ServerAction<
 				id: {
 					in: suppliersToRestore.map((supplier) => supplier.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 		});
 
-		// 8. Invalidation du cache
+		// 7. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:suppliers:${id}`);
+			revalidateTag(`suppliers:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:suppliers`);
+		revalidateTag(`suppliers`);
 
-		// 9. Message de succès personnalisé
+		// 8. Message de succès personnalisé
 		const statusText =
 			validation.data.status === SupplierStatus.ACTIVE
 				? "actif"

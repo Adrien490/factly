@@ -1,9 +1,8 @@
-import NotFound from "@/app/dashboard/[organizationId]/not-found";
+import NotFound from "@/app/dashboard/not-found";
 import {
 	FISCAL_YEAR_STATUS_COLORS,
 	FISCAL_YEAR_STATUS_LABELS,
 } from "@/domains/fiscal-year/constants";
-import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { use } from "react";
 import { GetFiscalYearReturn } from "../types";
@@ -49,21 +48,6 @@ export function FiscalYearHeader({ fiscalYearPromise }: FiscalYearHeaderProps) {
 							{new Date(fiscalYear.endDate).toLocaleDateString()}
 						</div>
 					</div>
-				</div>
-
-				<div className="flex flex-wrap gap-3">
-					<HorizontalMenu
-						items={[
-							{
-								title: "Détails",
-								url: `/dashboard/${fiscalYear.organizationId}/fiscal-years/${fiscalYear.id}`,
-							},
-							{
-								title: "Modifier",
-								url: `/dashboard/${fiscalYear.organizationId}/fiscal-years/${fiscalYear.id}/edit`,
-							},
-						]}
-					/>
 				</div>
 			</div>
 		</div>

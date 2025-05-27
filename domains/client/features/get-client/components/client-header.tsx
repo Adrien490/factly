@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/[organizationId]/not-found";
+import NotFound from "@/app/dashboard/not-found";
 import {
 	CLIENT_STATUS_COLORS,
 	CLIENT_STATUS_LABELS,
@@ -82,19 +82,19 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 						items={[
 							{
 								title: "Fiche client",
-								url: `/dashboard/${client.organizationId}/clients/${client.id}`,
+								url: `/dashboard/clients/${client.id}`,
 							},
 							{
 								title: "Modifier",
-								url: `/dashboard/${client.organizationId}/clients/${client.id}/edit`,
+								url: `/dashboard/clients/${client.id}/edit`,
 							},
 							{
 								title: "Gestion des adresses",
-								url: `/dashboard/${client.organizationId}/clients/${client.id}/addresses`,
+								url: `/dashboard/clients/${client.id}/addresses`,
 							},
 							{
 								title: "Gestion des contacts",
-								url: `/dashboard/${client.organizationId}/clients/${client.id}/contacts`,
+								url: `/dashboard/clients/${client.id}/contacts`,
 							},
 						]}
 					/>

@@ -13,7 +13,7 @@ import {
 import { createToastCallbacks, withCallbacks } from "@/shared/utils";
 import { ProductCategory } from "@prisma/client";
 import { mergeForm, useTransform } from "@tanstack/react-form";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ReactNode, useActionState, useState } from "react";
 import { toast } from "sonner";
 import { GetProductCategoryReturn } from "../../get-product-category";
@@ -30,8 +30,6 @@ export function CreateProductCategorySheetForm({
 	children,
 }: CreateProductCategorySheetFormProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const router = useRouter();
 
 	const [state, dispatch, isPending] = useActionState(
@@ -53,7 +51,7 @@ export function CreateProductCategorySheetForm({
 								onClick: () => {
 									if (data.data?.id) {
 										router.push(
-											`/dashboard/${data.data.organizationId}/products/categories/${data.data.id}`
+											`/dashboard/products/categories/${data.data.id}`
 										);
 									}
 								},
@@ -69,7 +67,6 @@ export function CreateProductCategorySheetForm({
 	// TanStack Form setup avec les valeurs par défaut
 	const form = useAppForm({
 		defaultValues: {
-			organizationId,
 			name: "",
 			description: "",
 		},
@@ -105,17 +102,6 @@ export function CreateProductCategorySheetForm({
 					<form.Subscribe selector={(state) => state.errors}>
 						{(errors) => <FormErrors errors={errors} />}
 					</form.Subscribe>
-
-					{/* Champs cachés */}
-					<form.AppField name="organizationId">
-						{(field) => (
-							<input
-								type="hidden"
-								name="organizationId"
-								value={field.state.value}
-							/>
-						)}
-					</form.AppField>
 
 					{/* Contenu du formulaire avec défilement */}
 					<div className="flex-1 overflow-y-auto pr-1 space-y-6">

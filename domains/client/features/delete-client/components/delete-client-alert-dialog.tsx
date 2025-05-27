@@ -12,13 +12,11 @@ import {
 import { DeleteClientButton } from "./delete-client-button";
 
 interface DeleteClientAlertDialogProps {
-	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function DeleteClientAlertDialog({
-	organizationId,
 	id,
 	children,
 }: DeleteClientAlertDialogProps) {
@@ -38,7 +36,7 @@ export function DeleteClientAlertDialog({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
-					<DeleteClientButton organizationId={organizationId} id={id}>
+					<DeleteClientButton id={id}>
 						<AlertDialogAction>Supprimer</AlertDialogAction>
 					</DeleteClientButton>
 				</AlertDialogFooter>

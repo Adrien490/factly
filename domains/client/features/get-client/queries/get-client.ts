@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getClientSchema } from "../schemas/get-client-schema";
@@ -31,13 +30,6 @@ export async function getClient(
 	}
 
 	const validatedParams = validation.data;
-
-	// Vérification des droits d'accès à l'organisation
-	const hasAccess = await hasOrganizationAccess(validatedParams.organizationId);
-
-	if (!hasAccess) {
-		throw new Error("Access denied");
-	}
 
 	// Appel à la fonction cacheable
 	return fetchClient(validatedParams);

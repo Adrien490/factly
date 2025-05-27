@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useRestoreMultipleSuppliers } from "../hooks/use-restore-multiple-suppliers";
 
 interface RestoreMultipleSuppliersButtonProps {
-	organizationId: string;
 	ids: string[];
 	status: SupplierStatus;
 	children: React.ReactNode;
 }
 
 export function RestoreMultipleSuppliersButton({
-	organizationId,
 	ids,
 	status,
 	children,
@@ -25,9 +23,7 @@ export function RestoreMultipleSuppliersButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
-
 		startTransition(() => {
 			dispatch(formData);
 		});

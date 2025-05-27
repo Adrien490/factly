@@ -10,9 +10,7 @@ export function buildWhereClause(
 	params: z.infer<typeof countClientsSchema>
 ): Prisma.ClientWhereInput {
 	// Condition de base qui doit toujours être respectée
-	const whereClause: Prisma.ClientWhereInput = {
-		organizationId: params.organizationId,
-	};
+	const whereClause: Prisma.ClientWhereInput = {};
 
 	// Ajouter les conditions de recherche textuelle
 

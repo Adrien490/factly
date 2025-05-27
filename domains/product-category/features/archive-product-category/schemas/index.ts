@@ -6,5 +6,4 @@ import { z } from "zod";
 export const archiveProductCategorySchema = z.object({
 	// Identifiants
 	id: z.string().min(1, "L'ID de la catégorie est requis"),
-	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 });

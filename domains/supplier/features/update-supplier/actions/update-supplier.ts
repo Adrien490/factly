@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -49,30 +48,19 @@ export const updateSupplier: ServerAction<
 		}
 
 		// 2. Vérification de base des données requises
-		const organizationId = formData.get("organizationId");
 		const id = formData.get("id");
-		if (!organizationId || !id) {
+		if (!id) {
 			return createErrorResponse(
 				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation et l'ID du fournisseur sont requis"
+				"L'ID du fournisseur est requis"
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Préparation et transformation des données brutes
+		// 3. Préparation et transformation des données brutes
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: organizationId.toString(),
 			reference: formData.get("reference") as string,
-			supplierType: formData.get("supplierType") as SupplierType,
+			type: formData.get("type") as SupplierType,
 			status: formData.get("status") as SupplierStatus,
 
 			// Informations de contact
@@ -119,7 +107,7 @@ export const updateSupplier: ServerAction<
 				: null,
 		};
 
-		// 5. Validation des données avec le schéma Zod
+		// 4. Validation des données avec le schéma Zod
 		const validation = updateSupplierSchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(
@@ -135,7 +123,6 @@ export const updateSupplier: ServerAction<
 
 		const {
 			id: validatedId,
-			organizationId: validatedOrgId,
 			reference,
 			type,
 			status,
@@ -168,12 +155,11 @@ export const updateSupplier: ServerAction<
 			// Informations d'adresse
 		} = validation.data;
 
-		// 6. Vérification de l'existence de la référence uniquement si elle est fournie
+		// 5. Vérification de l'existence de la référence uniquement si elle est fournie
 		if (reference) {
 			const existingSupplier = await db.supplier.findFirst({
 				where: {
 					reference,
-					organizationId: validatedOrgId,
 					id: {
 						not: validatedId,
 					},
@@ -184,12 +170,12 @@ export const updateSupplier: ServerAction<
 			if (existingSupplier) {
 				return createErrorResponse(
 					ActionStatus.CONFLICT,
-					`Un fournisseur avec la référence "${existingSupplier.reference}" existe déjà dans cette organisation`
+					`Un fournisseur avec la référence "${existingSupplier.reference}" existe déjà`
 				);
 			}
 		}
 
-		// 7. Mise à jour du fournisseur dans la base de données
+		// 6. Mise à jour du fournisseur dans la base de données
 		const existingContact = await db.contact.findFirst({
 			where: {
 				supplierId: validatedId,
@@ -271,11 +257,11 @@ export const updateSupplier: ServerAction<
 			},
 		});
 
-		// 8. Invalidation du cache
-		revalidateTag(`organizations:${validatedOrgId}:suppliers`);
-		revalidateTag(`organizations:${validatedOrgId}:suppliers:${validatedId}`);
+		// 7. Invalidation du cache
+		revalidateTag(`suppliers`);
+		revalidateTag(`suppliers:${validatedId}`);
 
-		// 9. Retour de la réponse de succès
+		// 8. Retour de la réponse de succès
 		return createSuccessResponse(
 			supplier,
 			`Le fournisseur ${supplier.reference} a été modifié avec succès`,

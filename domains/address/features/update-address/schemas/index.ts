@@ -9,9 +9,6 @@ export const updateAddressSchema = z.object({
 	// ID de l'adresse (obligatoire pour la mise à jour)
 	id: z.string().min(1, "L'ID de l'adresse est requis"),
 
-	// Organisation
-	organizationId: z.string().min(1, "L'organisation est requise"),
-
 	// Informations d'adresse
 	addressType: z.nativeEnum(AddressType).default(AddressType.BILLING),
 	addressLine1: z.string().min(1, "L'adresse est requise"),

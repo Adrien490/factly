@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -45,16 +44,6 @@ export const deleteProduct: ServerAction<
 				"L'ID de l'organisation est manquant"
 			);
 		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 4. Validation complète des données
 		const validation = deleteProductSchema.safeParse(rawData);
 
@@ -70,7 +59,6 @@ export const deleteProduct: ServerAction<
 		const existingProduct = await db.product.findFirst({
 			where: {
 				id: validation.data.id,
-				organizationId: validation.data.organizationId,
 			},
 		});
 
@@ -84,11 +72,9 @@ export const deleteProduct: ServerAction<
 		});
 
 		// Revalidation du cache avec les mêmes tags que get-products
-		revalidateTag(`organizations:${rawData.organizationId}:products`);
-		revalidateTag(
-			`organizations:${rawData.organizationId}:products:${existingProduct.id}`
-		);
-		revalidateTag(`organizations:${rawData.organizationId}:products:count`);
+		revalidateTag(`products`);
+		revalidateTag(`products:${existingProduct.id}`);
+		revalidateTag(`products:count`);
 
 		return createSuccessResponse(
 			existingProduct,

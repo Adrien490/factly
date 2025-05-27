@@ -10,29 +10,29 @@ import {
 	Users,
 } from "lucide-react";
 
-export const getSidebarNav = (organizationId: string) => [
+export const getSidebarNav = () => [
 	{
 		title: "Tableau de bord",
-		url: `/dashboard/${organizationId}`,
+		url: `/dashboard`,
 		icon: LayoutDashboard,
 	},
 	{
 		title: "Clients",
 		icon: Users,
-		url: `/dashboard/${organizationId}/clients`,
-		items: getClientNavigation(organizationId),
+		url: `/dashboard/clients`,
+		items: getClientNavigation(),
 	},
 	{
 		title: "Fournisseurs",
 		icon: Truck,
-		url: `/dashboard/${organizationId}/suppliers`,
-		items: getSupplierNavigation(organizationId),
+		url: `/dashboard/suppliers`,
+		items: getSupplierNavigation(),
 	},
 	{
 		title: "Catalogue",
 		icon: Package,
-		url: `/dashboard/${organizationId}/products`,
-		items: getProductNavigation(organizationId),
+		url: `/dashboard/products`,
+		items: getProductNavigation(),
 	},
 	/*{
 		title: "Devis",
@@ -88,15 +88,15 @@ export const getSidebarNav = (organizationId: string) => [
 	{
 		title: "Années fiscales",
 		icon: CalendarClock,
-		url: `/dashboard/${organizationId}/fiscal-years`,
+		url: `/dashboard/fiscal-years`,
 		items: [
 			{
 				title: "Vue d'ensemble",
-				url: `/dashboard/${organizationId}/fiscal-years`,
+				url: `/dashboard/fiscal-years`,
 			},
 			{
 				title: "Nouvel exercice",
-				url: `/dashboard/${organizationId}/fiscal-years/new`,
+				url: `/dashboard/fiscal-years/new`,
 			},
 			/*{
 				title: "Procédure de clôture",
@@ -114,11 +114,11 @@ export const getSidebarNav = (organizationId: string) => [
 		items: [
 			{
 				title: "Modifier l'organisation",
-				url: `/dashboard/${organizationId}/edit`,
+				url: `/dashboard/edit`,
 			},
 			{
 				title: "Supprimer l'organisation",
-				url: `/dashboard/${organizationId}/delete`,
+				url: `/dashboard/delete`,
 			},
 			/*{
 				title: "Gestion des membres",

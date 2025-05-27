@@ -4,13 +4,11 @@ import { useTransition } from "react";
 import { useArchiveMultipleClients } from "../hooks/use-archive-multiple-clients";
 
 interface ArchiveMultipleClientsButtonProps {
-	organizationId: string;
 	ids: string[];
 	children: React.ReactNode;
 }
 
 export function ArchiveMultipleClientsButton({
-	organizationId,
 	ids,
 	children,
 }: ArchiveMultipleClientsButtonProps) {
@@ -22,7 +20,6 @@ export function ArchiveMultipleClientsButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 
 		startTransition(() => {
 			dispatch(formData);

@@ -39,7 +39,6 @@ export const createProductSchema = z.object({
 	depth: z.number().optional().nullable(),
 
 	// Relations
-	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
 	categoryId: z.string().optional().nullable(),
 	supplierId: z.string().optional().nullable(),
 });

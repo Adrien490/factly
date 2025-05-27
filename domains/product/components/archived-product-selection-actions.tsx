@@ -25,12 +25,10 @@ import { RestoreMultipleProductsButton } from "../features/restore-multiple-prod
 
 interface ArchivedProductSelectionActionsProps {
 	selectedProductIds: string[];
-	organizationId: string;
 }
 
 export function ArchivedProductSelectionActions({
 	selectedProductIds,
-	organizationId,
 }: ArchivedProductSelectionActionsProps) {
 	return (
 		<DropdownMenu>
@@ -89,7 +87,6 @@ export function ArchivedProductSelectionActions({
 									<AlertDialogFooter>
 										<AlertDialogCancel>Annuler</AlertDialogCancel>
 										<RestoreMultipleProductsButton
-											organizationId={organizationId}
 											ids={selectedProductIds}
 											status={status.value}
 										>
@@ -126,10 +123,7 @@ export function ArchivedProductSelectionActions({
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Annuler</AlertDialogCancel>
-							<DeleteMultipleProductsButton
-								organizationId={organizationId}
-								ids={selectedProductIds}
-							>
+							<DeleteMultipleProductsButton ids={selectedProductIds}>
 								<AlertDialogAction>Supprimer</AlertDialogAction>
 							</DeleteMultipleProductsButton>
 						</AlertDialogFooter>

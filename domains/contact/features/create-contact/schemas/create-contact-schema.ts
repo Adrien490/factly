@@ -1,42 +1,18 @@
 import { z } from "zod";
 
 export const createContactSchema = z.object({
-	organizationId: z.string(),
-	clientId: z.string().nullable(),
-	supplierId: z.string().nullable(),
-	firstName: z.string().optional(),
-	lastName: z.string().min(1, "Le nom est requis"),
+	clientId: z.string().optional(),
+	supplierId: z.string().optional(),
 	civility: z.string().optional(),
+	firstName: z.string().min(1, "Le prénom est requis"),
+	lastName: z.string().min(1, "Le nom est requis"),
 	function: z.string().optional(),
+	email: z.string().email("Email invalide").optional().or(z.literal("")),
+	phoneNumber: z.string().optional(),
+	mobileNumber: z.string().optional(),
+	faxNumber: z.string().optional(),
+	website: z.string().optional(),
 	notes: z.string().optional(),
-	email: z
-		.string()
-		.email("L'email n'est pas valide")
-		.optional()
-		.or(z.literal("")),
-	phoneNumber: z
-		.string()
-		.regex(/^\+?[0-9\s-]{10,}$/, "Le numéro de téléphone n'est pas valide")
-		.optional()
-		.or(z.literal("")),
-	mobileNumber: z
-		.string()
-		.regex(/^\+?[0-9\s-]{10,}$/, "Le numéro de mobile n'est pas valide")
-		.optional()
-		.or(z.literal("")),
-	faxNumber: z
-		.string()
-		.regex(/^\+?[0-9\s-]{10,}$/, "Le numéro de fax n'est pas valide")
-		.optional()
-		.or(z.literal("")),
-	website: z
-		.string()
-		.regex(
-			/^https?:\/\/[^\s/$.?#].[^\s]*$/,
-			"L'URL du site web n'est pas valide"
-		)
-		.optional()
-		.or(z.literal("")),
 	isDefault: z.boolean().default(false),
 });
 

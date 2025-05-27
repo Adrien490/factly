@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { validateProductStatusTransition } from "@/domains/product/utils";
 import db from "@/shared/lib/db";
 import {
@@ -33,14 +32,12 @@ export const restoreMultipleProducts: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
 		const status = formData.get("status") as ProductStatus;
 
 		// 3. Validation des données
 		const validation = restoreMultipleProductsSchema.safeParse({
 			ids,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -50,22 +47,12 @@ export const restoreMultipleProducts: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 5. Vérification de l'existence des produits
 		const existingProducts = await db.product.findMany({
 			where: {
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -120,7 +107,6 @@ export const restoreMultipleProducts: ServerAction<
 				id: {
 					in: productsToRestore.map((product) => product.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 			data: {
 				status: validation.data.status,
@@ -133,16 +119,15 @@ export const restoreMultipleProducts: ServerAction<
 				id: {
 					in: productsToRestore.map((product) => product.id),
 				},
-				organizationId: validation.data.organizationId,
 			},
 		});
 
 		// 8. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:products:${id}`);
+			revalidateTag(`products:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:products`);
-		revalidateTag(`organizations:${organizationId}:products:count`);
+		revalidateTag(`products`);
+		revalidateTag(`products:count`);
 
 		// 9. Message de succès personnalisé
 		const statusText =

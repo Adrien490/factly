@@ -1,10 +1,10 @@
-export const getFiscalYearNavigation = (organizationId: string) => [
+export const getFiscalYearNavigation = () => [
 	{
 		title: "Vue d'ensemble",
-		url: `/dashboard/${organizationId}/fiscal-years`,
+		url: `/dashboard/fiscal-years`,
 	},
 	{
 		title: "Nouvelle année fiscale",
-		url: `/dashboard/${organizationId}/fiscal-years/new`,
+		url: `/dashboard/fiscal-years/new`,
 	},
 ];

@@ -14,14 +14,12 @@ import { UpdateClientStatusButton } from "../../update-client-status/components/
 
 interface RestoreClientAlertDialogProps {
 	status: ClientStatusOption;
-	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function RestoreClientAlertDialog({
 	status,
-	organizationId,
 	id,
 	children,
 }: RestoreClientAlertDialogProps) {
@@ -42,11 +40,7 @@ export function RestoreClientAlertDialog({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
-					<UpdateClientStatusButton
-						organizationId={organizationId}
-						id={id}
-						status={status.value}
-					>
+					<UpdateClientStatusButton id={id} status={status.value}>
 						<AlertDialogAction>Restaurer</AlertDialogAction>
 					</UpdateClientStatusButton>
 				</AlertDialogFooter>

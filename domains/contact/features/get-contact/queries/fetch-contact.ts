@@ -1,3 +1,5 @@
+"use server";
+
 import db from "@/shared/lib/db";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -14,32 +16,19 @@ export async function fetchContact(
 ): Promise<GetContactReturn> {
 	"use cache";
 
-	// Tag de base pour tous les contacts de l'organisation
-	cacheTag(`organizations:${params.organizationId}:contacts:${params.id}`);
+	// Tags de cache
+	cacheTag(`contacts:${params.id}`);
 	cacheLife({
-		revalidate: 60 * 60 * 24,
-		stale: 60 * 60 * 24,
-		expire: 60 * 60 * 24,
+		revalidate: 60 * 60 * 24, // 24 heures
+		stale: 60 * 60 * 24, // 24 heures
+		expire: 60 * 60 * 24 * 7, // 7 jours
 	});
 
 	try {
+		// Récupération du contact
 		const contact = await db.contact.findFirst({
 			where: {
 				id: params.id,
-				OR: [
-					{
-						client: {
-							organizationId: params.organizationId,
-							...(params.clientId && { id: params.clientId }),
-						},
-					},
-					{
-						supplier: {
-							organizationId: params.organizationId,
-							...(params.supplierId && { id: params.supplierId }),
-						},
-					},
-				],
 			},
 			select: GET_CONTACT_DEFAULT_SELECT,
 		});
@@ -51,6 +40,6 @@ export async function fetchContact(
 		return contact;
 	} catch (error) {
 		console.error("[FETCH_CONTACT]", error);
-		throw new Error("Failed to fetch contact");
+		throw error;
 	}
 }

@@ -20,20 +20,16 @@ export function useCreateFiscalYear() {
 						action: {
 							label: "Voir les détails",
 							onClick: () => {
-								if (result.data?.id && result.data?.organizationId) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/fiscal-years`
-									);
+								if (result.data?.id) {
+									router.push(`/dashboard/fiscal-years`);
 								}
 							},
 						},
 					});
 
 					// Redirection vers la liste des années fiscales
-					if (result.data?.organizationId) {
-						router.push(
-							`/dashboard/${result.data.organizationId}/fiscal-years`
-						);
+					if (result.data?.id) {
+						router.push(`/dashboard/fiscal-years`);
 					}
 				},
 			})

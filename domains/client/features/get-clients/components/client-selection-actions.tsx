@@ -28,13 +28,11 @@ import { UpdateMultipleClientStatusButton } from "../../update-multiple-client-s
 
 interface ClientSelectionActionsProps {
 	selectedClientIds: string[];
-	organizationId: string;
 	isArchived?: boolean;
 }
 
 export function ClientSelectionActions({
 	selectedClientIds,
-	organizationId,
 	isArchived,
 }: ClientSelectionActionsProps) {
 	return (
@@ -96,7 +94,6 @@ export function ClientSelectionActions({
 											<AlertDialogFooter>
 												<AlertDialogCancel>Annuler</AlertDialogCancel>
 												<UpdateMultipleClientStatusButton
-													organizationId={organizationId}
 													ids={selectedClientIds}
 													status={status.value}
 												>
@@ -132,10 +129,7 @@ export function ClientSelectionActions({
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<ArchiveMultipleClientsButton
-										organizationId={organizationId}
-										ids={selectedClientIds}
-									>
+									<ArchiveMultipleClientsButton ids={selectedClientIds}>
 										<AlertDialogAction>Archiver</AlertDialogAction>
 									</ArchiveMultipleClientsButton>
 								</AlertDialogFooter>
@@ -179,7 +173,6 @@ export function ClientSelectionActions({
 											<AlertDialogFooter>
 												<AlertDialogCancel>Annuler</AlertDialogCancel>
 												<RestoreMultipleClientsButton
-													organizationId={organizationId}
 													ids={selectedClientIds}
 													status={status.value}
 												>
@@ -216,10 +209,7 @@ export function ClientSelectionActions({
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Annuler</AlertDialogCancel>
-									<DeleteMultipleClientsButton
-										organizationId={organizationId}
-										ids={selectedClientIds}
-									>
+									<DeleteMultipleClientsButton ids={selectedClientIds}>
 										<AlertDialogAction>Supprimer</AlertDialogAction>
 									</DeleteMultipleClientsButton>
 								</AlertDialogFooter>

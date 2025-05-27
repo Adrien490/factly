@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 export const GET_CONTACT_DEFAULT_SELECT = {
 	id: true,
 	firstName: true,
@@ -18,13 +20,13 @@ export const GET_CONTACT_DEFAULT_SELECT = {
 	client: {
 		select: {
 			id: true,
-			organizationId: true,
+			reference: true,
 		},
 	},
 	supplier: {
 		select: {
 			id: true,
-			organizationId: true,
+			reference: true,
 		},
 	},
-} as const;
+} as const satisfies Prisma.ContactSelect;

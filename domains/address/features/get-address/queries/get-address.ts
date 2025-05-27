@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import { headers } from "next/headers";
 import { z } from "zod";
@@ -50,10 +49,9 @@ export async function getAddress(params: z.infer<typeof getAddressSchema>) {
 			// Pour les adresses liées à un client
 			const client = await db.client.findUnique({
 				where: { id: address.clientId },
-				select: { organizationId: true },
 			});
 
-			if (!client || client.organizationId !== validatedParams.organizationId) {
+			if (!client) {
 				throw new Error(
 					"Address does not belong to the specified organization"
 				);
@@ -62,13 +60,9 @@ export async function getAddress(params: z.infer<typeof getAddressSchema>) {
 			// Pour les adresses liées à un fournisseur
 			const supplier = await db.supplier.findUnique({
 				where: { id: address.supplierId },
-				select: { organizationId: true },
 			});
 
-			if (
-				!supplier ||
-				supplier.organizationId !== validatedParams.organizationId
-			) {
+			if (!supplier) {
 				throw new Error(
 					"Address does not belong to the specified organization"
 				);
@@ -76,15 +70,6 @@ export async function getAddress(params: z.infer<typeof getAddressSchema>) {
 		} else {
 			// Si l'adresse n'est liée ni à un client ni à un fournisseur
 			throw new Error("Address is not associated with any entity");
-		}
-
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(
-			validatedParams.organizationId
-		);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
 		}
 
 		// Appel à la fonction cacheable pour récupérer l'adresse complète

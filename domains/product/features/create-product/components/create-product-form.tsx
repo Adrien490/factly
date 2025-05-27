@@ -48,9 +48,7 @@ export function CreateProductForm() {
 							label: "Voir la fiche produit",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/products/${result.data.id}`
-									);
+									router.push(`/dashboard/products/${result.data.id}`);
 								}
 							},
 						},
@@ -64,7 +62,6 @@ export function CreateProductForm() {
 	// TanStack Form setup
 	const form = useAppForm({
 		defaultValues: {
-			organizationId: organizationId,
 			name: "",
 			reference: "",
 			description: "",
@@ -113,17 +110,6 @@ export function CreateProductForm() {
 			<form.Subscribe selector={(state) => state.errors}>
 				{(errors) => <FormErrors errors={errors} />}
 			</form.Subscribe>
-
-			{/* Champ caché pour organizationId */}
-			<form.Field name="organizationId">
-				{(field) => (
-					<input
-						type="hidden"
-						name="organizationId"
-						value={field.state.value}
-					/>
-				)}
-			</form.Field>
 
 			{/* Champ caché pour imageUrl */}
 			<form.Field name="imageUrl">

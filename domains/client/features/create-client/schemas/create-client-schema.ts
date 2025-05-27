@@ -13,7 +13,6 @@ import { z } from "zod";
 export const createClientSchema = z
 	.object({
 		// Identifiants
-		organizationId: z.string(),
 		reference: z.string().optional(),
 		type: z.nativeEnum(ClientType),
 		status: z.nativeEnum(ClientStatus),

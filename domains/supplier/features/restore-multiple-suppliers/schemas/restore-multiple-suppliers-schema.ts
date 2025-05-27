@@ -2,7 +2,6 @@ import { SupplierStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const restoreMultipleSuppliersSchema = z.object({
-	organizationId: z.string(),
 	ids: z.array(z.string()),
 	status: z.nativeEnum(SupplierStatus, {
 		required_error: "Le statut cible est requis",

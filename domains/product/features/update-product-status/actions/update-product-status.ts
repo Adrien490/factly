@@ -1,8 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
-import { validateProductStatusTransition } from "@/domains/product/utils";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -28,43 +26,28 @@ export const updateProductStatus: ServerAction<
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour effectuer cette action"
+				"Vous devez être connecté pour modifier le statut d'un produit"
 			);
 		}
 
 		// 2. Récupération des données
-		const id = formData.get("id") as string;
-		const organizationId = formData.get("organizationId") as string;
-		const status = formData.get("status") as ProductStatus;
+		const rawData = {
+			id: formData.get("id") as string,
+			status: formData.get("status") as ProductStatus,
+		};
 
 		// 3. Validation des données
-		const validation = updateProductStatusSchema.safeParse({
-			id,
-			organizationId,
-			status,
-		});
+		const validation = updateProductStatusSchema.safeParse(rawData);
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Validation échouée. Veuillez vérifier votre sélection."
+				"Validation échouée. Veuillez vérifier votre saisie."
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence du produit
+		// 4. Vérification de l'existence du produit
 		const existingProduct = await db.product.findUnique({
-			where: {
-				id,
-				organizationId,
-			},
+			where: { id: validation.data.id },
 			select: {
 				id: true,
 				status: true,
@@ -73,68 +56,33 @@ export const updateProductStatus: ServerAction<
 		});
 
 		if (!existingProduct) {
+			return createErrorResponse(ActionStatus.NOT_FOUND, "Produit introuvable");
+		}
+
+		// 5. Vérification que le statut est différent
+		if (existingProduct.status === validation.data.status) {
 			return createErrorResponse(
-				ActionStatus.NOT_FOUND,
-				"Le produit n'a pas été trouvé"
+				ActionStatus.VALIDATION_ERROR,
+				"Le produit a déjà ce statut"
 			);
 		}
 
-		// 6. Validation de la transition de statut
-		const transitionValidation = validateProductStatusTransition({
-			currentStatus: existingProduct.status,
-			newStatus: validation.data.status,
-		});
-
-		if (!transitionValidation.isValid) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				transitionValidation.message || "Transition de statut non autorisée"
-			);
-		}
-
-		// 7. Mise à jour du produit
+		// 6. Mise à jour du statut
 		const updatedProduct = await db.product.update({
-			where: {
-				id,
-				organizationId,
-			},
+			where: { id: validation.data.id },
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:products:${id}`);
-		revalidateTag(`organizations:${organizationId}:products`);
-		revalidateTag(`organizations:${organizationId}:products:count`);
+		// 7. Invalidation du cache
+		revalidateTag(`products:${validation.data.id}`);
+		revalidateTag(`products`);
 
-		// 9. Message de succès personnalisé
-		let message;
-
-		// Pour l'archivage
-		if (validation.data.status === ProductStatus.ARCHIVED) {
-			message = `Le produit ${updatedProduct.name} a été archivé avec succès`;
-		}
-		// Pour la restauration depuis l'archivage
-		else if (existingProduct.status === ProductStatus.ARCHIVED) {
-			const statusText =
-				validation.data.status === ProductStatus.ACTIVE
-					? "actif"
-					: validation.data.status === ProductStatus.INACTIVE
-						? "inactif"
-						: validation.data.status === ProductStatus.DRAFT
-							? "brouillon"
-							: validation.data.status === ProductStatus.DISCONTINUED
-								? "obsolète"
-								: "autre statut";
-			message = `Le produit ${updatedProduct.name} a été restauré en ${statusText} avec succès`;
-		}
-		// Pour les autres transitions
-		else {
-			message = `Le statut du produit ${updatedProduct.name} a été mis à jour avec succès`;
-		}
-
-		return createSuccessResponse(updatedProduct, message);
+		return createSuccessResponse(
+			updatedProduct,
+			`Statut du produit "${existingProduct.name}" mis à jour avec succès`
+		);
 	} catch (error) {
 		console.error("[UPDATE_PRODUCT_STATUS]", error);
 		return createErrorResponse(

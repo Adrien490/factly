@@ -25,13 +25,11 @@ import { GetProductCategoriesReturn } from "../types";
 
 export interface ProductCategoryDataTableProps {
 	categoriesPromise: Promise<GetProductCategoriesReturn>;
-	organizationId: string;
 	emptyState?: React.ReactNode;
 }
 
 export function ProductCategoryDataTable({
 	categoriesPromise,
-	organizationId,
 	emptyState,
 }: ProductCategoryDataTableProps) {
 	const response = use(categoriesPromise);
@@ -145,10 +143,7 @@ export function ProductCategoryDataTable({
 										</TableCell>
 
 										<TableCell role="gridcell" className="text-right w-[100px]">
-											<ProductCategoryActions
-												category={category}
-												organizationId={organizationId}
-											/>
+											<ProductCategoryActions category={category} />
 										</TableCell>
 									</TableRow>
 								);

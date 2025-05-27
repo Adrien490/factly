@@ -1,12 +1,10 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
 	createSuccessResponse,
-	createValidationErrorResponse,
 	ServerAction,
 } from "@/shared/types/server-action";
 import { revalidateTag } from "next/cache";
@@ -22,7 +20,7 @@ import { refreshFiscalYearsSchema } from "../schemas";
 export const refreshFiscalYears: ServerAction<
 	null,
 	typeof refreshFiscalYearsSchema
-> = async (_, formData) => {
+> = async () => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -35,45 +33,9 @@ export const refreshFiscalYears: ServerAction<
 			);
 		}
 
-		const rawData = {
-			organizationId: formData.get("organizationId")?.toString(),
-		};
-
-		const { organizationId } = rawData;
-
-		// 2. Vérification de base des données requises
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
-			);
-		}
-
-		// 3. Validation des données avec le schéma Zod
-		const validation = refreshFiscalYearsSchema.safeParse({
-			organizationId,
-		});
-
-		if (!validation.success) {
-			return createValidationErrorResponse(
-				validation.error.flatten().fieldErrors,
-				"Veuillez remplir tous les champs obligatoires"
-			);
-		}
-
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 5. Révalidation des tags pour forcer le rafraîchissement des données
-		revalidateTag(`organizations:${organizationId}:fiscal-years`);
-		revalidateTag(`organizations:${organizationId}:fiscal-years:count`);
+		revalidateTag(`fiscal-years`);
+		revalidateTag(`fiscal-years:count`);
 
 		// 6. Retour de la réponse de succès
 		return createSuccessResponse(

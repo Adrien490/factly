@@ -4,13 +4,11 @@ import db from "@/shared/lib/db";
  * Vérifie si une période (startDate - endDate) chevauche des années fiscales existantes
  */
 export async function hasDateOverlap(
-	organizationId: string,
 	startDate: Date,
 	endDate: Date
 ): Promise<boolean> {
 	const overlappingFiscalYears = await db.fiscalYear.findMany({
 		where: {
-			organizationId,
 			OR: [
 				// Cas 1: startDate est entre les dates d'une année existante
 				{

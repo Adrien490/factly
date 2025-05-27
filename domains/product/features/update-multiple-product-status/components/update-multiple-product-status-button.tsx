@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useUpdateMultipleProductStatus } from "../hooks/use-update-multiple-product-status";
 
 interface UpdateMultipleProductStatusButtonProps {
-	organizationId: string;
 	ids: string[];
 	status: ProductStatus;
 	children: React.ReactNode;
 }
 
 export function UpdateMultipleProductStatusButton({
-	organizationId,
 	ids,
 	status,
 	children,
@@ -26,7 +24,6 @@ export function UpdateMultipleProductStatusButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
 
 		startTransition(() => {

@@ -10,17 +10,11 @@ export const buildWhereClause = (
 	params: GetFiscalYearsParams
 ): Prisma.FiscalYearWhereInput => {
 	// Clause de base: récupère seulement les années fiscales de l'organisation spécifiée
-	const baseWhere: Prisma.FiscalYearWhereInput = {
-		organizationId: params.organizationId,
-	};
+	const baseWhere: Prisma.FiscalYearWhereInput = {};
 
 	// Ajout des filtres optionnels
 	if (params.status) {
 		baseWhere.status = params.status;
-	}
-
-	if (params.isCurrent !== undefined) {
-		baseWhere.isCurrent = params.isCurrent;
 	}
 
 	// Si pas de recherche, retourne la clause de base

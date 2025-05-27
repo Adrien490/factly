@@ -12,7 +12,7 @@ export async function fetchProduct(params: z.infer<typeof getProductSchema>) {
 	"use cache";
 
 	// Tag de base pour tous les produits de l'organisation
-	cacheTag(`organizations:${params.organizationId}:products:${params.id}`);
+	cacheTag(`products:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24,
 		stale: 60 * 60 * 24,
@@ -23,7 +23,6 @@ export async function fetchProduct(params: z.infer<typeof getProductSchema>) {
 		const product = await db.product.findFirst({
 			where: {
 				id: params.id,
-				organizationId: params.organizationId,
 			},
 			select: GET_PRODUCT_DEFAULT_SELECT,
 		});

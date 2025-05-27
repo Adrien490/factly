@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getAddressesSchema } from "../schemas";
@@ -33,13 +32,6 @@ export async function getAddresses(
 		}
 
 		const validatedParams = validation.data;
-
-		const hasAccess = await hasOrganizationAccess(
-			validatedParams.organizationId
-		);
-		if (!hasAccess) {
-			throw new Error("Access denied");
-		}
 
 		// Appel à la fonction avec cache
 		return await fetchAddresses(validatedParams);

@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useRestoreMultipleClients } from "../hooks/use-restore-multiple-clients";
 
 interface RestoreMultipleClientsButtonProps {
-	organizationId: string;
 	ids: string[];
 	status: ClientStatus;
 	children: React.ReactNode;
 }
 
 export function RestoreMultipleClientsButton({
-	organizationId,
 	ids,
 	status,
 	children,
@@ -25,7 +23,6 @@ export function RestoreMultipleClientsButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
 
 		startTransition(() => {

@@ -18,6 +18,5 @@ const filterValueSchema = z.union([
 const clientFiltersSchema = z.record(filterValueSchema);
 
 export const countClientsSchema = z.object({
-	organizationId: z.string(),
 	filters: clientFiltersSchema.optional().default({}),
 });

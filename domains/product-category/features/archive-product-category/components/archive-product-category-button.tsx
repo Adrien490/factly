@@ -4,13 +4,11 @@ import { useTransition } from "react";
 import { useArchiveProductCategory } from "../hooks/use-archive-product-category";
 
 interface ArchiveProductCategoryButtonProps {
-	organizationId: string;
 	id: string;
 	children: React.ReactNode;
 }
 
 export function ArchiveProductCategoryButton({
-	organizationId,
 	id,
 	children,
 }: ArchiveProductCategoryButtonProps) {
@@ -20,7 +18,6 @@ export function ArchiveProductCategoryButton({
 	const handleArchive = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 		startTransition(() => {
 			dispatch(formData);
 		});

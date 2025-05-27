@@ -7,37 +7,27 @@ import { z } from "zod";
 export const updateFiscalYearSchema = z
 	.object({
 		id: z.string().min(1, "L'ID de l'année fiscale est requis"),
-		organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
-		name: z.string().min(1, "Le nom est requis").optional(),
+		name: z.string().min(1, "Le nom est requis"),
 		description: z.string().optional().nullable(),
-		startDate: z.coerce
-			.date({
-				invalid_type_error: "La date de début n'est pas valide",
-			})
-			.optional(),
-		endDate: z.coerce
-			.date({
-				invalid_type_error: "La date de fin n'est pas valide",
-			})
-			.optional(),
+		startDate: z.coerce.date({
+			required_error: "La date de début est requise",
+			invalid_type_error: "La date de début n'est pas valide",
+		}),
+		endDate: z.coerce.date({
+			required_error: "La date de fin est requise",
+			invalid_type_error: "La date de fin n'est pas valide",
+		}),
 		status: z
 			.nativeEnum(FiscalYearStatus, {
+				required_error: "Le statut est requis",
 				invalid_type_error: "Le statut n'est pas valide",
 			})
-			.optional(),
-		isCurrent: z.boolean().optional(),
+			.default(FiscalYearStatus.ACTIVE),
+		isCurrent: z.boolean().default(false),
 	})
-	.refine(
-		(data) => {
-			if (data.startDate && data.endDate) {
-				return data.endDate > data.startDate;
-			}
-			return true;
-		},
-		{
-			message: "La date de fin doit être postérieure à la date de début",
-			path: ["endDate"],
-		}
-	);
+	.refine((data) => data.endDate > data.startDate, {
+		message: "La date de fin doit être postérieure à la date de début",
+		path: ["endDate"],
+	});
 
 export type UpdateFiscalYearInput = z.infer<typeof updateFiscalYearSchema>;

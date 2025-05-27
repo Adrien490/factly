@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -9,14 +8,14 @@ import {
 	createSuccessResponse,
 	createValidationErrorResponse,
 	ServerAction,
-} from "@/shared/types/server-action";
-import { SupplierStatus } from "@prisma/client";
+} from "@/shared/types";
+import { Supplier, SupplierStatus } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { updateMultipleSupplierStatusSchema } from "../schemas/update-multiple-supplier-status-schema";
 
 export const updateMultipleSupplierStatus: ServerAction<
-	null,
+	Supplier[],
 	typeof updateMultipleSupplierStatusSchema
 > = async (_, formData) => {
 	try {
@@ -32,34 +31,14 @@ export const updateMultipleSupplierStatus: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
-		const supplierIds = formData.getAll("ids") as string[];
+		const ids = formData.getAll("ids") as string[];
 		const status = formData.get("status") as SupplierStatus;
 
-		// Vérification que l'organizationId n'est pas vide
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
+		// 3. Validation des données
 		const validation = updateMultipleSupplierStatusSchema.safeParse({
-			ids: supplierIds,
-			organizationId,
+			ids,
 			status,
 		});
-
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
@@ -67,11 +46,12 @@ export const updateMultipleSupplierStatus: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence des fournisseurs
+		// 4. Vérification de l'existence des fournisseurs
 		const existingSuppliers = await db.supplier.findMany({
 			where: {
-				id: { in: validation.data.ids },
-				organizationId: validation.data.organizationId,
+				id: {
+					in: validation.data.ids,
+				},
 			},
 			select: {
 				id: true,
@@ -82,45 +62,46 @@ export const updateMultipleSupplierStatus: ServerAction<
 		if (existingSuppliers.length !== validation.data.ids.length) {
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
-				"Certains fournisseurs sont introuvables"
+				"Un ou plusieurs fournisseurs n'ont pas été trouvés"
 			);
 		}
 
-		// Filtrer les fournisseurs qui n'ont pas déjà le statut cible
-		const suppliersToUpdate = existingSuppliers.filter(
-			(supplier) => supplier.status !== validation.data.status
-		);
-
-		if (suppliersToUpdate.length === 0) {
-			return createSuccessResponse(
-				null,
-				"Tous les fournisseurs sélectionnés ont déjà ce statut"
-			);
-		}
-
-		// 6. Mise à jour
+		// 5. Mise à jour des fournisseurs
 		await db.supplier.updateMany({
 			where: {
-				id: { in: suppliersToUpdate.map((supplier) => supplier.id) },
-				organizationId: validation.data.organizationId,
+				id: {
+					in: validation.data.ids,
+				},
 			},
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// 7. Revalidation du cache
-		revalidateTag(`organizations:${organizationId}:suppliers`);
-		revalidateTag(`organizations:${organizationId}:suppliers:count`);
+		// Récupération des fournisseurs mis à jour
+		const updatedSuppliers = await db.supplier.findMany({
+			where: {
+				id: {
+					in: validation.data.ids,
+				},
+			},
+		});
 
-		const message = `${suppliersToUpdate.length} fournisseur(s) ont été mis à jour avec succès`;
+		// 6. Invalidation du cache
+		for (const id of validation.data.ids) {
+			revalidateTag(`suppliers:${id}`);
+		}
+		revalidateTag(`suppliers`);
 
-		return createSuccessResponse(null, message);
+		// 7. Message de succès personnalisé
+		const message = `${existingSuppliers.length} fournisseur(s) ont été mis à jour avec succès`;
+
+		return createSuccessResponse(updatedSuppliers, message);
 	} catch (error) {
 		console.error("[UPDATE_MULTIPLE_SUPPLIER_STATUS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de mettre à jour le statut des fournisseurs"
+			"Une erreur est survenue lors de la mise à jour du statut"
 		);
 	}
 };

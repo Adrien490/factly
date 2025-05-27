@@ -14,7 +14,7 @@ export async function fetchFiscalYear(
 	"use cache";
 
 	// Tag de base pour toutes les années fiscales de l'organisation
-	cacheTag(`organizations:${params.organizationId}:fiscal-year:${params.id}`);
+	cacheTag(`fiscal-year:${params.id}`);
 	cacheLife({
 		revalidate: 60 * 60 * 24, // 24 heures
 		stale: 60 * 60 * 24, // 24 heures
@@ -25,7 +25,6 @@ export async function fetchFiscalYear(
 		const fiscalYear = await db.fiscalYear.findFirst({
 			where: {
 				id: params.id,
-				organizationId: params.organizationId,
 			},
 			select: GET_FISCAL_YEAR_DEFAULT_SELECT,
 		});

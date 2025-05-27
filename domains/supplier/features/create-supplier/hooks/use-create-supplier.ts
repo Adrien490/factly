@@ -20,9 +20,7 @@ export function useCreateSupplier() {
 							label: "Voir le fournisseur",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(
-										`/dashboard/${result.data.organizationId}/suppliers/${result.data.id}`
-									);
+									router.push(`/dashboard/suppliers/${result.data.id}`);
 								}
 							},
 						},

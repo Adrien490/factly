@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -31,23 +30,13 @@ export const updateSupplierStatus: ServerAction<
 			);
 		}
 
-		// 2. Vérification de base des données requises
+		// 2. Récupération des données
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
 			status: formData.get("status") as SupplierStatus,
 		};
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
+		// 3. Validation complète des données
 		const validation = updateSupplierStatusSchema.safeParse(rawData);
 
 		if (!validation.success) {
@@ -58,11 +47,10 @@ export const updateSupplierStatus: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence du fournisseur
+		// 4. Vérification de l'existence du fournisseur
 		const existingSupplier = await db.supplier.findFirst({
 			where: {
 				id: validation.data.id,
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -85,7 +73,7 @@ export const updateSupplierStatus: ServerAction<
 			);
 		}
 
-		// 6. Mise à jour du statut
+		// 5. Mise à jour du statut
 		const updatedSupplier = await db.supplier.update({
 			where: { id: validation.data.id },
 			data: {
@@ -93,11 +81,9 @@ export const updateSupplierStatus: ServerAction<
 			},
 		});
 
-		// 7. Revalidation du cache
-		revalidateTag(`organizations:${rawData.organizationId}:suppliers`);
-		revalidateTag(
-			`organizations:${rawData.organizationId}:suppliers:${existingSupplier.id}`
-		);
+		// 6. Revalidation du cache
+		revalidateTag(`suppliers`);
+		revalidateTag(`suppliers:${existingSupplier.id}`);
 
 		const message = `Le statut du fournisseur a été mis à jour avec succès`;
 

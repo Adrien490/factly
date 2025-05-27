@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -27,138 +26,117 @@ export const deleteContact: ServerAction<
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour effectuer cette action"
+				"Vous devez être connecté pour supprimer un contact"
 			);
 		}
 
-		// 2. Vérification de base des données requises
+		// 2. Récupération des données
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
-			clientId: formData.get("clientId") as string,
-			supplierId: formData.get("supplierId") as string,
 		};
 
-		console.log("[DELETE_CONTACT] Form Data:", rawData);
-
-		// Vérification que l'organizationId n'est pas vide
-		if (!rawData.organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
+		// 3. Validation des données
 		const validation = deleteContactSchema.safeParse(rawData);
-
 		if (!validation.success) {
-			console.log(
-				"[DELETE_CONTACT] Validation errors:",
-				validation.error.flatten().fieldErrors
-			);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
 				"Validation échouée. Veuillez vérifier votre saisie."
 			);
 		}
 
-		// 5. Vérification de l'existence du contact
-		const existingContact = await db.contact.findFirst({
-			where: {
-				id: validation.data.id,
-				OR: [
-					{ clientId: validation.data.clientId },
-					{ supplierId: validation.data.supplierId },
-				],
-			},
-			include: {
-				client: {
-					select: {
-						type: true,
-					},
-				},
-				supplier: {
-					select: {
-						type: true,
-					},
-				},
-			},
+		// 4. Vérification de l'existence du contact
+		const existingContact = await db.contact.findUnique({
+			where: { id: validation.data.id },
 		});
 
 		if (!existingContact) {
 			return createErrorResponse(ActionStatus.NOT_FOUND, "Contact introuvable");
 		}
 
-		// Vérification si c'est le dernier contact d'un client particulier
-		if (
-			existingContact.clientId &&
-			existingContact.client?.type === "INDIVIDUAL"
-		) {
-			const contactCount = await db.contact.count({
-				where: {
-					clientId: existingContact.clientId,
-				},
-			});
+		// 5. Vérification qu'on ne supprime pas le dernier contact par défaut
+		if (existingContact.isDefault) {
+			let otherContactsCount = 0;
 
-			if (contactCount <= 1) {
+			if (existingContact.clientId) {
+				otherContactsCount = await db.contact.count({
+					where: {
+						clientId: existingContact.clientId,
+						id: { not: validation.data.id },
+					},
+				});
+			} else if (existingContact.supplierId) {
+				otherContactsCount = await db.contact.count({
+					where: {
+						supplierId: existingContact.supplierId,
+						id: { not: validation.data.id },
+					},
+				});
+			}
+
+			if (otherContactsCount === 0) {
 				return createErrorResponse(
-					ActionStatus.FORBIDDEN,
-					"Impossible de supprimer le dernier contact d'un client particulier"
+					ActionStatus.VALIDATION_ERROR,
+					"Impossible de supprimer le dernier contact"
 				);
+			}
+
+			// Si on supprime le contact par défaut et qu'il y a d'autres contacts,
+			// on définit le premier autre contact comme par défaut
+			if (existingContact.clientId) {
+				const firstOtherContact = await db.contact.findFirst({
+					where: {
+						clientId: existingContact.clientId,
+						id: { not: validation.data.id },
+					},
+					orderBy: { createdAt: "asc" },
+				});
+
+				if (firstOtherContact) {
+					await db.contact.update({
+						where: { id: firstOtherContact.id },
+						data: { isDefault: true },
+					});
+				}
+			} else if (existingContact.supplierId) {
+				const firstOtherContact = await db.contact.findFirst({
+					where: {
+						supplierId: existingContact.supplierId,
+						id: { not: validation.data.id },
+					},
+					orderBy: { createdAt: "asc" },
+				});
+
+				if (firstOtherContact) {
+					await db.contact.update({
+						where: { id: firstOtherContact.id },
+						data: { isDefault: true },
+					});
+				}
 			}
 		}
 
-		// Vérification si c'est le dernier contact d'un fournisseur particulier
-		if (existingContact.supplierId) {
-			const contactCount = await db.contact.count({
-				where: {
-					supplierId: existingContact.supplierId,
-				},
-			});
-
-			if (contactCount <= 1) {
-				return createErrorResponse(
-					ActionStatus.FORBIDDEN,
-					"Impossible de supprimer le dernier contact d'un fournisseur particulier"
-				);
-			}
-		}
-
-		// 6. Suppression
+		// 6. Suppression du contact
 		await db.contact.delete({
 			where: { id: validation.data.id },
 		});
 
-		// 7. Revalidation du cache
+		// 7. Invalidation du cache
 		if (existingContact.clientId) {
-			revalidateTag(
-				`organizations:${rawData.organizationId}:clients:${existingContact.clientId}:contacts`
-			);
-		} else if (existingContact.supplierId) {
-			revalidateTag(
-				`organizations:${rawData.organizationId}:suppliers:${existingContact.supplierId}:contacts`
-			);
+			revalidateTag(`clients:${existingContact.clientId}:contacts`);
+		}
+		if (existingContact.supplierId) {
+			revalidateTag(`suppliers:${existingContact.supplierId}:contacts`);
 		}
 
 		return createSuccessResponse(
 			existingContact,
-			`Contact "${existingContact.firstName} ${existingContact.lastName}" supprimé définitivement`
+			"Contact supprimé avec succès"
 		);
 	} catch (error) {
 		console.error("[DELETE_CONTACT]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de supprimer définitivement le contact"
+			"Une erreur est survenue lors de la suppression du contact"
 		);
 	}
 };

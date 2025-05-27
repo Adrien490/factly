@@ -63,7 +63,7 @@ export function SupplierActions({
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}`}
+						href={`/dashboard/suppliers/${supplier.id}`}
 						className={cn("flex w-full items-center")}
 					>
 						{isArchived && <FileText className="h-4 w-4 mr-2" />}
@@ -77,7 +77,7 @@ export function SupplierActions({
 						<DropdownMenuSeparator />
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`}
+								href={`/dashboard/suppliers/${supplier.id}/edit`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Modifier</span>
@@ -85,7 +85,7 @@ export function SupplierActions({
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`}
+								href={`/dashboard/suppliers/${supplier.id}/contacts`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Gérer les contacts</span>
@@ -106,7 +106,6 @@ export function SupplierActions({
 								).map((status) => (
 									<UpdateSupplierStatusButton
 										key={status.value}
-										organizationId={supplier.organizationId}
 										id={supplier.id}
 										status={status.value}
 									>
@@ -144,10 +143,7 @@ export function SupplierActions({
 									</AlertDialogHeader>
 									<AlertDialogFooter>
 										<AlertDialogCancel>Annuler</AlertDialogCancel>
-										<ArchiveSupplierButton
-											organizationId={supplier.organizationId}
-											id={supplier.id}
-										>
+										<ArchiveSupplierButton id={supplier.id}>
 											<AlertDialogAction>Archiver</AlertDialogAction>
 										</ArchiveSupplierButton>
 									</AlertDialogFooter>
@@ -196,7 +192,6 @@ export function SupplierActions({
 												<AlertDialogFooter>
 													<AlertDialogCancel>Annuler</AlertDialogCancel>
 													<RestoreSupplierButton
-														organizationId={supplier.organizationId}
 														id={supplier.id}
 														status={status.value}
 													>
@@ -234,10 +229,7 @@ export function SupplierActions({
 									</AlertDialogHeader>
 									<AlertDialogFooter>
 										<AlertDialogCancel>Annuler</AlertDialogCancel>
-										<DeleteSupplierButton
-											organizationId={supplier.organizationId}
-											id={supplier.id}
-										>
+										<DeleteSupplierButton id={supplier.id}>
 											<AlertDialogAction>Supprimer</AlertDialogAction>
 										</DeleteSupplierButton>
 									</AlertDialogFooter>

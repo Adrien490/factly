@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionState,
@@ -43,15 +42,6 @@ export async function updateAddress(
 			return createErrorResponse(
 				ActionStatus.VALIDATION_ERROR,
 				"L'ID de l'organisation est requis"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
 			);
 		}
 
@@ -118,11 +108,7 @@ export async function updateAddress(
 		}
 
 		// 8. Mise à jour de l'adresse dans la base de données
-		const {
-			id,
-			organizationId: validatedOrgId,
-			...addressData
-		} = validation.data;
+		const { id, ...addressData } = validation.data;
 
 		// Vérifier si c'est l'adresse par défaut
 		if (addressData.isDefault) {
@@ -173,14 +159,12 @@ export async function updateAddress(
 
 		// Tags spécifiques au client ou fournisseur
 		if (existingAddress.clientId) {
-			revalidateTag(`clients:${validatedOrgId}:user:${session.user.id}`);
 			revalidateTag(`client:${existingAddress.clientId}`);
 			revalidateTag(
 				`client:${existingAddress.clientId}:addresses:user:${session.user.id}`
 			);
 		}
 		if (existingAddress.supplierId) {
-			revalidateTag(`suppliers:${validatedOrgId}:user:${session.user.id}`);
 			revalidateTag(`supplier:${existingAddress.supplierId}`);
 			revalidateTag(
 				`supplier:${existingAddress.supplierId}:addresses:user:${session.user.id}`

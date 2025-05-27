@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useUpdateMultipleClientStatus } from "../hooks/use-update-multiple-client-status";
 
 interface UpdateMultipleClientStatusButtonProps {
-	organizationId: string;
 	ids: string[];
 	status: ClientStatus;
 	children: React.ReactNode;
 }
 
 export function UpdateMultipleClientStatusButton({
-	organizationId,
 	ids,
 	status,
 	children,
@@ -26,7 +24,6 @@ export function UpdateMultipleClientStatusButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
 
 		startTransition(() => {

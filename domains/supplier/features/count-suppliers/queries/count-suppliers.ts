@@ -1,14 +1,13 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { countSuppliersSchema } from "../schemas";
 import { fetchCount } from "./fetch-count";
 
 /**
- * Compte le nombre de fournisseurs d'une organisation selon les critères de recherche et de filtrage
+ * Compte le nombre de fournisseurs selon les critères de recherche et de filtrage
  * @param params - Paramètres validés par countSuppliersSchema
  * @returns Nombre de fournisseurs
  */
@@ -23,13 +22,6 @@ export async function countSuppliers(
 
 		if (!session?.user?.id) {
 			throw new Error("Unauthorized");
-		}
-
-		// Vérification des droits d'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(params.organizationId);
-
-		if (!hasAccess) {
-			throw new Error("Access denied");
 		}
 
 		// Appel à la fonction

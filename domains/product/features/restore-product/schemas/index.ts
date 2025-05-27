@@ -5,12 +5,11 @@ import { z } from "zod";
  * Schéma de validation pour la restauration d'un produit
  */
 export const restoreProductSchema = z.object({
-	// Identifiants
 	id: z.string().min(1, "L'ID du produit est requis"),
-	organizationId: z.string().min(1, "L'ID de l'organisation est requis"),
-	// Statut cible
 	status: z.nativeEnum(ProductStatus, {
 		required_error: "Le statut est requis",
-		invalid_type_error: "Statut invalide",
+		invalid_type_error: "Le statut n'est pas valide",
 	}),
 });
+
+export type RestoreProductInput = z.infer<typeof restoreProductSchema>;

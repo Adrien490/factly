@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -14,16 +13,14 @@ import { headers } from "next/headers";
 import { refreshClientsSchema } from "../schemas";
 
 /**
- * Action serveur pour créer un nouveau client
+ * Action serveur pour rafraîchir les clients
  * Validations :
  * - L'utilisateur doit être authentifié
- * - L'utilisateur doit avoir accès à l'organisation
- * - La référence du client doit être unique dans l'organisation
  */
 export const refreshClients: ServerAction<
 	null,
 	typeof refreshClientsSchema
-> = async (_, formData) => {
+> = async () => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -32,59 +29,35 @@ export const refreshClients: ServerAction<
 		if (!session?.user?.id) {
 			return createErrorResponse(
 				ActionStatus.UNAUTHORIZED,
-				"Vous devez être connecté pour créer un client"
+				"Vous devez être connecté pour rafraîchir les clients"
 			);
 		}
 
-		const rawData = {
-			organizationId: formData.get("organizationId")?.toString(),
-		};
-
-		const { organizationId } = rawData;
-
-		// 2. Vérification de base des données requises
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
-			);
-		}
-
-		// 5. Validation des données avec le schéma Zod
-		const validation = refreshClientsSchema.safeParse({
-			organizationId,
-		});
+		// 2. Validation des données avec le schéma Zod
+		const validation = refreshClientsSchema.safeParse({});
 
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Veuillez remplir tous les champs obligatoires"
+				"Validation échouée"
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
+		revalidateTag(`clients`);
+		revalidateTag(`clients:count`);
 
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		revalidateTag(`organizations:${organizationId}:clients`);
-		revalidateTag(`organizations:${organizationId}:clients:count`);
-
-		// 9. Retour de la réponse de succès
+		// 3. Retour de la réponse de succès
 		return createSuccessResponse(
 			null,
 			`Les clients ont été rafraîchis avec succès`
 		);
 	} catch (error) {
-		console.error("[CREATE_CLIENT]", error);
+		console.error("[REFRESH_CLIENTS]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			error instanceof Error ? error.message : "Impossible de créer le client"
+			error instanceof Error
+				? error.message
+				: "Impossible de rafraîchir les clients"
 		);
 	}
 };

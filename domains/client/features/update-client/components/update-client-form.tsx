@@ -40,7 +40,6 @@ type Props = {
 
 export function UpdateClientForm({ client }: Props) {
 	const params = useParams();
-	const organizationId = params.organizationId as string;
 	const clientId = params.clientId as string;
 
 	const { dispatch, isPending, state } = useUpdateClient();
@@ -49,7 +48,6 @@ export function UpdateClientForm({ client }: Props) {
 	const form = useAppForm({
 		defaultValues: {
 			id: clientId,
-			organizationId,
 			reference: state?.inputs?.reference ?? client.reference ?? "",
 			contactEmail:
 				state?.inputs?.contactEmail ?? client.contacts[0]?.email ?? "",
@@ -142,15 +140,6 @@ export function UpdateClientForm({ client }: Props) {
 				{(field) => <input type="hidden" name="id" value={field.state.value} />}
 			</form.Field>
 			{/* Champs cachés */}
-			<form.Field name="organizationId">
-				{(field) => (
-					<input
-						type="hidden"
-						name="organizationId"
-						value={field.state.value}
-					/>
-				)}
-			</form.Field>
 
 			<FormLayout withDividers columns={2}>
 				{/* Section 1: Informations de base */}
@@ -666,7 +655,7 @@ export function UpdateClientForm({ client }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/${organizationId}/clients`}
+						cancelHref={`/dashboard/clients`}
 						submitLabel="Enregistrer"
 					/>
 				)}

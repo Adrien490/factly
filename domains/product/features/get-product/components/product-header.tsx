@@ -1,9 +1,8 @@
-import NotFound from "@/app/dashboard/[organizationId]/not-found";
+import NotFound from "@/app/dashboard/not-found";
 import {
 	PRODUCT_STATUS_COLORS,
 	PRODUCT_STATUS_LABELS,
 } from "@/domains/product/constants";
-import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { formatPrice } from "@/shared/utils";
 import { use } from "react";
@@ -78,20 +77,6 @@ export function ProductHeader({ productPromise }: ProductHeaderProps) {
 				</div>
 
 				{/* Actions et navigation */}
-				<div className="flex flex-wrap gap-3">
-					<HorizontalMenu
-						items={[
-							{
-								title: "Fiche produit",
-								url: `/dashboard/${product.organizationId}/products/${product.id}`,
-							},
-							{
-								title: "Modifier",
-								url: `/dashboard/${product.organizationId}/products/${product.id}/edit`,
-							},
-						]}
-					/>
-				</div>
 			</div>
 		</div>
 	);

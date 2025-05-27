@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -33,13 +32,11 @@ export const restoreSupplier: ServerAction<
 
 		// 2. Récupération des données
 		const id = formData.get("id") as string;
-		const organizationId = formData.get("organizationId") as string;
 		const status = formData.get("status") as SupplierStatus;
 
 		// 3. Validation des données
 		const validation = restoreSupplierSchema.safeParse({
 			id,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -49,24 +46,15 @@ export const restoreSupplier: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence du fournisseur
+		// 4. Vérification de l'existence du fournisseur
 		const existingSupplier = await db.supplier.findUnique({
 			where: {
 				id,
-				organizationId,
 			},
 			select: {
 				id: true,
 				status: true,
+				reference: true,
 			},
 		});
 
@@ -77,7 +65,7 @@ export const restoreSupplier: ServerAction<
 			);
 		}
 
-		// 6. Vérification que le fournisseur est bien archivé
+		// 5. Vérification que le fournisseur est bien archivé
 		if (existingSupplier.status !== SupplierStatus.ARCHIVED) {
 			return createErrorResponse(
 				ActionStatus.ERROR,
@@ -85,22 +73,21 @@ export const restoreSupplier: ServerAction<
 			);
 		}
 
-		// 7. Mise à jour du fournisseur
+		// 6. Mise à jour du fournisseur
 		const updatedSupplier = await db.supplier.update({
 			where: {
 				id,
-				organizationId,
 			},
 			data: {
 				status: validation.data.status,
 			},
 		});
 
-		// 8. Invalidation du cache
-		revalidateTag(`organizations:${organizationId}:suppliers:${id}`);
-		revalidateTag(`organizations:${organizationId}:suppliers`);
+		// 7. Invalidation du cache
+		revalidateTag(`suppliers:${id}`);
+		revalidateTag(`suppliers`);
 
-		// 9. Message de succès personnalisé
+		// 8. Message de succès personnalisé
 		const statusText =
 			validation.data.status === SupplierStatus.ACTIVE
 				? "actif"
@@ -108,7 +95,7 @@ export const restoreSupplier: ServerAction<
 					? "inactif"
 					: "autre statut";
 
-		const message = `Le fournisseur a été restauré en ${statusText} avec succès`;
+		const message = `Le fournisseur ${existingSupplier.reference} a été restauré en ${statusText} avec succès`;
 
 		return createSuccessResponse(updatedSupplier, message);
 	} catch (error) {

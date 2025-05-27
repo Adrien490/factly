@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useUpdateProductStatus } from "../hooks/use-update-product-status";
 
 interface UpdateProductStatusButtonProps {
-	organizationId: string;
 	id: string;
 	status: ProductStatus;
 	children: React.ReactNode;
 }
 
 export function UpdateProductStatusButton({
-	organizationId,
 	id,
 	status,
 	children,
@@ -24,7 +22,6 @@ export function UpdateProductStatusButton({
 	const handleUpdate = () => {
 		const formData = new FormData();
 		formData.append("id", id);
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
 		startTransition(() => {
 			dispatch(formData);

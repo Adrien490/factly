@@ -12,7 +12,6 @@ import {
 import { DeleteContactButton } from "./delete-contact-button";
 
 interface DeleteContactAlertDialogProps {
-	organizationId: string;
 	id: string;
 	clientId?: string;
 	supplierId?: string;
@@ -20,7 +19,6 @@ interface DeleteContactAlertDialogProps {
 }
 
 export function DeleteContactAlertDialog({
-	organizationId,
 	id,
 	clientId,
 	supplierId,
@@ -43,7 +41,6 @@ export function DeleteContactAlertDialog({
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
 					<DeleteContactButton
-						organizationId={organizationId}
 						id={id}
 						clientId={clientId}
 						supplierId={supplierId}

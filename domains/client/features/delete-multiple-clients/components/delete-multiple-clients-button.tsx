@@ -3,13 +3,11 @@ import { useTransition } from "react";
 import { useDeleteMultipleClients } from "../hooks/use-delete-multiple-clients";
 
 interface DeleteMultipleClientsButtonProps {
-	organizationId: string;
 	ids: string[];
 	children: React.ReactNode;
 }
 
 export function DeleteMultipleClientsButton({
-	organizationId,
 	ids,
 	children,
 }: DeleteMultipleClientsButtonProps) {
@@ -22,7 +20,6 @@ export function DeleteMultipleClientsButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 
 		startTransition(() => {
 			dispatch(formData);

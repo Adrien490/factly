@@ -2,7 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import { validateClientStatusTransition } from "@/domains/client/utils/validate-client-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -33,14 +32,12 @@ export const updateMultipleClientStatus: ServerAction<
 		}
 
 		// 2. Récupération des données
-		const organizationId = formData.get("organizationId") as string;
 		const ids = formData.getAll("ids") as string[];
 		const status = formData.get("status") as ClientStatus;
 
 		// 3. Validation des données
 		const validation = updateMultipleClientStatusSchema.safeParse({
 			ids,
-			organizationId,
 			status,
 		});
 		if (!validation.success) {
@@ -50,22 +47,12 @@ export const updateMultipleClientStatus: ServerAction<
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Vérification de l'existence des clients
+		// 4. Vérification de l'existence des clients
 		const existingClients = await db.client.findMany({
 			where: {
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			select: {
 				id: true,
@@ -80,7 +67,7 @@ export const updateMultipleClientStatus: ServerAction<
 			);
 		}
 
-		// 6. Validation des transitions de statut
+		// 5. Validation des transitions de statut
 		for (const client of existingClients) {
 			const transitionValidation = validateClientStatusTransition({
 				currentStatus: client.status,
@@ -95,13 +82,12 @@ export const updateMultipleClientStatus: ServerAction<
 			}
 		}
 
-		// 7. Mise à jour des clients
+		// 6. Mise à jour des clients
 		await db.client.updateMany({
 			where: {
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 			data: {
 				status: validation.data.status,
@@ -114,17 +100,16 @@ export const updateMultipleClientStatus: ServerAction<
 				id: {
 					in: validation.data.ids,
 				},
-				organizationId: validation.data.organizationId,
 			},
 		});
 
-		// 8. Invalidation du cache
+		// 7. Invalidation du cache
 		for (const id of validation.data.ids) {
-			revalidateTag(`organizations:${organizationId}:clients:${id}`);
+			revalidateTag(`clients:${id}`);
 		}
-		revalidateTag(`organizations:${organizationId}:clients`);
+		revalidateTag(`clients`);
 
-		// 9. Message de succès personnalisé
+		// 8. Message de succès personnalisé
 		const message = `${existingClients.length} client(s) ont été mis à jour avec succès`;
 
 		return createSuccessResponse(updatedClients, message);

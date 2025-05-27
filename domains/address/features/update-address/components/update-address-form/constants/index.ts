@@ -7,11 +7,10 @@ export type FormValues = z.infer<typeof updateAddressSchema>;
 /**
  * Options de configuration de base pour TanStack Form
  */
-export const formOpts = (address: GetAddressReturn, organizationId: string) => {
+export const formOpts = (address: GetAddressReturn) => {
 	// Valeurs par défaut basées sur l'adresse existante
 	const defaultValues: FormValues = {
 		id: address.id,
-		organizationId,
 		addressType: address.addressType,
 		addressLine1: address.addressLine1,
 		addressLine2: address.addressLine2 || "",

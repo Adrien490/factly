@@ -11,9 +11,7 @@ export function buildWhereClause(
 	params: z.infer<typeof countProductCategoriesSchema>
 ): Prisma.ProductCategoryWhereInput {
 	// Condition de base qui doit toujours être respectée
-	const whereClause: Prisma.ProductCategoryWhereInput = {
-		organizationId: params.organizationId,
-	};
+	const whereClause: Prisma.ProductCategoryWhereInput = {};
 
 	// Application des options de hiérarchie
 

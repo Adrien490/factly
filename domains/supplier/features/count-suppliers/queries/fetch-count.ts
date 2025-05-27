@@ -13,23 +13,22 @@ export async function fetchCount(
 ): Promise<number> {
 	"use cache";
 
-	// Tag de base pour tous les fournisseurs de l'organisation
-	cacheTag(`organizations:${params.organizationId}:suppliers:count`);
+	// Tag de base pour tous les fournisseurs
+	cacheTag(`suppliers:count`);
+
+	// Tag pour la recherche textuelle
+	if (params.search) {
+		cacheTag(`suppliers:search:${params.search}:count`);
+	}
 
 	// Tags pour les filtres dynamiques
 	if (params.filters && Object.keys(params.filters).length > 0) {
 		Object.entries(params.filters).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
 				// Pour les filtres multivaleurs (comme les tableaux)
-				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value.join(
-						","
-					)}:count`
-				);
+				cacheTag(`suppliers:filter:${key}:${value.join(",")}:count`);
 			} else {
-				cacheTag(
-					`organizations:${params.organizationId}:filter:${key}:${value}:count`
-				);
+				cacheTag(`suppliers:filter:${key}:${value}:count`);
 			}
 		});
 	}

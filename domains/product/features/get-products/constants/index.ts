@@ -9,7 +9,6 @@ export const DEFAULT_PER_PAGE = 10;
  */
 export const GET_PRODUCTS_DEFAULT_SELECT = {
 	// Identifiants et informations de base
-	organizationId: true,
 	id: true,
 	reference: true,
 	name: true,

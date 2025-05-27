@@ -5,14 +5,12 @@ import { useTransition } from "react";
 import { useUpdateMultipleSupplierStatus } from "../hooks/use-update-multiple-supplier-status";
 
 interface UpdateMultipleSupplierStatusButtonProps {
-	organizationId: string;
 	ids: string[];
 	status: SupplierStatus;
 	children: React.ReactNode;
 }
 
 export function UpdateMultipleSupplierStatusButton({
-	organizationId,
 	ids,
 	status,
 	children,
@@ -26,9 +24,7 @@ export function UpdateMultipleSupplierStatusButton({
 		ids.forEach((id) => {
 			formData.append("ids", id);
 		});
-		formData.append("organizationId", organizationId);
 		formData.append("status", status);
-
 		startTransition(() => {
 			dispatch(formData);
 		});

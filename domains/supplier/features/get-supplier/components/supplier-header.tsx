@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/[organizationId]/not-found";
+import NotFound from "@/app/dashboard/not-found";
 import {
 	SUPPLIER_STATUS_COLORS,
 	SUPPLIER_STATUS_LABELS,
@@ -79,19 +79,19 @@ export function SupplierHeader({ supplierPromise }: SupplierHeaderProps) {
 						items={[
 							{
 								title: "Fiche fournisseur",
-								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}`,
+								url: `/dashboard/suppliers/${supplier.id}`,
 							},
 							{
 								title: "Modifier",
-								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/edit`,
+								url: `/dashboard/suppliers/${supplier.id}/edit`,
 							},
 							{
 								title: "Gestion des adresses",
-								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/addresses`,
+								url: `/dashboard/suppliers/${supplier.id}/addresses`,
 							},
 							{
 								title: "Gestion des contacts",
-								url: `/dashboard/${supplier.organizationId}/suppliers/${supplier.id}/contacts`,
+								url: `/dashboard/suppliers/${supplier.id}/contacts`,
 							},
 						]}
 					/>

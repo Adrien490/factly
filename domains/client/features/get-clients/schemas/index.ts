@@ -8,7 +8,6 @@ import { clientFiltersSchema } from "./client-filters-schema";
 import { clientSortBySchema } from "./client-sort-by-schema";
 
 export const getClientsSchema = z.object({
-	organizationId: z.string(),
 	search: z.string().optional(),
 	filters: clientFiltersSchema.default({}),
 	page: z.number().default(1),

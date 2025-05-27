@@ -33,14 +33,12 @@ export interface SupplierDataTableProps {
 	suppliersPromise: Promise<GetSuppliersReturn>;
 	selectedSupplierIds: string[];
 	isArchivedView: boolean;
-	organizationId: string;
 }
 
 export function SupplierDataTable({
 	suppliersPromise,
 	selectedSupplierIds,
 	isArchivedView,
-	organizationId,
 }: SupplierDataTableProps) {
 	const response = use(suppliersPromise);
 	const { suppliers, pagination } = response;
@@ -62,7 +60,6 @@ export function SupplierDataTable({
 				<SelectionToolbar>
 					<SupplierSelectionActions
 						selectedSupplierIds={selectedSupplierIds}
-						organizationId={organizationId}
 						isArchived={isArchivedView}
 					/>
 				</SelectionToolbar>

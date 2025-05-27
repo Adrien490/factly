@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import { hasAssociatedTransactions } from "@/domains/fiscal-year/queries/has-associated-transactions";
 import { isValidStatusTransition } from "@/domains/fiscal-year/utils/is-valid-status-transition";
-import { hasOrganizationAccess } from "@/domains/organization/features/has-organization-access";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -53,16 +52,7 @@ export const changeFiscalYearStatus: ServerAction<
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Préparation des données
+		// 3. Préparation des données
 		const rawData = {
 			id: fiscalYearId,
 			organizationId,
@@ -82,7 +72,6 @@ export const changeFiscalYearStatus: ServerAction<
 		const existingFiscalYear = await db.fiscalYear.findUnique({
 			where: {
 				id: fiscalYearId,
-				organizationId,
 			},
 		});
 
@@ -115,7 +104,6 @@ export const changeFiscalYearStatus: ServerAction<
 				// Vérifier s'il existe une autre année fiscale qui pourrait devenir courante
 				const otherActiveFiscalYear = await db.fiscalYear.findFirst({
 					where: {
-						organizationId,
 						id: { not: fiscalYearId },
 						status: FiscalYearStatus.ACTIVE,
 					},

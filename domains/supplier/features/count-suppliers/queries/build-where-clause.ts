@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
+import { buildSearchConditions } from "../../get-suppliers/queries/build-search-conditions";
 import { countSuppliersSchema } from "../schemas";
 import { buildFilterConditions } from "./build-filter-conditions";
 
@@ -9,10 +10,13 @@ import { buildFilterConditions } from "./build-filter-conditions";
 export function buildWhereClause(
 	params: z.infer<typeof countSuppliersSchema>
 ): Prisma.SupplierWhereInput {
-	// Condition de base qui doit toujours être respectée
-	const whereClause: Prisma.SupplierWhereInput = {
-		organizationId: params.organizationId,
-	};
+	// Condition de base
+	const whereClause: Prisma.SupplierWhereInput = {};
+
+	// Ajouter les conditions de recherche textuelle
+	if (typeof params.search === "string" && params.search.trim()) {
+		whereClause.OR = buildSearchConditions(params.search);
+	}
 
 	// Ajouter les filtres spécifiques
 	if (params.filters && Object.keys(params.filters).length > 0) {

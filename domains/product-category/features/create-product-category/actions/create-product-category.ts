@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -47,15 +46,6 @@ export const createProductCategory: ServerAction<
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
 		// 4. Préparation et transformation des données brutes
 		const name = formData.get("name") as string;
 
@@ -82,7 +72,6 @@ export const createProductCategory: ServerAction<
 		const existingCategory = await db.productCategory.findFirst({
 			where: {
 				name: validation.data.name,
-				organizationId: validation.data.organizationId,
 			},
 			select: { id: true },
 		});
@@ -95,13 +84,12 @@ export const createProductCategory: ServerAction<
 		}
 
 		// 8. Création de la catégorie dans la base de données
-		const { organizationId: validatedOrgId, ...categoryData } = validation.data;
+		const { ...categoryData } = validation.data;
 
 		// Créer la catégorie avec les relations appropriées
 		const createData = {
 			name: categoryData.name,
 			description: categoryData.description,
-			organization: { connect: { id: validatedOrgId } },
 		};
 
 		// Créer la catégorie avec ou sans parent
@@ -110,8 +98,8 @@ export const createProductCategory: ServerAction<
 		});
 
 		// 9. Invalidation du cache pour forcer un rafraîchissement des données
-		revalidateTag(`organizations:${validatedOrgId}:product-categories`);
-		revalidateTag(`organizations:${validatedOrgId}:product-categories:count`);
+		revalidateTag(`product-categories`);
+		revalidateTag(`product-categories:count`);
 
 		// 10. Retour de la réponse de succès
 		return createSuccessResponse(

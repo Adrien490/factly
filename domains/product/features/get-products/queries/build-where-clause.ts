@@ -13,9 +13,7 @@ export const buildWhereClause = (
 	params: z.infer<typeof getProductsSchema>
 ): Prisma.ProductWhereInput => {
 	// Condition de base qui doit toujours être respectée
-	const whereClause: Prisma.ProductWhereInput = {
-		organizationId: params.organizationId as string,
-	};
+	const whereClause: Prisma.ProductWhereInput = {};
 
 	// Ajouter les conditions de recherche textuelle
 	if (typeof params.search === "string" && params.search.trim()) {

@@ -1,19 +1,17 @@
 /**
- * Fonction qui génère les liens de navigation pour les produits
- * @param organizationId ID de l'organisation
- * @returns Un tableau d'objets contenant les liens de navigation
+ * Génère la navigation pour les produits
  */
-export const getProductNavigation = (organizationId: string) => [
+export const getProductNavigation = () => [
 	{
-		title: "Produits",
-		url: `/dashboard/${organizationId}/products`,
+		title: "Tous les produits",
+		url: `/dashboard/products`,
 	},
 	{
 		title: "Nouveau produit",
-		url: `/dashboard/${organizationId}/products/new`,
+		url: `/dashboard/products/new`,
 	},
 	{
 		title: "Catégories",
-		url: `/dashboard/${organizationId}/products/categories`,
+		url: `/dashboard/products/categories`,
 	},
 ];

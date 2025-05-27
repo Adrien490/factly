@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -39,20 +38,11 @@ export const checkReference: ServerAction<
 			);
 		}
 
-		const { reference, organizationId } = validation.data;
-
-		const hasAccess = await hasOrganizationAccess(organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
+		const { reference } = validation.data;
 
 		const existingClient = await db.client.findFirst({
 			where: {
 				reference,
-				organizationId,
 			},
 			select: {
 				id: true,

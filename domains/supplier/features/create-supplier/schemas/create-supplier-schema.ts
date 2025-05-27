@@ -13,7 +13,6 @@ import { z } from "zod";
 export const createSupplierSchema = z
 	.object({
 		// Identifiants
-		organizationId: z.string().min(1, "L'organisation est obligatoire"),
 		reference: z.string().optional(),
 		type: z.nativeEnum(SupplierType).optional(),
 		status: z.nativeEnum(SupplierStatus).optional(),

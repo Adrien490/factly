@@ -11,10 +11,8 @@ import { buildSearchConditions } from "./build-search-conditions";
 export function buildWhereClause(
 	params: z.infer<typeof getSuppliersSchema>
 ): Prisma.SupplierWhereInput {
-	// Base de la clause WHERE avec l'organizationId obligatoire
-	const whereClause: Prisma.SupplierWhereInput = {
-		organizationId: params.organizationId,
-	};
+	// Base de la clause WHERE
+	const whereClause: Prisma.SupplierWhereInput = {};
 
 	// Traitement de la recherche textuelle si fournie
 	if (typeof params.search === "string" && params.search.trim()) {

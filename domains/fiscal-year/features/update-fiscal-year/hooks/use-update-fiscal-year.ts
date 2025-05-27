@@ -21,9 +21,7 @@ export function useUpdateFiscalYear() {
 						action: {
 							label: "Voir l&apos;année fiscale",
 							onClick: () => {
-								router.push(
-									`/dashboard/${result.data?.organizationId}/fiscal-years/${result.data?.id}`
-								);
+								router.push(`/dashboard/fiscal-years/${result.data?.id}`);
 							},
 						},
 					});

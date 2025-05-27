@@ -13,14 +13,12 @@ import { DeleteProductButton } from "./delete-product-button";
 
 interface DeleteProductAlertDialogProps {
 	name: string;
-	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function DeleteProductAlertDialog({
 	name,
-	organizationId,
 	id,
 	children,
 }: DeleteProductAlertDialogProps) {
@@ -41,7 +39,7 @@ export function DeleteProductAlertDialog({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
-					<DeleteProductButton organizationId={organizationId} id={id}>
+					<DeleteProductButton id={id}>
 						<AlertDialogAction>Supprimer</AlertDialogAction>
 					</DeleteProductButton>
 				</AlertDialogFooter>

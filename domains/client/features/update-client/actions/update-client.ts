@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import db from "@/shared/lib/db";
 import {
 	ActionStatus,
@@ -27,8 +26,7 @@ import { updateClientSchema } from "../schemas/update-client-schema";
  * Action serveur pour mettre à jour un client existant
  * Validations :
  * - L'utilisateur doit être authentifié
- * - L'utilisateur doit avoir accès à l'organisation
- * - La référence du client doit être unique dans l'organisation
+ * - La référence du client doit être unique
  */
 export const updateClient: ServerAction<
 	Client,
@@ -47,28 +45,17 @@ export const updateClient: ServerAction<
 		}
 
 		// 2. Vérification de base des données requises
-		const organizationId = formData.get("organizationId");
 		const id = formData.get("id");
-		if (!organizationId || !id) {
+		if (!id) {
 			return createErrorResponse(
 				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation et l'ID du client sont requis"
+				"L'ID du client est requis"
 			);
 		}
 
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId.toString());
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Préparation et transformation des données brutes
+		// 3. Préparation et transformation des données brutes
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
 			reference: formData.get("reference") as string,
 			type: formData.get("type") as ClientType,
 			status: formData.get("status") as ClientStatus,
@@ -105,7 +92,7 @@ export const updateClient: ServerAction<
 
 		console.log("[UPDATE_CLIENT] Raw data:", rawData);
 
-		// 5. Validation des données avec le schéma Zod
+		// 4. Validation des données avec le schéma Zod
 		const validation = updateClientSchema.safeParse(rawData);
 		if (!validation.success) {
 			console.log(
@@ -121,7 +108,6 @@ export const updateClient: ServerAction<
 
 		const {
 			id: validatedId,
-			organizationId: validatedOrgId,
 			type,
 			status,
 			reference,
@@ -152,12 +138,11 @@ export const updateClient: ServerAction<
 			companyEmployeeCount,
 		} = validation.data;
 
-		// 6. Vérification de l'existence de la référence uniquement si elle est fournie
+		// 5. Vérification de l'existence de la référence uniquement si elle est fournie
 		if (reference) {
 			const existingClient = await db.client.findFirst({
 				where: {
 					reference,
-					organizationId: validatedOrgId,
 					id: {
 						not: validatedId,
 					},
@@ -168,12 +153,12 @@ export const updateClient: ServerAction<
 			if (existingClient) {
 				return createErrorResponse(
 					ActionStatus.CONFLICT,
-					"Un client avec cette référence existe déjà dans l'organisation"
+					"Un client avec cette référence existe déjà"
 				);
 			}
 		}
 
-		// 7. Mise à jour du client dans la base de données
+		// 6. Mise à jour du client dans la base de données
 		const existingContact = await db.contact.findFirst({
 			where: {
 				clientId: validatedId,
@@ -251,11 +236,11 @@ export const updateClient: ServerAction<
 			},
 		});
 
-		// 8. Invalidation du cache
-		revalidateTag(`organizations:${validatedOrgId}:clients`);
-		revalidateTag(`organizations:${validatedOrgId}:clients:${validatedId}`);
+		// 7. Invalidation du cache
+		revalidateTag(`clients`);
+		revalidateTag(`clients:${validatedId}`);
 
-		// 9. Retour de la réponse de succès
+		// 8. Retour de la réponse de succès
 		return createSuccessResponse(
 			client,
 			`Le client ${client.reference} a été modifié avec succès`,

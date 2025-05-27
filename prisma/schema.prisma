@@ -64,11 +64,10 @@ model User {
   updatedAt     DateTime @updatedAt
 
   // Relations
-  organizations Organization[] @relation("UserOrganizations")
-  members       Member[]
-  sessions      Session[]
-  accounts      Account[]
-  passkeys      Passkey[] // Relation avec les passkeys
+  members  Member[]
+  sessions Session[]
+  accounts Account[]
+  passkeys Passkey[] // Relation avec les passkeys
 
   @@map("user")
 }
@@ -89,30 +88,6 @@ model Passkey {
   @@map("passkey")
 }
 
-model Organization {
-  id        String             @id @default(cuid())
-  slug      String             @unique
-  status    OrganizationStatus @default(ACTIVE)
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-
-  // Relations
-  company           Company?
-  address           Address?
-  members           Member[]
-  clients           Client[]
-  fiscalYears       FiscalYear[]
-  suppliers         Supplier[]
-  products          Product[]
-  productCategories ProductCategory[]
-
-  // Relation avec User (créateur)
-  user   User?   @relation("UserOrganizations", fields: [userId], references: [id])
-  userId String?
-
-  @@index([status])
-}
-
 // Modifications du modèle Client existant
 
 model Client {
@@ -121,13 +96,11 @@ model Client {
   type      ClientType   @default(INDIVIDUAL)
   status    ClientStatus @default(LEAD)
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  company        Company?
-  addresses      Address[]
-  contacts       Contact[]
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  company   Company?
+  addresses Address[]
+  contacts  Contact[]
 
   // Index composé pour recherche par nom + statut
   // Pour les requêtes de triage par date
@@ -137,7 +110,6 @@ model Client {
   // Courant
   // via @@unique
   @@index([status])
-  @@index([organizationId, type])
   @@index([reference])
 }
 
@@ -182,15 +154,15 @@ model Company {
   rcs            String?
   vatNumber      String?
   businessSector BusinessSector?
+  isMain         Boolean         @default(false)
   employeeCount  EmployeeCount?
 
-  // Relation to client
-  client         Client?       @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId       String?       @unique
-  supplier       Supplier?     @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  supplierId     String?       @unique
-  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String?       @unique
+  // Relations
+  addresses  Address[] // Plusieurs adresses possibles
+  client     Client?   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId   String?   @unique
+  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplierId String?   @unique
 }
 
 model FiscalYear {
@@ -206,13 +178,11 @@ model FiscalYear {
   updatedAt DateTime @updatedAt
 
   // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
 
   // Important
   // Reqûetes combo
   @@index([startDate, endDate])
-  @@index([status, organizationId])
+  @@index([status])
 }
 
 // Enum pour le statut de l'année fiscale
@@ -229,12 +199,10 @@ model Member {
   updatedAt DateTime @updatedAt
 
   // Relations
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  @@unique([userId, organizationId])
+  @@unique([userId])
 }
 
 model Supplier {
@@ -246,14 +214,12 @@ model Supplier {
   updatedAt DateTime       @updatedAt
 
   // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  addresses      Address[]
-  contacts       Contact[]
-  products       Product[]
-  company        Company?
+  addresses Address[]
+  contacts  Contact[]
+  products  Product[]
+  company   Company?
 
-  @@index([status, organizationId])
+  @@index([status])
 }
 
 model Address {
@@ -270,12 +236,12 @@ model Address {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
-  supplier       Supplier?     @relation(fields: [supplierId], references: [id])
-  supplierId     String?
-  client         Client?       @relation(fields: [clientId], references: [id])
-  clientId       String?
-  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String?       @unique
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?
+  client     Client?   @relation(fields: [clientId], references: [id])
+  clientId   String?
+  company    Company?  @relation(fields: [companyId], references: [id])
+  companyId  String?
 
   @@index([supplierId])
 }
@@ -300,13 +266,11 @@ model ProductCategory {
   updatedAt DateTime @updatedAt
 
   // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  products       Product[] // Produits dans cette catégorie
+  products Product[] // Produits dans cette catégorie
 
   // Contraintes et index
-  @@unique([name, organizationId])
-  @@index([status, organizationId])
+  @@unique([name])
+  @@index([status])
 }
 
 model Product {
@@ -335,9 +299,6 @@ model Product {
   updatedAt DateTime @updatedAt
 
   // Relations
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-
   supplier   Supplier? @relation(fields: [supplierId], references: [id])
   supplierId String?
 
@@ -345,9 +306,9 @@ model Product {
   categoryId String?
 
   // Index pour optimiser les recherches
-  @@unique([reference, organizationId])
+  @@unique([reference])
   @@index([name])
-  @@index([status, organizationId])
+  @@index([status])
   @@index([categoryId])
   @@index([supplierId])
 }
@@ -518,9 +479,4 @@ enum BusinessSector {
   HEALTH // Santé humaine et action sociale
   ARTS // Arts, spectacles et activités récréatives
   OTHER // Autres activités de services
-}
-
-enum OrganizationStatus {
-  ACTIVE // Organisation active
-  DELETED // Organisation supprimée
 }

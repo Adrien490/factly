@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/domains/auth";
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -14,15 +13,14 @@ import { headers } from "next/headers";
 import { refreshSuppliersSchema } from "../schemas";
 
 /**
- * Action serveur pour rafraîchir les données des fournisseurs
+ * Action serveur pour rafraîchir les fournisseurs
  * Validations :
  * - L'utilisateur doit être authentifié
- * - L'utilisateur doit avoir accès à l'organisation
  */
 export const refreshSuppliers: ServerAction<
 	null,
 	typeof refreshSuppliersSchema
-> = async (_, formData) => {
+> = async () => {
 	try {
 		// 1. Vérification de l'authentification
 		const session = await auth.api.getSession({
@@ -35,47 +33,20 @@ export const refreshSuppliers: ServerAction<
 			);
 		}
 
-		const rawData = {
-			organizationId: formData.get("organizationId")?.toString(),
-		};
-
-		const { organizationId } = rawData;
-
-		// 2. Vérification de base des données requises
-		if (!organizationId) {
-			return createErrorResponse(
-				ActionStatus.VALIDATION_ERROR,
-				"L'ID de l'organisation est requis"
-			);
-		}
-
-		// 3. Validation des données avec le schéma Zod
-		const validation = refreshSuppliersSchema.safeParse({
-			organizationId,
-		});
+		// 2. Validation des données avec le schéma Zod
+		const validation = refreshSuppliersSchema.safeParse({});
 
 		if (!validation.success) {
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Veuillez remplir tous les champs obligatoires"
+				"Validation échouée"
 			);
 		}
 
-		// 4. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(organizationId);
+		revalidateTag(`suppliers`);
+		revalidateTag(`suppliers:count`);
 
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 5. Revalidation des tags pour les fournisseurs
-		revalidateTag(`organizations:${organizationId}:suppliers`);
-		revalidateTag(`organizations:${organizationId}:suppliers:count`);
-
-		// 6. Retour de la réponse de succès
+		// 3. Retour de la réponse de succès
 		return createSuccessResponse(
 			null,
 			`Les fournisseurs ont été rafraîchis avec succès`

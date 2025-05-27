@@ -20,9 +20,7 @@ export function useUpdateClient() {
 						action: {
 							label: "Voir le client",
 							onClick: () => {
-								router.push(
-									`/dashboard/${result.data?.organizationId}/clients/${result.data?.id}`
-								);
+								router.push(`/dashboard/clients/${result.data?.id}`);
 							},
 						},
 					});

@@ -26,12 +26,10 @@ import { UpdateMultipleProductStatusButton } from "../features/update-multiple-p
 
 interface ProductSelectionActionsProps {
 	selectedProductIds: string[];
-	organizationId: string;
 }
 
 export function ProductSelectionActions({
 	selectedProductIds,
-	organizationId,
 }: ProductSelectionActionsProps) {
 	return (
 		<DropdownMenu>
@@ -91,7 +89,6 @@ export function ProductSelectionActions({
 									<AlertDialogFooter>
 										<AlertDialogCancel>Annuler</AlertDialogCancel>
 										<UpdateMultipleProductStatusButton
-											organizationId={organizationId}
 											ids={selectedProductIds}
 											status={status.value}
 										>
@@ -127,10 +124,7 @@ export function ProductSelectionActions({
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Annuler</AlertDialogCancel>
-							<ArchiveMultipleProductsButton
-								organizationId={organizationId}
-								ids={selectedProductIds}
-							>
+							<ArchiveMultipleProductsButton ids={selectedProductIds}>
 								<AlertDialogAction>Archiver</AlertDialogAction>
 							</ArchiveMultipleProductsButton>
 						</AlertDialogFooter>

@@ -3,7 +3,6 @@
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
 
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -34,35 +33,16 @@ export const deleteClient: ServerAction<
 
 		console.log(formData);
 
-		// 2. Vérification de base des données requises
+		// 2. Récupération des données
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
 		};
 
 		console.log("[DELETE_CLIENT] Form Data:", {
 			id: rawData.id,
-			organizationId: rawData.organizationId,
 		});
 
-		// Vérification que l'organizationId n'est pas vide
-		if (!rawData.organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
+		// 3. Validation complète des données
 		const validation = deleteClientSchema.safeParse(rawData);
 
 		if (!validation.success) {
@@ -73,11 +53,10 @@ export const deleteClient: ServerAction<
 			);
 		}
 
-		// 5. Vérification de l'existence du client
+		// 4. Vérification de l'existence du client
 		const existingClient = await db.client.findFirst({
 			where: {
 				id: validation.data.id,
-				organizationId: validation.data.organizationId,
 			},
 		});
 
@@ -85,17 +64,14 @@ export const deleteClient: ServerAction<
 			return createErrorResponse(ActionStatus.NOT_FOUND, "Client introuvable");
 		}
 
-		// 6. Suppression
+		// 5. Suppression
 		await db.client.delete({
 			where: { id: validation.data.id },
 		});
 
 		// Revalidation du cache avec les mêmes tags que get-clients
-		revalidateTag(`organizations:${rawData.organizationId}:clients`);
-		revalidateTag(
-			`organizations:${rawData.organizationId}:clients:${existingClient.id}`
-		);
-		revalidateTag(`organizations:${rawData.organizationId}:clients:count`);
+		revalidateTag(`clients`);
+		revalidateTag(`clients:count`);
 
 		return createSuccessResponse(
 			existingClient,

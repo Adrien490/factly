@@ -53,7 +53,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${client.organizationId}/clients/${client.id}`}
+						href={`/dashboard/clients/${client.id}`}
 						className={cn("flex w-full items-center")}
 					>
 						Fiche client
@@ -66,7 +66,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 						<DropdownMenuSeparator />
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/${client.organizationId}/clients/${client.id}/edit`}
+								href={`/dashboard/clients/${client.id}/edit`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Modifier</span>
@@ -74,7 +74,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/${client.organizationId}/clients/${client.id}/addresses`}
+								href={`/dashboard/clients/${client.id}/addresses`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Gérer les adresses</span>
@@ -82,7 +82,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/${client.organizationId}/clients/${client.id}/contacts`}
+								href={`/dashboard/clients/${client.id}/contacts`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Gérer les contacts</span>
@@ -103,7 +103,6 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 								).map((status) => (
 									<UpdateClientStatusButton
 										key={status.value}
-										organizationId={client.organizationId}
 										id={client.id}
 										status={status.value}
 									>
@@ -125,10 +124,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 							preventDefault
 							className="text-destructive focus:text-destructive p-0"
 						>
-							<ArchiveClientAlertDialog
-								organizationId={client.organizationId}
-								id={client.id}
-							>
+							<ArchiveClientAlertDialog id={client.id}>
 								<span className="w-full text-left px-2 py-1.5">Archiver</span>
 							</ArchiveClientAlertDialog>
 						</DropdownMenuItem>
@@ -151,11 +147,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 										preventDefault
 										key={status.value}
 									>
-										<RestoreClientAlertDialog
-											status={status}
-											organizationId={client.organizationId}
-											id={client.id}
-										>
+										<RestoreClientAlertDialog status={status} id={client.id}>
 											<div className="flex items-center gap-2 px-2 py-1.5 cursor-pointer w-full">
 												<div
 													className="h-2 w-2 rounded-full"
@@ -173,10 +165,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 							className="text-destructive focus:text-destructive"
 							preventDefault
 						>
-							<DeleteClientAlertDialog
-								organizationId={client.organizationId}
-								id={client.id}
-							>
+							<DeleteClientAlertDialog id={client.id}>
 								<span>Supprimer définitivement</span>
 							</DeleteClientAlertDialog>
 						</DropdownMenuItem>

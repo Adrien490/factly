@@ -2,8 +2,6 @@
 
 import { auth } from "@/domains/auth";
 import db from "@/shared/lib/db";
-
-import { hasOrganizationAccess } from "@/domains/organization/features";
 import {
 	ActionStatus,
 	createErrorResponse,
@@ -31,109 +29,57 @@ export const deleteFiscalYear: ServerAction<
 			);
 		}
 
-		// 2. Vérification de base des données requises
+		// 2. Récupération et validation des données
 		const rawData = {
 			id: formData.get("id") as string,
-			organizationId: formData.get("organizationId") as string,
 		};
 
-		console.log("[DELETE_FISCAL_YEAR] Form Data:", {
-			id: rawData.id,
-			organizationId: rawData.organizationId,
-		});
-
-		// Vérification que l'organizationId n'est pas vide
-		if (!rawData.organizationId) {
-			return createErrorResponse(
-				ActionStatus.ERROR,
-				"L'ID de l'organisation est manquant"
-			);
-		}
-
-		// 3. Vérification de l'accès à l'organisation
-		const hasAccess = await hasOrganizationAccess(rawData.organizationId);
-		if (!hasAccess) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Vous n'avez pas accès à cette organisation"
-			);
-		}
-
-		// 4. Validation complète des données
 		const validation = deleteFiscalYearSchema.safeParse(rawData);
-
 		if (!validation.success) {
-			console.log(validation.error.flatten().fieldErrors);
 			return createValidationErrorResponse(
 				validation.error.flatten().fieldErrors,
-				"Validation échouée. Veuillez vérifier votre saisie."
+				"Validation échouée. Veuillez vérifier vos données."
 			);
 		}
 
-		// 5. Vérification de l'existence de l'année fiscale
-		const existingFiscalYear = await db.fiscalYear.findFirst({
-			where: {
-				id: validation.data.id,
-				organizationId: validation.data.organizationId,
-			},
-			select: {
-				id: true,
-				status: true,
-				name: true,
-				isCurrent: true, // Récupérer si c'est l'année courante
-			},
+		// 3. Vérification de l'existence de l'année fiscale
+		const existingFiscalYear = await db.fiscalYear.findUnique({
+			where: { id: validation.data.id },
 		});
 
 		if (!existingFiscalYear) {
 			return createErrorResponse(
 				ActionStatus.NOT_FOUND,
-				"Année fiscale introuvable"
+				"Année fiscale non trouvée"
 			);
 		}
 
-		// 6. Vérifier si c'est la dernière année fiscale de l'organisation
-		const fiscalYearsCount = await db.fiscalYear.count({
-			where: {
-				organizationId: validation.data.organizationId,
-			},
-		});
-
-		if (fiscalYearsCount <= 1) {
-			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Impossible de supprimer la dernière année fiscale de l'organisation. Chaque organisation doit avoir au moins une année fiscale."
-			);
-		}
-
-		// 7. Vérifier si c'est l'année fiscale courante
+		// 4. Vérification que l'année fiscale n'est pas courante
 		if (existingFiscalYear.isCurrent) {
 			return createErrorResponse(
-				ActionStatus.FORBIDDEN,
-				"Impossible de supprimer l'année fiscale courante. Veuillez d'abord définir une autre année fiscale comme courante."
+				ActionStatus.VALIDATION_ERROR,
+				"Impossible de supprimer l'année fiscale courante. Veuillez d'abord définir une autre année comme courante."
 			);
 		}
 
-		// 8. Suppression
+		// 5. Suppression de l'année fiscale
 		await db.fiscalYear.delete({
 			where: { id: validation.data.id },
 		});
 
-		// Revalidation du cache avec les mêmes tags que get-fiscal-years
-		revalidateTag(`organizations:${rawData.organizationId}:fiscal-years`);
-		revalidateTag(
-			`organizations:${rawData.organizationId}:fiscal-year:${existingFiscalYear.id}`
-		);
-		revalidateTag(`organizations:${rawData.organizationId}:fiscal-years:count`);
+		// 6. Invalidation du cache
+		revalidateTag(`fiscal-years`);
+		revalidateTag(`fiscal-year:${existingFiscalYear.id}`);
 
 		return createSuccessResponse(
 			null,
-			`Année fiscale "${existingFiscalYear.name}" supprimée définitivement`
+			`L'année fiscale "${existingFiscalYear.name}" a été supprimée avec succès`
 		);
 	} catch (error) {
-		console.error("[HARD_DELETE_FISCAL_YEAR]", error);
+		console.error("[DELETE_FISCAL_YEAR]", error);
 		return createErrorResponse(
 			ActionStatus.ERROR,
-			"Impossible de supprimer définitivement l'année fiscale"
+			"Une erreur est survenue lors de la suppression de l'année fiscale"
 		);
 	}
 };

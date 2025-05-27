@@ -12,13 +12,11 @@ import {
 import { ArchiveClientButton } from "./archive-client-button";
 
 interface ArchiveClientAlertDialogProps {
-	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function ArchiveClientAlertDialog({
-	organizationId,
 	id,
 	children,
 }: ArchiveClientAlertDialogProps) {
@@ -36,7 +34,7 @@ export function ArchiveClientAlertDialog({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
-					<ArchiveClientButton organizationId={organizationId} id={id}>
+					<ArchiveClientButton id={id}>
 						<AlertDialogAction>Archiver</AlertDialogAction>
 					</ArchiveClientButton>
 				</AlertDialogFooter>

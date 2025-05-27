@@ -15,12 +15,10 @@ import { GetProductCategoriesReturn } from "../features/get-product-categories/t
 
 interface ProductCategoryActionsProps {
 	category: GetProductCategoriesReturn["categories"][number];
-	organizationId: string;
 }
 
 export function ProductCategoryActions({
 	category,
-	organizationId,
 }: ProductCategoryActionsProps) {
 	// Récupérer les ancêtres pour construire l'URL complète
 
@@ -47,7 +45,7 @@ export function ProductCategoryActions({
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${organizationId}/products/categories/${category.id}/edit`}
+						href={`/dashboard/products/categories/${category.id}/edit`}
 						className={cn("flex w-full items-center")}
 					>
 						<span>Modifier</span>
@@ -56,7 +54,7 @@ export function ProductCategoryActions({
 
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/${organizationId}/products/categories/${category.id}/details`}
+						href={`/dashboard/products/categories/${category.id}/details`}
 						className={cn("flex w-full items-center")}
 					>
 						<span>Voir les détails</span>
@@ -72,7 +70,6 @@ export function ProductCategoryActions({
 					>
 						<ArchiveProductCategoryAlertDialog
 							name={category.name}
-							organizationId={category.organizationId}
 							id={category.id}
 						>
 							<span className="w-full text-left px-2 py-1.5">Archiver</span>

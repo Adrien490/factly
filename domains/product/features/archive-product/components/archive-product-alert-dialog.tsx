@@ -13,14 +13,12 @@ import { ArchiveProductButton } from "./archive-product-button";
 
 interface ArchiveProductAlertDialogProps {
 	name: string;
-	organizationId: string;
 	id: string;
 	children?: React.ReactNode;
 }
 
 export function ArchiveProductAlertDialog({
 	name,
-	organizationId,
 	id,
 	children,
 }: ArchiveProductAlertDialogProps) {
@@ -39,7 +37,7 @@ export function ArchiveProductAlertDialog({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Annuler</AlertDialogCancel>
-					<ArchiveProductButton organizationId={organizationId} id={id}>
+					<ArchiveProductButton id={id}>
 						<AlertDialogAction>Archiver</AlertDialogAction>
 					</ArchiveProductButton>
 				</AlertDialogFooter>
