@@ -45,7 +45,7 @@ export default async function SignupPage() {
 					<p className="text-sm text-muted-foreground">
 						Déjà un compte ?{" "}
 						<Link
-							href={`/signin`}
+							href={`/`}
 							className="font-medium text-primary hover:underline"
 						>
 							Se connecter
