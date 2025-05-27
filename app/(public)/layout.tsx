@@ -1,6 +1,4 @@
 import { Logo, Spotlight } from "@/shared/components";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 
 export default function AuthLayout({
 	children,
@@ -14,14 +12,6 @@ export default function AuthLayout({
 
 			{/* Navigation simplifiée */}
 			<header className="fixed top-0 left-0 w-full p-4 sm:p-8 z-20 flex justify-between items-center">
-				<Link
-					href="/"
-					className="inline-flex items-center gap-2 rounded-full bg-background/60 px-4 py-2 text-sm font-medium text-foreground/80 backdrop-blur-xs transition-colors hover:text-foreground"
-					aria-label="Retour à l'accueil"
-				>
-					<ArrowLeft className="h-4 w-4" />
-					<span>Accueil</span>
-				</Link>
 				<Logo variant="default" size="md" shape="circle" hideText={true} />
 			</header>
 

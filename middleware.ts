@@ -3,7 +3,7 @@ import { Session } from "inspector";
 import { NextResponse, type NextRequest } from "next/server";
 
 const protectedRoutes = ["/dashboard"];
-const publicOnlyRoutes = ["/signin"];
+const publicOnlyRoutes = ["/"];
 const publicApiRoutes = ["/api"];
 
 export async function middleware(request: NextRequest) {
@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
 		!isLoggedIn &&
 		protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))
 	) {
-		const redirectUrl = new URL("/signin", nextUrl.origin);
+		const redirectUrl = new URL("/", nextUrl.origin);
 		redirectUrl.searchParams.set("callbackUrl", nextUrl.pathname);
 		return Response.redirect(redirectUrl);
 	}
@@ -44,5 +44,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/dashboard", "/signin", "/api"], // Apply middleware to specific routes
+	matcher: ["/dashboard", "/", "/api"], // Apply middleware to specific routes
 };
