@@ -38,6 +38,11 @@ export async function middleware(request: NextRequest) {
 		!isLoggedIn &&
 		protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))
 	) {
+		// Éviter la boucle de redirection si on est déjà sur /
+		if (nextUrl.pathname === "/") {
+			return NextResponse.next();
+		}
+
 		const redirectUrl = new URL("/", nextUrl.origin);
 		redirectUrl.searchParams.set("callbackUrl", nextUrl.pathname);
 		return Response.redirect(redirectUrl);
@@ -54,8 +59,7 @@ export const config = {
 		 * - _next/static (static files)
 		 * - _next/image (image optimization files)
 		 * - favicon.ico (favicon file)
-		 * - dashboard (protected routes)
 		 */
-		"/((?!api|_next/static|_next/image|favicon.ico|dashboard).*)",
+		"/((?!api|_next/static|_next/image|favicon.ico).*)",
 	],
 };
