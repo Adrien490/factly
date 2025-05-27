@@ -19,7 +19,6 @@ import { MemberActions } from "./member-actions";
 
 export interface MemberDataTableProps {
 	membersPromise: Promise<GetMembersReturn>;
-	selectedMemberIds: string[];
 }
 
 export function MemberDataTable({ membersPromise }: MemberDataTableProps) {

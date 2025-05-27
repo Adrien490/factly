@@ -38,15 +38,10 @@ type PageProps = {
 };
 
 export default async function MembersPage({ searchParams }: PageProps) {
-	const { perPage, page, sortBy, sortOrder, search, emailVerified, selected } =
+	const { perPage, page, sortBy, sortOrder, search, emailVerified } =
 		await searchParams;
 
 	const filters: Record<string, string | string[]> = {};
-	const selectedMemberIds = !Array.isArray(selected)
-		? selected
-			? [selected]
-			: []
-		: (selected.filter(Boolean) as string[]);
 
 	if (emailVerified) {
 		filters.emailVerified = emailVerified;
