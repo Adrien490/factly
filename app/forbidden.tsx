@@ -3,14 +3,10 @@
 import { authClient } from "@/domains/auth";
 import { Button } from "@/shared/components";
 import { ErrorPage } from "@/shared/components/error-page";
-import { ArrowLeftIcon, LockIcon, Mail, UserPlus } from "lucide-react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { LockIcon, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ForbiddenPage() {
-	const params = useParams();
-	const organizationId = params.organizationId as string;
-	console.log(organizationId);
 	const router = useRouter();
 
 	const handleLogout = () => {
@@ -42,24 +38,6 @@ export default function ForbiddenPage() {
 						</p>
 					</div>
 					<div className="flex flex-col sm:flex-row gap-3 items-center">
-						<Button asChild variant="outline">
-							<Link
-								href={`/dashboard/${organizationId}`}
-								className="flex items-center gap-2"
-							>
-								<ArrowLeftIcon className="h-4 w-4" />
-								Retour au tableau de bord
-							</Link>
-						</Button>
-						<Button asChild variant="outline">
-							<Link
-								href="mailto:admin@example.com?subject=Demande d'accès à l'organisation&body=Bonjour,%0D%0A%0D%0AJe souhaiterais obtenir l'accès à l'organisation en tant que membre.%0D%0A%0D%0AMerci."
-								className="flex items-center gap-2"
-							>
-								<Mail className="h-4 w-4" />
-								Contacter l&apos;administrateur
-							</Link>
-						</Button>
 						<Button onClick={handleLogout}>Se déconnecter</Button>
 					</div>
 				</div>
