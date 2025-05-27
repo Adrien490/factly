@@ -1,4 +1,3 @@
-import { SignInEmailForm } from "@/domains/auth/features/sign-in-email/components/sign-in-email-form";
 import { SignInSocialForm } from "@/domains/auth/features/sign-in-social/components/sign-in-social-form";
 import { Card, CardContent } from "@/shared/components";
 import Link from "next/link";
@@ -36,11 +35,9 @@ export default async function LoginPage() {
 				</div>
 
 				{/* Formulaire de connexion ou d'inscription */}
-				<div className="w-full">
-					<SignInEmailForm />
-				</div>
+				<div className="w-full"></div>
 
-				{/* Bouton de basculement */}
+				{/* Bouton de basculement 
 				<div className="text-center">
 					<p className="text-sm text-muted-foreground">
 						Pas encore de compte ?{" "}
@@ -52,6 +49,7 @@ export default async function LoginPage() {
 						</Link>
 					</p>
 				</div>
+				*/}
 
 				{/* Mentions légales */}
 				<div className="text-center">
