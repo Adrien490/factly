@@ -5,7 +5,7 @@ import {
 	CalendarClock,
 	LayoutDashboard,
 	Package,
-	Settings2,
+	Settings,
 	Truck,
 	Users,
 } from "lucide-react";
@@ -110,19 +110,19 @@ export const getSidebarNav = () => [
 	},
 	{
 		title: "Paramètres",
-		icon: Settings2,
+		icon: Settings,
 		items: [
 			{
 				title: "Modifier l'entreprise",
-				url: `/dashboard/company/edit`,
+				url: `/dashboard/settings/company/edit`,
 			},
 			{
 				title: "Gestion des membres",
-				url: `/dashboard/members`,
+				url: `/dashboard/settings/members`,
 			},
 			{
 				title: "Gestion des droits",
-				url: `/dashboard/permissions`,
+				url: `/dashboard/settings/permissions`,
 			},
 		],
 	},
