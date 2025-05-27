@@ -25,4 +25,18 @@ export const GET_COMPANY_DEFAULT_SELECT = {
 	employeeCount: true,
 	clientId: true,
 	supplierId: true,
+	addresses: {
+		select: {
+			id: true,
+			addressType: true,
+			addressLine1: true,
+			addressLine2: true,
+			postalCode: true,
+			city: true,
+			country: true,
+			latitude: true,
+			longitude: true,
+			isDefault: true,
+		},
+	},
 } as const satisfies Prisma.CompanySelect;

@@ -1,3 +1,6 @@
+import { searchAddress } from "@/domains/address/features";
+import { getCompany } from "@/domains/company";
+import { UpdateCompanyForm } from "@/domains/company/features/update-company";
 import { PageContainer, PageHeader } from "@/shared/components";
 
 type Props = {
@@ -14,6 +17,12 @@ type Props = {
 };
 
 export default async function EditCompanyPage({ searchParams }: Props) {
+	const company = await getCompany();
+
+	if (!company) {
+		throw new Error("Entreprise non trouvée");
+	}
+
 	const {
 		q = "",
 		postcode,
@@ -41,6 +50,10 @@ export default async function EditCompanyPage({ searchParams }: Props) {
 	return (
 		<PageContainer>
 			<PageHeader title="Modifier l'organisation" />
+			<UpdateCompanyForm
+				company={company}
+				searchAddressPromise={searchAddress(searchAddressParams)}
+			/>
 		</PageContainer>
 	);
 }

@@ -109,25 +109,13 @@ export const getSidebarNav = () => [
 		],
 	},
 	{
-		title: "Organisation",
+		title: "Entreprise",
 		icon: Building2,
 		items: [
 			{
-				title: "Modifier l'organisation",
-				url: `/dashboard/edit`,
+				title: "Modifier l'entreprise",
+				url: `/dashboard/company/edit`,
 			},
-			{
-				title: "Supprimer l'organisation",
-				url: `/dashboard/delete`,
-			},
-			/*{
-				title: "Gestion des membres",
-				url: `/dashboard/${organizationId}/members`,
-			},
-			{
-				title: "Invitations",
-				url: `/dashboard/${organizationId}/invitations`,
-			},*/
 		],
 	},
 	/*{
