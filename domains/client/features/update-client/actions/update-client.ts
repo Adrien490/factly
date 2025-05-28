@@ -74,7 +74,7 @@ export const updateClient: ServerAction<
 			status: formData.get("status") as ClientStatus,
 
 			// Informations de contact
-			contactCivility: formData.get("contactCivility") as Civility,
+			contactCivility: formData.get("contactCivility") as string,
 			contactFirstName: formData.get("contactFirstName") as string,
 			contactLastName: formData.get("contactLastName") as string,
 			contactFunction: formData.get("contactFunction") as string,
