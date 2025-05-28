@@ -5,6 +5,7 @@ import {
 	CLIENT_TYPE_COLORS,
 	CLIENT_TYPE_LABELS,
 } from "@/domains/client/constants";
+import { CIVILITY_LABELS } from "@/domains/contact/constants/civility-options";
 import { HorizontalMenu } from "@/shared/components";
 import { Badge } from "@/shared/components/ui/badge";
 import { use } from "react";
@@ -21,10 +22,24 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 	}
 
 	const defaultContact = client.contacts[0];
-	const displayName =
-		client.type === "COMPANY"
-			? client.company?.name
-			: `${defaultContact?.firstName} ${defaultContact?.lastName}`;
+
+	let displayName = "";
+	if (client.type === "COMPANY") {
+		displayName = client.company?.name || "";
+	} else {
+		// Pour les particuliers, inclure la civilité si elle existe
+		const civility = defaultContact?.civility
+			? CIVILITY_LABELS[defaultContact.civility]
+			: "";
+		const firstName = defaultContact?.firstName || "";
+		const lastName = defaultContact?.lastName || "";
+
+		if (civility) {
+			displayName = `${civility} ${firstName} ${lastName}`.trim();
+		} else {
+			displayName = `${firstName} ${lastName}`.trim();
+		}
+	}
 
 	return (
 		<div>

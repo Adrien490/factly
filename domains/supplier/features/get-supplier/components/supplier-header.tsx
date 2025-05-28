@@ -1,4 +1,5 @@
 import NotFound from "@/app/dashboard/not-found";
+import { CIVILITY_LABELS } from "@/domains/contact/constants/civility-options";
 import {
 	SUPPLIER_STATUS_COLORS,
 	SUPPLIER_STATUS_LABELS,
@@ -21,7 +22,30 @@ export function SupplierHeader({ supplierPromise }: SupplierHeaderProps) {
 		return <NotFound />;
 	}
 
-	const displayName = supplier.company?.name || supplier.reference;
+	const defaultContact = supplier.contacts?.[0];
+
+	let displayName = "";
+	if (supplier.type === "COMPANY") {
+		displayName = supplier.company?.name || supplier.reference;
+	} else {
+		// Pour les particuliers, inclure la civilité si elle existe
+		const civility = defaultContact?.civility
+			? CIVILITY_LABELS[defaultContact.civility]
+			: "";
+		const firstName = defaultContact?.firstName || "";
+		const lastName = defaultContact?.lastName || "";
+
+		if (civility) {
+			displayName = `${civility} ${firstName} ${lastName}`.trim();
+		} else {
+			displayName = `${firstName} ${lastName}`.trim();
+		}
+
+		// Fallback sur la référence si pas de nom
+		if (!displayName) {
+			displayName = supplier.reference;
+		}
+	}
 
 	return (
 		<div>
