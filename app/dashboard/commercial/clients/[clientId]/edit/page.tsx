@@ -1,6 +1,6 @@
 import { getClient } from "@/domains/client/features/get-client";
 import { UpdateClientForm } from "@/domains/client/features/update-client";
-import NotFound from "../../../../not-found";
+import NotFound from "../../../../../not-found";
 
 type PageProps = {
 	params: Promise<{

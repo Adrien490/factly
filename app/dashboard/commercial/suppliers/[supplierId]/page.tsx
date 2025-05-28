@@ -3,7 +3,7 @@ import { ContentCard } from "@/shared/components/content-card";
 import { Country } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import NotFound from "../../../not-found";
+import NotFound from "../../../../not-found";
 
 type Props = {
 	params: Promise<{

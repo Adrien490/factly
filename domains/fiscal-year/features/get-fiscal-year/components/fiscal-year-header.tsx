@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/not-found";
+import NotFound from "@/app/not-found";
 import {
 	FISCAL_YEAR_STATUS_COLORS,
 	FISCAL_YEAR_STATUS_LABELS,

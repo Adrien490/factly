@@ -21,7 +21,7 @@ import {
 	Truck,
 } from "lucide-react";
 import Image from "next/image";
-import NotFound from "../../../not-found";
+import NotFound from "../../../../not-found";
 
 type Props = {
 	params: Promise<{

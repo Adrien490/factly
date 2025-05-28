@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/not-found";
+import NotFound from "@/app/not-found";
 import { getFiscalYear } from "@/domains/fiscal-year/features/get-fiscal-year";
 import { UpdateFiscalYearForm } from "@/domains/fiscal-year/features/update-fiscal-year/components";
 

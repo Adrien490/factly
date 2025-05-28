@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/not-found";
+import NotFound from "@/app/not-found";
 import { CIVILITY_LABELS } from "@/domains/contact/constants/civility-options";
 import {
 	SUPPLIER_STATUS_COLORS,

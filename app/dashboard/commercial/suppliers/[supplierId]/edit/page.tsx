@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/not-found";
+import NotFound from "@/app/not-found";
 import { getSupplier } from "@/domains/supplier/features/get-supplier";
 import { UpdateSupplierForm } from "@/domains/supplier/features/update-supplier";
 

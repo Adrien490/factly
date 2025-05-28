@@ -1,4 +1,4 @@
-import NotFound from "@/app/dashboard/not-found";
+import NotFound from "@/app/not-found";
 import {
 	CLIENT_STATUS_COLORS,
 	CLIENT_STATUS_LABELS,
