@@ -3,10 +3,8 @@ import { getProductCategories } from "@/domains/product-category/features/get-pr
 import { ProductCategoryDataTable } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable";
 import { ProductCategoryDataTableSkeleton } from "@/domains/product-category/features/get-product-categories/components/product-category-datatable-skeleton";
 import { RefreshProductCategoriesButton } from "@/domains/product-category/features/refresh-product-categories/components/refresh-product-categories-button";
-import { getProductNavigation } from "@/domains/product/utils";
 import {
 	Button,
-	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -46,8 +44,6 @@ export default async function ProductsCategoriesPage({ searchParams }: Props) {
 				description="Gérer vos catégories de produits"
 			/>
 
-			<HorizontalMenu items={getProductNavigation()} />
-
 			<Toolbar>
 				<SearchForm
 					paramName="search"
@@ -85,7 +81,7 @@ export default async function ProductsCategoriesPage({ searchParams }: Props) {
 				/>
 				{isArchivedView ? (
 					<Button variant="default" className="shrink-0" asChild>
-						<Link href={`/dashboard/products/categories`}>
+						<Link href={`/dashboard/catalog/categories`}>
 							<Undo2 className="h-4 w-4 mr-2" />
 							Voir toutes les catégories
 						</Link>
@@ -93,7 +89,7 @@ export default async function ProductsCategoriesPage({ searchParams }: Props) {
 				) : (
 					<Button variant="outline" className="shrink-0" asChild>
 						<Link
-							href={`/dashboard/products/categories?status=${ProductCategoryStatus.ARCHIVED}`}
+							href={`/dashboard/catalog/categories?status=${ProductCategoryStatus.ARCHIVED}`}
 						>
 							<Trash2 className="h-4 w-4 mr-2" />
 							Voir les catégories archivées

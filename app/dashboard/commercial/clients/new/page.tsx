@@ -1,7 +1,6 @@
 import { searchAddress } from "@/domains/address/features/search-address";
 import { CreateClientForm } from "@/domains/client/features/create-client";
-import { getClientNavigation } from "@/domains/client/utils";
-import { HorizontalMenu, PageContainer, PageHeader } from "@/shared/components";
+import { PageContainer, PageHeader } from "@/shared/components";
 
 type PageProps = {
 	searchParams: Promise<{
@@ -35,8 +34,6 @@ export default async function NewClientPage({ searchParams }: PageProps) {
 				title="Nouveau client"
 				description="Créez un nouveau client pour votre organisation"
 			/>
-
-			<HorizontalMenu items={getClientNavigation()} />
 
 			{/* Contenu principal */}
 			<CreateClientForm

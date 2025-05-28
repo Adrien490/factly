@@ -8,10 +8,8 @@ import {
 	SupplierFilterSheet,
 } from "@/domains/supplier/features/get-suppliers/components";
 import { RefreshSuppliersButton } from "@/domains/supplier/features/refresh-suppliers/components";
-import { getSupplierNavigation } from "@/domains/supplier/utils";
 import {
 	Button,
-	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -83,8 +81,6 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
 				title="Fournisseurs"
 				description="Gérez votre portefeuille fournisseurs"
 			/>
-
-			<HorizontalMenu items={getSupplierNavigation()} />
 
 			<Toolbar>
 				<SearchForm

@@ -1,21 +1,19 @@
+import { RefreshClientsButton } from "@/domains/client/features/refresh-clients";
+import { ArchivedProductSelectionActions } from "@/domains/product/components/archived-product-selection-actions";
+import { ProductFilterSheet } from "@/domains/product/components/product-filter-sheet";
+import { ProductSelectionActions } from "@/domains/product/components/product-selection-actions";
 import {
-	GET_CLIENTS_SORT_FIELDS,
-	getClients,
-} from "@/domains/client/features/get-clients";
-import { getClientNavigation } from "@/domains/client/utils";
-
-import {
-	ClientDataTable,
-	ClientDataTableSkeleton,
-	ClientFilterSheet,
-} from "@/domains/client/features/get-clients/components";
-import { RefreshClientsButton } from "@/domains/client/features/refresh-clients/components";
+	GET_PRODUCTS_SORT_FIELDS,
+	ProductDataTable,
+	ProductDataTableSkeleton,
+	getProducts,
+} from "@/domains/product/features";
 import {
 	Button,
-	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
+	SelectionToolbar,
 	SortingOptionsDropdown,
 	Toolbar,
 	Tooltip,
@@ -24,14 +22,12 @@ import {
 	TooltipTrigger,
 } from "@/shared/components";
 import { SortOrder } from "@/shared/types";
-import { ClientStatus, ClientType } from "@prisma/client";
+import { ProductStatus, VatRate } from "@prisma/client";
 import { Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-// Options pour le type de client
-
-type PageProps = {
+interface ProductsPageProps {
 	searchParams: Promise<{
 		selected?: string[];
 		perPage?: string;
@@ -39,17 +35,26 @@ type PageProps = {
 		sortBy?: string;
 		sortOrder?: SortOrder;
 		search?: string;
-		status?: ClientStatus | ClientStatus[];
-		type?: ClientType;
+		status?: ProductStatus | ProductStatus[];
+		vatRate?: VatRate | VatRate[];
 	}>;
-};
-
-export default async function ClientsPage({ searchParams }: PageProps) {
-	const { perPage, page, sortBy, sortOrder, search, status, type, selected } =
-		await searchParams;
+}
+export default async function ProductsPage({
+	searchParams,
+}: ProductsPageProps) {
+	const {
+		perPage,
+		page,
+		sortBy,
+		sortOrder,
+		search,
+		status,
+		selected,
+		vatRate,
+	} = await searchParams;
 
 	const filters: Record<string, string | string[]> = {};
-	const selectedClientIds = !Array.isArray(selected)
+	const selectedProductIds = !Array.isArray(selected)
 		? selected
 			? [selected]
 			: []
@@ -57,28 +62,25 @@ export default async function ClientsPage({ searchParams }: PageProps) {
 	if (status) {
 		filters.status = status;
 	} else {
-		filters.status = Object.values(ClientStatus).filter(
-			(status) => status !== ClientStatus.ARCHIVED
+		filters.status = Object.values(ProductStatus).filter(
+			(status) => status !== ProductStatus.ARCHIVED
 		);
 	}
-	if (type) filters.type = type;
+	if (vatRate) {
+		filters.vatRate = vatRate;
+	}
 
 	const activeFiltersCount = Object.keys(filters).filter((key) => {
 		if (key === "status" && !status) return false;
-		if (key === "status" && status === ClientStatus.ARCHIVED) return false;
+		if (key === "status" && status === ProductStatus.ARCHIVED) return false;
 		return true;
 	}).length;
 
-	const isArchivedView = status === ClientStatus.ARCHIVED;
+	const isArchivedView = status === ProductStatus.ARCHIVED;
 
 	return (
-		<PageContainer className="group pb-12">
-			<PageHeader
-				title="Clients"
-				description="Gérez votre portefeuille clients"
-			/>
-
-			<HorizontalMenu items={getClientNavigation()} />
+		<PageContainer>
+			<PageHeader title="Produits" description="Gérez vos produits" />
 
 			<Toolbar>
 				<SearchForm
@@ -101,6 +103,10 @@ export default async function ClientsPage({ searchParams }: PageProps) {
 				<SortingOptionsDropdown
 					sortFields={[
 						{
+							label: "Nom",
+							value: "name",
+						},
+						{
 							label: "Référence",
 							value: "reference",
 						},
@@ -108,46 +114,58 @@ export default async function ClientsPage({ searchParams }: PageProps) {
 							label: "Date de création",
 							value: "createdAt",
 						},
+						{
+							label: "Prix",
+							value: "price",
+						},
 					]}
 					defaultSortBy="createdAt"
 					defaultSortOrder="desc"
 					className="w-[200px] shrink-0"
 				/>
 
-				<ClientFilterSheet
+				<ProductFilterSheet
 					activeFiltersCount={activeFiltersCount}
 					isArchivedView={isArchivedView}
 				/>
 
 				{isArchivedView ? (
 					<Button variant="default" className="shrink-0" asChild>
-						<Link href={`/dashboard/clients`}>
+						<Link href={`/dashboard/catalog/products`}>
 							<Undo2 className="h-4 w-4 mr-2" />
-							Voir tous les clients
+							Voir tous les produits
 						</Link>
 					</Button>
 				) : (
 					<Button variant="outline" className="shrink-0" asChild>
-						<Link href={`/dashboard/clients?status=${ClientStatus.ARCHIVED}`}>
+						<Link
+							href={`/dashboard/catalog/products?status=${ProductStatus.ARCHIVED}`}
+						>
 							<Trash2 className="h-4 w-4 mr-2" />
-							Voir les clients archivés
+							Voir les produits archivés
 						</Link>
 					</Button>
 				)}
 
 				<Button className="shrink-0" asChild>
-					<Link href={`/dashboard/clients/new`}>Nouveau client</Link>
+					<Link href={`/dashboard/catalog/products/new`}>Nouveau produit</Link>
 				</Button>
 			</Toolbar>
-
-			<Suspense fallback={<ClientDataTableSkeleton />}>
-				<ClientDataTable
-					isArchivedView={isArchivedView}
-					selectedClientIds={selectedClientIds}
-					clientsPromise={getClients({
+			<SelectionToolbar>
+				{isArchivedView ? (
+					<ArchivedProductSelectionActions
+						selectedProductIds={selectedProductIds}
+					/>
+				) : (
+					<ProductSelectionActions selectedProductIds={selectedProductIds} />
+				)}
+			</SelectionToolbar>
+			<Suspense fallback={<ProductDataTableSkeleton />}>
+				<ProductDataTable
+					productsPromise={getProducts({
 						perPage: Number(perPage) || 10,
 						page: Number(page) || 1,
-						sortBy: sortBy as (typeof GET_CLIENTS_SORT_FIELDS)[number],
+						sortBy: sortBy as (typeof GET_PRODUCTS_SORT_FIELDS)[number],
 						sortOrder: sortOrder as SortOrder,
 						search,
 						filters,
