@@ -53,7 +53,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/clients/${client.id}`}
+						href={`/dashboard/commercial/clients/${client.id}`}
 						className={cn("flex w-full items-center")}
 					>
 						Fiche client
@@ -66,7 +66,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 						<DropdownMenuSeparator />
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/clients/${client.id}/edit`}
+								href={`/dashboard/commercial/clients/${client.id}/edit`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Modifier</span>
@@ -74,7 +74,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/clients/${client.id}/addresses`}
+								href={`/dashboard/commercial/clients/${client.id}/addresses`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Gérer les adresses</span>
@@ -82,7 +82,7 @@ export function ClientActions({ client, isArchived }: ClientActionsProps) {
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/clients/${client.id}/contacts`}
+								href={`/dashboard/commercial/clients/${client.id}/contacts`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Gérer les contacts</span>

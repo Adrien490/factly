@@ -19,7 +19,7 @@ export function useCreateClient() {
 					label: "Voir le client",
 					onClick: (data) => {
 						if (data?.id) {
-							router.push(`/dashboard/clients/${data.id}`);
+							router.push(`/dashboard/commercial/clients/${data.id}`);
 						}
 					},
 				},

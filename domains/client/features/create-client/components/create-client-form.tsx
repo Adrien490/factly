@@ -180,7 +180,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 		const url = new URLSearchParams();
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
-			router.push(`/dashboard/clients/new?${url.toString()}`);
+			router.push(`/dashboard/commercial/clients/new?${url.toString()}`);
 		});
 	};
 
@@ -771,7 +771,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 										if (!isSubmitting) {
 											startAddressTransition(() => {
 												router.push(
-													`/dashboard/clients/new?${url.toString()}`,
+													`/dashboard/commercial/clients/new?${url.toString()}`,
 													{
 														scroll: false,
 													}
@@ -926,7 +926,7 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/clients`}
+						cancelHref={`/dashboard/commercial/clients`}
 						submitLabel="Créer le client"
 					/>
 				)}

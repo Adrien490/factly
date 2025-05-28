@@ -1,10 +1,10 @@
 export const getClientNavigation = () => [
 	{
 		title: "Liste des clients",
-		url: `/dashboard/clients`,
+		url: `/dashboard/commercial/clients`,
 	},
 	{
 		title: "Nouveau client",
-		url: `/dashboard/clients/new`,
+		url: `/dashboard/commercial/clients/new`,
 	},
 ];

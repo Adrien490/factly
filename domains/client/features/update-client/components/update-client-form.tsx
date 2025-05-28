@@ -655,7 +655,7 @@ export function UpdateClientForm({ client }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/clients`}
+						cancelHref={`/dashboard/commercial/clients`}
 						submitLabel="Enregistrer"
 					/>
 				)}
