@@ -12,14 +12,10 @@ import {
 } from "@/shared/types/server-action";
 import {
 	AddressType,
-	BusinessSector,
-	Civility,
 	Client,
 	ClientStatus,
 	ClientType,
 	Country,
-	EmployeeCount,
-	LegalForm,
 } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -69,7 +65,7 @@ export const createClient: ServerAction<
 			status: formData.get("status") as ClientStatus,
 
 			// Informations de contact
-			contactCivility: formData.get("contactCivility") as Civility | null,
+			contactCivility: formData.get("contactCivility") as string,
 			contactFirstName: formData.get("contactFirstName") as string,
 			contactLastName: formData.get("contactLastName") as string,
 			contactFunction: formData.get("contactFunction") as string,
@@ -78,23 +74,20 @@ export const createClient: ServerAction<
 			contactMobileNumber: formData.get("contactMobileNumber") as string,
 			contactFaxNumber: formData.get("contactFaxNumber") as string,
 			contactWebsite: formData.get("contactWebsite") as string,
+			contactNotes: formData.get("contactNotes") as string,
 
 			// Informations d'entreprise
 			companyName: formData.get("companyName") as string,
 			companyEmail: formData.get("companyEmail") as string,
-			companyLegalForm: formData.get("companyLegalForm") as LegalForm,
+			companyLegalForm: formData.get("companyLegalForm") as string,
 			companySiren: formData.get("companySiren") as string,
 			companySiret: formData.get("companySiret") as string,
 			companyNafApeCode: formData.get("companyNafApeCode") as string,
 			companyCapital: formData.get("companyCapital") as string,
 			companyRcs: formData.get("companyRcs") as string,
 			companyVatNumber: formData.get("companyVatNumber") as string,
-			companyBusinessSector: formData.get(
-				"companyBusinessSector"
-			) as BusinessSector,
-			companyEmployeeCount: formData.get(
-				"companyEmployeeCount"
-			) as EmployeeCount,
+			companyBusinessSector: formData.get("companyBusinessSector") as string,
+			companyEmployeeCount: formData.get("companyEmployeeCount") as string,
 
 			// Informations d'adresse
 			addressType: formData.get("addressType") as AddressType,
@@ -198,16 +191,16 @@ export const createClient: ServerAction<
 					contacts: {
 						create: [
 							{
-								civility: contactCivility as Civility | null,
+								civility: contactCivility,
 								firstName: contactFirstName ?? "",
 								lastName: contactLastName ?? "",
-								function: contactFunction,
-								notes: contactNotes,
-								email: contactEmail,
-								phoneNumber: contactPhoneNumber,
-								mobileNumber: contactMobileNumber,
-								faxNumber: contactFaxNumber,
-								website: contactWebsite,
+								function: contactFunction || null,
+								notes: contactNotes || null,
+								email: contactEmail || null,
+								phoneNumber: contactPhoneNumber || null,
+								mobileNumber: contactMobileNumber || null,
+								faxNumber: contactFaxNumber || null,
+								website: contactWebsite || null,
 								isDefault: true,
 							},
 						],
@@ -219,15 +212,15 @@ export const createClient: ServerAction<
 					company: {
 						create: {
 							name: companyName!,
-							legalForm: companyLegalForm!,
-							siren: companySiren!,
-							siret: companySiret!,
-							nafApeCode: companyNafApeCode!,
-							capital: companyCapital!,
-							rcs: companyRcs!,
-							vatNumber: companyVatNumber!,
-							businessSector: companyBusinessSector!,
-							employeeCount: companyEmployeeCount!,
+							legalForm: companyLegalForm,
+							siren: companySiren || "",
+							siret: companySiret || "",
+							nafApeCode: companyNafApeCode || "",
+							capital: companyCapital || "",
+							rcs: companyRcs || "",
+							vatNumber: companyVatNumber || "",
+							businessSector: companyBusinessSector,
+							employeeCount: companyEmployeeCount,
 							email: companyEmail || null,
 						},
 					},
@@ -241,7 +234,7 @@ export const createClient: ServerAction<
 								{
 									addressType,
 									addressLine1,
-									addressLine2,
+									addressLine2: addressLine2 || null,
 									postalCode: postalCode || "",
 									city: city || "",
 									country: country as Country,
