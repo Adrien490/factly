@@ -1,4 +1,3 @@
-import { getFiscalYearNavigation } from "@/domains/fiscal-year/constants";
 import {
 	FiscalYearDataTable,
 	FiscalYearDataTableSkeleton,
@@ -8,7 +7,6 @@ import { RefreshFiscalYearsButton } from "@/domains/fiscal-year/features/refresh
 import {
 	Button,
 	Calendar,
-	HorizontalMenu,
 	PageContainer,
 	PageHeader,
 	SearchForm,
@@ -49,8 +47,6 @@ export default async function FiscalYearsPage({ searchParams }: PageProps) {
 				description="Gérez vos années fiscales"
 			/>
 
-			<HorizontalMenu items={getFiscalYearNavigation()} />
-
 			{/* Barre d'actions principale */}
 			<Toolbar>
 				<SearchForm
@@ -81,7 +77,7 @@ export default async function FiscalYearsPage({ searchParams }: PageProps) {
 				/>
 
 				<Button className="shrink-0" asChild>
-					<Link href={`/dashboard/fiscal-years/new`}>
+					<Link href={`/dashboard/admin/fiscal-years/new`}>
 						Nouvelle année fiscale
 					</Link>
 				</Button>

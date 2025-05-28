@@ -337,6 +337,7 @@ export const getSidebarNav = () => [
 						title: "Années fiscales",
 						url: `/dashboard/admin/fiscal-years`,
 					},
+					/*
 					{
 						title: "Taxes & TVA",
 						url: `/dashboard/admin/taxes`,
@@ -349,6 +350,7 @@ export const getSidebarNav = () => [
 						title: "Paramètres généraux",
 						url: `/dashboard/admin/settings`,
 					},
+					*/
 				],
 			},
 			/*
