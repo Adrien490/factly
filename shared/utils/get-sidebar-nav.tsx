@@ -2,212 +2,135 @@ import { getClientNavigation } from "@/domains/client/utils";
 import { getProductNavigation } from "@/domains/product/utils";
 import { getSupplierNavigation } from "@/domains/supplier/utils";
 import {
-	CalendarClock,
+	BarChart3,
+	Building2,
 	LayoutDashboard,
 	Package,
 	Settings,
+	ShoppingCart,
 	Truck,
+	UserCheck,
 	Users,
 } from "lucide-react";
 
 export const getSidebarNav = () => [
+	// Dashboard principal
 	{
 		title: "Tableau de bord",
 		url: `/dashboard`,
 		icon: LayoutDashboard,
 	},
+
+	// 1. COMMERCIAL - Cœur de l'activité commerciale
 	{
-		title: "Clients",
-		icon: Users,
-		url: `/dashboard/clients`,
-		items: getClientNavigation(),
+		title: "Commercial",
+		icon: ShoppingCart,
+		isSection: true,
+		sectionDescription: "Cœur de l'activité commerciale",
+		items: [
+			{
+				title: "Clients",
+				url: `/dashboard/clients`,
+				icon: Users,
+				items: getClientNavigation(),
+			},
+			{
+				title: "Fournisseurs",
+				url: `/dashboard/suppliers`,
+				icon: Truck,
+				items: getSupplierNavigation(),
+			},
+		],
 	},
-	{
-		title: "Fournisseurs",
-		icon: Truck,
-		url: `/dashboard/suppliers`,
-		items: getSupplierNavigation(),
-	},
+
+	// 2. CATALOGUE - Gestion des produits et services
 	{
 		title: "Catalogue",
 		icon: Package,
-		url: `/dashboard/products`,
-		items: getProductNavigation(),
-	},
-	/*{
-		title: "Devis",
-		icon: FileText,
+		isSection: true,
+		sectionDescription: "Gestion des produits et services",
 		items: [
 			{
-				title: "Liste des devis",
-				url: `/dashboard/${organizationId}/quotes`,
+				title: "Produits",
+				url: `/dashboard/products`,
+				items: getProductNavigation(),
 			},
 			{
-				title: "Créer un devis",
-				url: `/dashboard/${organizationId}/quotes/new`,
+				title: "Catégories",
+				url: `/dashboard/products/categories`,
 			},
-		],
-	},*/
-	/*{
-		title: "Facturation",
-		icon: Receipt,
-		items: [
-			{
-				title: "Liste des factures",
-				url: `/dashboard/${organizationId}/invoices`,
-			},
-			{
-				title: "Créer une facture",
-				url: `/dashboard/${organizationId}/invoices/new`,
-			},
-			{
-				title: "Paiements",
-				url: `/dashboard/${organizationId}/invoices/payments`,
-			},
+			/*{
+				title: "Prix et tarification",
+				url: `/dashboard/products/pricing`,
+			},*/
 		],
 	},
-	{
-		title: "Stock",
-		icon: Warehouse,
-		items: [
-			{
-				title: "Inventaire",
-				url: `/dashboard/${organizationId}/inventory`,
-			},
-			{
-				title: "Entrepôts",
-				url: `/dashboard/${organizationId}/warehouses`,
-			},
-			{
-				title: "Mouvements de stock",
-				url: `/dashboard/${organizationId}/stock-movements`,
-			},
-		],
-	},*/
 
+	// 3. ADMINISTRATION - Gestion interne et configuration
 	{
-		title: "Années fiscales",
-		icon: CalendarClock,
-		url: `/dashboard/fiscal-years`,
-		items: [
-			{
-				title: "Vue d'ensemble",
-				url: `/dashboard/fiscal-years`,
-			},
-			{
-				title: "Nouvel exercice",
-				url: `/dashboard/fiscal-years/new`,
-			},
-			/*{
-				title: "Procédure de clôture",
-				url: `/dashboard/${organizationId}/fiscal-years/closing`,
-			},*/
-			/*{
-				title: "Documents comptables",
-				url: `/dashboard/${organizationId}/fiscal-years/documents`,
-			},*/
-		],
-	},
-	{
-		title: "Paramètres",
+		title: "Administration",
 		icon: Settings,
+		isSection: true,
+		sectionDescription: "Gestion interne et configuration",
 		items: [
 			{
-				title: "Modifier l'entreprise",
-				url: `/dashboard/settings/company/edit`,
+				title: "Équipe",
+				icon: UserCheck,
+				items: [
+					{
+						title: "Utilisateurs",
+						url: `/dashboard/admin/users`,
+					},
+					{
+						title: "Rôles et permissions",
+						url: `/dashboard/admin/permissions`,
+					},
+					/*{
+						title: "Groupes de travail",
+						url: `/dashboard/admin/groups`,
+					},*/
+				],
 			},
-			{
-				title: "Gestion des membres",
-				url: `/dashboard/settings/members`,
-			},
-			{
-				title: "Gestion des droits",
-				url: `/dashboard/settings/permissions`,
-			},
-		],
-	},
-	/*{
-		title: "Paiements",
-		icon: CreditCard,
-		items: [
-			{
-				title: "Méthodes de paiement",
-				url: `/dashboard/${organizationId}/payments/methods`,
-			},
-			{
-				title: "Transactions",
-				url: `/dashboard/${organizationId}/payments/transactions`,
-			},
-			{
-				title: "Coordonnées bancaires",
-				url: `/dashboard/${organizationId}/payments/bank-details`,
-			},
-		],
-	},*/
-	/*{
-		title: "Facturation électronique",
-		icon: FileSpreadsheet,
-		items: [
 			{
 				title: "Configuration",
-				url: `/dashboard/${organizationId}/e-invoicing/config`,
-			},
-			{
-				title: "Connexion PPF/PDP",
-				url: `/dashboard/${organizationId}/e-invoicing/platforms`,
-			},
-			{
-				title: "Statut des transmissions",
-				url: `/dashboard/${organizationId}/e-invoicing/status`,
-			},
-			{
-				title: "Archivage électronique",
-				url: `/dashboard/${organizationId}/e-invoicing/archive`,
-			},
-		],
-	},*/
-	/*{
-		title: "Sécurité",
-		icon: ShieldCheck,
-		items: [
-			{
-				title: "Authentification",
-				url: `/dashboard/${organizationId}/security/auth`,
-			},
-			{
-				title: "Passkeys",
-				url: `/dashboard/${organizationId}/security/passkeys`,
-			},
-			{
-				title: "Journaux d'activité",
-				url: `/dashboard/${organizationId}/security/logs`,
-			},
-			{
-				title: "Sauvegardes",
-				url: `/dashboard/${organizationId}/security/backups`,
+				icon: Building2,
+				items: [
+					{
+						title: "Entreprise",
+						url: `/dashboard/admin/company`,
+					},
+					{
+						title: "Années fiscales",
+						url: `/dashboard/fiscal-years`,
+					},
+					/*{
+						title: "Paramètres généraux",
+						url: `/dashboard/admin/settings`,
+					},*/
+				],
 			},
 		],
-	},*/
-	/*{
-		title: "Paramètres",
-		icon: Settings,
+	},
+
+	// 4. RAPPORTS & ANALYTICS - Tableaux de bord et statistiques
+	{
+		title: "Rapports & Analytics",
+		icon: BarChart3,
+		isSection: true,
+		sectionDescription: "Tableaux de bord et statistiques",
 		items: [
-			{
-				title: "Informations générales",
-				url: `/dashboard/${organizationId}/settings/general`,
-			},
 			/*{
-				title: "Numérotation",
-				url: `/dashboard/${organizationId}/settings/numbering`,
+				title: "Rapports commerciaux",
+				url: `/dashboard/reports/commercial`,
+			},
+			{
+				title: "Analytics clients",
+				url: `/dashboard/reports/clients`,
+			},
+			{
+				title: "Performance produits",
+				url: `/dashboard/reports/products`,
 			},*/
-	/*{
-				title: "Mentions légales",
-				url: `/dashboard/${organizationId}/settings/legal-notices`,
-			},*/
-	/*{
-				title: "Intégrations",
-				url: `/dashboard/${organizationId}/settings/integrations`,
-			},*/
-	/*],
-	},*/
+		],
+	},
 ];
