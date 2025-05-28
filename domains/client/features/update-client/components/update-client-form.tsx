@@ -189,25 +189,6 @@ export function UpdateClientForm({ client }: Props) {
 										/>
 									)}
 								</form.AppField>
-								<form.AppField
-									name="companyEmail"
-									validators={{
-										onChange: ({ value }) => {
-											if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-												return "Format d'email invalide";
-											}
-											return undefined;
-										},
-									}}
-								>
-									{(field) => (
-										<field.InputField
-											label="Email de la société"
-											disabled={isPending}
-											placeholder="Ex: contact@example.com"
-										/>
-									)}
-								</form.AppField>
 							</>
 						)}
 
