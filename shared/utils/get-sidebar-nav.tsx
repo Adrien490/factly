@@ -1,4 +1,5 @@
 import {
+	Box,
 	Building2,
 	Handshake,
 	LayoutDashboard,
@@ -6,6 +7,7 @@ import {
 	Receipt,
 	Settings,
 	ShoppingCart,
+	Tags,
 	Truck,
 	UserCheck,
 	Users,
@@ -24,7 +26,6 @@ export const getSidebarNav = () => [
 		title: "Commercial",
 		icon: ShoppingCart,
 		isSection: true,
-		sectionDescription: "Cœur de l'activité commerciale",
 		items: [
 			{
 				title: "Clients",
@@ -64,10 +65,10 @@ export const getSidebarNav = () => [
 		title: "Ventes & Achats",
 		icon: Handshake,
 		isSection: true,
-		sectionDescription: "Gestion des transactions commerciales",
 		items: [
 			{
 				title: "Ventes",
+				url: `/dashboard/sales/quotes`,
 				icon: Receipt,
 				items: [
 					{
@@ -88,8 +89,10 @@ export const getSidebarNav = () => [
 					},
 				],
 			},
+			/*
 			{
 				title: "Achats",
+				url: `/dashboard/purchases`,
 				icon: ShoppingCart,
 				items: [
 					{
@@ -105,12 +108,14 @@ export const getSidebarNav = () => [
 						url: `/dashboard/purchases/invoices`,
 					},
 				],
-			},
+			},*/
+			/*
 			{
 				title: "Livraisons",
 				url: `/dashboard/logistics/deliveries`,
 				icon: Truck,
 			},
+			*/
 		],
 	},
 
@@ -119,15 +124,16 @@ export const getSidebarNav = () => [
 		title: "Catalogue & Stock",
 		icon: Package,
 		isSection: true,
-		sectionDescription: "Gestion des produits et inventaire",
 		items: [
 			{
 				title: "Produits",
 				url: `/dashboard/catalog/products`,
+				icon: Box,
 			},
 			{
 				title: "Catégories",
 				url: `/dashboard/catalog/categories`,
+				icon: Tags,
 			},
 			/*
 			{
@@ -302,10 +308,10 @@ export const getSidebarNav = () => [
 		title: "Administration",
 		icon: Settings,
 		isSection: true,
-		sectionDescription: "Gestion interne et configuration",
 		items: [
 			{
 				title: "Équipe",
+				url: `/dashboard/admin/users`,
 				icon: UserCheck,
 				items: [
 					{
@@ -320,6 +326,7 @@ export const getSidebarNav = () => [
 			},
 			{
 				title: "Configuration",
+				url: `/dashboard/admin/company`,
 				icon: Building2,
 				items: [
 					{

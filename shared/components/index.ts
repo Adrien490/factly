@@ -1,5 +1,6 @@
 export * from "./autocomplete";
 export * from "./breadcrumbs";
+export * from "./clear-filters-button";
 export * from "./datatable";
 export * from "./date-filter";
 export * from "./date-range-filter";
@@ -11,10 +12,10 @@ export * from "./kpi-card/kpi-card";
 export * from "./loaders/dots-loader";
 export * from "./loaders/pulse-loader";
 export * from "./loaders/spinner-loader";
+export * from "./loading-indicator";
 export * from "./logo";
 export * from "./multi-select-filter";
 export * from "./navigation-dropdown";
-export * from "./number-ticker";
 export * from "./page-container";
 export * from "./page-header";
 export * from "./scroll-to-button";
@@ -28,7 +29,3 @@ export * from "./toolbar";
 export * from "./ui";
 export * from "./user-avatar";
 export * from "./view-toggle";
-
-export * from "./loading-indicator";
-
-export * from "./clear-filters-button";

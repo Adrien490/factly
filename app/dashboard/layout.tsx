@@ -18,7 +18,7 @@ import {
 	SidebarRail,
 	SidebarTrigger,
 } from "@/shared/components";
-import { NavMain } from "@/shared/components/nav-main";
+import { SidebarNav } from "@/shared/components/sidebar-nav";
 import { ThemeToggleSwitch } from "@/shared/components/theme-toggle-switch";
 import { UserDropdown } from "@/shared/components/user-dropdown";
 import { UserDropdownSkeleton } from "@/shared/components/user-dropdown/user-dropdown-skeleton";
@@ -54,7 +54,7 @@ export default async function OrganizationLayout({
 				</SidebarHeader>
 
 				<SidebarContent className="pt-2">
-					<NavMain />
+					<SidebarNav />
 				</SidebarContent>
 
 				<SidebarFooter>

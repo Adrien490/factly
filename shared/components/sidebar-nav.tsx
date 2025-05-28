@@ -17,6 +17,7 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
+	useSidebar,
 } from "@/shared/components/ui/sidebar";
 import { cn, getSidebarNav } from "@/shared/utils";
 import Link from "next/link";
@@ -29,7 +30,6 @@ export interface NavMainProps {
 		icon?: LucideIcon;
 		isActive?: boolean;
 		isSection?: boolean;
-		sectionDescription?: string;
 		items?: {
 			title: string;
 			url?: string;
@@ -42,9 +42,9 @@ export interface NavMainProps {
 	}[];
 }
 
-export function NavMain() {
+export function SidebarNav() {
 	const pathname = usePathname();
-
+	const { state } = useSidebar();
 	const items = getSidebarNav();
 
 	const renderMenuItem = (item: {
@@ -75,7 +75,10 @@ export function NavMain() {
 		if (!hasSubItems && item.url) {
 			return (
 				<SidebarMenuItem key={item.title}>
-					<SidebarMenuButton tooltip={item.title} asChild>
+					<SidebarMenuButton
+						tooltip={state === "collapsed" ? item.title : undefined}
+						asChild
+					>
 						<Link
 							href={item.url}
 							className={cn(
@@ -85,16 +88,60 @@ export function NavMain() {
 						>
 							<div className="flex items-center gap-2">
 								{item.icon && <item.icon className="size-4" />}
-								<span>{item.title}</span>
+								<span className={cn(state === "collapsed" && "sr-only")}>
+									{item.title}
+								</span>
 							</div>
-							<LoadingIndicator />
+							{state !== "collapsed" && <LoadingIndicator />}
 						</Link>
 					</SidebarMenuButton>
 				</SidebarMenuItem>
 			);
 		}
 
-		// Menu avec sous-menus
+		// Menu avec sous-menus - en mode collapsed, on affiche seulement l'icône avec tooltip
+		if (state === "collapsed" && hasSubItems) {
+			// Si l'item a une URL, on le rend cliquable même en mode collapsed
+			if (item.url) {
+				return (
+					<SidebarMenuItem key={item.title}>
+						<SidebarMenuButton
+							tooltip={`${item.title}\n${item.items?.map((subItem) => `• ${subItem.title}`).join("\n")}`}
+							asChild
+						>
+							<Link
+								href={item.url}
+								className={cn(
+									"flex items-center justify-between",
+									isActive && "bg-sidebar-accent"
+								)}
+							>
+								<div className="flex items-center gap-2">
+									{item.icon && <item.icon className="size-4" />}
+									<span className="sr-only">{item.title}</span>
+								</div>
+							</Link>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				);
+			}
+
+			// En mode collapsed, on crée un tooltip avec tous les sous-items
+			const tooltipContent = `${item.title}\n${item.items?.map((subItem) => `• ${subItem.title}`).join("\n")}`;
+
+			return (
+				<SidebarMenuItem key={item.title}>
+					<SidebarMenuButton tooltip={tooltipContent}>
+						<div className="flex items-center gap-2">
+							{item.icon && <item.icon className="size-4" />}
+							<span className="sr-only">{item.title}</span>
+						</div>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
+			);
+		}
+
+		// Menu avec sous-menus en mode étendu
 		return (
 			<Collapsible
 				key={item.title}
@@ -104,7 +151,9 @@ export function NavMain() {
 			>
 				<SidebarMenuItem>
 					<CollapsibleTrigger asChild>
-						<SidebarMenuButton tooltip={item.title}>
+						<SidebarMenuButton
+							tooltip={state === "collapsed" ? item.title : undefined}
+						>
 							<div className="flex items-center gap-2 w-full">
 								{item.icon && <item.icon className="size-4" />}
 								<span className="flex-1">{item.title}</span>
@@ -207,7 +256,12 @@ export function NavMain() {
 				if (item.isSection) {
 					return (
 						<SidebarGroup key={item.title} className="py-1">
-							<SidebarGroupLabel className="text-xs font-medium text-sidebar-foreground/80 mb-1">
+							<SidebarGroupLabel
+								className={cn(
+									"text-xs font-medium text-sidebar-foreground/80 mb-1",
+									state === "collapsed" && "sr-only"
+								)}
+							>
 								{item.title}
 							</SidebarGroupLabel>
 							<SidebarMenu>
@@ -220,7 +274,11 @@ export function NavMain() {
 				// Sinon, afficher dans le groupe principal
 				return (
 					<SidebarGroup key="main">
-						<SidebarGroupLabel>Menu principal</SidebarGroupLabel>
+						<SidebarGroupLabel
+							className={cn(state === "collapsed" && "sr-only")}
+						>
+							Menu principal
+						</SidebarGroupLabel>
 						<SidebarMenu>{renderMenuItem(item)}</SidebarMenu>
 					</SidebarGroup>
 				);
