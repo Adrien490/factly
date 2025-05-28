@@ -767,7 +767,6 @@ export function UpdateCompanyForm({ company, searchAddressPromise }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending || isUploading}
-						cancelHref={`/dashboard/companies`}
 						submitLabel="Mettre à jour l'entreprise"
 					/>
 				)}
