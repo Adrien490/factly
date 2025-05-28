@@ -609,7 +609,7 @@ export function UpdateSupplierForm({ supplier }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/suppliers`}
+						cancelHref={`/dashboard/commercial/suppliers`}
 						submitLabel="Mettre à jour le fournisseur"
 					/>
 				)}

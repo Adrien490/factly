@@ -82,19 +82,19 @@ export function ClientHeader({ clientPromise }: ClientHeaderProps) {
 						items={[
 							{
 								title: "Fiche client",
-								url: `/dashboard/clients/${client.id}`,
+								url: `/dashboard/commercial/clients/${client.id}`,
 							},
 							{
 								title: "Modifier",
-								url: `/dashboard/clients/${client.id}/edit`,
+								url: `/dashboard/commercial/clients/${client.id}/edit`,
 							},
 							{
 								title: "Gestion des adresses",
-								url: `/dashboard/clients/${client.id}/addresses`,
+								url: `/dashboard/commercial/clients/${client.id}/addresses`,
 							},
 							{
 								title: "Gestion des contacts",
-								url: `/dashboard/clients/${client.id}/contacts`,
+								url: `/dashboard/commercial/clients/${client.id}/contacts`,
 							},
 						]}
 					/>

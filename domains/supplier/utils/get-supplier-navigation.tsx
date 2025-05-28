@@ -1,10 +1,10 @@
 export const getSupplierNavigation = () => [
 	{
 		title: "Liste des fournisseurs",
-		url: `/dashboard/suppliers`,
+		url: `/dashboard/commercial/suppliers`,
 	},
 	{
 		title: "Nouveau fournisseur",
-		url: `/dashboard/suppliers/new`,
+		url: `/dashboard/commercial/suppliers/new`,
 	},
 ];

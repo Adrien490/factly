@@ -134,7 +134,7 @@ export function UpdateAddressForm({
 								(address.clientId
 									? `/dashboard/clients/${address.clientId}`
 									: address.supplierId
-										? `/dashboard/suppliers/${address.supplierId}`
+										? `/dashboard/commercial/suppliers/${address.supplierId}`
 										: `/dashboard`)
 						);
 						toast.dismiss();
@@ -472,7 +472,7 @@ export function UpdateAddressForm({
 					(address.clientId
 						? `/dashboard/clients/${address.clientId}`
 						: address.supplierId
-							? `/dashboard/suppliers/${address.supplierId}`
+							? `/dashboard/commercial/suppliers/${address.supplierId}`
 							: `/dashboard`)
 				}
 				isPending={isPending}

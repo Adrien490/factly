@@ -178,7 +178,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 		const url = new URLSearchParams();
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
-			router.push(`/dashboard/suppliers/new?${url.toString()}`);
+			router.push(`/dashboard/commercial/suppliers/new?${url.toString()}`);
 		});
 	};
 
@@ -768,7 +768,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 										if (!isSubmitting) {
 											startAddressTransition(() => {
 												router.push(
-													`/dashboard/suppliers/new?${url.toString()}`,
+													`/dashboard/commercial/suppliers/new?${url.toString()}`,
 													{
 														scroll: false,
 													}
@@ -922,7 +922,7 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 				{([canSubmit]) => (
 					<FormFooter
 						disabled={!canSubmit || isPending}
-						cancelHref={`/dashboard/suppliers`}
+						cancelHref={`/dashboard/commercial/suppliers`}
 						submitLabel="Créer le fournisseur"
 					/>
 				)}

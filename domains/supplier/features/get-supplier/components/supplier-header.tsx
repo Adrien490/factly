@@ -79,19 +79,19 @@ export function SupplierHeader({ supplierPromise }: SupplierHeaderProps) {
 						items={[
 							{
 								title: "Fiche fournisseur",
-								url: `/dashboard/suppliers/${supplier.id}`,
+								url: `/dashboard/commercial/suppliers/${supplier.id}`,
 							},
 							{
 								title: "Modifier",
-								url: `/dashboard/suppliers/${supplier.id}/edit`,
+								url: `/dashboard/commercial/suppliers/${supplier.id}/edit`,
 							},
 							{
 								title: "Gestion des adresses",
-								url: `/dashboard/suppliers/${supplier.id}/addresses`,
+								url: `/dashboard/commercial/suppliers/${supplier.id}/addresses`,
 							},
 							{
 								title: "Gestion des contacts",
-								url: `/dashboard/suppliers/${supplier.id}/contacts`,
+								url: `/dashboard/commercial/suppliers/${supplier.id}/contacts`,
 							},
 						]}
 					/>

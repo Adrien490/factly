@@ -63,7 +63,7 @@ export function SupplierActions({
 			>
 				<DropdownMenuItem asChild>
 					<Link
-						href={`/dashboard/suppliers/${supplier.id}`}
+						href={`/dashboard/commercial/suppliers/${supplier.id}`}
 						className={cn("flex w-full items-center")}
 					>
 						{isArchived && <FileText className="h-4 w-4 mr-2" />}
@@ -77,7 +77,7 @@ export function SupplierActions({
 						<DropdownMenuSeparator />
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/suppliers/${supplier.id}/edit`}
+								href={`/dashboard/commercial/suppliers/${supplier.id}/edit`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Modifier</span>
@@ -85,7 +85,7 @@ export function SupplierActions({
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
 							<Link
-								href={`/dashboard/suppliers/${supplier.id}/contacts`}
+								href={`/dashboard/commercial/suppliers/${supplier.id}/contacts`}
 								className={cn("flex w-full items-center")}
 							>
 								<span>Gérer les contacts</span>
