@@ -132,7 +132,7 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
 
 				{isArchivedView ? (
 					<Button variant="default" className="shrink-0" asChild>
-						<Link href={`/dashboard/suppliers`}>
+						<Link href={`/dashboard/commercial/suppliers`}>
 							<Undo2 className="h-4 w-4 mr-2" />
 							Voir tous les fournisseurs
 						</Link>
@@ -140,7 +140,7 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
 				) : (
 					<Button variant="outline" className="shrink-0" asChild>
 						<Link
-							href={`/dashboard/suppliers?status=${SupplierStatus.ARCHIVED}`}
+							href={`/dashboard/commercial/suppliers?status=${SupplierStatus.ARCHIVED}`}
 						>
 							<Trash2 className="h-4 w-4 mr-2" />
 							Voir les fournisseurs archivés
@@ -149,7 +149,9 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
 				)}
 
 				<Button className="shrink-0" asChild>
-					<Link href={`/dashboard/suppliers/new`}>Nouveau fournisseur</Link>
+					<Link href={`/dashboard/commercial/suppliers/new`}>
+						Nouveau fournisseur
+					</Link>
 				</Button>
 			</Toolbar>
 

@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar, Clock, FileText, PencilIcon } from "lucide-react";
 import Link from "next/link";
-import NotFound from "../../not-found";
+import NotFound from "../../../not-found";
 
 type Props = {
 	params: Promise<{
