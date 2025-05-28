@@ -69,7 +69,9 @@ export function CreateClientForm({ searchAddressPromise }: Props) {
 							label: "Voir le client",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(`/dashboard/clients/${result.data.id}`);
+									router.push(
+										`/dashboard/commercial/clients/${result.data.id}`
+									);
 								}
 							},
 						},

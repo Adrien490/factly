@@ -67,7 +67,9 @@ export function CreateSupplierForm({ searchAddressPromise }: Props) {
 							label: "Voir le fournisseur",
 							onClick: () => {
 								if (result.data?.id) {
-									router.push(`/dashboard/suppliers/${result.data.id}`);
+									router.push(
+										`/dashboard/commercial/suppliers/${result.data.id}`
+									);
 								}
 							},
 						},
