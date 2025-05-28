@@ -114,7 +114,7 @@ export function UpdateAddressForm({
 		// Réinitialiser l'URL de recherche
 		startAddressTransition(() => {
 			router.push(
-				`/dashboard/clients/${address.clientId}/addresses/${
+				`/dashboard/commercial/clients/${address.clientId}/addresses/${
 					address.id
 				}/edit?${url.toString()}`
 			);
@@ -132,7 +132,7 @@ export function UpdateAddressForm({
 						router.push(
 							returnUrl ||
 								(address.clientId
-									? `/dashboard/clients/${address.clientId}`
+									? `/dashboard/commercial/clients/${address.clientId}`
 									: address.supplierId
 										? `/dashboard/commercial/suppliers/${address.supplierId}`
 										: `/dashboard`)
@@ -286,7 +286,7 @@ export function UpdateAddressForm({
 
 									startAddressTransition(() => {
 										router.push(
-											`/dashboard/clients/${address.clientId}/addresses/${
+											`/dashboard/commercial/clients/${address.clientId}/addresses/${
 												address.id
 											}/edit?${url.toString()}`,
 											{
@@ -470,7 +470,7 @@ export function UpdateAddressForm({
 				cancelHref={
 					returnUrl ||
 					(address.clientId
-						? `/dashboard/clients/${address.clientId}`
+						? `/dashboard/commercial/clients/${address.clientId}`
 						: address.supplierId
 							? `/dashboard/commercial/suppliers/${address.supplierId}`
 							: `/dashboard`)
